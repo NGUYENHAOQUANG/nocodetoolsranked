@@ -6,7 +6,8 @@ import Toplist from "../components/Toplist.astro";
 import BestOverall from "../components/BestOverall.astro";
 import MiniReview from "../components/MiniReview.astro";
 import ContentGrid from "../components/ContentGrid.astro";
-// Các phần tiếp theo: Footer · nút cuộn lên đầu
+import Footer from "../components/Footer.astro";
+import ToTop from "../components/ToTop.astro";
 ---
 
 <BaseLayout>
@@ -17,6 +18,7 @@ import ContentGrid from "../components/ContentGrid.astro";
     <BestOverall />
     <MiniReview />
     <ContentGrid />
-    <!-- Nội dung sẽ được thêm ở các phase tiếp theo -->
   </main>
+  <Footer />
+  <ToTop />
 </BaseLayout>
