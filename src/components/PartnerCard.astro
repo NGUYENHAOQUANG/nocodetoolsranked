@@ -12,9 +12,17 @@ interface Props {
   sideBanner?: boolean;
   /** Ẩn huy hiệu số thứ hạng (dùng cho khối "Best Overall" lặp lại cuối trang) */
   showRank?: boolean;
+  /** Biến thể cho section "Best Overall": bỏ icon sao góc phải, nhãn thành dải
+      ngang full-width, và tooltip không tự mở */
+  bestOverall?: boolean;
 }
 
-const { brand, sideBanner = false, showRank = true } = Astro.props;
+const {
+  brand,
+  sideBanner = false,
+  showRank = true,
+  bestOverall = false,
+} = Astro.props;
 const {
   rank,
   logo,
@@ -63,9 +71,17 @@ const mobileLogo = logoMobile ?? logo;
 
   <div class="partner__frame">
     {showRank && <span class="partner__rank partner__rank--compact">{rank}</span>}
-    {editorsChoice && <span class="partner__tag">Exclusive Offer</span>}
     {
       editorsChoice && (
+        <span
+          class:list={["partner__tag", { "partner__tag--full": bestOverall }]}
+        >
+          Exclusive Offer
+        </span>
+      )
+    }
+    {
+      editorsChoice && !bestOverall && (
         <span class="partner__highlight" aria-hidden="true">
           <svg viewBox="0 0 16 16" fill="currentColor">
             <path d="M16 6.204l-5.528-0.803-2.472-5.009-2.472 5.009-5.528 0.803 4 3.899-0.944 5.505 4.944-2.599 4.944 2.599-0.944-5.505 4-3.899z" />
@@ -179,7 +195,7 @@ const mobileLogo = logoMobile ?? logo;
                       <PartnerTooltip
                         highlight={hoverTooltip.highlight}
                         text={hoverTooltip.text}
-                        stayOpen={editorsChoice}
+                        stayOpen={editorsChoice && !bestOverall}
                       />
                     )
                   }
@@ -256,6 +272,21 @@ const mobileLogo = logoMobile ?? logo;
     font-weight: 400;
     white-space: nowrap;
     border-bottom-right-radius: 7px;
+  }
+
+  /* Biến thể "Best Overall": nhãn thành dải ngang kín chiều rộng card.
+     Viết 2 class để thắng các rule .partner__tag trong media query (cùng 0,1,0). */
+  .partner__tag.partner__tag--full {
+    left: 0;
+    width: 100%;
+    max-width: 100%;
+    border-radius: 0;
+  }
+  /* Từ 615px dải này nằm trong luồng → đẩy nội dung card xuống 27.2px */
+  @media (min-width: 615px) {
+    .partner__tag.partner__tag--full {
+      position: static;
+    }
   }
 
   /* ----- Icon ngôi sao góc phải ----- */

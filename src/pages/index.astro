@@ -3,7 +3,8 @@ import BaseLayout from "../layouts/BaseLayout.astro";
 import Header from "../components/Header.astro";
 import Hero from "../components/Hero.astro";
 import Toplist from "../components/Toplist.astro";
-// Các phần tiếp theo: PromoBanner · Content · FAQ · Footer
+import BestOverall from "../components/BestOverall.astro";
+// Các phần tiếp theo: khối nội dung · FAQ · Footer
 ---
 
 <BaseLayout>
@@ -11,6 +12,7 @@ import Toplist from "../components/Toplist.astro";
   <main>
     <Hero />
     <Toplist />
+    <BestOverall />
     <!-- Nội dung sẽ được thêm ở các phase tiếp theo -->
   </main>
 </BaseLayout>

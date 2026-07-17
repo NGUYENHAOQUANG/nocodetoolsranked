@@ -36,6 +36,15 @@ const promo = {
     min-height: 30dvh;
   }
 
+  /* Bản gốc có rule chung cho mọi section trong trang: từ 1025px thêm 30px đáy,
+     tạo khoảng cách tới section "Best Overall" phía dưới. (margin-top 2px không có
+     tác dụng vì bị margin 5px của card đầu nuốt khi collapse.) */
+  @media (min-width: 1025px) {
+    .toplist {
+      margin: 2px auto 30px;
+    }
+  }
+
   .toplist__list {
     width: 100%;
     max-width: min(1060px, 95dvw);
