@@ -1,0 +1,256 @@
+---
+interface Props {
+  rating: string;
+  label: string;
+  stars: number;
+  reviews: string;
+}
+
+const { rating, label, stars, reviews } = Astro.props;
+
+// Cung tròn r=47.5 trong viewBox 100×100 → chu vi 2πr. Điểm 9.9/10 ⇒ vẽ 99% cung.
+const RADIUS = 47.5;
+const CIRCUMFERENCE = 2 * Math.PI * RADIUS;
+const ARC = `M 50,50 m 0,-${RADIUS} a ${RADIUS},${RADIUS} 0 1 1 0,${RADIUS * 2} a ${RADIUS},${RADIUS} 0 1 1 0,-${RADIUS * 2}`;
+const dashOffset = CIRCUMFERENCE * (1 - Number(rating) / 10);
+
+// 5 ô sao: đầy → nửa (nếu dư ≥ 0.5) → còn lại rỗng.
+// Sao nửa/rỗng là MỘT path gồm 2 subpath: viền ngoài + phần khoét bên trong
+// (fill-rule mặc định tạo lỗ). Tách thành 2 thẻ path sẽ tô đầy cả hai và mất hiệu ứng.
+const STAR_OUTLINE =
+  "M16 6.204l-5.528-0.803-2.472-5.009-2.472 5.009-5.528 0.803 4 3.899-0.944 5.505 4.944-2.599 4.944 2.599-0.944-5.505 4-3.899z";
+const STAR_HALF_CUTOUT =
+  "M8 11.773l-0.015 0.008 0.015-8.918 1.746 3.537 3.904 0.567-2.825 2.753 0.667 3.888-3.492-1.836z";
+const STAR_EMPTY_CUTOUT =
+  "M8 11.773l-3.492 1.836 0.667-3.888-2.825-2.753 3.904-0.567 1.746-3.537 1.746 3.537 3.904 0.567-2.825 2.753 0.667 3.888-3.492-1.836z";
+
+const full = Math.floor(stars);
+const hasHalf = stars - full >= 0.5;
+const starPaths = Array.from({ length: 5 }, (_, i) => {
+  if (i < full) return { kind: "full", d: STAR_OUTLINE };
+  if (i === full && hasHalf)
+    return { kind: "half", d: STAR_OUTLINE + STAR_HALF_CUTOUT };
+  return { kind: "empty", d: STAR_OUTLINE + STAR_EMPTY_CUTOUT };
+});
+---
+
+<div class="score">
+  <div class="score__ring">
+    <svg class="score__svg" viewBox="0 0 100 100" aria-hidden="true">
+      <path
+        class="score__trail"
+        d={ARC}
+        stroke-width="5"
+        fill-opacity="0"
+        style={`stroke-dasharray: ${CIRCUMFERENCE}px, ${CIRCUMFERENCE}px;`}
+      ></path>
+      <path
+        class="score__arc"
+        d={ARC}
+        stroke-width="5"
+        fill-opacity="0"
+        style={`stroke-dasharray: ${CIRCUMFERENCE}px, ${CIRCUMFERENCE}px; stroke-dashoffset: ${dashOffset}px;`}
+      ></path>
+    </svg>
+
+    {/* Lớp phủ đè lên vòng tròn; cao tự động — cũng là mốc định vị cho sao và số lượt đánh giá */}
+    <div class="score__overlay">
+      <div class="score__content">
+        <div class="score__value">{rating}</div>
+        <label class="score__label">{label}</label>
+        <div class="score__stars" aria-hidden="true">
+          {
+            starPaths.map(({ kind, d }) => (
+              <svg
+                class:list={["score__star", `score__star--${kind}`]}
+                viewBox="0 0 16 16"
+                width="1rem"
+                height="1rem"
+                fill="currentColor"
+              >
+                <path d={d} />
+              </svg>
+            ))
+          }
+        </div>
+      </div>
+
+      <span class="score__reviews">Reviews ({reviews})</span>
+    </div>
+  </div>
+</div>
+
+<style>
+  /* ===== Base = mobile ===== */
+  .score {
+    grid-area: grade;
+    position: relative;
+    display: flex;
+    flex-flow: column;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    font-size: 10vw;
+    font-weight: 700;
+    color: #2d2d2d;
+    justify-self: center;
+    text-align: center;
+    cursor: pointer;
+  }
+
+  .score__ring {
+    position: relative;
+    width: 100%;
+  }
+
+  /* Dưới 768px không có vòng tròn: svg ẩn hẳn, chỉ còn điểm + nhãn + sao xếp dòng thường */
+  .score__svg {
+    display: none;
+    width: 100%;
+    height: auto;
+  }
+  /* Vòng tròn chỉ vẽ từ 1025px; khoảng 768–1024 svg chiếm chỗ nhưng không vẽ nét */
+  .score__trail,
+  .score__arc {
+    display: none;
+    stroke-linecap: round;
+  }
+  .score__trail {
+    stroke: rgba(220, 220, 220, 0.521);
+  }
+  .score__arc {
+    stroke: #c5e5f7;
+  }
+
+  /* Dưới 768px nằm trong luồng (không đè lên gì); từ 768px mới phủ lên vòng tròn */
+  .score__overlay {
+    position: static;
+    width: 100%;
+    display: flex;
+    flex-flow: column;
+    align-items: center;
+  }
+
+  .score__content {
+    display: flex;
+    flex-flow: column;
+    align-items: center;
+    width: 100%;
+    font-size: 42px;
+  }
+
+  .score__value {
+    line-height: 2.2rem;
+    margin-bottom: 5px;
+    color: #2d2d2d;
+  }
+
+  /* Dưới 768px nhãn màu đen; từ 768px đổi sang #2d2d2d (bản gốc dùng 2 khối riêng
+     cho mobile/desktop, khối mobile có inline color: black) */
+  .score__label {
+    font-size: 0.9375rem;
+    font-weight: 400;
+    color: #000;
+    white-space: nowrap;
+    cursor: pointer;
+  }
+
+  .score__stars {
+    position: relative;
+    bottom: 0;
+    display: flex;
+    flex-wrap: nowrap;
+    font-size: 30%;
+    color: #ffcd42;
+  }
+  .score__star--empty {
+    color: #e0e0e0;
+  }
+
+  /* Số lượt đánh giá: chỉ hiện ở desktop */
+  .score__reviews {
+    display: none;
+  }
+
+  /* ===== ≥481px ===== */
+  @media (min-width: 481px) {
+    .score {
+      width: 50%;
+      font-size: 1.7rem;
+      top: 0;
+    }
+  }
+
+  /* ===== ≥768px: vòng tròn chiếm chỗ, nội dung phủ lên trên (bám mép trên) ===== */
+  @media (min-width: 768px) {
+    .score__svg {
+      display: block;
+    }
+    .score__overlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+    }
+    .score__label {
+      color: #2d2d2d;
+    }
+    .score__stars {
+      font-size: 50%;
+    }
+    .score__stars svg {
+      font-size: 0.9375rem;
+    }
+  }
+
+  /* ===== Desktop ≥1025px: hiện vòng tròn, đảo thứ tự điểm/nhãn ===== */
+  @media (min-width: 1025px) {
+    .score {
+      width: 120px;
+      max-width: unset;
+      position: relative;
+      top: -20px;
+      grid-column: 3 / 4;
+    }
+    .score__ring {
+      width: 95px;
+      height: 95px;
+      transition: transform 0.2s linear;
+    }
+    .score__trail,
+    .score__arc {
+      display: initial;
+    }
+    .score__content {
+      flex-flow: column-reverse;
+      padding: 10px;
+      margin: 0 0 5px;
+      font-size: 1.7rem;
+      transition: transform 0.2s linear;
+    }
+    .score__value {
+      margin-top: -7px;
+      font-weight: 600;
+    }
+    .score__label {
+      font-weight: 500;
+      font-size: 0.78rem;
+      margin-top: 10px;
+    }
+    .score__stars {
+      position: absolute;
+      bottom: -20px;
+    }
+    .score__reviews {
+      display: block;
+      position: absolute;
+      bottom: -50%;
+      font-size: 0.75rem;
+      white-space: nowrap;
+      color: #2d2d2d;
+      font-weight: 400;
+    }
+    .score:hover .score__value {
+      scale: 1.1;
+    }
+  }
+</style>

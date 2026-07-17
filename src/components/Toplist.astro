@@ -1,0 +1,44 @@
+---
+import { brands } from "../data/brands";
+import PartnerCard from "./PartnerCard.astro";
+import PromoBanner from "./PromoBanner.astro";
+import thePetsTable from "../assets/logos/the-pets-table.svg";
+
+/** Banner khuyến mãi chèn xen giữa danh sách, ngay sau card hạng này */
+const PROMO_AFTER_RANK = 2;
+
+const promo = {
+  logo: thePetsTable,
+  logoAlt: "The Pet's Table - ",
+  title: " 100% Money-Back Guarantee",
+  buttonText: "Get Started",
+  href: "/red/?url=https%3A%2F%2Fthepetstableus.pxf.io%2Fc%2F2213888%2F3881506%2F41436%3Fsharedid%3Dst5433d1bb2a234343943386a05e5e85e8",
+};
+---
+
+<section class="toplist">
+  <div class="toplist__list">
+    {
+      brands.map((brand, i) => (
+        <>
+          <PartnerCard brand={brand} sideBanner={i === 0} />
+          {brand.rank === PROMO_AFTER_RANK && <PromoBanner {...promo} />}
+        </>
+      ))
+    }
+  </div>
+</section>
+
+<style>
+  .toplist {
+    position: relative;
+    z-index: 20;
+    min-height: 30dvh;
+  }
+
+  .toplist__list {
+    width: 100%;
+    max-width: min(1060px, 95dvw);
+    margin-inline: auto;
+  }
+</style>

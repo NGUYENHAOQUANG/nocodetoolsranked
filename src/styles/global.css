@@ -1,0 +1,132 @@
+/* ==========================================================================
+   Global styles — design tokens, fonts, reset
+   Tham chiếu màu/font từ trang gốc top10dogfood.com
+   ========================================================================== */
+
+/* ----- Fonts (self-hosted Lato) ----- */
+@font-face {
+  font-family: "Lato";
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("/fonts/lato-400.woff2") format("woff2");
+}
+@font-face {
+  font-family: "Lato";
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url("/fonts/lato-700.woff2") format("woff2");
+}
+@font-face {
+  font-family: "Lato";
+  font-style: normal;
+  font-weight: 900;
+  font-display: swap;
+  src: url("/fonts/lato-900.woff2") format("woff2");
+}
+
+/* ----- Design tokens ----- */
+:root {
+  /* Colors */
+  --color-primary: #f97132;
+  --color-primary-rgb: 249, 113, 50;
+  --color-secondary: #f44516;
+  /* Nhấn cho card "Exclusive Offer": viền, nhãn, icon sao */
+  --color-accent: #00cfea;
+  --color-bg: #ffffff;
+  --color-text: #000000;
+
+  /* Typography */
+  --font-base: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
+    "Helvetica Neue", Arial, "Noto Sans", sans-serif;
+  --font-brand: "Lato", var(--font-base);
+  /* Stack riêng cho tooltip đối tác — trang gốc khai báo Work Sans nhưng không nạp,
+     nên thực tế lấy font hệ thống nếu máy có, không thì rơi về stack dưới */
+  --font-ui: "Work Sans", -apple-system, BlinkMacSystemFont, "Segoe UI",
+    "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji",
+    "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+
+  /* Layout (tinh chỉnh dần theo từng phần) */
+  --container-max: 1200px;
+  --container-pad: 20px;
+}
+
+/* ----- Reset ----- */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+}
+
+html {
+  /* Gốc: 14px trên mobile/tablet, 16px trên desktop → scale mọi giá trị rem */
+  font-size: 14px;
+  scroll-behavior: smooth;
+  /* Như trang gốc: rộng đúng 100vw (kể cả phần thanh cuộn) rồi cắt phần tràn,
+     nhờ vậy nội dung căn giữa theo 100vw chứ không theo vùng trừ thanh cuộn */
+  width: 100vw;
+  height: max-content;
+  overflow-x: hidden;
+}
+@media (min-width: 1025px) {
+  html {
+    font-size: 16px;
+  }
+}
+
+body {
+  margin: 0;
+  font-family: var(--font-base);
+  /* Trang gốc đặt line-height 1.7em ở wrapper trang → kế thừa thành 23.8px (14px)
+     / 27.2px (16px). Nhiều chỗ (nhãn, nút, coupon) phụ thuộc giá trị này. */
+  line-height: 1.7em;
+  color: var(--color-text);
+  background: var(--color-bg);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p,
+figure {
+  margin: 0;
+}
+
+ul,
+ol {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+img,
+svg {
+  max-width: 100%;
+}
+
+button {
+  font: inherit;
+  color: inherit;
+  cursor: pointer;
+}
+
+/* ----- Helpers ----- */
+.container {
+  width: 100%;
+  max-width: var(--container-max);
+  margin-inline: auto;
+  padding-inline: var(--container-pad);
+}
