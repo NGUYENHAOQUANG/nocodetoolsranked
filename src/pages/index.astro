@@ -4,7 +4,8 @@ import Header from "../components/Header.astro";
 import Hero from "../components/Hero.astro";
 import Toplist from "../components/Toplist.astro";
 import BestOverall from "../components/BestOverall.astro";
-// Các phần tiếp theo: khối nội dung · FAQ · Footer
+import MiniReview from "../components/MiniReview.astro";
+// Các phần tiếp theo: khối nội dung + sidebar "Must Reads" · FAQ · Footer
 ---
 
 <BaseLayout>
@@ -13,6 +14,7 @@ import BestOverall from "../components/BestOverall.astro";
     <Hero />
     <Toplist />
     <BestOverall />
+    <MiniReview />
     <!-- Nội dung sẽ được thêm ở các phase tiếp theo -->
   </main>
 </BaseLayout>
