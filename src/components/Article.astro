@@ -1,0 +1,69 @@
+---
+import { articleBlocks } from "../data/article";
+import InlineCta from "./InlineCta.astro";
+---
+
+<div class="article">
+  {
+    articleBlocks.map((block) => {
+      if (block.type === "heading") return <h2 class="article__heading">{block.text}</h2>;
+      if (block.type === "subheading")
+        return (
+          <p class="article__subheading">
+            <strong>{block.text}</strong>
+          </p>
+        );
+      if (block.type === "paragraph") return <p>{block.text}</p>;
+      return (
+        <InlineCta
+          logo={block.logo}
+          logoAlt={block.logoAlt}
+          promo={block.promo}
+          buttonText={block.buttonText}
+          href={block.href}
+        />
+      );
+    })
+  }
+</div>
+
+<style>
+  .article {
+    width: 100%;
+    /* Dưới 1025px khối này nằm thẳng trong section (không còn lưới) nên mới lộ
+       giới hạn 95dvw của bản gốc — ở desktop nó bị cột lưới 680px che mất */
+    max-width: min(95dvw, 1060px);
+    margin-inline: auto;
+    /* Bản gốc tạo BFC bằng `overflow-x: scroll` (để bảng rộng cuộn ngang được).
+       Tác dụng phụ mới là thứ quyết định layout: nó giữ margin 16px của đoạn
+       cuối nằm TRONG khối — bỏ đi thì khối hụt 16px. Trang này không có bảng
+       nên dùng flow-root cho đúng ý đồ. */
+    display: flow-root;
+    line-height: 1.7rem;
+    font-weight: 400;
+    color: #2d2d2d;
+  }
+
+  /* Bản gốc dựa vào margin mặc định của trình duyệt, nhưng global.css đã reset
+     margin của h2/p về 0 nên phải khai lại: h2 = .83em, p = 1em */
+  .article__heading {
+    margin: 0.83em 0;
+    font-size: 1.5625rem;
+    line-height: 2.2rem;
+    color: #2d2d2d;
+  }
+  .article h2:first-of-type {
+    margin-top: 0;
+  }
+
+  .article p {
+    margin: 1em 0;
+  }
+
+  /* Bản gốc dùng <p><strong> chứ không phải thẻ heading thật — và để <p> ở
+     font-weight mặc định 400. KHÔNG đặt 700 ở đây: UA cho <strong> là
+     `font-weight: bolder` (tương đối), cha 400 → 700, nhưng cha 700 → 900. */
+  .article__subheading {
+    font-weight: 400;
+  }
+</style>

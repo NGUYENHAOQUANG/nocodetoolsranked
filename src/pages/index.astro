@@ -5,7 +5,8 @@ import Hero from "../components/Hero.astro";
 import Toplist from "../components/Toplist.astro";
 import BestOverall from "../components/BestOverall.astro";
 import MiniReview from "../components/MiniReview.astro";
-// Các phần tiếp theo: khối nội dung + sidebar "Must Reads" · FAQ · Footer
+import ContentGrid from "../components/ContentGrid.astro";
+// Các phần tiếp theo: Footer · nút cuộn lên đầu
 ---
 
 <BaseLayout>
@@ -15,6 +16,7 @@ import MiniReview from "../components/MiniReview.astro";
     <Toplist />
     <BestOverall />
     <MiniReview />
+    <ContentGrid />
     <!-- Nội dung sẽ được thêm ở các phase tiếp theo -->
   </main>
 </BaseLayout>

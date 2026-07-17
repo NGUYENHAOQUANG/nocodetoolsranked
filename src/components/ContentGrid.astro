@@ -1,0 +1,56 @@
+---
+import Article from "./Article.astro";
+import FaqAccordion from "./FaqAccordion.astro";
+import MustReads from "./MustReads.astro";
+---
+
+<section class="content-grid">
+  <Article />
+  <FaqAccordion />
+  <MustReads />
+</section>
+
+<style>
+  .content-grid {
+    width: 100%;
+    max-width: 1060px;
+    margin-inline: auto;
+    padding: 0 10px;
+    /* Bên gốc section này là flex item của wrapper trang nên tự là BFC, giữ
+       margin đáy 20px của FAQ nằm trong. Ở đây nó là block thường nên phải tạo
+       BFC, không thì section hụt đúng 20px. */
+    display: flow-root;
+  }
+
+  /* Dưới 1025px bản gốc KHÔNG bật grid: bài viết và FAQ xếp chồng như block,
+     còn sidebar bị ẩn hẳn (class dùng chung `large-larger-display`). */
+  .content-grid > :global(.must-reads) {
+    display: none;
+  }
+
+  /* ===== Desktop ≥1025px (và cao ≥420px) — 2 cột: nội dung | sidebar ===== */
+  @media (min-width: 1025px) and (min-height: 420px) {
+    .content-grid {
+      display: grid;
+      grid-template-areas:
+        "main sidebar"
+        "main sidebar";
+      grid-template-columns: 2fr 1fr;
+      grid-template-rows: 1fr auto;
+      gap: 10px 20px;
+      /* Rule chung cho mọi section của trang là `2px auto 30px`, nhưng bên gốc
+         section này là flex item nên 2px KHÔNG gộp với margin đáy 20px của
+         MiniReview → cách nhau 22px. Ở đây hai section là block cạnh nhau nên
+         margin gộp, phải khai thẳng 22px mới ra đúng khoảng cách. */
+      margin: 22px auto 30px;
+    }
+    .content-grid > :global(.article),
+    .content-grid > :global(.faq) {
+      grid-column: 1;
+    }
+    .content-grid > :global(.must-reads) {
+      display: block;
+      grid-area: sidebar;
+    }
+  }
+</style>

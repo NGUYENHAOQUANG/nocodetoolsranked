@@ -1,0 +1,184 @@
+---
+import type { ImageMetadata } from "astro";
+
+interface Props {
+  logo: ImageMetadata;
+  logoAlt: string;
+  promo: string;
+  buttonText: string;
+  href: string;
+}
+
+const { logo, logoAlt, promo, buttonText, href } = Astro.props;
+---
+
+{/* Bản gốc lồng 3 div (background-wrapper > border-wrapper > content) nhưng viền
+    cùng màu nền và lớp giữa chỉ căn giữa bằng top:50%/translateY(-50%) — vốn triệt
+    tiêu nhau vì cùng cao 100px. Gộp làm 1: nền + viền 3px + padding 10px cho ra
+    đúng hộp nội dung 574×74 như bản gốc. */}
+<div class="inline-cta">
+  <img
+    class="inline-cta__logo"
+    src={logo.src}
+    alt={logoAlt}
+    width="142"
+    height="70"
+  />
+  <p class="inline-cta__promo">{promo}</p>
+  <div class="inline-cta__action">
+    <div class="inline-cta__button-box">
+      <a
+        class="inline-cta__button"
+        href={href}
+        title={buttonText}
+        target="_blank"
+        rel="noopener nofollow"
+        referrerpolicy="strict-origin"
+      >
+        <span class="inline-cta__button-text">{buttonText}</span>
+        <svg
+          class="inline-cta__arrow"
+          viewBox="0 0 320 512"
+          fill="currentColor"
+          aria-hidden="true"
+        >
+          <path
+            d="M285.476 272.971L91.132 467.314c-9.373 9.373-24.569 9.373-33.941 0l-22.667-22.667c-9.357-9.357-9.375-24.522-.04-33.901L188.505 256 34.484 101.255c-9.335-9.379-9.317-24.544.04-33.901l22.667-22.667c9.373-9.373 24.569-9.373 33.941 0L285.475 239.03c9.373 9.372 9.373 24.568.001 33.941z"
+          />
+        </svg>
+      </a>
+    </div>
+  </div>
+</div>
+
+<style>
+  .inline-cta {
+    width: 100%;
+    max-width: 600px;
+    height: 100px;
+    padding: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    gap: 5px;
+    background-color: #f5f5f5;
+    /* Viền cùng màu nền — không nhìn thấy nhưng vẫn ăn 3px mỗi bên */
+    border: 3px solid #f5f5f5;
+  }
+
+  .inline-cta__logo {
+    /* Bản gốc khoá cứng 150px hai đầu nên logo không co giãn */
+    min-width: 150px;
+    max-width: 150px;
+    height: 100%;
+    min-height: min(65px, 80%);
+    flex-shrink: 0;
+    object-fit: contain;
+  }
+
+  /* Dưới 481px bản gốc bỏ hẳn dòng khuyến mãi, chỉ còn logo + nút */
+  .inline-cta__promo {
+    display: none;
+    height: fit-content;
+    margin: 0;
+    padding: 0;
+    font-size: 1.125rem;
+    font-weight: 700;
+    line-height: 1.2rem;
+    text-align: center;
+    text-transform: capitalize;
+    color: #000;
+    cursor: pointer;
+  }
+
+  .inline-cta__action {
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  /* Cao đúng 47px chứ KHÔNG kéo hết 74px của ô chứa: bản gốc có thêm một lớp
+     bọc cao `auto` ở giữa nên `height:100%` bên trong không có mốc quy chiếu.
+     Ở đây bỏ luôn height, để min-height quyết định và cho nút con stretch theo. */
+  .inline-cta__button-box {
+    width: 100%;
+    min-height: 47px;
+    display: flex;
+    justify-content: center;
+  }
+
+  .inline-cta__button {
+    --hover-bg-color: var(--color-secondary);
+
+    position: relative;
+    width: 100%;
+    min-width: 127px;
+    max-width: 180px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    /* 3px chứ không phải 5px: bản gốc chồng 2 lớp cùng màu cam — thẻ <a> bo 3px
+       nằm dưới một div bo 5px, nên hình nhìn thấy là góc bo ÍT hơn = 3px */
+    border-radius: 3px;
+    background-color: var(--color-primary);
+    color: #fff;
+    /* Hai dòng này quyết định bề rộng chữ: `em` tính theo font-size CỦA THẺ NÀY
+       (1.123rem = 17.968px) ra 0.35936px rồi kế thừa xuống <span> bên trong (dù
+       span để 1.3rem). Thiếu nó chữ hụt 3.6px và lệch tâm 1.8px. */
+    font-size: 1.123rem;
+    letter-spacing: 0.02em;
+    cursor: pointer;
+    transition: all 0.3s ease-in-out;
+  }
+
+  .inline-cta__button-text {
+    position: relative;
+    font-family: var(--font-brand);
+    font-size: 1.3rem;
+    font-weight: 500;
+    line-height: 1.5rem;
+    white-space: nowrap;
+    transition: all 0.3s ease-in-out;
+  }
+
+  .inline-cta__arrow {
+    position: absolute;
+    right: 10px;
+    /* Bản gốc lệch xuống 2px so với chính giữa */
+    top: calc(50% + 2px);
+    width: 1rem;
+    height: 1rem;
+    transform: translateY(-50%);
+    opacity: 0;
+    transition: all 0.2s ease-in-out;
+  }
+
+  /* ===== ≥481px (và cao ≥420px) — hiện dòng khuyến mãi ===== */
+  @media (min-width: 481px) and (min-height: 420px) {
+    .inline-cta__promo {
+      display: block;
+    }
+  }
+
+  /* ===== ≥615px — hover (bản gốc chỉ bật từ mốc này) ===== */
+  @media (min-width: 615px) {
+    .inline-cta__button:hover {
+      background-color: var(--hover-bg-color);
+    }
+    .inline-cta__button:hover .inline-cta__button-text {
+      transform: translateX(-5px);
+    }
+    .inline-cta__button:hover .inline-cta__arrow {
+      opacity: 1;
+    }
+  }
+
+  /* ===== ≥768px (và cao ≥420px) — nút rộng hơn ===== */
+  @media (min-width: 768px) and (min-height: 420px) {
+    .inline-cta__button {
+      min-width: 157px;
+    }
+  }
+</style>

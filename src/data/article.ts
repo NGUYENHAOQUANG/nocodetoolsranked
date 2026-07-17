@@ -1,0 +1,65 @@
+import type { ImageMetadata } from "astro";
+
+import thePetsTable from "../assets/logos/the-pets-table.svg";
+import ollie from "../assets/logos/ollie.svg";
+
+/** Một khối trong bài viết — render theo đúng thứ tự khai báo, như bản gốc */
+export type ArticleBlock =
+  | { type: "heading"; text: string }
+  | { type: "subheading"; text: string }
+  | { type: "paragraph"; text: string }
+  | {
+      type: "cta";
+      logo: ImageMetadata;
+      logoAlt: string;
+      /** Dòng khuyến mãi — bản gốc ẩn dưới 481px, chỉ còn logo + nút */
+      promo: string;
+      buttonText: string;
+      href: string;
+    };
+
+export const articleBlocks: ArticleBlock[] = [
+  { type: "heading", text: "Why Choose Fresh Dog Food?" },
+  { type: "paragraph", text: "Now we know alternative types of dog food and the problems that could arise if you use them. But is all the buzz surrounding fresh dog food really worth the try? Or is this just a new marketing scheme to sell you one more product? Let’s look at the figures." },
+  { type: "paragraph", text: "According to studies by researchers from Purdue University, adding fresh vegetables to your dog’s dry kibble can reduce and prevent the growth of cancer cells by 70-90 percent. It’s not a secret that cancer is among the top causes of death in dogs above 10 years of age. If that’s not enough to encourage you to switch, let’s take a look at other benefits that studies have found from a fresh dog food diet." },
+  {
+    type: "cta",
+    logo: thePetsTable,
+    logoAlt: "The Pet's Table Official Logo | Fresh Dog Food Delivery",
+    promo: "Get 60% off your 1st box + 20% off your 2nd",
+    buttonText: "Visit Site ",
+    href: "/red/?url=https%3A%2F%2Fthepetstableus.pxf.io%2Fc%2F2213888%2F3881506%2F41436%3Fsharedid%3Dst23c16bf647b644cca97773d8a0ea695e",
+  },
+  { type: "subheading", text: "Better Digestion" },
+  { type: "paragraph", text: "Processed kibble and other types of dog food contain different kinds of fillers that are not good for your dog’s stomach. These include legumes that are high in starch and genetically engineered corn. High-quality fresh dog food is prepared with the health of dogs in mind. This means that the meals are made with ingredients that can be easily digested in their tummies as well as ingredients that are meant for canines." },
+  { type: "paragraph", text: "A dog’s digestive tract will find fresh food easier to process which makes it a healthier and safer option. In addition, when you switch to fresh dog food, you can see an immediate improvement in your pup’s bowel movements. Their waste will be fewer, cleaner, and have a less unpleasant odor since they digest the food properly and they don’t digest any of the junk commonly found in processed kibble." },
+  { type: "subheading", text: "Boost immune system" },
+  { type: "paragraph", text: "Fresh fruits and vegetables are rich in vitamins, minerals, and antioxidants such as vitamin A and vitamin C. There are also zinc-rich proteins that are used in prepping fresh dog food. All these ingredients give your dog’s immune system a huge boost which translates to fewer visits to the vet because you have a healthier pup overall." },
+  { type: "subheading", text: "Softer coat" },
+  { type: "paragraph", text: "Aside from better digestion and a stronger immune system, you can also see significant improvements in your pup’s skin and coat. There is an increasing number of dogs that experience rashes, skin irritations, and dandruff which most pet owners believe are due to allergens. But this is not typically the case. Veterinarians see that the increased cases of skin irritations can be attributed to the type of food that pet owners feed their dogs." },
+  { type: "paragraph", text: "A fresh dog food diet with high-quality ingredients can help reduce the appearance of itching, dry, and irritated skin. This is due to the essential fatty acids in the ingredients including omega 3, 6, and 9. It’s like drinking a bottle of clean and refreshing water when you’re extremely thirsty. Fresh food can help hydrate your dog’s skin and leave softer and shinier coats." },
+  { type: "subheading", text: "Weight maintenance + longer life expectancy" },
+  { type: "paragraph", text: "A fresh food diet has also been shown to help dogs maintain healthier weights. In the first weeks of starting the new diet, pet owners reported a healthy change in their dog’s weight. Veterinary nutritionists will tell you that maintaining healthy weight maintenance can increase life expectancy in dogs by 20%. You’ll have more chances to run, play, and cuddle with your best bud. Studies have also shown that fresh dog food can lead to a better range of motion and more activeness even with senior dogs." },
+  {
+    type: "cta",
+    logo: thePetsTable,
+    logoAlt: "The Pet's Table Official Logo | Fresh Dog Food Delivery",
+    promo: "Get 60% off your 1st box + 20% off your 2nd",
+    buttonText: "Visit Site ",
+    href: "/red/?url=https%3A%2F%2Fthepetstableus.pxf.io%2Fc%2F2213888%2F3881506%2F41436%3Fsharedid%3Dst23c16bf647b644cca97773d8a0ea695e",
+  },
+  { type: "heading", text: "Best Brands of Fresh Dog Food" },
+  { type: "paragraph", text: "New delivery services offering fresh food have cropped up to answer pet owners’ demands. However, you should do your research before you buy from any website since not all of them are the same. The top delivery services we recommend for fresh dog food are Ollie, Nom Nom, and The Pet’s Table." },
+  { type: "paragraph", text: "The best delivery services will help you customize a diet plan that’s based on your dog’s age, breed, weight, and more. With a personalized plan, you know that your pooch is getting the proper amount of nutrients that their body requires. The top delivery services will deliver the food directly to your house, allow flexible delivery schedules, and have the option for recurring subscription plans." },
+  {
+    type: "cta",
+    logo: ollie,
+    logoAlt: "Ollie  Official Logo | Fresh Dog Food Delivery",
+    promo: "Free KONG Classic + 70% off your first box",
+    buttonText: "Visit Site ",
+    href: "/red/?url=https%3A%2F%2Folliepets.sjv.io%2Fc%2F2213888%2F3760080%2F12309%3FsubId1%3Dst23c16bf647b644cca97773d8a0ea695e",
+  },
+  { type: "heading", text: "When to serve fresh food to puppies?" },
+  { type: "paragraph", text: "You can start serving fresh food to puppies 3 to 4 weeks after their birth which is during the weaning period. The earlier you can wean a puppy of the mother dog’s milk, the easier they can adjust to proper food (and the faster the mother can recover her health). When feeding puppies, freshly cooked food is important since raw food contains pathogens that could quickly overcome their undeveloped immune system." },
+  { type: "paragraph", text: "Another thing you need to consider is that puppies have a huge need for calories. The National Research Council of the National Academies recommends 990 calories for a 10-pound puppy that’s from small to medium-sized breeds. This is equivalent to the caloric needs of an active adult dog weighing 30 to 35 pounds and is twice the requirement for a 10-pound adult dog. Fresh food for puppies should have a good mix of carbohydrates, proteins, fats, and vegetables." },
+];
