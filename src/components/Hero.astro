@@ -3,32 +3,52 @@ import { Image } from "astro:assets";
 import heroImgDesktop from "../assets/images/hero.jpg";
 import heroImgMobile from "../assets/images/hero-mobile.jpg";
 
+interface Props {
+  /** Trang trong (vd /reviews/): chỉ hiện tiêu đề và căn giữa theo chiều dọc —
+      bỏ subtitle, "Last Updated" và tooltip "Advertising Disclosure" */
+  inner?: boolean;
+  /** Chỉ dùng cho biến thể `inner` */
+  title?: string;
+  alt?: string;
+}
+
+const {
+  inner = false,
+  title = "",
+  alt = "Best Dog Food Delivery Brands 2026 — Fresh Dog Food Delivery",
+} = Astro.props;
+
 // Trang gốc tự hiển thị ngày = hôm nay; lấy ngày lúc build cho khớp hành vi đó.
 const lastUpdated = new Intl.DateTimeFormat("en-US", {
   month: "long",
   day: "numeric",
   year: "numeric",
 }).format(new Date());
-
-const ALT = "Best Dog Food Delivery Brands 2026 — Fresh Dog Food Delivery";
 ---
 
 <section class="hero">
   <Image
     class="hero__bg hero__bg--desktop"
     src={heroImgDesktop}
-    alt={ALT}
+    alt={alt}
     sizes="100vw"
     loading="eager"
   />
   <Image
     class="hero__bg hero__bg--mobile"
     src={heroImgMobile}
-    alt={ALT}
+    alt={alt}
     sizes="100vw"
     loading="eager"
   />
 
+  {
+    inner ? (
+      <div class="hero__content hero__content--inner">
+        <h1 class="hero__title">{title}</h1>
+      </div>
+    ) : (
+      <>
   <div class="hero__content">
     <div class="hero__text">
       <h1 class="hero__title">
@@ -67,6 +87,9 @@ const ALT = "Best Dog Food Delivery Brands 2026 — Fresh Dog Food Delivery";
       food product on the market due to high amount of companies.
     </span>
   </div>
+      </>
+    )
+  }
 </section>
 
 <style>
@@ -103,6 +126,13 @@ const ALT = "Best Dog Food Delivery Brands 2026 — Fresh Dog Food Delivery";
     padding-block: 12px;
     display: flex;
     flex-direction: column;
+  }
+
+  /* Bản gốc chỉ đổi justify-content: trang chủ đẩy "Last Updated" xuống đáy
+     (space-between), trang trong căn giữa tiêu đề. Padding đối xứng nên tâm
+     tiêu đề rơi đúng giữa banner. */
+  .hero__content--inner {
+    justify-content: center;
   }
 
   /* flex column để margin title/subtitle KHÔNG collapse */
