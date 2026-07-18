@@ -268,9 +268,9 @@ const starPaths = starList(stars);
     --hover-bg-color: var(--color-secondary);
 
     width: 100%;
-    /* min-height 47px chỉ có từ 768px (xem media query bên dưới) — dưới mốc đó
-       nút cao đúng 45px theo ô chứa */
-    height: 100%;
+    /* KHÔNG ép height:100%. Bản gốc để nút cao theo NỘI DUNG: dưới 768px nút cao
+       40px (8+8 padding + 5+5 margin span + 14 line) rồi được ô .review__cta-inner
+       (min-height 45) căn giữa; từ 768px min-height:47 (media query dưới) → 47px. */
     padding: 8px;
     display: flex;
     align-items: center;
