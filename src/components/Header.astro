@@ -1,15 +1,19 @@
 ---
 import logo from "../assets/logos/logo.svg";
 
+/* Đúng thứ tự bản gốc (trùng thứ tự sidebarPartners): 6 mục, KHÔNG có Golden Child */
 const reviewLinks = [
   { label: "The Pet's Table", href: "/the-pets-table-review/" },
   { label: "Ollie", href: "/ollie-review/" },
+  { label: "Spot & Tango", href: "/spot-tango-review/" },
   { label: "We Feed Raw", href: "/we-feed-raw-review/" },
   { label: "Fresh Pet", href: "/freshpet-review/" },
   { label: "Sundays For Dogs", href: "/sunday-for-dogs-review/" },
-  { label: "Spot & Tango", href: "/spot-tango-review/" },
-  { label: "Golden Child", href: "/golden-child-review/" },
 ];
+
+/* Mục trang hiện tại được đánh dấu `navbar_active` (cam + đậm 600) như bản gốc */
+const currentPath = Astro.url.pathname.replace(/\/+$/, "");
+const isActive = (href: string) => href.replace(/\/+$/, "") === currentPath;
 ---
 
 <header class="site-header">
@@ -31,7 +35,9 @@ const reviewLinks = [
             {
               reviewLinks.map((item) => (
                 <li>
-                  <a href={item.href}>{item.label}</a>
+                  <a href={item.href} class:list={{ "is-active": isActive(item.href) }}>
+                    {item.label}
+                  </a>
                 </li>
               ))
             }
@@ -207,6 +213,11 @@ const reviewLinks = [
   .site-nav__submenu a:hover {
     color: var(--color-primary);
     background: #f5f5f5;
+  }
+  /* Mục trang hiện tại (navbar_active ở bản gốc): cam + đậm 600 */
+  .site-nav__submenu a.is-active {
+    color: var(--color-primary);
+    font-weight: 600;
   }
 
   /* ===== Mobile drawer ===== */

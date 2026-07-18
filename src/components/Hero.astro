@@ -7,15 +7,21 @@ interface Props {
   /** Trang trong (vd /reviews/): chỉ hiện tiêu đề và căn giữa theo chiều dọc —
       bỏ subtitle, "Last Updated" và tooltip "Advertising Disclosure" */
   inner?: boolean;
-  /** Chỉ dùng cho biến thể `inner` */
+  /** Chỉ dùng cho biến thể `inner` — tiêu đề bản DESKTOP */
   title?: string;
+  /** Tiêu đề bản MOBILE (<768px). Bản gốc để chuỗi KHÁC hẳn desktop; không
+      truyền thì dùng lại `title`. */
+  mobileTitle?: string;
   alt?: string;
+  mobileAlt?: string;
 }
 
 const {
   inner = false,
   title = "",
+  mobileTitle = title,
   alt = "Best Dog Food Delivery Brands 2026 — Fresh Dog Food Delivery",
+  mobileAlt = alt,
 } = Astro.props;
 
 // Trang gốc tự hiển thị ngày = hôm nay; lấy ngày lúc build cho khớp hành vi đó.
@@ -27,6 +33,34 @@ const lastUpdated = new Intl.DateTimeFormat("en-US", {
 ---
 
 <section class="hero">
+  {
+    inner ? (
+      <>
+        {/* Bản gốc dựng banner mobile/desktop thành HAI cây riêng: JS chọn cây theo
+            `clientWidth` (mốc 768), còn CSS lại ẩn theo `innerWidth` — lệch nhau đúng
+            15px thanh cuộn nên ở 768–782px KHÔNG cây nào hiện, chừa 170px trắng.
+            Tái hiện y hệt bằng 2 mốc ẩn lệch nhau ở cuối file. */}
+        <div class="hero__banner hero__banner--mobile-only">
+          <Image class="hero__bg" src={heroImgMobile} alt={mobileAlt} sizes="100vw" loading="eager" />
+          <div class="hero__content hero__content--inner">
+            <div class="hero__text">
+              {/* set:html để tiêu đề mobile chèn <br> cứng như bản gốc (vd
+                  "Top Dog Food Delivery" xuống dòng rồi "Reviews") — không tự wrap */}
+              <h1 class="hero__title" set:html={mobileTitle} />
+            </div>
+          </div>
+        </div>
+        <div class="hero__banner hero__banner--desktop-only">
+          <Image class="hero__bg" src={heroImgDesktop} alt={alt} sizes="100vw" loading="eager" />
+          <div class="hero__content hero__content--inner">
+            <div class="hero__text">
+              <h1 class="hero__title" set:html={title} />
+            </div>
+          </div>
+        </div>
+      </>
+    ) : (
+      <div class="hero__banner">
   <Image
     class="hero__bg hero__bg--desktop"
     src={heroImgDesktop}
@@ -41,14 +75,6 @@ const lastUpdated = new Intl.DateTimeFormat("en-US", {
     sizes="100vw"
     loading="eager"
   />
-
-  {
-    inner ? (
-      <div class="hero__content hero__content--inner">
-        <h1 class="hero__title">{title}</h1>
-      </div>
-    ) : (
-      <>
   <div class="hero__content">
     <div class="hero__text">
       <h1 class="hero__title">
@@ -87,17 +113,25 @@ const lastUpdated = new Intl.DateTimeFormat("en-US", {
       food product on the market due to high amount of companies.
     </span>
   </div>
-      </>
+      </div>
     )
   }
 </section>
 
 <style>
   /* ===== Base = mobile (< 615px) ===== */
+  /* Ô chừa chỗ cho banner: chỉ min-height 170px. Chiều cao THẬT (172px) do banner
+     bên trong quyết định — nhờ vậy lúc không banner nào hiện (768–782px) vẫn còn
+     đúng 170px trắng như bản gốc. */
   .hero {
     position: relative;
-    height: 172px;
+    min-height: 170px;
     background: #eaf4fb;
+  }
+  .hero__banner {
+    position: relative;
+    min-height: 172px;
+    display: grid;
   }
 
   .hero__bg {
@@ -117,13 +151,13 @@ const lastUpdated = new Intl.DateTimeFormat("en-US", {
     object-position: right center;
   }
 
+  /* Bản gốc dùng margin 12px 0 (không phải padding) và để grid kéo giãn ô này */
   .hero__content {
     position: relative;
     z-index: 1;
+    width: 100%;
     max-width: min(1060px, 95dvw);
-    height: 100%;
-    margin-inline: auto;
-    padding-block: 12px;
+    margin: 12px auto;
     display: flex;
     flex-direction: column;
   }
@@ -244,13 +278,29 @@ const lastUpdated = new Intl.DateTimeFormat("en-US", {
     }
   }
 
+  /* Hai mốc ẩn LỆCH NHAU 15px (đúng bằng thanh cuộn) — xem chú thích ở markup.
+     Kết quả: <768 hiện bản mobile, ≥783 hiện bản desktop, 768–782 trắng. */
+  @media (min-width: 768px) {
+    .hero__banner--mobile-only {
+      display: none;
+    }
+  }
+  @media (max-width: 782px) {
+    .hero__banner--desktop-only {
+      display: none;
+    }
+  }
+
   /* ===== Desktop (≥ 1025px): kích thước đầy đủ ===== */
   @media (min-width: 1025px) {
     .hero {
-      height: 220px;
+      min-height: 220px;
+    }
+    .hero__banner {
+      min-height: 220px;
     }
     .hero__content {
-      padding-block: 22px;
+      margin-block: 22px;
     }
     .hero__title {
       font-size: 2.35rem;

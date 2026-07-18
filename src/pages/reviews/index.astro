@@ -12,8 +12,14 @@ const TITLE = "Top Dog Food Delivery Reviews";
 
 <BaseLayout title="Dog Food Subscription Reviews">
   <Header />
-  <Hero inner title={TITLE} alt={`${TITLE} | Fresh Dog Food Delivery`} />
-  <Breadcrumbs items={["Home", TITLE]} />
+  {/* Bản gốc mobile xuống dòng cứng sau "Delivery" (<br>), desktop để 1 dòng */}
+  <Hero
+    inner
+    title={TITLE}
+    mobileTitle="Top Dog Food Delivery <br> Reviews"
+    alt={`${TITLE} | Fresh Dog Food Delivery`}
+  />
+  <Breadcrumbs items={[{ text: "Home" }, { text: TITLE }]} />
   <main>
     <ReviewsList />
   </main>
