@@ -1,0 +1,141 @@
+---
+import type { MarkdownHeading } from "astro";
+
+interface Props {
+  /** Lấy từ render(entry) của MDX — mọi heading trong bài đều lên TOC */
+  headings: MarkdownHeading[];
+}
+
+const { headings } = Astro.props;
+---
+
+{/* Bản gốc đánh dấu mục đang xem bằng text-shadow (scroll-spy), mặc định là mục đầu */}
+<nav class="inner-nav" aria-label="Nội dung bài viết">
+  <div class="inner-nav__content">
+    <h4 class="inner-nav__title">Navigate</h4>
+    {
+      headings.map((h, i) => (
+        <a
+          class:list={["inner-nav__link", { "is-active": i === 0 }]}
+          href={`#${h.slug}`}
+          data-target={h.slug}
+        >
+          <div class="inner-nav__item">{h.text}</div>
+        </a>
+      ))
+    }
+  </div>
+  {/* Dải mờ dần ở đáy, báo hiệu còn cuộn được */}
+  <div class="inner-nav__fade" aria-hidden="true"></div>
+</nav>
+
+<style>
+  .inner-nav {
+    --inner-nav-bg: #f5f5f5;
+
+    /* Bản gốc ẩn hẳn TOC dưới 1025px */
+    display: none;
+    position: sticky;
+    top: 10px;
+    width: 180px;
+    max-height: 500px;
+    height: max-content;
+    overflow-y: auto;
+    scroll-behavior: smooth;
+    /* CSS bản gốc ghi #e8e8e8 nhưng inline style đặt #f5f5f5 → màu thật là #f5f5f5 */
+    background-color: var(--inner-nav-bg);
+    border-radius: 5px;
+    box-shadow: 0 0 3px rgba(0, 0, 0, 0.1);
+  }
+
+  .inner-nav__content {
+    padding: 0 10px 10px;
+  }
+
+  .inner-nav__title {
+    position: sticky;
+    top: 0;
+    width: 100%;
+    /* global.css reset margin h4 về 0; bản gốc cũng ép margin-top 0 nên chỉ còn đáy 5px */
+    margin: 0 0 5px;
+    padding: 5px 0;
+    background-color: var(--inner-nav-bg);
+    border-bottom: 2px solid #d2d2d2;
+  }
+
+  .inner-nav__item {
+    padding: 10px 3px;
+    line-height: 1.5rem;
+    border-bottom: 1px solid rgba(160, 160, 160, 0.576);
+  }
+
+  /* Mục đang xem: bản gốc làm đậm bằng text-shadow chứ không đổi font-weight
+     (đổi weight sẽ làm chữ giãn ra và đẩy layout) */
+  .inner-nav__link.is-active {
+    text-shadow: 0.5px 0 0 #000;
+  }
+
+  .inner-nav__fade {
+    position: sticky;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 16px;
+    background: linear-gradient(180deg, transparent 0, var(--inner-nav-bg) 100%);
+    pointer-events: none;
+  }
+
+  /* Thanh cuộn mảnh, chỉ hiện khi rê chuột vào khung */
+  .inner-nav::-webkit-scrollbar {
+    width: 5px;
+    height: 5px;
+    background-color: transparent;
+  }
+  .inner-nav::-webkit-scrollbar-track {
+    background-color: transparent;
+  }
+  .inner-nav::-webkit-scrollbar-thumb {
+    background-color: transparent;
+    border-radius: 16px;
+  }
+  .inner-nav:hover::-webkit-scrollbar-thumb {
+    background-color: #a0a0a5;
+  }
+  .inner-nav::-webkit-scrollbar-button {
+    display: none;
+  }
+
+  @media (min-width: 615px) {
+    .inner-nav__item:hover {
+      color: var(--color-secondary);
+    }
+  }
+
+  @media (min-width: 1025px) and (min-height: 420px) {
+    .inner-nav {
+      display: block;
+    }
+  }
+</style>
+
+<script>
+  // Scroll-spy: đánh dấu mục ứng với heading đang ở gần đầu màn hình
+  const links = [...document.querySelectorAll<HTMLAnchorElement>(".inner-nav__link")];
+  const targets = links
+    .map((l) => document.getElementById(l.dataset.target ?? ""))
+    .filter((el): el is HTMLElement => el !== null);
+
+  if (links.length && targets.length) {
+    const sync = () => {
+      // heading cuối cùng đã trôi qua mốc 120px tính từ đỉnh màn hình
+      let current = 0;
+      targets.forEach((el, i) => {
+        if (el.getBoundingClientRect().top <= 120) current = i;
+      });
+      links.forEach((l, i) => l.classList.toggle("is-active", i === current));
+    };
+
+    sync();
+    window.addEventListener("scroll", sync, { passive: true });
+  }
+</script>

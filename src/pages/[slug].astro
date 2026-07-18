@@ -1,0 +1,113 @@
+---
+import { getCollection, render } from "astro:content";
+import BaseLayout from "../layouts/BaseLayout.astro";
+import Header from "../components/Header.astro";
+import Hero from "../components/Hero.astro";
+import Breadcrumbs from "../components/Breadcrumbs.astro";
+import InnerNavigator from "../components/InnerNavigator.astro";
+import ReviewIntro from "../components/ReviewIntro.astro";
+import ProsCons from "../components/ProsCons.astro";
+import ArticleLink from "../components/ArticleLink.astro";
+import ReviewSidebar from "../components/ReviewSidebar.astro";
+import Footer from "../components/Footer.astro";
+import ToTop from "../components/ToTop.astro";
+import { partnerLogos } from "../data/reviewPage";
+
+/** Mỗi file MDX trong src/content/reviews → một trang /<slug>/ */
+export async function getStaticPaths() {
+  const entries = await getCollection("reviews");
+  return entries.map((entry) => ({
+    params: { slug: entry.data.slug },
+    props: { entry },
+  }));
+}
+
+const { entry } = Astro.props;
+const { Content, headings } = await render(entry);
+const { title, heroTitle, promo, href, author, pros, cons, partner, articleLinkName } = entry.data;
+
+/* Logo đối tác cho thanh trên (ReviewIntro). Carousel sidebar tự dựng từ
+   carouselPartners, chỉ cần biết đối tác hiện tại (`partner`). */
+const { logo, logoAlt } = partnerLogos[partner];
+---
+
+<BaseLayout title={title}>
+  <Header />
+  {/* Bản gốc: desktop ghi "Reviews", mobile lại ghi tên bài */}
+  <Hero
+    inner
+    title="Reviews"
+    alt="Reviews | Fresh Dog Food Delivery"
+    mobileTitle={heroTitle}
+    mobileAlt={`${heroTitle} | Fresh Dog Food Delivery`}
+  />
+  <Breadcrumbs
+    items={[{ text: "Home" }, { text: "Reviews", href: "/reviews/" }, { text: "Reviews" }]}
+  />
+
+  <div class="review-layout">
+    {/* TOC lấy thẳng từ heading của bài — không khai tay, khỏi lệch khi sửa bài */}
+    <InnerNavigator headings={headings} />
+    <main class="review-layout__main">
+      <ReviewIntro logo={logo} logoAlt={logoAlt} promo={promo} href={href} author={author} />
+      {/* Bản gốc gom Pros/Cons + toàn bộ bài + link cuối vào CHUNG một section */}
+      <section class="review">
+        <div class="review__body">
+          <ProsCons pros={pros} cons={cons} />
+          <Content />
+          {/* Tên đối tác ở link cuối bài (không có dấu nháy) */}
+          <ArticleLink name={articleLinkName} href={href} />
+        </div>
+      </section>
+    </main>
+    <ReviewSidebar partner={partner} />
+  </div>
+
+  <Footer />
+  <ToTop />
+</BaseLayout>
+
+<style>
+  /* Dưới 1025px: 1 cột (nội dung rồi tới sidebar), TOC ẩn hẳn */
+  .review-layout {
+    width: 95%;
+    margin: 10px;
+    display: grid;
+    grid-template-areas:
+      "main"
+      "sidebar";
+    grid-template-columns: 100%;
+  }
+
+  .review-layout__main {
+    width: 100%;
+    margin: 0 auto 10px;
+    border: 1px solid #ecebeb;
+  }
+
+  /* Section bọc Pros/Cons + bài + link cuối. Rule chung cho mọi <section> của
+     bản gốc: padding 0 10px, margin 0 (đổi thành 2px auto 30px từ 1025px). */
+  .review {
+    position: relative;
+    margin: 0;
+    padding-inline: 10px;
+  }
+
+  @media (min-width: 1025px) and (min-height: 420px) {
+    .review-layout {
+      max-width: 1060px;
+      margin: 25px auto;
+      grid-template-areas: "nav main sidebar";
+      grid-template-columns: 1fr 2.8fr 1fr;
+      gap: 10px;
+    }
+    .review-layout__main {
+      margin-right: 0;
+      padding-right: 20px;
+      border: none;
+    }
+    .review {
+      margin: 2px auto 30px;
+    }
+  }
+</style>
