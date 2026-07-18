@@ -32,4 +32,11 @@ const reviews = defineCollection({
   }),
 });
 
-export const collections = { reviews };
+/** Bài viết trang chủ — MDX (prose markdown + <InlineCta/>). Để trong content/
+    cho gọn cùng chỗ với các collection khác; hiện chỉ có 1 bài. */
+const articles = defineCollection({
+  loader: glob({ pattern: "**/*.mdx", base: "./src/content/articles" }),
+  schema: z.object({ title: z.string() }),
+});
+
+export const collections = { reviews, articles };
