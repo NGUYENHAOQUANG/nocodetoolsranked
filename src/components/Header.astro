@@ -237,8 +237,10 @@ const isActive = (href: string) => href.replace(/\/+$/, "") === currentPath;
     opacity: 0;
     transition: opacity 0.25s ease;
   }
+  /* Bản gốc: nền rgba(0,0,0,.5) NHƯNG opacity element chỉ 0.5 → độ tối thực = .5×.5
+     = 0.25 (nhạt). Mình để opacity mở = 0.5 cho khớp (không phải 1). */
   .mobile-drawer.is-open .mobile-drawer__overlay {
-    opacity: 1;
+    opacity: 0.5;
   }
   .mobile-drawer__panel {
     position: absolute;
@@ -247,6 +249,11 @@ const isActive = (href: string) => href.replace(/\/+$/, "") === currentPath;
     width: 255px;
     height: 100%;
     background: #fff;
+    /* will-change:transform ép panel nằm trên layer riêng (composited) NGAY TỪ
+       lúc vẽ → chữ dùng khử răng cưa GRAYSCALE như bản gốc, không lên màu kiểu
+       subpixel (viền chữ ánh xanh/cam). translate3d(0) đơn thuần bị Chromium ép
+       về ma trận 2D nên không đủ. */
+    will-change: transform;
     transform: translateX(100%);
     transition: transform 0.25s ease;
     overflow-y: auto;
@@ -280,7 +287,10 @@ const isActive = (href: string) => href.replace(/\/+$/, "") === currentPath;
     width: 100%;
     box-sizing: border-box;
     height: 42px;
-    padding-left: 15px;
+    /* Reset đủ 4 chiều: `.mobile-drawer__toggle` là <button> nên có padding mặc
+       định của UA (1px 6px). Nếu chỉ đặt padding-left, padding-right 6px còn lại
+       sẽ đẩy chevron (space-between) lệch trái 6px so với bản gốc. */
+    padding: 0 0 0 15px;
     background: none;
     border: 0;
     border-bottom: 1px solid #808080;
@@ -345,15 +355,19 @@ const isActive = (href: string) => href.replace(/\/+$/, "") === currentPath;
   const burger = document.querySelector<HTMLButtonElement>(".site-header__burger");
 
   if (drawer && burger) {
+    // Khoá cuộn ở <html> (nơi giữ thanh cuộn) chứ không phải <body> — vì html đặt
+    // height:max-content nên body overflow:hidden không gỡ được thanh cuộn. Gỡ ở
+    // html mới làm mất thanh cuộn để panel (fixed, right:0) chạm đúng mép phải như
+    // bản gốc, không còn hở 15px.
     const open = () => {
       drawer.classList.add("is-open");
       burger.setAttribute("aria-expanded", "true");
-      document.body.style.overflow = "hidden";
+      document.documentElement.style.overflow = "hidden";
     };
     const close = () => {
       drawer.classList.remove("is-open");
       burger.setAttribute("aria-expanded", "false");
-      document.body.style.overflow = "";
+      document.documentElement.style.overflow = "";
     };
 
     burger.addEventListener("click", open);
