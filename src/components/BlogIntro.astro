@@ -1,0 +1,85 @@
+---
+import { Image } from "astro:assets";
+import type { ImageMetadata } from "astro";
+
+interface Props {
+  title: string;
+  /** vd "Jan 1, 2026" */
+  date: string;
+  /** vd "6 min read" */
+  readTime: string;
+  author: { name: string; role: string };
+  avatar: ImageMetadata;
+}
+
+const { title, date, readTime, author, avatar } = Astro.props;
+---
+
+<div class="post-intro">
+  {/* Ngày + thời lượng đọc, rồi tiêu đề bài (màu xanh slate #2d364d) */}
+  <div class="post-intro__top">
+    <p class="post-intro__meta">{date} | {readTime}</p>
+    <h2 class="post-intro__title">{title}</h2>
+  </div>
+
+  {/* Tác giả: avatar tròn 45px + tên (đậm) / vai trò */}
+  <div class="post-intro__author">
+    <Image class="post-intro__avatar" src={avatar} alt={author.name} width={45} height={45} />
+    <div class="post-intro__author-text">
+      <p class="post-intro__author-name">{author.name}</p>
+      <p class="post-intro__author-role">{author.role}</p>
+    </div>
+  </div>
+</div>
+
+<style>
+  /* Meta + tiêu đề đều màu slate #2d364d (khác thân bài #2d2d2d) */
+  .post-intro__meta {
+    margin: 0;
+    color: #2d364d;
+    font-size: 0.9375rem;
+    font-weight: 200;
+    line-height: 1.7rem;
+  }
+  .post-intro__title {
+    /* margin 0.83em (mặc định h2) — top-container không tính margin đáy này */
+    margin: 0.83em 0;
+    color: #2d364d;
+    font-size: 1.40625rem;
+    font-weight: 500;
+    line-height: 1.7rem;
+  }
+
+  .post-intro__author {
+    padding-top: 15px;
+    display: flex;
+  }
+  .post-intro__avatar {
+    width: 45px;
+    height: 45px;
+    flex-shrink: 0;
+    border-radius: 50%;
+    object-fit: cover;
+  }
+  /* Cột chữ giãn bằng chiều cao avatar (45px) rồi căn giữa dọc tên + vai trò */
+  .post-intro__author-text {
+    margin-left: 10px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+  .post-intro__author-name {
+    margin: 0;
+    color: #2d364d;
+    font-size: 0.85rem;
+    font-weight: 600;
+    line-height: 1.4;
+  }
+  .post-intro__author-role {
+    margin: 0;
+    color: #2d364d;
+    font-size: 0.85rem;
+    font-weight: 400;
+    line-height: 1.4;
+  }
+</style>
