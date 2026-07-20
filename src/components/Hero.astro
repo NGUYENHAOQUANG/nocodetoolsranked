@@ -261,6 +261,12 @@ const lastUpdated = new Intl.DateTimeFormat("en-US", {
 
   /* ===== Từ 768px: đổi sang ảnh + nội dung bản desktop (KHÔNG phải 615px) ===== */
   @media (min-width: 768px) {
+    /* Bản gốc: banner MOBILE để tiêu đề chạy full chiều ngang (max-width none);
+       chỉ banner DESKTOP mới giới hạn 95% để tiêu đề dài (bài blog) ngắt 2 dòng.
+       Vì vậy chỉ áp max-width từ 768px trở lên (nơi banner desktop hiện). */
+    .hero__title {
+      max-width: 95%;
+    }
     .hero__bg--desktop {
       display: block;
     }
