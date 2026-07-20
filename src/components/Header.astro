@@ -30,7 +30,10 @@ const isActive = (href: string) => href.replace(/\/+$/, "") === currentPath;
     <nav class="site-nav" aria-label="Chính">
       <ul class="site-nav__list">
         <li class="site-nav__item site-nav__item--has-menu">
-          <a class="site-nav__link" href="/reviews/">Reviews</a>
+          <a
+            class:list={["site-nav__link", { "is-active": isActive("/reviews/") }]}
+            href="/reviews/">Reviews</a
+          >
           <ul class="site-nav__submenu">
             {
               reviewLinks.map((item) => (
@@ -44,7 +47,10 @@ const isActive = (href: string) => href.replace(/\/+$/, "") === currentPath;
           </ul>
         </li>
         <li class="site-nav__item">
-          <a class="site-nav__link" href="/knowledge/">Learn</a>
+          <a
+            class:list={["site-nav__link", { "is-active": isActive("/knowledge/") }]}
+            href="/knowledge/">Learn</a
+          >
         </li>
       </ul>
     </nav>
@@ -182,6 +188,11 @@ const isActive = (href: string) => href.replace(/\/+$/, "") === currentPath;
   }
   .site-nav__item:hover > .site-nav__link {
     color: var(--color-primary);
+  }
+  /* Mục ứng với trang hiện tại: cam + đậm 600 (navbar_active bản gốc) */
+  .site-nav__link.is-active {
+    color: var(--color-primary);
+    font-weight: 600;
   }
 
   /* Reviews dropdown (desktop) */
