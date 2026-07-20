@@ -12,6 +12,9 @@ interface Props {
   /** Tiêu đề bản MOBILE (<768px). Bản gốc để chuỗi KHÁC hẳn desktop; không
       truyền thì dùng lại `title`. */
   mobileTitle?: string;
+  /** Biến thể `inner`: căn tiêu đề LÊN ĐẦU banner thay vì giữa (trang /about-page/
+      dùng space-between/flex-start, khác /reviews/ và /knowledge/ căn giữa). */
+  titleTop?: boolean;
   alt?: string;
   mobileAlt?: string;
 }
@@ -20,9 +23,18 @@ const {
   inner = false,
   title = "",
   mobileTitle = title,
+  titleTop = false,
   alt = "Best Dog Food Delivery Brands 2026 — Fresh Dog Food Delivery",
   mobileAlt = alt,
 } = Astro.props;
+
+const innerContentClass = [
+  "hero__content",
+  "hero__content--inner",
+  titleTop && "hero__content--top",
+]
+  .filter(Boolean)
+  .join(" ");
 
 // Trang gốc tự hiển thị ngày = hôm nay; lấy ngày lúc build cho khớp hành vi đó.
 const lastUpdated = new Intl.DateTimeFormat("en-US", {
@@ -42,7 +54,7 @@ const lastUpdated = new Intl.DateTimeFormat("en-US", {
             Tái hiện y hệt bằng 2 mốc ẩn lệch nhau ở cuối file. */}
         <div class="hero__banner hero__banner--mobile-only">
           <Image class="hero__bg" src={heroImgMobile} alt={mobileAlt} sizes="100vw" loading="eager" />
-          <div class="hero__content hero__content--inner">
+          <div class={innerContentClass}>
             <div class="hero__text">
               {/* set:html để tiêu đề mobile chèn <br> cứng như bản gốc (vd
                   "Top Dog Food Delivery" xuống dòng rồi "Reviews") — không tự wrap */}
@@ -52,7 +64,7 @@ const lastUpdated = new Intl.DateTimeFormat("en-US", {
         </div>
         <div class="hero__banner hero__banner--desktop-only">
           <Image class="hero__bg" src={heroImgDesktop} alt={alt} sizes="100vw" loading="eager" />
-          <div class="hero__content hero__content--inner">
+          <div class={innerContentClass}>
             <div class="hero__text">
               <h1 class="hero__title" set:html={title} />
             </div>
@@ -167,6 +179,11 @@ const lastUpdated = new Intl.DateTimeFormat("en-US", {
      tiêu đề rơi đúng giữa banner. */
   .hero__content--inner {
     justify-content: center;
+  }
+  /* /about-page/: tiêu đề căn LÊN ĐẦU (bản gốc dùng space-between/flex-start,
+     một con nên nằm sát trên) — đè lên căn-giữa của --inner */
+  .hero__content--top {
+    justify-content: flex-start;
   }
 
   /* flex column để margin title/subtitle KHÔNG collapse */
