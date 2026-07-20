@@ -1,0 +1,61 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import Header from "../../components/Header.astro";
+import Hero from "../../components/Hero.astro";
+import Breadcrumbs from "../../components/Breadcrumbs.astro";
+import Footer from "../../components/Footer.astro";
+import ToTop from "../../components/ToTop.astro";
+---
+
+<BaseLayout title="Top 10 Dog Food Subscriptions - Advertiser Disclosure">
+  <Header />
+  <Hero
+    inner
+    titleTop
+    title="Advertiser Disclosure"
+    mobileTitle="Advertiser Disclosure"
+    alt="Advertiser Disclosure | Fresh Dog Food Delivery"
+  />
+  <Breadcrumbs items={[{ text: "Home" }, { text: "Advertiser Disclosure" }]} />
+  <main>
+    <article class="disclosure">
+      <p>
+        top10dogfood.com is an independent review and comparison website funded
+        by referral fees. We may be paid compensation when you user avail an
+        insurance through our website links. This does not affect our reviews and
+        ratings which are based on thousands of ratings and testing our team made.
+        We regularly review new pet insurance services but do not feature every
+        service on the market due to high amount of companies.
+      </p>
+    </article>
+  </main>
+  <Footer />
+  <ToTop />
+</BaseLayout>
+
+<style>
+  /* Cùng khung prose như /terms-of-use/: first-child là <p> (margin-top 16) nên
+     phải là BFC (display:flow-root) để GÓI margin — không thì margin-top <p> đầu
+     collapse với container → hụt 2px ở đỉnh. Rộng 95%, tối đa 1060, căn giữa.
+     Trang RẤT NGẮN (1 đoạn) → bản gốc để `defaultPage_container { min-height: 70vh }`
+     đẩy footer xuống (nội dung ở đỉnh, chừa khoảng trống bên dưới). Với min-height,
+     khoảng cách container→footer chỉ còn margin section: <1025 = 0, ≥1025 = 30px. */
+  .disclosure {
+    display: flow-root;
+    width: 95%;
+    max-width: 1060px;
+    min-height: 70dvh;
+    margin: 0 auto;
+    color: #2d2d2d;
+    font-size: 1rem;
+    line-height: 1.7rem;
+  }
+  .disclosure p {
+    margin: 1em 0;
+  }
+  @media (min-width: 1025px) {
+    .disclosure {
+      margin: 2px auto 30px;
+    }
+  }
+</style>
