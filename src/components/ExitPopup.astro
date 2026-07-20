@@ -5,8 +5,8 @@ import discount from "../assets/images/popup-pets-discount.png";
 import logo from "../assets/images/popup-pets-logo.svg";
 ---
 
-{/* Popup exit-intent "The Pet's Table" — tái hiện chiến dịch Adoric của trang gốc:
-    hiện khi chuột rời mép trên cửa sổ (exit-intent), 1 lần/ngày, đóng rồi thôi. */}
+{/* Popup exit-intent "The Pet's Table" — hiện khi chuột rời mép trên cửa sổ
+    (exit-intent). Xem/đóng rồi thì thôi tới hết PHIÊN (lưu cookie phiên petsTablePopup). */}
 <div class="exit-popup" hidden>
   <div class="exit-popup__backdrop" data-close></div>
   <div class="exit-popup__box" role="dialog" aria-modal="true" aria-label="The Pets Table offer">
@@ -172,36 +172,26 @@ import logo from "../assets/images/popup-pets-logo.svg";
 <script>
   const popup = document.querySelector<HTMLElement>(".exit-popup");
   if (popup) {
-    const KEY = "petsTablePopup";
-    const ONE_DAY = 86_400_000;
+    const COOKIE = "petsTablePopup";
     let shownThisPage = false;
 
-    const state = () => {
-      try {
-        return JSON.parse(localStorage.getItem(KEY) || "{}");
-      } catch {
-        return {};
-      }
+    // Lưu bằng COOKIE PHIÊN (không đặt expires/max-age) → tự mất khi đóng trình duyệt.
+    // Không còn khoá theo ngày: mỗi phiên hiện tối đa 1 lần.
+    const seen = () =>
+      document.cookie.split("; ").some((c) => c.startsWith(COOKIE + "="));
+    const markSeen = () => {
+      document.cookie = COOKIE + "=1; path=/; SameSite=Lax";
     };
-    // Bản gốc: 1 lần/ngày (repeatShow 1) + đóng rồi thôi (notShowClosed)
-    const canShow = () => {
-      const s = state();
-      return !s.shownAt || Date.now() - s.shownAt > ONE_DAY;
-    };
+
     const show = () => {
-      if (shownThisPage || popup.hidden === false || !canShow()) return;
+      if (shownThisPage || popup.hidden === false || seen()) return;
       shownThisPage = true;
       popup.hidden = false;
-      const s = state();
-      s.shownAt = Date.now();
-      localStorage.setItem(KEY, JSON.stringify(s));
+      markSeen();
     };
     const close = () => {
       popup.hidden = true;
-      const s = state();
-      s.shownAt = Date.now();
-      s.closedAt = Date.now();
-      localStorage.setItem(KEY, JSON.stringify(s));
+      markSeen();
     };
 
     // Trigger = exit-intent: chuột rời qua MÉP TRÊN cửa sổ
