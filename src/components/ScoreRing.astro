@@ -152,6 +152,35 @@ const starPaths = starList(stars);
     color: #e0e0e0;
   }
 
+  /* Ánh sáng lướt qua hàng sao khi hover (bản gốc: pseudo-element gradient chạy
+     từ trái sang phải, 1 lần, giữ nguyên ở cuối) */
+  .score__stars:hover::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 1;
+    width: 100%;
+    height: 100%;
+    transform: translateX(100%);
+    background: linear-gradient(
+      90deg,
+      rgba(255, 255, 255, 0) 0px,
+      rgba(255, 255, 255, 0.8) 50%,
+      rgba(128, 186, 232, 0) 99%,
+      rgba(125, 185, 232, 0)
+    );
+    animation: score-stars-shine 1s ease 0s 1 normal forwards;
+  }
+  @keyframes score-stars-shine {
+    0% {
+      transform: translateX(-100%);
+    }
+    100% {
+      transform: translateX(100%);
+    }
+  }
+
   /* Số lượt đánh giá: chỉ hiện ở desktop */
   .score__reviews {
     display: none;
@@ -184,6 +213,11 @@ const starPaths = starList(stars);
     }
     .score__stars svg {
       font-size: 0.9375rem;
+    }
+    /* Bản gốc bật hiệu ứng phóng to điểm số khi hover từ đúng mốc này (768px),
+       không phải 1025px */
+    .score:hover .score__value {
+      scale: 1.1;
     }
   }
 
@@ -233,9 +267,6 @@ const starPaths = starList(stars);
       white-space: nowrap;
       color: #2d2d2d;
       font-weight: 400;
-    }
-    .score:hover .score__value {
-      scale: 1.1;
     }
   }
 </style>

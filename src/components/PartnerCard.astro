@@ -69,17 +69,9 @@ const mobileLogo = logoMobile ?? logo;
     )
   }
 
-  <div class="partner__frame">
-    {/* Cả thẻ là link như trang gốc (bản gốc dùng div link-wrapper + JS click);
-        link phủ toàn thẻ, nút "Visit Site" nổi lên trên (z-index) để bấm riêng */}
-    <a
-      class="partner__link"
-      href={href}
-      target="_blank"
-      rel="noopener nofollow"
-      referrerpolicy="strict-origin"
-      aria-label={`Visit ${brand.name}`}
-    ></a>
+  {/* Cả thẻ bấm được như bản gốc: div `cursor: pointer` + click handler, KHÔNG dùng
+      thẻ <a> phủ toàn card — overlay như vậy sẽ nuốt hover của chữ/gạch đầu dòng/vòng điểm */}
+  <div class="partner__frame" data-href={href}>
     {showRank && <span class="partner__rank partner__rank--compact">{rank}</span>}
     {
       editorsChoice && (
@@ -209,6 +201,14 @@ const mobileLogo = logoMobile ?? logo;
                       />
                     )
                   }
+                  <svg
+                    class="partner__button-arrow"
+                    viewBox="0 0 320 512"
+                    fill="currentColor"
+                    aria-hidden="true"
+                  >
+                    <path d="M285.476 272.971L91.132 467.314c-9.373 9.373-24.569 9.373-33.941 0l-22.667-22.667c-9.357-9.357-9.375-24.522-.04-33.901L188.505 256 34.484 101.255c-9.335-9.379-9.317-24.544.04-33.901l22.667-22.667c9.373-9.373 24.569-9.373 33.941 0L285.475 239.03c9.373 9.372 9.373 24.568.001 33.941z" />
+                  </svg>
                 </div>
               </a>
             </div>
@@ -218,6 +218,26 @@ const mobileLogo = logoMobile ?? logo;
     </div>
   </div>
 </div>
+
+<script>
+  // Bản gốc không có thẻ <a> phủ card: cả khung là div `cursor: pointer` gắn onClick.
+  // Làm y hệt để hover của tagline / gạch đầu dòng / vòng điểm không bị overlay chặn.
+  document
+    .querySelectorAll<HTMLElement>(".partner__frame[data-href]")
+    .forEach((frame) => {
+      const href = frame.dataset.href!;
+
+      frame.addEventListener("click", (event) => {
+        const target = event.target as HTMLElement;
+        // Bấm trúng link thật bên trong (nút "Visit Site") thì để nó tự xử lý
+        if (target.closest("a")) return;
+        // Bỏ qua khi người dùng đang bôi đen chữ
+        if (!window.getSelection()?.isCollapsed) return;
+
+        window.open(href, "_blank", "noopener");
+      });
+    });
+</script>
 
 <style>
   /* ==========================================================================
@@ -245,13 +265,6 @@ const mobileLogo = logoMobile ?? logo;
   .partner--editors-choice .partner__frame {
     border: 2px solid var(--color-accent);
   }
-  /* Link phủ toàn thẻ (stretched link) — nằm dưới nút Visit Site */
-  .partner__link {
-    position: absolute;
-    inset: 0;
-    z-index: 1;
-  }
-
   /* ----- Huy hiệu số thứ hạng ----- */
   .partner__rank {
     display: flex;
@@ -473,9 +486,6 @@ const mobileLogo = logoMobile ?? logo;
   /* ----- Nút CTA ----- */
   .partner__actions {
     grid-area: button;
-    /* Nổi lên trên link phủ thẻ để nút Visit Site bấm được riêng */
-    position: relative;
-    z-index: 2;
     height: 100%;
     max-width: 155px;
     width: 100%;
@@ -542,6 +552,19 @@ const mobileLogo = logoMobile ?? logo;
     color: #fff;
   }
 
+  /* Icon mũi tên: ẩn sẵn trong nút, chỉ hiện dần khi hover (từ 768px, xem media
+     query bên dưới) — bản gốc dùng icon FontAwesome chevron-right */
+  .partner__button-arrow {
+    position: absolute;
+    top: calc(50% + 2px);
+    right: 10px;
+    width: 1rem;
+    height: 1rem;
+    opacity: 0;
+    transform: translateY(-50%);
+    transition: all 0.2s ease-in-out;
+  }
+
   /* ==========================================================================
      ≥481px
      ========================================================================== */
@@ -569,8 +592,12 @@ const mobileLogo = logoMobile ?? logo;
      ≥615px — hiệu ứng hover (bản gốc chỉ bật từ mốc này)
      ========================================================================== */
   @media (min-width: 615px) {
-    .partner__tagline:hover,
-    .partner__bullets li:hover {
+    /* Đổi màu khi hover CHỈ ở bản desktop: bản gốc bọc riêng class tiện ích
+       `color-hover` quanh tagline/bullets desktop, bản mobile không có (chỉ đổi
+       con trỏ chuột) — nếu áp cho cả 2 biến thể sẽ sai ở khoảng 615–767px, lúc
+       bản mobile đang hiển thị mà lại đổi màu. */
+    .partner__tagline--wide:hover,
+    .partner__bullets--wide li:hover {
       color: var(--hover-color);
     }
     .partner__button:hover {
@@ -716,6 +743,9 @@ const mobileLogo = logoMobile ?? logo;
     .partner__button-inner {
       position: unset;
       width: fit-content;
+    }
+    .partner__button:hover .partner__button-arrow {
+      opacity: 1;
     }
   }
 

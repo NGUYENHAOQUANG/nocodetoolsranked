@@ -117,5 +117,12 @@ const { highlight, text, stayOpen = false } = Astro.props;
       opacity: 0;
       animation: tooltip-fade-in 0.3s linear 1s 1 normal forwards;
     }
+    /* Biến thể không tự mở: bản gốc hiện tooltip này khi rê chuột vào nút
+       "Visit Site" (không phải hover trực tiếp lên tooltip). `:global()` vì
+       .partner__button thuộc component cha PartnerCard, ngoài phạm vi scope CSS
+       của component này. */
+    :global(.partner__button:hover) .tooltip:not(.tooltip--stay-open) {
+      display: flex;
+    }
   }
 </style>
