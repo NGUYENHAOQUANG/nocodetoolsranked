@@ -6,20 +6,20 @@ interface Props {
   headings: MarkdownHeading[];
 }
 
-const { headings } = Astro.props;
+/** Bỏ heading rỗng: vài bài dùng <h2></h2>/<h3></h3> rỗng làm spacer sau ảnh —
+    chúng KHÔNG được lên TOC (bản gốc cũng vậy). */
+const { headings: allHeadings } = Astro.props;
+const headings = allHeadings.filter((h) => h.text.trim());
 ---
 
-{/* Bản gốc đánh dấu mục đang xem bằng text-shadow (scroll-spy), mặc định là mục đầu */}
+{/* Bản gốc đánh dấu mục đang xem bằng text-shadow (scroll-spy). Ở ĐẦU trang
+    (chưa cuộn) KHÔNG mục nào được tô — chỉ tô khi cuộn qua heading tương ứng. */}
 <nav class="inner-nav" aria-label="Nội dung bài viết">
   <div class="inner-nav__content">
     <h4 class="inner-nav__title">Navigate</h4>
     {
-      headings.map((h, i) => (
-        <a
-          class:list={["inner-nav__link", { "is-active": i === 0 }]}
-          href={`#${h.slug}`}
-          data-target={h.slug}
-        >
+      headings.map((h) => (
+        <a class="inner-nav__link" href={`#${h.slug}`} data-target={h.slug}>
           <div class="inner-nav__item">{h.text}</div>
         </a>
       ))
@@ -127,8 +127,9 @@ const { headings } = Astro.props;
 
   if (links.length && targets.length) {
     const sync = () => {
-      // heading cuối cùng đã trôi qua mốc 120px tính từ đỉnh màn hình
-      let current = 0;
+      // heading cuối cùng đã trôi qua mốc 120px tính từ đỉnh màn hình;
+      // -1 = chưa cuộn tới heading nào → không tô mục nào (như bản gốc)
+      let current = -1;
       targets.forEach((el, i) => {
         if (el.getBoundingClientRect().top <= 120) current = i;
       });
