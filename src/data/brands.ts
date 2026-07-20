@@ -70,7 +70,7 @@ export const brands: Brand[] = [
     ratingLabel: "Outstanding",
     stars: 5,
     reviews: "2,452",
-    href: "/red/?url=https%3A%2F%2Fthepetstableus.pxf.io%2Fc%2F2213888%2F3881506%2F41436%3Fsharedid%3Dst5433d1bb2a234343943386a05e5e85e8",
+    href: "#",
     editorsChoice: true,
     hoverTooltip: {
       highlight: "16,024 people",
@@ -94,7 +94,7 @@ export const brands: Brand[] = [
     ratingLabel: "Excellent",
     stars: 4.5,
     reviews: "2,002",
-    href: "/red/?url=https%3A%2F%2Fspot-and-tango.i5md.net%2Fc%2F2213888%2F3803028%2F9669%3Fsharedid%3Dst5433d1bb2a234343943386a05e5e85e8",
+    href: "#",
   },
   {
     rank: 3,
@@ -113,7 +113,7 @@ export const brands: Brand[] = [
     ratingLabel: "Excellent",
     stars: 4,
     reviews: "1,983",
-    href: "/red/?url=https%3A%2F%2Folliepets.sjv.io%2Fc%2F2213888%2F3760080%2F12309%3FsubId1%3Dst5433d1bb2a234343943386a05e5e85e8",
+    href: "#",
   },
   {
     rank: 4,
@@ -127,7 +127,7 @@ export const brands: Brand[] = [
     ratingLabel: "Very Good",
     stars: 4,
     reviews: "1,902",
-    href: "/red/?url=https%3A%2F%2Fsundaysfordogs.pxf.io%2Fc%2F2213888%2F3285231%2F24301%3Fsharedid%3Dst5433d1bb2a234343943386a05e5e85e8",
+    href: "#",
   },
   {
     rank: 5,
@@ -144,7 +144,7 @@ export const brands: Brand[] = [
     ratingLabel: "Very Good",
     stars: 4,
     reviews: "1,850",
-    href: "/red/?url=https%3A%2F%2Fmax-bone.bop8.net%2Fc%2F2213888%2F3954534%2F9572%3Fsharedid%3Dst5433d1bb2a234343943386a05e5e85e8",
+    href: "#",
   },
   {
     rank: 6,
@@ -161,7 +161,7 @@ export const brands: Brand[] = [
     ratingLabel: "Good",
     stars: 4,
     reviews: "1,622",
-    href: "/red/?url=https%3A%2F%2Fwefeedraw.sjv.io%2Fc%2F2213888%2F3067221%2F22021%3Fsharedid%3Dst5433d1bb2a234343943386a05e5e85e8",
+    href: "#",
   },
   {
     rank: 7,
@@ -179,7 +179,7 @@ export const brands: Brand[] = [
     ratingLabel: "Good",
     stars: 4,
     reviews: "1,494",
-    href: "/red/?url=https%3A%2F%2Ffreshpet.pxf.io%2Fc%2F2213888%2F3279254%2F34344%3Fsharedid%3Dst5433d1bb2a234343943386a05e5e85e8",
+    href: "#",
   },
   {
     rank: 8,
@@ -196,7 +196,7 @@ export const brands: Brand[] = [
     ratingLabel: "Good",
     stars: 3.5,
     reviews: "1,159",
-    href: "/red/?url=https%3A%2F%2Fmaevinc.sjv.io%2Fc%2F2213888%2F3931107%2F27953%3Fsharedid%3Dst5433d1bb2a234343943386a05e5e85e8",
+    href: "#",
   },
   {
     rank: 9,
@@ -214,6 +214,6 @@ export const brands: Brand[] = [
     ratingLabel: "Fair",
     stars: 3,
     reviews: "986",
-    href: "/red/?url=https%3A%2F%2Fthe-honest-kitchen.pxf.io%2Fc%2F2213888%2F3010129%2F17474%3Fsharedid%3Dst5433d1bb2a234343943386a05e5e85e8",
+    href: "#",
   },
 ];

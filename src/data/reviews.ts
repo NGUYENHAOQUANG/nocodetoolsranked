@@ -35,7 +35,7 @@ export const reviews: ReviewEntry[] = [
     rating: "9.9",
     ratingLabel: "Outstanding",
     stars: 5,
-    href: "/red/?url=https%3A%2F%2Fthepetstableus.pxf.io%2Fc%2F2213888%2F3881506%2F41436%3Fsharedid%3Dst23c16bf647b644cca97773d8a0ea695e",
+    href: "#",
   },
   {
     logo: ollie,
@@ -45,7 +45,7 @@ export const reviews: ReviewEntry[] = [
     rating: "9.3",
     ratingLabel: "Excellent",
     stars: 4.5,
-    href: "/red/?url=https%3A%2F%2Folliepets.sjv.io%2Fc%2F2213888%2F3760080%2F12309%3FsubId1%3Dst23c16bf647b644cca97773d8a0ea695e",
+    href: "#",
     trailingBlank: true,
   },
   {
@@ -56,7 +56,7 @@ export const reviews: ReviewEntry[] = [
     rating: "8.7",
     ratingLabel: "Excellent",
     stars: 4,
-    href: "/red/?url=https%3A%2F%2Fwefeedraw.sjv.io%2Fc%2F2213888%2F3067221%2F22021%3Fsharedid%3Dst23c16bf647b644cca97773d8a0ea695e",
+    href: "#",
   },
   {
     logo: spotTango,
@@ -66,7 +66,7 @@ export const reviews: ReviewEntry[] = [
     rating: "8.4",
     ratingLabel: "Very Good",
     stars: 4,
-    href: "/red/?url=https%3A%2F%2Fspot-and-tango.i5md.net%2Fc%2F2213888%2F3803028%2F9669%3Fsharedid%3Dst23c16bf647b644cca97773d8a0ea695e",
+    href: "#",
   },
   {
     logo: freshpet,
@@ -76,7 +76,7 @@ export const reviews: ReviewEntry[] = [
     rating: "8.0",
     ratingLabel: "Very Good",
     stars: 4,
-    href: "/red/?url=https%3A%2F%2Ffreshpet.pxf.io%2Fc%2F2213888%2F3279254%2F34344%3Fsharedid%3Dst23c16bf647b644cca97773d8a0ea695e",
+    href: "#",
   },
   {
     logo: sundaysForDogs,
@@ -86,6 +86,6 @@ export const reviews: ReviewEntry[] = [
     rating: "7.9",
     ratingLabel: "Good",
     stars: 4,
-    href: "/red/?url=https%3A%2F%2Fsundaysfordogs.pxf.io%2Fc%2F2213888%2F3285231%2F24301%3Fsharedid%3Dst23c16bf647b644cca97773d8a0ea695e",
+    href: "#",
   },
 ];
