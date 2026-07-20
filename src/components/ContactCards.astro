@@ -1,0 +1,342 @@
+---
+// Contact cards + modal form (hover nâng thẻ, click mở modal)
+import { Image } from "astro:assets";
+import { contactCards } from "../data/contactCards";
+---
+
+<section class="contact">
+  {/* Bản gốc để chuỗi "hey" trong h4.contactPage_page-subtitle (16px/400) */}
+  <h4 class="contact__subtitle">hey</h4>
+  <div class="contact__grid">
+    {
+      contactCards.map((card) => (
+        <article
+          class="c-card"
+          data-title={card.title}
+          data-subtitle={card.subtitle}
+          data-submit={card.button}
+        >
+          <div class="c-card__content">
+            <div class="c-card__image">
+              <Image src={card.image} alt={card.title} width={512} height={512} />
+            </div>
+            <h3 class="c-card__title">{card.title}</h3>
+            <p class="c-card__subtitle">{card.subtitle}</p>
+          </div>
+          <button class="c-card__button" type="button">{card.button}</button>
+        </article>
+      ))
+    }
+  </div>
+</section>
+
+{/* Modal dùng chung — điền tiêu đề/subtitle/nút theo card lúc mở (bản gốc portal ra body) */}
+<div class="c-modal" hidden>
+  <div class="c-modal__backdrop" data-close></div>
+  <div class="c-modal__box" role="dialog" aria-modal="true" aria-labelledby="c-modal-title">
+    <button class="c-modal__close" type="button" data-close aria-label="Close">
+      <svg viewBox="0 0 512 512" width="23" height="23" aria-hidden="true">
+        <path
+          d="m289.94 256 95-95A24 24 0 0 0 351 127l-95 95-95-95a24 24 0 0 0-34 34l95 95-95 95a24 24 0 1 0 34 34l95-95 95 95a24 24 0 0 0 34-34z"
+        ></path>
+      </svg>
+    </button>
+    <h2 class="c-modal__title" id="c-modal-title"></h2>
+    <p class="c-modal__subtitle"></p>
+    <form class="c-modal__form">
+      <div class="c-modal__field"><input type="text" placeholder="Your name" /></div>
+      <div class="c-modal__field"><input type="text" placeholder="Company" /></div>
+      <div class="c-modal__field">
+        <input type="email" placeholder="Email Address" />
+      </div>
+      <div class="c-modal__field"><textarea placeholder="Message"></textarea></div>
+      <button class="c-modal__submit" type="submit"></button>
+    </form>
+    <p class="c-modal__disclaimer">
+      by clicking the button you agree to our Privacy Policy <a
+        class="c-modal__link-bold"
+        href="/"
+        target="_blank">Privacy Policy.</a
+      > This site is protected by reCAPTCHA and the Google <a
+        href="#"
+        target="_blank">Privacy Policy</a
+      > and <a href="#" target="_blank"
+        >Terms of Service</a
+      > apply.
+    </p>
+  </div>
+</div>
+
+<style>
+  /* Section bọc: min-height 60vh (bản gốc contactPage_no-title), căn giữa dọc+ngang.
+     Trang ngắn → footer bị đẩy xuống bởi min-height. */
+  .contact {
+    min-height: 60dvh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+  }
+  .contact__subtitle {
+    margin: 1.33em 0;
+    color: #2d2d2d;
+    font-size: 1rem;
+    font-weight: 400;
+    line-height: 1.7rem;
+  }
+
+  /* Lưới thẻ: base (mobile) 1 cột đầy; ≥768 auto-fit 245px căn giữa (ô rỗng co về 0) */
+  .contact__grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    justify-items: center;
+    gap: 20px;
+    padding: 10px 0 20px;
+    width: 100%;
+  }
+
+  /* Thẻ: rộng 300 nhưng tối đa 90% cột (desktop 245→220.5; mobile full→300).
+     Cao CỐ ĐỊNH (mobile 300, desktop 320) → nút luôn ở đáy. */
+  .c-card {
+    width: 300px;
+    max-width: 90%;
+    height: 300px;
+    display: flex;
+    flex-direction: column;
+    /* Khe 2px giữa nội dung và nút (bản gốc: content-container 271.1 + 2 + nút 46.9
+       = 320) → subtitle (margin-top:auto) không bị đẩy thấp thêm 2px */
+    gap: 2px;
+    box-shadow: 0 1px 7px 3px rgb(177, 176, 176);
+    /* Cả thẻ bấm được → mở modal; hover nâng lên 5px (bản gốc: translate 0 -5px) */
+    cursor: pointer;
+    transition: 0.3s linear;
+  }
+  .c-card:hover {
+    translate: 0 -5px;
+  }
+  .c-card__content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+  }
+  .c-card__image {
+    height: 140px;
+    padding-top: 3px;
+    flex-shrink: 0;
+  }
+  .c-card__image :global(img) {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    display: block;
+  }
+  .c-card__title {
+    margin: 1em 0;
+    color: #2d2d2d;
+    font-size: 1.4rem;
+    font-weight: 700;
+    line-height: 1.7rem;
+  }
+  /* margin-top:auto → hút hết khoảng trống, đẩy subtitle xuống sát nút (giống bản gốc,
+     nên khe title↔subtitle giãn theo chiều cao thừa của thẻ) */
+  .c-card__subtitle {
+    margin: auto 0 1em;
+    padding: 0 5px;
+    color: #2d2d2d;
+    font-size: 1rem;
+    line-height: 1.2rem;
+  }
+  .c-card__button {
+    /* Bản gốc KHÔNG reset <button> → chữ dùng font UA (Arial), KHÔNG phải Lato.
+       global.css có `button{font:inherit}` nên phải `font:revert` để lấy lại font UA,
+       rồi khai lại cỡ/đậm. Nút native tự căn giữa chữ theo chiều dọc. */
+    font: revert;
+    /* Chiều cao nút CỐ ĐỊNH theo bản gốc, đổi ở mốc 768 cùng chiều cao thẻ:
+       46.44px (<768, thẻ 300) / 46.9px (≥768, thẻ 320). box-sizing border-box. */
+    box-sizing: border-box;
+    height: 46.44px;
+    padding: 1px 6px;
+    background: #f97132;
+    color: #fff;
+    font-size: 1rem;
+    font-weight: 600;
+    text-align: center;
+    border: none;
+    cursor: pointer;
+  }
+
+  /* ≥768px: thẻ cao 320, subtitle nhỏ 0.8125rem, lưới auto-fit 245 căn giữa */
+  @media (min-width: 768px) {
+    .contact__grid {
+      grid-template-columns: repeat(auto-fit, 245px);
+      justify-content: center;
+    }
+    .c-card {
+      height: 320px;
+    }
+    .c-card__subtitle {
+      font-size: 0.8125rem;
+    }
+    .c-card__button {
+      height: 46.9px;
+    }
+  }
+
+  /* ===================== MODAL FORM ===================== */
+  /* Bản gốc portal modal ra body → thoát scope Lato: chữ dùng system-ui, ô input +
+     nút dùng font UA (Arial). Nền tối rgba(0,0,0,.5), hộp trắng 375, bo 3px. */
+  .c-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    /* 100dvw/100dvh (kể cả vùng thanh cuộn) để căn giữa theo TRỌN viewport như bản
+       gốc — dùng inset:0 sẽ căn theo clientWidth (đã trừ thanh cuộn) → lệch ~8px */
+    width: 100dvw;
+    height: 100dvh;
+    z-index: 100;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .c-modal[hidden] {
+    display: none;
+  }
+  .c-modal__backdrop {
+    position: absolute;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.5);
+  }
+  .c-modal__box {
+    position: relative;
+    box-sizing: border-box;
+    width: 375px;
+    max-width: 90dvw;
+    max-height: 95dvh;
+    overflow-y: auto;
+    padding: 7px 12px;
+    background: #fff;
+    border-radius: 3px;
+    box-shadow: 0 0 12px 1px #454545;
+    font-family:
+      system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
+      "Helvetica Neue", Arial, "Noto Sans", sans-serif;
+    text-align: left;
+  }
+  .c-modal__close {
+    position: absolute;
+    top: 7px;
+    right: 7px;
+    width: 23px;
+    height: 23px;
+    padding: 0;
+    background: none;
+    border: none;
+    cursor: pointer;
+  }
+  .c-modal__close svg {
+    display: block;
+    width: 23px;
+    height: 23px;
+    fill: #2d2d2d;
+  }
+  .c-modal__title {
+    margin: 5px 0;
+    color: #2d2d2d;
+    font-size: 1.4rem;
+    font-weight: 700;
+  }
+  .c-modal__subtitle {
+    margin: 0;
+    color: #2d2d2d;
+    font-size: 0.8125rem;
+    line-height: 1.7rem;
+  }
+  .c-modal__form {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+  }
+  /* Ô input/textarea: font UA (Arial) — KHÔNG set family để giữ mặc định như bản gốc */
+  .c-modal__form input,
+  .c-modal__form textarea {
+    width: 100%;
+    box-sizing: border-box;
+    border: 2px solid #bbb;
+    border-radius: 5px;
+    font-size: 1rem;
+  }
+  .c-modal__form input {
+    height: 50px;
+    padding: 0 8px;
+  }
+  .c-modal__form textarea {
+    height: 210px;
+    padding: 8px;
+    resize: none;
+  }
+  .c-modal__submit {
+    /* Nút submit: font UA Arial (font:revert), căn giữa, cao 45px */
+    align-self: center;
+    font: revert;
+    font-weight: 600;
+    height: 45px;
+    padding: 2px 6px;
+    background: #f97132;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+  .c-modal__disclaimer {
+    margin: 0;
+    color: #2d2d2d;
+    font-size: 0.7rem;
+    line-height: 1.7rem;
+    text-align: left;
+  }
+  .c-modal__disclaimer a {
+    color: #f97132;
+    text-decoration: none;
+  }
+  .c-modal__disclaimer a.c-modal__link-bold {
+    color: #000;
+    font-weight: 600;
+    text-decoration: underline;
+  }
+</style>
+
+<script>
+  const modal = document.querySelector<HTMLElement>(".c-modal");
+  if (modal) {
+    const titleEl = modal.querySelector<HTMLElement>(".c-modal__title");
+    const subEl = modal.querySelector<HTMLElement>(".c-modal__subtitle");
+    const submitEl = modal.querySelector<HTMLElement>(".c-modal__submit");
+
+    const open = (card: HTMLElement) => {
+      if (titleEl) titleEl.textContent = card.dataset.title ?? "";
+      if (subEl) subEl.textContent = card.dataset.subtitle ?? "";
+      if (submitEl) submitEl.textContent = card.dataset.submit ?? "";
+      modal.hidden = false;
+      document.body.style.overflow = "hidden";
+    };
+    const close = () => {
+      modal.hidden = true;
+      document.body.style.overflow = "";
+    };
+
+    document.querySelectorAll<HTMLElement>(".c-card").forEach((card) => {
+      card.addEventListener("click", () => open(card));
+    });
+    modal.querySelectorAll("[data-close]").forEach((el) => {
+      el.addEventListener("click", close);
+    });
+    // Không cho form thật sự gửi (bản clone tĩnh)
+    modal
+      .querySelector("form")
+      ?.addEventListener("submit", (e) => e.preventDefault());
+    document.addEventListener("keydown", (e) => {
+      if (e.key === "Escape" && !modal.hidden) close();
+    });
+  }
+</script>
