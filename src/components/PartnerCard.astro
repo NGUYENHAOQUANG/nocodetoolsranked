@@ -70,6 +70,16 @@ const mobileLogo = logoMobile ?? logo;
   }
 
   <div class="partner__frame">
+    {/* Cả thẻ là link như trang gốc (bản gốc dùng div link-wrapper + JS click);
+        link phủ toàn thẻ, nút "Visit Site" nổi lên trên (z-index) để bấm riêng */}
+    <a
+      class="partner__link"
+      href={href}
+      target="_blank"
+      rel="noopener nofollow"
+      referrerpolicy="strict-origin"
+      aria-label={`Visit ${brand.name}`}
+    ></a>
     {showRank && <span class="partner__rank partner__rank--compact">{rank}</span>}
     {
       editorsChoice && (
@@ -234,6 +244,12 @@ const mobileLogo = logoMobile ?? logo;
   }
   .partner--editors-choice .partner__frame {
     border: 2px solid var(--color-accent);
+  }
+  /* Link phủ toàn thẻ (stretched link) — nằm dưới nút Visit Site */
+  .partner__link {
+    position: absolute;
+    inset: 0;
+    z-index: 1;
   }
 
   /* ----- Huy hiệu số thứ hạng ----- */
@@ -457,6 +473,9 @@ const mobileLogo = logoMobile ?? logo;
   /* ----- Nút CTA ----- */
   .partner__actions {
     grid-area: button;
+    /* Nổi lên trên link phủ thẻ để nút Visit Site bấm được riêng */
+    position: relative;
+    z-index: 2;
     height: 100%;
     max-width: 155px;
     width: 100%;
