@@ -1,8 +1,8 @@
 import type { ImageMetadata } from "astro";
 
-import healthyPetFood from "../assets/images/must-reads-healthy-pet-food.jpg";
-import freshFood from "../assets/images/must-reads-fresh-food.jpg";
-import alternatives from "../assets/images/must-reads-alternatives.jpg";
+import healthyPetFood from "@/assets/images/must-reads-healthy-pet-food.jpg";
+import freshFood from "@/assets/images/must-reads-fresh-food.jpg";
+import alternatives from "@/assets/images/must-reads-alternatives.jpg";
 
 export interface MustRead {
   title: string;

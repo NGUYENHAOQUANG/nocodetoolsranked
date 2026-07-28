@@ -4,16 +4,16 @@
    Breadcrumbs/BlogIntro/BlogSidebar/Footer. */
 import { getEntry, render } from "astro:content";
 import BaseLayout from "./BaseLayout.astro";
-import Header from "../components/Header.astro";
-import Hero from "../components/Hero.astro";
-import Breadcrumbs from "../components/Breadcrumbs.astro";
-import InnerNavigator from "../components/InnerNavigator.astro";
-import BlogIntro from "../components/BlogIntro.astro";
-import BlogSidebar from "../components/BlogSidebar.astro";
-import Footer from "../components/Footer.astro";
-import ToTop from "../components/ToTop.astro";
-import steveAvatar from "../assets/images/author-steve-diller.png";
-import periAvatar from "../assets/images/author-peri-elgrot.png";
+import Header from "@/components/layout/Header.astro";
+import Hero from "@/components/sections/Hero.astro";
+import Breadcrumbs from "@/components/layout/Breadcrumbs.astro";
+import InnerNavigator from "@/components/article/InnerNavigator.astro";
+import BlogIntro from "@/components/article/BlogIntro.astro";
+import BlogSidebar from "@/components/sidebar/BlogSidebar.astro";
+import Footer from "@/components/layout/Footer.astro";
+import ToTop from "@/components/layout/ToTop.astro";
+import steveAvatar from "@/assets/images/author-steve-diller.png";
+import periAvatar from "@/assets/images/author-peri-elgrot.png";
 
 /** Ảnh đại diện tác giả theo key `avatar` trong frontmatter */
 const AVATARS = {

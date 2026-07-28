@@ -1,7 +1,7 @@
 import type { ImageMetadata } from "astro";
-import imgPartner from "../assets/images/contact-partner.png";
-import imgFeedback from "../assets/images/contact-feedback.png";
-import imgHelp from "../assets/images/contact-help.png";
+import imgPartner from "@/assets/images/contact-partner.png";
+import imgFeedback from "@/assets/images/contact-feedback.png";
+import imgHelp from "@/assets/images/contact-help.png";
 
 export interface ContactCard {
   image: ImageMetadata;

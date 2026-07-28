@@ -1,16 +1,16 @@
 import type { ImageMetadata } from "astro";
 
-import thePetsTable from "../assets/logos/the-pets-table.svg";
-import spotTango from "../assets/logos/spot-tango.svg";
-import ollie from "../assets/logos/ollie.svg";
-import sundaysForDogs from "../assets/logos/sundays-for-dogs.svg";
-import maxbone from "../assets/logos/maxbone.svg";
-import weFeedRaw from "../assets/logos/we-feed-raw.svg";
-import freshpet from "../assets/logos/freshpet.svg";
-import freshpetMobile from "../assets/logos/freshpet-mobile.svg";
-import maev from "../assets/logos/maev.svg";
-import honestKitchen from "../assets/logos/honest-kitchen.svg";
-import honestKitchenMobile from "../assets/logos/honest-kitchen-mobile.svg";
+import thePetsTable from "@/assets/logos/the-pets-table.svg";
+import spotTango from "@/assets/logos/spot-tango.svg";
+import ollie from "@/assets/logos/ollie.svg";
+import sundaysForDogs from "@/assets/logos/sundays-for-dogs.svg";
+import maxbone from "@/assets/logos/maxbone.svg";
+import weFeedRaw from "@/assets/logos/we-feed-raw.svg";
+import freshpet from "@/assets/logos/freshpet.svg";
+import freshpetMobile from "@/assets/logos/freshpet-mobile.svg";
+import maev from "@/assets/logos/maev.svg";
+import honestKitchen from "@/assets/logos/honest-kitchen.svg";
+import honestKitchenMobile from "@/assets/logos/honest-kitchen-mobile.svg";
 
 export interface Brand {
   /** Thứ hạng hiển thị trong huy hiệu góc trái card */

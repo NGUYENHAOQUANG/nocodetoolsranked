@@ -1,9 +1,9 @@
 import type { ImageMetadata } from "astro";
 
-import foodTypesIcon from "../assets/icons/food-types.svg";
-import qualityIcon from "../assets/icons/quality.svg";
-import plansIcon from "../assets/icons/plans.svg";
-import valueIcon from "../assets/icons/value.svg";
+import foodTypesIcon from "@/assets/icons/food-types.svg";
+import qualityIcon from "@/assets/icons/quality.svg";
+import plansIcon from "@/assets/icons/plans.svg";
+import valueIcon from "@/assets/icons/value.svg";
 
 export interface ReviewCategory {
   title: string;

@@ -1,11 +1,11 @@
 import type { ImageMetadata } from "astro";
 
-import thePetsTable from "../assets/logos/the-pets-table.svg";
-import ollie from "../assets/logos/ollie.svg";
-import weFeedRaw from "../assets/logos/we-feed-raw.svg";
-import spotTango from "../assets/logos/spot-tango.svg";
-import freshpet from "../assets/logos/freshpet.svg";
-import sundaysForDogs from "../assets/logos/sundays-for-dogs.svg";
+import thePetsTable from "@/assets/logos/the-pets-table.svg";
+import ollie from "@/assets/logos/ollie.svg";
+import weFeedRaw from "@/assets/logos/we-feed-raw.svg";
+import spotTango from "@/assets/logos/spot-tango.svg";
+import freshpet from "@/assets/logos/freshpet.svg";
+import sundaysForDogs from "@/assets/logos/sundays-for-dogs.svg";
 
 export interface ReviewEntry {
   logo: ImageMetadata;

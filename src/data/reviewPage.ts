@@ -1,15 +1,15 @@
 import type { ImageMetadata } from "astro";
 
-import thePetsTable from "../assets/logos/the-pets-table.svg";
-import ollie from "../assets/logos/ollie.svg";
-import spotTango from "../assets/logos/spot-tango.svg";
-import weFeedRaw from "../assets/logos/we-feed-raw.svg";
-import freshpet from "../assets/logos/freshpet.svg";
-import sundaysForDogs from "../assets/logos/sundays-for-dogs.svg";
+import thePetsTable from "@/assets/logos/the-pets-table.svg";
+import ollie from "@/assets/logos/ollie.svg";
+import spotTango from "@/assets/logos/spot-tango.svg";
+import weFeedRaw from "@/assets/logos/we-feed-raw.svg";
+import freshpet from "@/assets/logos/freshpet.svg";
+import sundaysForDogs from "@/assets/logos/sundays-for-dogs.svg";
 
-import articleAlternatives from "../assets/images/must-reads-fresh-food.jpg";
-import articleHealthy from "../assets/images/must-reads-healthy-pet-food.jpg";
-import articleWhyFresh from "../assets/images/article-why-fresh-food.jpg";
+import articleAlternatives from "@/assets/images/must-reads-fresh-food.jpg";
+import articleHealthy from "@/assets/images/must-reads-healthy-pet-food.jpg";
+import articleWhyFresh from "@/assets/images/article-why-fresh-food.jpg";
 
 export interface SidebarPartner {
   logo: ImageMetadata;

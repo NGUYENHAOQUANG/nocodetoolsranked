@@ -1,12 +1,12 @@
 import type { ImageMetadata } from "astro";
 
 // Ảnh thẻ: 3 bài mới dùng ảnh vuông 1200×1200, 3 bài cũ dùng lại ảnh thân bài.
-import imgUnderstanding from "../assets/images/knowledge-understanding.jpg";
-import imgFreshVs from "../assets/images/knowledge-fresh-vs.jpg";
-import imgGutHealth from "../assets/images/knowledge-gut-health.jpg";
-import imgWhyFresh from "../assets/images/blog-why-fresh-1.jpg";
-import imgHealthyPet from "../assets/images/blog-healthy-pet-1.jpg";
-import imgAlternatives from "../assets/images/blog-alternatives-1.jpg";
+import imgUnderstanding from "@/assets/images/knowledge-understanding.jpg";
+import imgFreshVs from "@/assets/images/knowledge-fresh-vs.jpg";
+import imgGutHealth from "@/assets/images/knowledge-gut-health.jpg";
+import imgWhyFresh from "@/assets/images/blog-why-fresh-1.jpg";
+import imgHealthyPet from "@/assets/images/blog-healthy-pet-1.jpg";
+import imgAlternatives from "@/assets/images/blog-alternatives-1.jpg";
 
 export interface KnowledgeCard {
   image: ImageMetadata;
