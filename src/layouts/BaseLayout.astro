@@ -1,25 +1,36 @@
 ---
 import "@/styles/global.css";
+import Seo from "@/components/layout/Seo.astro";
+import { SITE } from "@/config/site";
 
 interface Props {
   title?: string;
   description?: string;
+  /** Ảnh chia sẻ mạng xã hội (đường dẫn trong site) */
+  image?: string;
+  type?: "website" | "article";
+  /** JSON-LD — xem lib/schema-org.ts */
+  schema?: Record<string, unknown>[];
 }
 
 const {
-  title = "Top 10 Dog Food Subscriptions 2026",
-  description = "So sánh top 10 dịch vụ đăng ký thức ăn cho chó tươi, chất lượng — giao tận nhà.",
+  title = SITE.defaultTitle,
+  description = SITE.defaultDescription,
+  image,
+  type = "website",
+  schema = [],
 } = Astro.props;
 ---
 
 <!doctype html>
-<html lang="en">
+<html lang={SITE.lang}>
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <title>{title}</title>
     <meta name="description" content={description} />
+    <Seo title={title} description={description} image={image} type={type} schema={schema} />
   </head>
   <body>
     <slot />

@@ -1,0 +1,53 @@
+---
+/**
+ * Thẻ SEO cho <head>: canonical, Open Graph, Twitter Card, JSON-LD.
+ *
+ * Tự viết thay vì dùng `astro-seo`: gói đó chỉ tiết kiệm ~40 dòng nhưng thêm
+ * một dependency và một lớp trừu tượng (CLAUDE.md §8.1).
+ *
+ * CHỈ phát thẻ vào <head> — không được đụng gì tới <body>, vì gate của GĐ6 là
+ * "body diff rỗng, head diff thuần cộng thêm".
+ */
+import { SITE } from "@/config/site";
+
+interface Props {
+  title: string;
+  description: string;
+  /** Ảnh đại diện khi chia sẻ (đường dẫn tuyệt đối trong site, vd /_astro/x.webp) */
+  image?: string;
+  /** "website" cho trang thường, "article" cho bài viết/review */
+  type?: "website" | "article";
+  /** JSON-LD đã dựng sẵn — xem lib/schema-org.ts */
+  schema?: Record<string, unknown>[];
+}
+
+const { title, description, image, type = "website", schema = [] } = Astro.props;
+
+/* Canonical dựng từ `site` trong astro.config + đường dẫn hiện tại.
+   Astro.url.pathname đã kèm "/" cuối do trailingSlash: "always". */
+const canonical = new URL(Astro.url.pathname, SITE.url).href;
+const ogImage = image ? new URL(image, SITE.url).href : undefined;
+---
+
+<link rel="canonical" href={canonical} />
+
+{/* Open Graph */}
+<meta property="og:type" content={type} />
+<meta property="og:site_name" content={SITE.name} />
+<meta property="og:title" content={title} />
+<meta property="og:description" content={description} />
+<meta property="og:url" content={canonical} />
+<meta property="og:locale" content={SITE.locale} />
+{ogImage && <meta property="og:image" content={ogImage} />}
+
+{/* Twitter */}
+<meta name="twitter:card" content={ogImage ? "summary_large_image" : "summary"} />
+<meta name="twitter:title" content={title} />
+<meta name="twitter:description" content={description} />
+{ogImage && <meta name="twitter:image" content={ogImage} />}
+
+{
+  schema.map((node) => (
+    <script type="application/ld+json" set:html={JSON.stringify(node)} />
+  ))
+}

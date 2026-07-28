@@ -12,7 +12,8 @@ import BlogIntro from "@/components/article/BlogIntro.astro";
 import BlogSidebar from "@/components/sidebar/BlogSidebar.astro";
 import Footer from "@/components/layout/Footer.astro";
 import ToTop from "@/components/layout/ToTop.astro";
-import { KNOWLEDGE_INDEX } from "@/lib/links";
+import { KNOWLEDGE_INDEX, postUrl } from "@/lib/links";
+import { breadcrumbSchema, articleSchema } from "@/lib/schema-org";
 
 interface Props {
   /** id của bài trong collection `blog` (tên file .mdx không đuôi) */
@@ -29,9 +30,32 @@ const { title, date, readTime, heroMobileTitle } = entry.data;
    Map AVATARS hardcode trước đây đã bỏ — gõ sai tên tác giả giờ là lỗi build
    chứ không phải avatar `undefined` âm thầm. */
 const author = (await getEntry(entry.data.author))!.data;
+
+const crumbs = [
+  { text: "Home" },
+  { text: "Knowledge", href: KNOWLEDGE_INDEX },
+  { text: title },
+];
+
+const schema = [
+  breadcrumbSchema(crumbs),
+  articleSchema({
+    title,
+    description: entry.data.excerpt,
+    url: postUrl(entry.id),
+    image: entry.data.images.card.src,
+    authorName: author.name,
+  }),
+];
 ---
 
-<BaseLayout title={title}>
+<BaseLayout
+  title={title}
+  description={entry.data.excerpt}
+  image={entry.data.images.card.src}
+  type="article"
+  schema={schema}
+>
   <Header />
   {/* Blog: hero hiện chính tiêu đề bài (cả desktop lẫn mobile) */}
   <Hero
@@ -44,9 +68,7 @@ const author = (await getEntry(entry.data.author))!.data;
   {/* Bản gốc ghi mốc giữa là "-" — chuyên mục RỖNG, di chứng của việc bài viết
       nằm ở gốc site không thuộc đâu cả. Giờ bài nằm dưới /knowledge/ nên mốc đó
       có tên thật. Đây là 1 trong 3 khác biệt được phép (CLAUDE.md §4). */}
-  <Breadcrumbs
-    items={[{ text: "Home" }, { text: "Knowledge", href: KNOWLEDGE_INDEX }, { text: title }]}
-  />
+  <Breadcrumbs items={crumbs} />
 
   <div class="post-layout">
     {/* TOC "Navigate" lấy từ h3 trong thân bài */}

@@ -2,6 +2,7 @@
 import { defineConfig } from "astro/config";
 
 import mdx from "@astrojs/mdx";
+import sitemap from "@astrojs/sitemap";
 
 // https://astro.build/config
 export default defineConfig({
@@ -11,7 +12,7 @@ export default defineConfig({
   /** Mọi URL của site kết thúc bằng "/" — khai rõ để build và dev không lệch nhau. */
   trailingSlash: "always",
 
-  integrations: [mdx()],
+  integrations: [mdx(), sitemap()],
 
   markdown: {
     // TẮT: nội dung lấy từ trang gốc vốn đã có sẵn ’ và —. Để bật thì remark sẽ
