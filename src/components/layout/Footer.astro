@@ -1,19 +1,20 @@
 ---
 import logoWhite from "@/assets/site/logo-white.svg";
+import { HOME, REVIEWS_INDEX, KNOWLEDGE_INDEX, STATIC_PAGES } from "@/lib/links";
 
 // Trang gốc hiển thị năm hiện tại; lấy lúc build cho khớp hành vi đó (như Hero)
 const year = new Date().getFullYear();
 
 const links = [
-  { text: "Home", href: "/" },
-  { text: "About Us", href: "/about-page/" },
-  { text: "Reviews", href: "/reviews/" },
-  { text: "Knowledge", href: "/knowledge/" },
-  { text: "Terms of Use", href: "/terms-of-use/" },
-  { text: "Privacy Policy", href: "/privacy-policy/" },
-  { text: "Advertiser Disclosure", href: "/advertiser-disclosure/" },
+  { text: "Home", href: HOME },
+  { text: "About Us", href: STATIC_PAGES.about },
+  { text: "Reviews", href: REVIEWS_INDEX },
+  { text: "Knowledge", href: KNOWLEDGE_INDEX },
+  { text: "Terms of Use", href: STATIC_PAGES.terms },
+  { text: "Privacy Policy", href: STATIC_PAGES.privacy },
+  { text: "Advertiser Disclosure", href: STATIC_PAGES.disclosure },
   // Bản gốc có dấu cách thừa cuối chuỗi này
-  { text: "Contact Us ", href: "/contact-us/" },
+  { text: "Contact Us ", href: STATIC_PAGES.contact },
 ];
 ---
 

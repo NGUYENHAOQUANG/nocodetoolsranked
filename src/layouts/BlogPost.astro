@@ -12,6 +12,7 @@ import BlogIntro from "@/components/article/BlogIntro.astro";
 import BlogSidebar from "@/components/sidebar/BlogSidebar.astro";
 import Footer from "@/components/layout/Footer.astro";
 import ToTop from "@/components/layout/ToTop.astro";
+import { KNOWLEDGE_INDEX } from "@/lib/links";
 
 interface Props {
   /** id của bài trong collection `blog` (tên file .mdx không đuôi) */
@@ -40,8 +41,12 @@ const author = (await getEntry(entry.data.author))!.data;
     mobileTitle={heroMobileTitle ?? title}
     mobileAlt={`${title} | Fresh Dog Food Delivery`}
   />
-  {/* Bản gốc có mốc giữa "-" (chuyên mục rỗng): Home > - > tiêu đề */}
-  <Breadcrumbs items={[{ text: "Home" }, { text: "-" }, { text: title }]} />
+  {/* Bản gốc ghi mốc giữa là "-" — chuyên mục RỖNG, di chứng của việc bài viết
+      nằm ở gốc site không thuộc đâu cả. Giờ bài nằm dưới /knowledge/ nên mốc đó
+      có tên thật. Đây là 1 trong 3 khác biệt được phép (CLAUDE.md §4). */}
+  <Breadcrumbs
+    items={[{ text: "Home" }, { text: "Knowledge", href: KNOWLEDGE_INDEX }, { text: title }]}
+  />
 
   <div class="post-layout">
     {/* TOC "Navigate" lấy từ h3 trong thân bài */}

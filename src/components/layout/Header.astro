@@ -1,15 +1,12 @@
 ---
 import logo from "@/assets/site/logo.svg";
+import { getReviewNavLinks } from "@/lib/rankings";
+import { REVIEWS_INDEX, KNOWLEDGE_INDEX } from "@/lib/links";
 
-/* Đúng thứ tự bản gốc (trùng thứ tự sidebarPartners): 6 mục, KHÔNG có Golden Child */
-const reviewLinks = [
-  { label: "The Pet's Table", href: "/the-pets-table-review/" },
-  { label: "Ollie", href: "/ollie-review/" },
-  { label: "Spot & Tango", href: "/spot-tango-review/" },
-  { label: "We Feed Raw", href: "/we-feed-raw-review/" },
-  { label: "Fresh Pet", href: "/freshpet-review/" },
-  { label: "Sundays For Dogs", href: "/sunday-for-dogs-review/" },
-];
+/* Menu con "Reviews" — đúng thứ tự bản gốc (trùng thứ tự sidebar): 6 mục,
+   KHÔNG có Golden Child. Trước đây là 6 dòng gõ tay ở đây, tức nguồn thứ hai
+   cho cả tên brand lẫn đường dẫn. */
+const reviewLinks = await getReviewNavLinks();
 
 /* Mục trang hiện tại được đánh dấu `navbar_active` (cam + đậm 600) như bản gốc */
 const currentPath = Astro.url.pathname.replace(/\/+$/, "");
@@ -32,7 +29,7 @@ const isActive = (href: string) => href.replace(/\/+$/, "") === currentPath;
         <li class="site-nav__item site-nav__item--has-menu">
           <a
             class:list={["site-nav__link", { "is-active": isActive("/reviews/") }]}
-            href="/reviews/">Reviews</a
+            href={REVIEWS_INDEX}>Reviews</a
           >
           <ul class="site-nav__submenu">
             {
@@ -49,7 +46,7 @@ const isActive = (href: string) => href.replace(/\/+$/, "") === currentPath;
         <li class="site-nav__item">
           <a
             class:list={["site-nav__link", { "is-active": isActive("/knowledge/") }]}
-            href="/knowledge/">Learn</a
+            href={KNOWLEDGE_INDEX}>Learn</a
           >
         </li>
       </ul>
@@ -108,7 +105,7 @@ const isActive = (href: string) => href.replace(/\/+$/, "") === currentPath;
         </div>
       </li>
       <li class="mobile-drawer__group">
-        <a class="mobile-drawer__item" href="/knowledge/">Learn</a>
+        <a class="mobile-drawer__item" href={KNOWLEDGE_INDEX}>Learn</a>
       </li>
     </ul>
   </aside>

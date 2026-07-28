@@ -12,12 +12,16 @@ import ReviewSidebar from "@/components/sidebar/ReviewSidebar.astro";
 import Footer from "@/components/layout/Footer.astro";
 import ToTop from "@/components/layout/ToTop.astro";
 import { getPartnerLogos } from "@/lib/rankings";
+import { REVIEWS_INDEX } from "@/lib/links";
 
-/** Mỗi file MDX trong src/content/reviews → một trang /<slug>/ */
+/** Mỗi file MDX trong src/content/reviews → một trang /reviews/<brand>/
+    Tham số lấy từ `entry.id` (tên file), KHÔNG phải trường `slug` khai tay:
+    hai nguồn sự thật cho URL là nguyên nhân của lỗi thiếu "s" trong
+    /sunday-for-dogs-review/ (file vốn là sundays-for-dogs.mdx). */
 export async function getStaticPaths() {
   const entries = await getCollection("reviews");
   return entries.map((entry) => ({
-    params: { slug: entry.data.slug },
+    params: { brand: entry.id },
     props: { entry },
   }));
 }
@@ -29,6 +33,14 @@ const { title, heroTitle, promo, href, author, pros, cons, partner, articleLinkN
 /* Logo đối tác cho thanh trên (ReviewIntro). Carousel sidebar tự dựng từ
    carouselPartners, chỉ cần biết đối tác hiện tại (`partner`). */
 const { logo, logoAlt } = (await getPartnerLogos())[partner];
+
+/* Bản gốc: "Home" KHÔNG có href (không phải link), mốc giữa mới là link, và
+   mốc cuối lại ghi "Reviews" chứ không phải tên bài. Giữ nguyên cả ba. */
+const crumbs = [
+  { text: "Home" },
+  { text: "Reviews", href: REVIEWS_INDEX },
+  { text: "Reviews" },
+];
 ---
 
 <BaseLayout title={title}>
@@ -41,9 +53,7 @@ const { logo, logoAlt } = (await getPartnerLogos())[partner];
     mobileTitle={heroTitle}
     mobileAlt={`${heroTitle} | Fresh Dog Food Delivery`}
   />
-  <Breadcrumbs
-    items={[{ text: "Home" }, { text: "Reviews", href: "/reviews/" }, { text: "Reviews" }]}
-  />
+  <Breadcrumbs items={crumbs} />
 
   <div class="review-layout">
     {/* TOC lấy thẳng từ heading của bài — không khai tay, khỏi lệch khi sửa bài */}

@@ -1,6 +1,7 @@
 ---
 import { Image } from "astro:assets";
 import { getReviewSidebarArticles } from "@/lib/posts";
+import { HOME } from "@/lib/links";
 import { getCarouselPartners, getSidebarPartners } from "@/lib/rankings";
 
 const carouselPartners = await getCarouselPartners();
@@ -122,7 +123,7 @@ const FLOATING_ARROW_RIGHT =
       }
     </div>
     <div class="sidebar-partners__compare">
-      <a href="/">
+      <a href={HOME}>
         Compare All
         <svg viewBox="0 0 320 512" width="1em" height="1em" aria-hidden="true">
           <path d={FLOATING_ARROW_RIGHT}></path>

@@ -10,6 +10,7 @@
  */
 import { getCollection, getEntry } from "astro:content";
 import type { ImageMetadata } from "astro";
+import { postUrl } from "@/lib/links";
 
 export interface KnowledgeCard {
   image: ImageMetadata;
@@ -36,8 +37,8 @@ export interface SidebarArticle {
   href: string;
 }
 
-/** Đường dẫn trang bài viết. GĐ5 sẽ đổi thành /knowledge/<slug>/ */
-export const postHref = (id: string) => `/${id}/`;
+/** Đường dẫn trang bài viết — đi qua lib/links.ts (nguồn duy nhất) */
+export const postHref = postUrl;
 
 /** Thứ tự lưới /knowledge/ của bản gốc (3 cột × 2 hàng) */
 const KNOWLEDGE_ORDER = [

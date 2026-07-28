@@ -36,8 +36,6 @@ const brands = defineCollection({
       articleLinkName: z.string().optional(),
       /** NGUỒN DUY NHẤT của link affiliate. Mọi nơi khác tham chiếu tới đây. */
       affiliateUrl: z.string(),
-      /** Đường dẫn trang review (brand không có bài review thì bỏ trống) */
-      reviewHref: z.string().optional(),
       /** Dòng chữ trong ô carousel sidebar */
       carouselPromo: z.string().optional(),
     }),
@@ -104,8 +102,6 @@ const authors = defineCollection({
 const reviews = defineCollection({
   loader: glob({ pattern: "**/*.mdx", base: "./src/content/reviews" }),
   schema: z.object({
-    /** Đường dẫn trang, vd "the-pets-table-review" */
-    slug: z.string(),
     /** Thẻ <title> */
     title: z.string(),
     /** Tiêu đề hero bản MOBILE. Desktop luôn ghi "Reviews" — hai chuỗi khác hẳn nhau. */

@@ -1,0 +1,19 @@
+---
+/* Mỗi file MDX trong src/content/blog → một trang /knowledge/<slug>/
+   Thay cho 6 thư mục pages/<slug>/index.astro viết tay của bản cũ: thêm bài
+   giờ là thêm ĐÚNG MỘT file .mdx, không đụng code. */
+import { getCollection } from "astro:content";
+import BlogPost from "@/layouts/BlogPost.astro";
+
+export async function getStaticPaths() {
+  const entries = await getCollection("blog");
+  return entries.map((entry) => ({
+    params: { slug: entry.id },
+    props: { slug: entry.id },
+  }));
+}
+
+const { slug } = Astro.props;
+---
+
+<BlogPost slug={slug} />
