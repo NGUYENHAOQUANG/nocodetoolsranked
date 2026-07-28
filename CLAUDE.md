@@ -557,6 +557,19 @@ description tiếng Việt → tiếng Anh.
 - **Chưa làm:** `data-dump.json` trong `_verify/reports/` là bản trích dữ liệu cũ,
   giữ để đối chiếu; xoá được khi đã yên tâm.
 
+### Giới hạn đã biết của harness
+
+- **Probe `hover/` nhạy với thời điểm đo.** `runProbes` có chèn
+  `transition: none !important` nhưng nó KHÔNG ăn với transition màu của nav link,
+  nên giá trị màu đọc được là giữa chừng và dao động theo tải máy. Lần nghiệm thu
+  cuối cho `rgb(247,112,50)` vs `rgb(241,110,48)` — cả hai đều là điểm giữa của
+  cùng một transition tới `#f97132`. Chạy riêng một trang thì cả hai phía đều ra
+  đúng `rgb(249,113,50)`. **Khi thấy `hover/` lệch, chạy lại riêng trang đó trước
+  khi kết luận là regression.**
+- Probe `ERROR/*` và `totop/at-150` trong bản baseline được chụp TRƯỚC khi vá
+  harness (chuẩn hoá cid trong chuỗi lỗi; nới thời gian chờ ToTop), nên chúng lệch
+  so với bản after. Không phải regression.
+
 ### Bài học vận hành harness
 
 - **Không build lại trong lúc harness đang chụp** — `dist/` bị ghi đè giữa chừng
