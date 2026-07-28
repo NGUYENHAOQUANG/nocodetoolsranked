@@ -1,6 +1,10 @@
 ---
 import { Image } from "astro:assets";
-import { carouselPartners, sidebarPartners, sidebarArticles } from "@/data/reviewPage";
+import { sidebarArticles } from "@/data/reviewPage";
+import { getCarouselPartners, getSidebarPartners } from "@/lib/rankings";
+
+const carouselPartners = await getCarouselPartners();
+const sidebarPartners = await getSidebarPartners();
 
 interface Props {
   /** Key đối tác của trang hiện tại — quyết định slide bắt đầu của carousel */

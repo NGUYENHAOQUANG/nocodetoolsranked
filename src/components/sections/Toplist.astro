@@ -1,5 +1,7 @@
 ---
-import { brands } from "@/data/brands";
+import { getHomepageBrands } from "@/lib/rankings";
+
+const brands = await getHomepageBrands();
 import PartnerCard from "@/components/brand/PartnerCard.astro";
 import PromoBanner from "@/components/sections/PromoBanner.astro";
 import thePetsTable from "@/assets/logos/the-pets-table.svg";

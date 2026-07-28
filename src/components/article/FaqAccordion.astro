@@ -1,5 +1,7 @@
 ---
-import { faqItems } from "@/data/faq";
+import { getEntry } from "astro:content";
+
+const faqItems = (await getEntry("faq", "homepage"))!.data.items;
 
 /** Bản gốc mở sẵn câu đầu tiên */
 const DEFAULT_OPEN = 0;

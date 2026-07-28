@@ -1,7 +1,9 @@
 ---
 // Contact cards + modal form (hover nâng thẻ, click mở modal)
 import { Image } from "astro:assets";
-import { contactCards } from "@/data/contactCards";
+import { getEntry } from "astro:content";
+
+const contactCards = (await getEntry("contactCards", "homepage"))!.data.cards;
 ---
 
 <section class="contact">

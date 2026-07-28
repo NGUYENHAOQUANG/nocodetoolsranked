@@ -11,7 +11,7 @@ import ArticleLink from "@/components/article/ArticleLink.astro";
 import ReviewSidebar from "@/components/sidebar/ReviewSidebar.astro";
 import Footer from "@/components/layout/Footer.astro";
 import ToTop from "@/components/layout/ToTop.astro";
-import { partnerLogos } from "@/data/reviewPage";
+import { getPartnerLogos } from "@/lib/rankings";
 
 /** Mỗi file MDX trong src/content/reviews → một trang /<slug>/ */
 export async function getStaticPaths() {
@@ -28,7 +28,7 @@ const { title, heroTitle, promo, href, author, pros, cons, partner, articleLinkN
 
 /* Logo đối tác cho thanh trên (ReviewIntro). Carousel sidebar tự dựng từ
    carouselPartners, chỉ cần biết đối tác hiện tại (`partner`). */
-const { logo, logoAlt } = partnerLogos[partner];
+const { logo, logoAlt } = (await getPartnerLogos())[partner];
 ---
 
 <BaseLayout title={title}>

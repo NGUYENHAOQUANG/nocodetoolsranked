@@ -1,6 +1,8 @@
 ---
 import { Image } from "astro:assets";
-import { sidebarPartners } from "@/data/reviewPage";
+import { getSidebarPartners } from "@/lib/rankings";
+
+const sidebarPartners = await getSidebarPartners();
 import { mustReads } from "@/data/mustReads";
 import whyFreshImg from "@/assets/images/blog-mustread-why-fresh-food.jpg";
 import alternativesImg from "@/assets/images/blog-mustread-alternatives.jpg";

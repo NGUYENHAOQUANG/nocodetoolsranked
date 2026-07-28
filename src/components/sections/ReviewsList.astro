@@ -1,5 +1,7 @@
 ---
-import { reviews } from "@/data/reviews";
+import { getReviewsPageEntries } from "@/lib/rankings";
+
+const reviews = await getReviewsPageEntries();
 import ReviewCard from "@/components/brand/ReviewCard.astro";
 ---
 

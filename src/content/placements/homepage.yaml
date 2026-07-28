@@ -1,0 +1,120 @@
+# Bảng xếp hạng TRANG CHỦ — 9 brand.
+# Thứ tự và điểm ở đây CỐ Ý khác /reviews/ (vd Ollie 8.7 ở đây, 9.3 ở kia).
+# Đó là chủ ý của bản gốc, không phải dữ liệu lệch.
+entries:
+  - brand: "the-pets-table"
+    rank: 1
+    rating: "9.9"
+    ratingLabel: "Outstanding"
+    stars: 5
+    reviewsCount: "2,452"
+    tagline: " Best Fresh Food Brand"
+    taglineMobile: " Human-grade fresh dog food"
+    isTaglineMobileBold: true
+    bullets:
+      - "100% money back guarantee"
+      - "On-staff board certified vet nutritionist®"
+      - "9 recipes - more variety than most competitors"
+      - "+30,000,000 meals delivered to happy customers"
+      - "Human-grade fresh and affordable air-dried options"
+    bulletsMobile:
+      - "Fresh, Air-Dried, Mixed, and Topper plans"
+      - "EasyFresh™ - Human-Grade, Shelf-Stable"
+      - "10+ Recipes, More Variety Than Most"
+    coupon: "Get 60% off your 1st box + 20% off your 2nd"
+    isEditorsChoice: true
+    hoverTooltip:
+      highlight: "16,024 people"
+      text: " visited this site today"
+  - brand: "spot-tango"
+    rank: 2
+    rating: "9.3"
+    ratingLabel: "Excellent"
+    stars: 4.5
+    reviewsCount: "2,002"
+    tagline: " Over 150,000,000  Meals Served "
+    taglineMobile: "Over 150,000,000 Meals Served "
+    bullets:
+      - "Vet-approved, nutrient-rich wet dog food"
+      - "Tailored portions to your dog’s needs and traits"
+      - "Fresh & UnKibble delivered straight to your door"
+    coupon: "Get 60% Off + Personalized Plan "
+  - brand: "ollie"
+    rank: 3
+    rating: "8.7"
+    ratingLabel: "Excellent"
+    stars: 4
+    reviewsCount: "1,983"
+    tagline: " Ensured care graded practice"
+    taglineMobile: "Human-grade, vet-approved for optimal health"
+    bullets:
+      - "Customized to your dog's profile"
+      - "Human-grade, vet-approved for optimal health"
+      - "Complete, balanced raw nutrition for dogs"
+    coupon: " 70% off your first box + FREE bowl and Welcome Kit"
+  - brand: "sundays-for-dogs"
+    rank: 4
+    rating: "8.4"
+    ratingLabel: "Very Good"
+    stars: 4
+    reviewsCount: "1,902"
+    tagline: "30% off First Order"
+    taglineMobile: "Get 30% off Your First Order"
+    bullets:
+      - "No fillers. Only real food"
+      - "Premium meats + superfoods"
+  - brand: "maxbone"
+    rank: 5
+    rating: "8.0"
+    ratingLabel: "Very Good"
+    stars: 4
+    reviewsCount: "1,850"
+    tagline: "50% Off + Subscription Bags"
+    taglineMobile: "50% Off + Subscription Bags"
+    bullets:
+      - "#1 ingredient farm-raised beef and turkey"
+      - "No hormones, antibiotics, or synthetics"
+  - brand: "we-feed-raw"
+    rank: 6
+    rating: "7.9"
+    ratingLabel: "Good"
+    stars: 4
+    reviewsCount: "1,622"
+    tagline: " Best Raw Food Brand"
+    taglineMobile: "Nutritionist formulated + vet approved"
+    bullets:
+      - "Complete & balanced raw meals"
+      - "PhD-formulated for optimal nutrition"
+  - brand: "freshpet"
+    rank: 7
+    rating: "7.8"
+    ratingLabel: "Good"
+    stars: 4
+    reviewsCount: "1,494"
+    tagline: " Get 50% Off First Order + FREE Welcome Kit "
+    taglineMobile: "Get 50% Off First Order + FREE Welcome Kit"
+    bullets:
+      - "Formulated by veterinary nutritionists"
+      - "Ideal for pets needing weight management"
+  - brand: "maev"
+    rank: 8
+    rating: "7.7"
+    ratingLabel: "Good"
+    stars: 3.5
+    reviewsCount: "1,159"
+    tagline: " 20% off using: MAEVDELIVERY20"
+    taglineMobile: "20% off using: MAEVDELIVERY20"
+    bullets:
+      - "100% USDA-certified lean protein"
+      - "Specialized formula tailored for puppies"
+  - brand: "honest-kitchen"
+    rank: 9
+    rating: "6.1"
+    ratingLabel: "Fair"
+    stars: 3
+    reviewsCount: "986"
+    tagline: "20% off All Recipes"
+    taglineMobile: "20% off All Recipes"
+    bullets:
+      - "Dry, wet, dehydrated, treats & toppers"
+      - "First to offer human-grade meals for dogs and cats"

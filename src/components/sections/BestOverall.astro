@@ -1,5 +1,7 @@
 ---
-import { brands } from "@/data/brands";
+import { getHomepageBrands } from "@/lib/rankings";
+
+const brands = await getHomepageBrands();
 import PartnerCard from "@/components/brand/PartnerCard.astro";
 
 /** Bản gốc lặp lại đúng card hạng 1 (The Pet's Table) ở cuối trang */
