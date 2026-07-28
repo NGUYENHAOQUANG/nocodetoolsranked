@@ -1,0 +1,21 @@
+# ============================================================================
+# KHÔNG format .astro và .mdx — đây là hàng rào an toàn, không phải tuỳ chọn.
+#
+# prettier-plugin-astro reformat template HTML, mà KHOẢNG TRẮNG GIỮA CÁC INLINE
+# ELEMENT RENDER THÀNH DẤU CÁCH. Trên codebase này — nơi "Visit Site " có dấu
+# cách cuối, alt là "Ollie  logo" hai dấu cách, và <p>&nbsp;</p> là spacer cố ý —
+# chạy formatter lên template là cách nhanh nhất để phá vỡ ràng buộc §4.
+#
+# Xem CLAUDE.md §8.7. Muốn format toàn bộ thì phải là một commit riêng, sau khi
+# tái cấu trúc xong, với đầy đủ harness làm gate.
+# ============================================================================
+**/*.astro
+**/*.mdx
+
+# Nội dung + build output
+src/content/**
+dist/
+.astro/
+node_modules/
+public/
+package-lock.json
