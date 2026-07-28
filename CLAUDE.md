@@ -507,6 +507,44 @@ Những việc trông có vẻ "dọn cho sạch" nhưng sẽ phá vỡ §4. Đ�
 - Review MDX dùng `#` (h1) cho mục kết bài và **nó có xuất hiện trong TOC**. Đó là
   hành vi hiện tại — giữ nguyên dù trông như bug.
 
+## 8.8 Tiến độ tái cấu trúc
+
+Branch `refactor/astro-architecture`, tag `pre-refactor` = trạng thái trước khi bắt đầu.
+
+| GĐ | Nội dung | Gate |
+|---|---|---|
+| 0 | Lưới an toàn + harness kiểm chứng | self-test 4/4 artifact tất định |
+| 1 | Tooling + config | `dist` byte-identical 86/86 |
+| 2 | 31 component vào 6 nhóm thư mục | 0/20 trang khác biệt |
+| 3a | brands + placements + authors + faq + mini-review + contact-cards | 0/20 |
+| 3b | Dữ liệu bài viết → collection blog; `src/data/` biến mất | 0/20 |
+
+Xác minh đầy đủ GĐ3 bằng harness (20 trang × 11 khổ + 13 probe):
+`dom` / `layout` / `assets` **giống hệt**; `behavior` giống hệt sau khi vá 2 lỗi
+của chính harness (cid lọt vào chuỗi lỗi Playwright; probe ToTop đo opacity giữa
+lúc transition chạy).
+
+**Còn lại: GĐ4 (assets) · GĐ5 (routing + URL) · GĐ6 (SEO).**
+
+### Việc tồn đọng đã biết
+
+- **6 file orphan trong `dist/_astro/` (~120KB)** — `image()` trong schema
+  collection khiến Astro phát cả file gốc bên cạnh bản `.webp` mà `<Image>` sinh:
+  `author-{peri-elgrot,steve-diller}.png`, `contact-{feedback,help,partner}.png`,
+  `must-reads-alternatives.jpg`. Không trang nào tham chiếu → không lệch giao diện,
+  nhưng là rác build. Xử lý ở GĐ4.
+- `postHref()` trong `src/lib/posts.ts` và `reviewHref` trong `content/brands/*.yaml`
+  còn giữ URL CŨ — đổi ở GĐ5. Bản đồ URL đích nằm ở `_verify/tool/pages.js`, kiêm
+  luôn phép khẳng định route.
+
+### Bài học vận hành harness
+
+- **Không build lại trong lúc harness đang chụp** — `dist/` bị ghi đè giữa chừng
+  làm hỏng cả lần chụp (đã gặp thật).
+- Git Bash biến `--pages=/` thành đường dẫn Windows → đặt `MSYS_NO_PATHCONV=1`.
+- Self-test phải chạy trên **nhiều trang**, không chỉ 1–2: flake của probe ToTop
+  chỉ lộ ra ở trang review, không lộ ở trang chủ.
+
 ## 9. Cách xác minh sau khi sửa
 
 Không được coi là xong nếu chưa kiểm chứng giao diện:
