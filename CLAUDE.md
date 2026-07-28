@@ -518,13 +518,22 @@ Branch `refactor/astro-architecture`, tag `pre-refactor` = trạng thái trướ
 | 2 | 31 component vào 6 nhóm thư mục | 0/20 trang khác biệt |
 | 3a | brands + placements + authors + faq + mini-review + contact-cards | 0/20 |
 | 3b | Dữ liệu bài viết → collection blog; `src/data/` biến mất | 0/20 |
+| 4 | Sắp xếp assets theo thư mục (không đổi tên) | 0/20, 0 file đổi basename |
+| 5 | **Lồng URL + route động** | route khớp §8.3 từng dòng; body diff chỉ breadcrumb |
+| 6 | SEO: canonical, OG/Twitter, JSON-LD, sitemap, robots | body diff 0; head thuần cộng thêm |
+| 7 | Format | **hoãn có chủ ý** — xem §8.7 |
 
 Xác minh đầy đủ GĐ3 bằng harness (20 trang × 11 khổ + 13 probe):
 `dom` / `layout` / `assets` **giống hệt**; `behavior` giống hệt sau khi vá 2 lỗi
 của chính harness (cid lọt vào chuỗi lỗi Playwright; probe ToTop đo opacity giữa
 lúc transition chạy).
 
-**Còn lại: GĐ4 (assets) · GĐ5 (routing + URL) · GĐ6 (SEO).**
+**TÁI CẤU TRÚC ĐÃ HOÀN TẤT.** Ba loại khác biệt được phép ở §4 đều đã dùng đúng
+một lần và không hơn: URL đổi theo §8.3, breadcrumb `-` → `Knowledge`, meta
+description tiếng Việt → tiếng Anh.
+
+> ⚠️ **URL kể từ đây ĐÓNG BĂNG.** Mọi thay đổi về sau phải kèm 301 ở tầng host
+> và vẫn mất một phần thứ hạng. Xem §7.
 
 ### Việc tồn đọng đã biết
 
@@ -539,9 +548,14 @@ lúc transition chạy).
   một vị trí thì có — nên có vẻ liên quan số biến thể `<Image>` sinh ra.
   Là hành vi nội bộ của Astro khi resolve ảnh qua `image()`. **Chưa xử lý** —
   cần điều tra riêng, không đáng chặn tiến độ vì không ảnh hưởng render.
-- `postHref()` trong `src/lib/posts.ts` và `reviewHref` trong `content/brands/*.yaml`
-  còn giữ URL CŨ — đổi ở GĐ5. Bản đồ URL đích nằm ở `_verify/tool/pages.js`, kiêm
-  luôn phép khẳng định route.
+- **Chưa làm, cân nhắc sau:** tách `styles/tokens.css` + `styles/prose.css` khỏi
+  `global.css`/`BlogPost.astro` (§8.6). Nhớ cảnh báo ở §8.6: dùng chung FILE,
+  KHÔNG dùng chung RULE.
+- **Chưa làm:** frontmatter review vẫn giữ `author` inline, `partner` dạng chuỗi,
+  `href`, `carouselPromo`, `articleLinkName` — trùng với `content/brands/*.yaml`.
+  Đổi sang `reference()` sẽ xoá nốt lớp trùng lặp cuối cùng.
+- **Chưa làm:** `data-dump.json` trong `_verify/reports/` là bản trích dữ liệu cũ,
+  giữ để đối chiếu; xoá được khi đã yên tâm.
 
 ### Bài học vận hành harness
 
