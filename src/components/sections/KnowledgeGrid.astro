@@ -1,6 +1,8 @@
 ---
 import { Image } from "astro:assets";
-import { knowledgeCards } from "@/data/knowledge";
+import { getKnowledgeCards } from "@/lib/posts";
+
+const knowledgeCards = await getKnowledgeCards();
 
 /** Mũi tên ">" ở "Read More" — path lấy nguyên từ bản gốc (viewBox 1024) */
 const ARROW =

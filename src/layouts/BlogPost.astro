@@ -12,14 +12,6 @@ import BlogIntro from "@/components/article/BlogIntro.astro";
 import BlogSidebar from "@/components/sidebar/BlogSidebar.astro";
 import Footer from "@/components/layout/Footer.astro";
 import ToTop from "@/components/layout/ToTop.astro";
-import steveAvatar from "@/assets/images/author-steve-diller.png";
-import periAvatar from "@/assets/images/author-peri-elgrot.png";
-
-/** Ảnh đại diện tác giả theo key `avatar` trong frontmatter */
-const AVATARS = {
-  "steve-diller": steveAvatar,
-  "peri-elgrot": periAvatar,
-};
 
 interface Props {
   /** id của bài trong collection `blog` (tên file .mdx không đuôi) */
@@ -28,9 +20,14 @@ interface Props {
 
 const { slug } = Astro.props;
 const entry = await getEntry("blog", slug);
-const { Content, headings } = await render(entry!);
-const { title, date, readTime, author, avatar, sidebarArticles, heroMobileTitle } =
-  entry!.data;
+if (!entry) throw new Error(`Không có bài "${slug}" trong collection blog`);
+const { Content, headings } = await render(entry);
+const { title, date, readTime, heroMobileTitle } = entry.data;
+
+/* Tác giả (tên/vai trò/ảnh) lấy từ collection `authors` qua reference().
+   Map AVATARS hardcode trước đây đã bỏ — gõ sai tên tác giả giờ là lỗi build
+   chứ không phải avatar `undefined` âm thầm. */
+const author = (await getEntry(entry.data.author))!.data;
 ---
 
 <BaseLayout title={title}>
@@ -50,12 +47,12 @@ const { title, date, readTime, author, avatar, sidebarArticles, heroMobileTitle 
     {/* TOC "Navigate" lấy từ h3 trong thân bài */}
     <InnerNavigator headings={headings} />
     <main class="post-layout__main">
-      <BlogIntro title={title} date={date} readTime={readTime} author={author} avatar={AVATARS[avatar]} />
+      <BlogIntro title={title} date={date} readTime={readTime} author={author} avatar={author.avatar} />
       <div class="post__body">
         <Content />
       </div>
     </main>
-    <BlogSidebar articleKeys={sidebarArticles} />
+    <BlogSidebar postId={entry.id} />
   </div>
 
   <Footer />

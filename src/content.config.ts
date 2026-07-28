@@ -131,23 +131,44 @@ const articles = defineCollection({
 });
 
 /** Bài blog. Thân MDX = prose + ảnh; TOC lấy từ heading trong thân.
-    GHI CHÚ: bước B của GĐ3 sẽ thêm `excerpt`, `images` (BỐN slot) và
-    `relatedPosts` để xoá nốt trùng lặp 6 nơi của danh sách bài viết. */
+
+    Gộp về đây dữ liệu vốn nằm rải ở SÁU nơi: frontmatter, knowledge.ts,
+    mustReads.ts, reviewPage.sidebarArticles, ARTICLE_MAP hardcode trong
+    BlogSidebar.astro, và các chuỗi alt sinh theo 5 quy ước khác nhau. */
 const blog = defineCollection({
   loader: glob({ pattern: "**/*.mdx", base: "./src/content/blog" }),
-  schema: z.object({
-    title: z.string(),
-    /** Tiêu đề hero bản MOBILE — bản gốc chèn <br> CỨNG để ngắt 2 dòng cân đối.
-        Không đặt thì dùng `title`. HTML thô → render bằng set:html. */
-    heroMobileTitle: z.string().optional(),
-    date: z.string(),
-    readTime: z.string(),
-    author: z.object({ name: z.string(), role: z.string() }),
-    avatar: z.enum(["steve-diller", "peri-elgrot"]).default("steve-diller"),
-    sidebarArticles: z
-      .array(z.enum(["healthy-pet-food", "why-fresh-food", "alternatives"]))
-      .default(["healthy-pet-food", "why-fresh-food"]),
-  }),
+  schema: ({ image }) =>
+    z.object({
+      title: z.string(),
+      /** Tiêu đề hero bản MOBILE — bản gốc chèn <br> CỨNG để ngắt 2 dòng cân đối.
+          Không đặt thì dùng `title`. HTML thô → render bằng set:html. */
+      heroMobileTitle: z.string().optional(),
+      date: z.string(),
+      readTime: z.string(),
+      author: reference("authors"),
+      /** Trích đoạn ~115 ký tự + "..." cho lưới /knowledge/. Điểm cắt là tuỳ ý
+          của bản gốc — giữ nguyên văn, KHÔNG sinh lại bằng máy. */
+      excerpt: z.string(),
+      /** Trích đoạn dài hơn (1–2 câu đủ) cho sidebar "Must Reads" */
+      excerptLong: z.string().optional(),
+      /** BỐN ảnh KHÁC NHAU cho cùng một bài ở bốn vị trí — chính là lý do dữ
+          liệu bị tách ra nhiều nơi trong bản cũ. Lưu ý `reviewSidebar` của bài
+          "a-detailed-look…" trỏ ảnh must-reads-fresh-food.jpg: tréo tên nhưng
+          là quirk CỐ Ý của bản gốc. */
+      images: z.object({
+        /** Lưới /knowledge/ */
+        card: image(),
+        /** Sidebar "Must Reads" trang chủ */
+        mustRead: image().optional(),
+        /** Sidebar trang review */
+        reviewSidebar: image().optional(),
+        /** Sidebar bài viết */
+        blogSidebar: image().optional(),
+      }),
+      /** 2 bài gợi ý ở sidebar. Bài nào TỰ là must-read thì trỏ bài khác để
+          không tự trỏ về chính nó. reference() nên gõ sai = lỗi build. */
+      relatedPosts: z.array(reference("blog")),
+    }),
 });
 
 /** FAQ trang chủ — `answer` là chuỗi HTML (bản gốc có <strong>) → set:html */

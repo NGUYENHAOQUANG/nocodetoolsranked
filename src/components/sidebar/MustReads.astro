@@ -1,6 +1,8 @@
 ---
 import { Image } from "astro:assets";
-import { mustReads } from "@/data/mustReads";
+import { getMustReads } from "@/lib/posts";
+
+const mustReads = await getMustReads();
 ---
 
 <aside class="must-reads">

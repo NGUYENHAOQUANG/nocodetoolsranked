@@ -2,43 +2,25 @@
 import { Image } from "astro:assets";
 import { getSidebarPartners } from "@/lib/rankings";
 
+import { getRelatedPosts } from "@/lib/posts";
+
 const sidebarPartners = await getSidebarPartners();
-import { mustReads } from "@/data/mustReads";
-import whyFreshImg from "@/assets/images/blog-mustread-why-fresh-food.jpg";
-import alternativesImg from "@/assets/images/blog-mustread-alternatives.jpg";
 
 interface Props {
-  /** 2 key bài trong ARTICLE_MAP; mặc định healthy-pet-food + why-fresh-food */
-  articleKeys?: Array<"healthy-pet-food" | "why-fresh-food" | "alternatives">;
+  /** id bài đang xem — 2 thẻ gợi ý lấy từ `relatedPosts` của chính bài đó */
+  postId: string;
 }
 
 /* Sidebar bài blog = danh sách brand + "Compare All", rồi 2 thẻ "must reads".
    Không có carousel như trang review. Tên brand là <h4>, tiêu đề bài là <h6>
    (đúng thẻ bản gốc dùng). Thẻ "must reads" đổi theo từng bài: bài nào TỰ là
-   must-read thì thay thẻ trỏ về chính nó bằng thẻ khác. */
-const ARTICLE_MAP = {
-  "healthy-pet-food": {
-    image: mustReads[0].image,
-    imageAlt: mustReads[0].imageAlt,
-    title: mustReads[0].title,
-    href: mustReads[0].href,
-  },
-  "why-fresh-food": {
-    image: whyFreshImg,
-    imageAlt: "Why Fresh Food Is The Best For Dogs? | Article Thumbnail",
-    title: "Why Fresh Food Is The Best For Dogs?",
-    href: "/why-fresh-food-is-the-best-for-dogs/",
-  },
-  alternatives: {
-    image: alternativesImg,
-    imageAlt: "A Detailed Look At Dog Food Alternatives | Article Thumbnail",
-    title: "A Detailed Look At Dog Food Alternatives",
-    href: "/a-detailed-look-at-dog-food-alternatives/",
-  },
-} as const;
+   must-read thì thay thẻ trỏ về chính nó bằng thẻ khác.
 
-const { articleKeys = ["healthy-pet-food", "why-fresh-food"] } = Astro.props;
-const articles = articleKeys.map((k) => ARTICLE_MAP[k]);
+   ARTICLE_MAP hardcode trước đây đã bỏ — đó là nơi thứ SÁU khai cùng danh sách
+   bài viết. Giờ lấy từ frontmatter `relatedPosts` (reference() nên gõ sai là
+   lỗi build, không phải undefined âm thầm). */
+const { postId } = Astro.props;
+const articles = await getRelatedPosts(postId);
 
 const FLOATING_ARROW_RIGHT =
   "M285.476 272.971L91.132 467.314c-9.373 9.373-24.569 9.373-33.941 0l-22.667-22.667c-9.357-9.357-9.375-24.522-.04-33.901L188.505 256 34.484 101.255c-9.335-9.379-9.317-24.544.04-33.901l22.667-22.667c9.373-9.373 24.569-9.373 33.941 0L285.475 239.03c9.373 9.372 9.373 24.568.001 33.941z";
