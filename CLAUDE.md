@@ -531,8 +531,14 @@ lúc transition chạy).
 - **6 file orphan trong `dist/_astro/` (~120KB)** — `image()` trong schema
   collection khiến Astro phát cả file gốc bên cạnh bản `.webp` mà `<Image>` sinh:
   `author-{peri-elgrot,steve-diller}.png`, `contact-{feedback,help,partner}.png`,
-  `must-reads-alternatives.jpg`. Không trang nào tham chiếu → không lệch giao diện,
-  nhưng là rác build. Xử lý ở GĐ4.
+  `must-reads-alternatives.jpg`. **Không trang nào tham chiếu** → không lệch giao
+  diện, chỉ là rác build.
+  Đã thử truy nguyên: không phải do cách gọi `<Image>` (mọi consumer đều dùng
+  `<Image>` giống nhau), cũng không theo định dạng file. `must-reads-fresh-food.jpg`
+  dùng ở HAI vị trí thì KHÔNG sinh orphan, còn `must-reads-alternatives.jpg` dùng ở
+  một vị trí thì có — nên có vẻ liên quan số biến thể `<Image>` sinh ra.
+  Là hành vi nội bộ của Astro khi resolve ảnh qua `image()`. **Chưa xử lý** —
+  cần điều tra riêng, không đáng chặn tiến độ vì không ảnh hưởng render.
 - `postHref()` trong `src/lib/posts.ts` và `reviewHref` trong `content/brands/*.yaml`
   còn giữ URL CŨ — đổi ở GĐ5. Bản đồ URL đích nằm ở `_verify/tool/pages.js`, kiêm
   luôn phép khẳng định route.
