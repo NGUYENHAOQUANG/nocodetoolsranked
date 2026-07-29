@@ -7,23 +7,23 @@ entries:
     rating: "9.9"
     ratingLabel: "Outstanding"
     stars: 5
-    excerpt: "Founded by HelloFresh veterans Laurent Guillemain, Anisha Chandra, and Dovas Zakas, The Pets Table was created to extend HelloFresh’s mission beyond human meals to include pets as well. Many pet owners consider kibble the most convenient and nutritious choice, believing their dogs thrive on it. However, the lengthy list of hard-to-pronounce ingredients in most kibble brands raises concerns. Over time, these ingredients may contribute to chronic inflammation or health issues in pets."
+    excerpt: "Founded by HelloFresh veterans Laurent Guillemain, Anisha Chandra, and Dovas Zakas, The Pets Table was created to extend HelloFresh's mission beyond human meals to include pets as well. Many pet owners consider kibble the most convenient and nutritious choice, believing their dogs thrive on it. However, the lengthy list of hard-to-pronounce ingredients in most kibble brands raises concerns. Over time, these ingredients may contribute to chronic inflammation or health issues in pets."
   - brand: "ollie"
     rating: "9.3"
     ratingLabel: "Excellent"
     stars: 4.5
-    excerpt: "We cherish our dogs as part of the family, but do we put as much thought into their meals as we do our own? Ollie, a premium subscription-based dog food brand, aims to transform the way our furry friends eat. The company claims benefits like better weight management, a longer life, and improved digestion—boasting that 90% of its customers notice positive changes in their dogs, including increased energy, better digestion, and improved allergy and weight control."
+    excerpt: "We cherish our dogs as part of the family, but do we put as much thought into their meals as we do our own? Ollie, a premium subscription-based dog food brand, aims to transform the way our furry friends eat. The company claims benefits like better weight management, a longer life, and improved digestion - boasting that 90% of its customers notice positive changes in their dogs, including increased energy, better digestion, and improved allergy and weight control."
     hasTrailingBlank: true
   - brand: "we-feed-raw"
     rating: "8.7"
     ratingLabel: "Excellent"
     stars: 4
-    excerpt: "We Feed Raw enhances its meals by adding essential vitamins and minerals to ensure a balanced diet. While some may assume that feeding grocery store ground beef is enough, it often lacks the full range of nutrients needed for optimal canine health. Though human-grade, store-bought meat doesn’t provide the carefully formulated nutrition that We Feed Raw delivers."
+    excerpt: "We Feed Raw enhances its meals by adding essential vitamins and minerals to ensure a balanced diet. While some may assume that feeding grocery store ground beef is enough, it often lacks the full range of nutrients needed for optimal canine health. Though human-grade, store-bought meat doesn't provide the carefully formulated nutrition that We Feed Raw delivers."
   - brand: "spot-tango"
     rating: "8.4"
     ratingLabel: "Very Good"
     stars: 4
-    excerpt: "Spot & Tango’s dog food subscription service is among the top choices for dog food. They focus on preparing fresh, nutritious meals tailored to each dog’s needs and deliver them directly to your door for added convenience."
+    excerpt: "Spot & Tango's dog food subscription service is among the top choices for dog food. They focus on preparing fresh, nutritious meals tailored to each dog's needs and deliver them directly to your door for added convenience."
   - brand: "freshpet"
     rating: "8.0"
     ratingLabel: "Very Good"
@@ -33,4 +33,4 @@ entries:
     rating: "7.9"
     ratingLabel: "Good"
     stars: 4
-    excerpt: "Sunday for Dogs is a premium air-dried dog food brand created by a practicing veterinarian. The brand focuses on real meat, whole ingredients, and minimal processing. It promises better digestion, steady energy, and easier feeding than fresh dog food. The food stays shelf-stable and does not require freezing or cooking. However, pricing and customer service raise concerns for some buyers. This review explains what works, what doesn’t, and who should consider it."
+    excerpt: "Sunday for Dogs is a premium air-dried dog food brand created by a practicing veterinarian. The brand focuses on real meat, whole ingredients, and minimal processing. It promises better digestion, steady energy, and easier feeding than fresh dog food. The food stays shelf-stable and does not require freezing or cooking. However, pricing and customer service raise concerns for some buyers. This review explains what works, what doesn't, and who should consider it."
