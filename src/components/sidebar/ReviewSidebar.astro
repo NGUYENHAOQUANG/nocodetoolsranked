@@ -3,6 +3,7 @@ import { Image } from "astro:assets";
 import { getReviewSidebarArticles } from "@/lib/posts";
 import { HOME } from "@/lib/links";
 import { getCarouselPartners, getSidebarPartners } from "@/lib/rankings";
+import { CHEVRON_RIGHT } from "@/lib/icon-paths";
 
 const carouselPartners = await getCarouselPartners();
 const sidebarPartners = await getSidebarPartners();
@@ -35,9 +36,6 @@ const CIRCLE_ARROW_LEFT =
   "M256 48C141.1 48 48 141.1 48 256s93.1 208 208 208 208-93.1 208-208S370.9 48 256 48zm43.4 289.1c7.5 7.5 7.5 19.8 0 27.3-3.8 3.8-8.7 5.6-13.6 5.6s-9.9-1.9-13.7-5.7l-94-94.3c-6.9-7.6-6.7-19.3.6-26.6l95.4-95.7c7.5-7.5 19.7-7.6 27.3 0 7.5 7.5 7.6 19.7 0 27.3l-81.9 81 79.9 81.1z";
 const CIRCLE_ARROW_RIGHT =
   "M48 256c0 114.9 93.1 208 208 208s208-93.1 208-208S370.9 48 256 48 48 141.1 48 256zm244.5 0l-81.9-81.1c-7.5-7.5-7.5-19.8 0-27.3s19.8-7.5 27.3 0l95.4 95.7c7.3 7.3 7.5 19.1.6 26.6l-94 94.3c-3.8 3.8-8.7 5.7-13.7 5.7-4.9 0-9.9-1.9-13.6-5.6-7.5-7.5-7.6-19.7 0-27.3l79.9-81z";
-/* Mũi tên trượt ra khi hover nút CTA (ẩn sẵn, opacity 0) */
-const FLOATING_ARROW_RIGHT =
-  "M285.476 272.971L91.132 467.314c-9.373 9.373-24.569 9.373-33.941 0l-22.667-22.667c-9.357-9.357-9.375-24.522-.04-33.901L188.505 256 34.484 101.255c-9.335-9.379-9.317-24.544.04-33.901l22.667-22.667c9.373-9.373 24.569-9.373 33.941 0L285.475 239.03c9.373 9.372 9.373 24.568.001 33.941z";
 ---
 
 <div class="review-sidebar">
@@ -68,7 +66,7 @@ const FLOATING_ARROW_RIGHT =
             <span class="promo-carousel__button">
               View Rates
               <svg viewBox="0 0 320 512" width="1em" height="1em" aria-hidden="true">
-                <path d={FLOATING_ARROW_RIGHT}></path>
+                <path d={CHEVRON_RIGHT}></path>
               </svg>
             </span>
           </div>
@@ -126,7 +124,7 @@ const FLOATING_ARROW_RIGHT =
       <a href={HOME}>
         Compare All
         <svg viewBox="0 0 320 512" width="1em" height="1em" aria-hidden="true">
-          <path d={FLOATING_ARROW_RIGHT}></path>
+          <path d={CHEVRON_RIGHT}></path>
         </svg>
       </a>
     </div>
