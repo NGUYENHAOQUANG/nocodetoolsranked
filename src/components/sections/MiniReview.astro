@@ -3,6 +3,7 @@ import { getEntry } from "astro:content";
 import { getHomepageBrands } from "@/lib/rankings";
 
 import { STAR_OUTLINE } from "@/lib/icon-paths";
+import MiniReviewCategories from "@/components/sections/MiniReviewCategories.astro";
 
 const brands = await getHomepageBrands();
 const miniReview = (await getEntry("miniReviews", "homepage"))!.data;
@@ -10,12 +11,6 @@ const miniReview = (await getEntry("miniReviews", "homepage"))!.data;
 /** Bản gốc chỉ đánh giá chi tiết brand hạng 1 (The Pet's Table) */
 const brand = brands[0];
 const { categories, pros, cons, summary } = miniReview;
-
-/** Bản gốc: 10 để nguyên, còn lại luôn 1 chữ số thập phân (9 → "9.0") */
-const formatScore = (score: number) => (score === 10 ? "10" : score.toFixed(1));
-/** Ngưỡng màu ô điểm của bản gốc */
-const scoreLevel = (score: number) =>
-  score >= 9 ? "high" : score >= 7 ? "medium" : "low";
 
 const CHECK = "M186.301 339.893L96 249.461l-32 30.507L186.301 402 448 140.506 416 110z";
 const CROSS =
@@ -75,35 +70,7 @@ const reviewsMobile = `(${brand.reviews}) Reviews`;
       </div>
     </div>
 
-    <div class="mini-review__categories">
-      {
-        categories.map((cat) => (
-          <div class="mini-review__category">
-            <div class="mini-review__category-header">
-              <div class="mini-review__category-title">
-                <img
-                  class="mini-review__category-icon"
-                  src={cat.icon.src}
-                  alt=""
-                  width="20"
-                  height="20"
-                />
-                <span class="mini-review__category-name">{cat.title}</span>
-              </div>
-              <span
-                class:list={[
-                  "mini-review__category-score",
-                  `mini-review__category-score--${scoreLevel(cat.score)}`,
-                ]}
-              >
-                {formatScore(cat.score)}
-              </span>
-            </div>
-            <p class="mini-review__category-desc">{cat.description}</p>
-          </div>
-        ))
-      }
-    </div>
+    <MiniReviewCategories categories={categories} />
 
     <div class="mini-review__drawer">
       <button class="mini-review__drawer-button" type="button" aria-expanded="false">
@@ -155,35 +122,7 @@ const reviewsMobile = `(${brand.reviews}) Reviews`;
         </div>
       </div>
 
-      <div class="mini-review__categories">
-        {
-          categories.map((cat) => (
-            <div class="mini-review__category">
-              <div class="mini-review__category-header">
-                <div class="mini-review__category-title">
-                  <img
-                    class="mini-review__category-icon"
-                    src={cat.icon.src}
-                    alt=""
-                    width="20"
-                    height="20"
-                  />
-                  <span class="mini-review__category-name">{cat.title}</span>
-                </div>
-                <span
-                  class:list={[
-                    "mini-review__category-score",
-                    `mini-review__category-score--${scoreLevel(cat.score)}`,
-                  ]}
-                >
-                  {formatScore(cat.score)}
-                </span>
-              </div>
-              <p class="mini-review__category-desc">{cat.description}</p>
-            </div>
-          ))
-        }
-      </div>
+      <MiniReviewCategories categories={categories} />
     </div>
 
     <div class="mini-review__column mini-review__column--aside">
@@ -396,66 +335,7 @@ const reviewsMobile = `(${brand.reviews}) Reviews`;
     margin-bottom: 1rem;
   }
 
-  /* ----- Hạng mục chấm điểm ----- */
-  .mini-review__categories {
-    display: flex;
-    flex-direction: column;
-    gap: 0.3rem;
-    padding: 1rem;
-  }
-  .mini-review__category {
-    margin-bottom: 0.75rem;
-    padding: 1rem;
-    background: #fff;
-    border-radius: 8px;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-  }
-  .mini-review__category-header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    margin-bottom: 0.5rem;
-    font-size: 1.1rem;
-  }
-  .mini-review__category-title {
-    display: flex;
-    align-items: center;
-    gap: 0.7rem;
-  }
-  .mini-review__category-icon {
-    width: 20px;
-    height: 20px;
-    flex-shrink: 0;
-    object-fit: contain;
-  }
-  .mini-review__category-name {
-    font-weight: 600;
-  }
-  .mini-review__category-score {
-    width: 35px;
-    padding: 0.25rem 0.5rem;
-    border-radius: 8px;
-    font-size: 1rem;
-    font-weight: 700;
-    text-align: center;
-  }
-  .mini-review__category-score--high {
-    color: var(--score-high-color);
-    background-color: var(--score-high-background);
-  }
-  .mini-review__category-score--medium {
-    color: var(--score-medium-color);
-    background-color: var(--score-medium-background);
-  }
-  .mini-review__category-score--low {
-    color: var(--score-low-color);
-    background-color: var(--score-low-background);
-  }
-  .mini-review__category-desc {
-    margin: 0.5rem 0 0.5rem 28px;
-    font-size: 1rem;
-    line-height: 1.6;
-  }
+  /* ----- Hạng mục chấm điểm ----- */
 
   /* ----- Drawer "Summary" (chỉ có ở bản mobile) ----- */
   .mini-review__drawer {
@@ -516,7 +396,8 @@ const reviewsMobile = `(${brand.reviews}) Reviews`;
     .mini-review__mobile-top {
       padding: 1.2rem 1.2rem 2rem;
     }
-    .mini-review__categories,
+    /* Bản gốc gộp chung với .mini-review__categories; nửa kia nay nằm ở
+       MiniReviewCategories.astro cùng giá trị. */
     .mini-review__drawer {
       padding: 1.2rem;
     }
@@ -592,40 +473,7 @@ const reviewsMobile = `(${brand.reviews}) Reviews`;
     .mini-review__reviews {
       font-size: 0.875rem;
     }
-
-    .mini-review__categories {
-      gap: 0.75rem;
-      padding: 0;
-    }
-    .mini-review__category {
-      margin-bottom: 0;
-      padding: 0.75rem;
-      background: hsla(0, 0%, 100%, 0.5);
-      border: 1px solid rgba(0, 0, 0, 0.05);
-      box-shadow: none;
-    }
-    .mini-review__category-header {
-      font-size: 1rem;
-    }
-    .mini-review__category-title {
-      gap: 0.5rem;
-    }
-    .mini-review__category-score {
-      width: 27px;
-      height: 27px;
-      padding: 0;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      border-radius: 4px;
-      font-size: 0.8rem;
-    }
-    .mini-review__category-desc {
-      margin: 0 0 0 2rem;
-      font-size: 0.9rem;
-      line-height: 1.4;
-      color: #6b7280;
-    }
+
 
     /* ----- Pros / Cons ----- */
     .mini-review__proscons {
@@ -702,7 +550,11 @@ const reviewsMobile = `(${brand.reviews}) Reviews`;
   document
     .querySelectorAll<HTMLButtonElement>(".mini-review__drawer-button")
     .forEach((button) => {
-      const content = button.nextElementSibling;
+      /* Tìm theo khối cha chứ không dùng `nextElementSibling`: cách cũ gãy im
+         lặng nếu về sau chèn thêm element nào vào giữa nút và phần nội dung. */
+      const content = button
+        .closest(".mini-review__drawer")
+        ?.querySelector(".mini-review__drawer-content");
       const path = button.querySelector("path");
       if (!content || !path) return;
 
