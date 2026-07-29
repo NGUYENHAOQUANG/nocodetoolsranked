@@ -32,6 +32,5 @@ export const footerLinks: NavLink[] = [
   { label: "Terms of Use", href: STATIC_PAGES.terms },
   { label: "Privacy Policy", href: STATIC_PAGES.privacy },
   { label: "Advertiser Disclosure", href: STATIC_PAGES.disclosure },
-  // Dấu cách cuối là dấu vết của trang mẫu — dọn ở đợt chuẩn hoá ký tự
-  { label: "Contact Us ", href: STATIC_PAGES.contact },
+  { label: "Contact Us", href: STATIC_PAGES.contact },
 ];

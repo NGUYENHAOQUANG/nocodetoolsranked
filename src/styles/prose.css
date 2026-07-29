@@ -143,8 +143,38 @@
   list-style: decimal;
 }
 
-/* Bảng giá: bản gốc dựng từ CMS nên viền nằm ở style inline của từng ô;
-   ở đây chỉ giữ phần khung + kẻ sọc + hover. */
+/* Ô bọc cho bảng rộng hơn viewport. `.paragraph` cũng cuộn ngang được nhưng ẩn
+   thanh cuộn (`scrollbar-width: none`); ở đây cần thanh cuộn HIỆN như bản gốc. */
+.prose-scroll {
+  width: 100%;
+  overflow-x: auto;
+}
+
+/* Bảng giá.
+
+   Bản gốc dựng từ CMS nên viền nằm ở `style` inline của TỪNG Ô — 54 chỗ lặp lại
+   cùng một khai báo trên ba file nội dung. Đó là trình bày nằm trong dữ liệu.
+   Gom về đây, giữ nguyên hình: lưới 1px, hàng CUỐI không có viền dưới, và ô đầu
+   mỗi hàng có thêm viền trái (chồng lên viền của bảng — bản gốc như vậy vì
+   `border-collapse: separate` nên hai viền không gộp). */
+.paragraph__content table {
+  --table-border: 1px solid #d3d3d3;
+
+  border: var(--table-border);
+}
+.paragraph__content td {
+  border-right: var(--table-border);
+}
+.paragraph__content td:last-child {
+  border-right: 0;
+}
+.paragraph__content td:first-child {
+  border-left: var(--table-border);
+}
+.paragraph__content tr:not(:last-child) td {
+  border-bottom: var(--table-border);
+}
+
 .paragraph__content table {
   width: max-content;
   min-width: 100%;
