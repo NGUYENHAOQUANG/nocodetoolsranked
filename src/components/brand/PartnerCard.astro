@@ -548,7 +548,9 @@ const mobileLogo = logoMobile ?? logo;
   .partner__button-text {
     font-family: var(--font-brand);
     font-size: 1.12rem;
-    font-weight: 600;
+    /* Lato chỉ nạp 400/700/900 (global.css). Khai 600 thì trình duyệt vẫn chọn
+       700 — ghi 700 cho đúng thứ đang render. */
+    font-weight: 700;
     color: #fff;
   }
 

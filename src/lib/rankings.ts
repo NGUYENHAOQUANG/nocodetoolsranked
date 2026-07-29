@@ -66,29 +66,46 @@ function brandId(ref: unknown): string {
 }
 
 /**
- * Đọc một file placement và trả về mảng `entries` đã kèm dữ liệu brand.
+ * Gắn dữ liệu brand vào từng dòng của một file placement.
+ *
+ * Nhận thẳng mảng `entries` thay vì tên collection: ba collection placement có
+ * ba kiểu dòng khác nhau, truyền mảng vào thì generic `R` giữ nguyên kiểu của
+ * từng loại và nơi gọi không phải ép `any` như bản trước.
  *
  * Dùng getEntry("brands", id) tường minh chứ KHÔNG dùng getEntry(reference):
  * dạng sau trả về union của mọi collection nên TypeScript không thu hẹp được
  * kiểu, và mọi truy cập trường sau đó đều báo lỗi.
  */
-async function loadPlacement(id: string) {
-  const entry = await getEntry("placements", id);
-  if (!entry) throw new Error(`Không tìm thấy placement "${id}"`);
-
+async function withBrands<R extends { brand: unknown }>(entries: R[], source: string) {
   return Promise.all(
-    entry.data.entries.map(async (row) => {
-      const key = brandId((row as { brand: unknown }).brand);
+    entries.map(async (row) => {
+      const key = brandId(row.brand);
       const brand = await getEntry("brands", key);
-      if (!brand) throw new Error(`placement "${id}" trỏ tới brand không tồn tại: "${key}"`);
-      return { row: row as Record<string, any>, key, brand: brand.data };
+      if (!brand) throw new Error(`placement "${source}" trỏ tới brand không tồn tại: "${key}"`);
+      return { row, key, brand: brand.data };
     }),
   );
 }
 
+/**
+ * Đọc entry duy nhất của một collection placement.
+ *
+ * Ba hàm dưới gọi `getEntry` tường minh với tên collection dạng literal, KHÔNG
+ * bọc qua một helper generic: nhận tên collection qua tham số generic thì
+ * TypeScript gộp ba kiểu `data.entries` thành union và chỉ còn thấy trường
+ * chung (`brand`), làm mất sạch kiểu vừa siết được ở schema.
+ */
+async function rowsOf<T>(entry: { data: { entries: T[] } } | undefined, id: string): Promise<T[]> {
+  if (!entry) throw new Error(`Không tìm thấy placement "${id}"`);
+  return entry.data.entries;
+}
+
 /** Toplist trang chủ — 9 brand, thứ tự và điểm RIÊNG của trang chủ */
 export async function getHomepageBrands(): Promise<Brand[]> {
-  const rows = await loadPlacement("homepage");
+  const rows = await withBrands(
+    await rowsOf(await getEntry("homepagePlacement", "homepage"), "homepage"),
+    "homepage",
+  );
   return rows.map(({ row, brand }) => ({
     rank: row.rank,
     name: brand.name,
@@ -113,7 +130,10 @@ export async function getHomepageBrands(): Promise<Brand[]> {
 
 /** Danh sách trang /reviews/ — 6 brand, thứ tự và điểm KHÁC trang chủ (có chủ ý) */
 export async function getReviewsPageEntries(): Promise<ReviewEntry[]> {
-  const rows = await loadPlacement("reviews-page");
+  const rows = await withBrands(
+    await rowsOf(await getEntry("reviewsPagePlacement", "reviews-page"), "reviews-page"),
+    "reviews-page",
+  );
   return rows.map(({ row, key, brand }) => ({
     logo: brand.logo,
     logoAlt: brand.logoAltShort!,
@@ -127,9 +147,16 @@ export async function getReviewsPageEntries(): Promise<ReviewEntry[]> {
   }));
 }
 
+/** Ba hàm dưới dùng chung một file thứ tự, gom lời gọi về đây cho khỏi lặp */
+const sidebarRows = async () =>
+  withBrands(
+    await rowsOf(await getEntry("sidebarPlacement", "review-sidebar"), "review-sidebar"),
+    "review-sidebar",
+  );
+
 /** Danh sách partner ở sidebar (logo + tên + link tới bài review) */
 export async function getSidebarPartners(): Promise<SidebarPartner[]> {
-  const rows = await loadPlacement("review-sidebar");
+  const rows = await sidebarRows();
   return rows.map(({ key, brand }) => ({
     logo: brand.logo,
     logoAlt: brand.logoAltShort!,
@@ -140,7 +167,7 @@ export async function getSidebarPartners(): Promise<SidebarPartner[]> {
 
 /** Ô carousel ở sidebar trang review (logo + promo + link affiliate) */
 export async function getCarouselPartners(): Promise<CarouselPartner[]> {
-  const rows = await loadPlacement("review-sidebar");
+  const rows = await sidebarRows();
   return rows.map(({ key, brand }) => ({
     key,
     logo: brand.logo,
@@ -158,6 +185,6 @@ export async function getCarouselPartners(): Promise<CarouselPartner[]> {
  * được cho nhau — đây đúng là lý do brands giữ bốn biến thể tên riêng biệt.
  */
 export async function getReviewNavLinks(): Promise<{ label: string; href: string }[]> {
-  const rows = await loadPlacement("review-sidebar");
+  const rows = await sidebarRows();
   return rows.map(({ key, brand }) => ({ label: brand.name, href: reviewUrl(key) }));
 }

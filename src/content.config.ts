@@ -42,7 +42,7 @@ const brands = defineCollection({
 });
 
 /** Một dòng trong bảng xếp hạng trang chủ */
-const homepagePlacement = z.object({
+const homepageRow = z.object({
   brand: reference("brands"),
   rank: z.number(),
   /** Chuỗi để giữ đúng "8.0"; vòng điểm dùng giá trị này tính phần trăm */
@@ -64,7 +64,7 @@ const homepagePlacement = z.object({
 });
 
 /** Một dòng trong danh sách /reviews/ */
-const reviewsPagePlacement = z.object({
+const reviewsPageRow = z.object({
   brand: reference("brands"),
   rating: z.string(),
   ratingLabel: z.string(),
@@ -77,11 +77,36 @@ const reviewsPagePlacement = z.object({
   hasTrailingBlank: z.boolean().default(false),
 });
 
-const placements = defineCollection({
-  loader: glob({ pattern: "**/*.yaml", base: "./src/content/placements" }),
-  schema: z.object({
-    entries: z.array(z.union([homepagePlacement, reviewsPagePlacement, z.object({ brand: reference("brands") })])),
-  }),
+/**
+ * BA collection riêng, KHÔNG gộp làm một.
+ *
+ * Bản trước gộp cả ba vào một collection `placements` với
+ * `z.union([homepageRow, reviewsPageRow, z.object({ brand })])`. Biến thể thứ ba
+ * bắt được mọi thứ có `brand`, nên gõ sai một tên trường (vd `rankk`) sẽ khiến
+ * dòng đó trượt hai biến thể đầu, khớp biến thể ba, và Zod strip sạch các trường
+ * còn lại — dữ liệu biến mất ÂM THẦM lúc chạy thay vì lỗi build. Đúng ngược lại
+ * điều mà schema sinh ra để làm.
+ *
+ * Tách ra thì mỗi file có đúng một schema chặt, và `loadPlacement` không còn phải
+ * ép kiểu `Record<string, any>`.
+ *
+ * Cả ba file vẫn ở chung `src/content/placements/` vì chúng cùng một khái niệm;
+ * `pattern` trỏ đích danh từng file.
+ */
+const homepagePlacement = defineCollection({
+  loader: glob({ pattern: "homepage.yaml", base: "./src/content/placements" }),
+  schema: z.object({ entries: z.array(homepageRow) }),
+});
+
+const reviewsPagePlacement = defineCollection({
+  loader: glob({ pattern: "reviews-page.yaml", base: "./src/content/placements" }),
+  schema: z.object({ entries: z.array(reviewsPageRow) }),
+});
+
+/** Sidebar trang review: chỉ còn THỨ TỰ, mọi thứ khác lấy từ `brands` */
+const sidebarPlacement = defineCollection({
+  loader: glob({ pattern: "review-sidebar.yaml", base: "./src/content/placements" }),
+  schema: z.object({ entries: z.array(z.object({ brand: reference("brands") })) }),
 });
 
 /** Tác giả. Bài review dùng avatar SVG dùng chung, bài blog dùng PNG riêng —
@@ -214,7 +239,9 @@ const miniReviews = defineCollection({
 
 export const collections = {
   brands,
-  placements,
+  homepagePlacement,
+  reviewsPagePlacement,
+  sidebarPlacement,
   authors,
   reviews,
   articles,
