@@ -7,13 +7,12 @@ import PostLayout from "@/layouts/PostLayout.astro";
 
 export async function getStaticPaths() {
   const entries = await getCollection("posts");
-  return entries.map((entry) => ({
-    params: { slug: entry.id },
-    props: { slug: entry.id },
-  }));
+  /* Truyền thẳng entry chứ không truyền `entry.id` rồi để layout đi tra lại:
+     chuỗi làm khoá tra bảng là đúng thứ reference() sinh ra để diệt. */
+  return entries.map((entry) => ({ params: { slug: entry.id }, props: { entry } }));
 }
 
-const { slug } = Astro.props;
+const { entry } = Astro.props;
 ---
 
-<PostLayout slug={slug} />
+<PostLayout entry={entry} />

@@ -11,12 +11,7 @@
  * route tĩnh đã có.
  */
 import { getCollection, render } from "astro:content";
-import BaseLayout from "@/layouts/BaseLayout.astro";
-import Header from "@/components/layout/Header.astro";
-import HeroInner from "@/components/sections/HeroInner.astro";
-import Breadcrumbs from "@/components/layout/Breadcrumbs.astro";
-import Footer from "@/components/layout/Footer.astro";
-import ToTop from "@/components/layout/ToTop.astro";
+import InnerPageLayout from "@/layouts/InnerPageLayout.astro";
 import { breadcrumbSchema } from "@/lib/schema-org";
 
 export async function getStaticPaths() {
@@ -31,20 +26,18 @@ const { Content } = await render(entry);
 const crumbs = [{ text: "Home" }, { text: heroTitle }];
 ---
 
-<BaseLayout title={title} description={description} schema={[breadcrumbSchema(crumbs)]}>
-  <Header />
-  <HeroInner
-    isTitleTop
-    title={heroTitle}
-    mobileTitle={heroMobileTitle}
-    alt={`${heroTitle} | Fresh Dog Food Delivery`}
-  />
-  <Breadcrumbs items={crumbs} />
+<InnerPageLayout
+  isTitleTop
+  title={title}
+  description={description}
+  schema={[breadcrumbSchema(crumbs)]}
+  heroTitle={heroTitle}
+  heroMobileTitle={heroMobileTitle}
+  crumbs={crumbs}
+>
   <main>
     <article class:list={["page__body", { "page__body--plain-headings": headingStyle === "plain" }]}>
       <Content />
     </article>
   </main>
-  <Footer />
-  <ToTop />
-</BaseLayout>
+</InnerPageLayout>

@@ -1,16 +1,11 @@
 ---
 import { getCollection, getEntry, render } from "astro:content";
-import BaseLayout from "@/layouts/BaseLayout.astro";
-import Header from "@/components/layout/Header.astro";
-import HeroInner from "@/components/sections/HeroInner.astro";
-import Breadcrumbs from "@/components/layout/Breadcrumbs.astro";
+import InnerPageLayout from "@/layouts/InnerPageLayout.astro";
 import InnerNavigator from "@/components/article/InnerNavigator.astro";
 import ReviewIntro from "@/components/article/ReviewIntro.astro";
 import ProsCons from "@/components/brand/ProsCons.astro";
 import ArticleLink from "@/components/article/ArticleLink.astro";
 import ReviewSidebar from "@/components/sidebar/ReviewSidebar.astro";
-import Footer from "@/components/layout/Footer.astro";
-import ToTop from "@/components/layout/ToTop.astro";
 import { REVIEWS_INDEX, reviewUrl } from "@/lib/links";
 import { breadcrumbSchema, articleSchema } from "@/lib/schema-org";
 
@@ -58,17 +53,18 @@ const schema = [
 ];
 ---
 
-<BaseLayout title={title} description={promo} type="article" schema={schema}>
-  <Header />
-  {/* Bản gốc: desktop ghi "Reviews", mobile lại ghi tên bài */}
-  <HeroInner
-    title="Reviews"
-    alt="Reviews | Fresh Dog Food Delivery"
-    mobileTitle={heroTitle}
-    mobileAlt={`${heroTitle} | Fresh Dog Food Delivery`}
-  />
-  <Breadcrumbs items={crumbs} />
-
+{/* Bản gốc: desktop ghi "Reviews", mobile lại ghi tên bài — nên đây là trang
+    DUY NHẤT phải truyền `heroMobileAlt` tường minh. */}
+<InnerPageLayout
+  title={title}
+  description={promo}
+  type="article"
+  schema={schema}
+  heroTitle="Reviews"
+  heroMobileTitle={heroTitle}
+  heroMobileAlt={`${heroTitle} | Fresh Dog Food Delivery`}
+  crumbs={crumbs}
+>
   <div class="review-layout">
     {/* TOC lấy thẳng từ heading của bài — không khai tay, khỏi lệch khi sửa bài */}
     <InnerNavigator headings={headings} />
@@ -86,10 +82,7 @@ const schema = [
     </main>
     <ReviewSidebar partner={partnerKey} />
   </div>
-
-  <Footer />
-  <ToTop />
-</BaseLayout>
+</InnerPageLayout>
 
 <style>
   /* Dưới 1025px: 1 cột (nội dung rồi tới sidebar), TOC ẩn hẳn */

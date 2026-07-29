@@ -1,0 +1,79 @@
+---
+/**
+ * Khung cho MỌI trang trong: header, banner, breadcrumb, footer, nút lên đầu.
+ *
+ * Trước đây 9 file tự import và tự đặt đúng năm thứ này theo đúng thứ tự — thêm
+ * một trang là chép lại cả khối. `BaseLayout` chỉ lo `<html>`/`<head>` nên
+ * không gánh được phần đó.
+ *
+ * KHÔNG phát `<main>`: trang review và trang blog đặt `<main>` BÊN TRONG lưới ba
+ * cột (`main.review-layout__main`), nên nếu layout bọc sẵn thì sẽ thành `<main>`
+ * lồng `<main>`. Mỗi nơi gọi tự viết `<main>` của mình.
+ *
+ * Trang chủ KHÔNG dùng layout này: nó không có breadcrumb, banner là `HeroHome`
+ * với cây DOM khác hẳn, và `<main>` bọc luôn cả banner.
+ */
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import Header from "@/components/layout/Header.astro";
+import HeroInner from "@/components/sections/HeroInner.astro";
+import Breadcrumbs from "@/components/layout/Breadcrumbs.astro";
+import type { Crumb } from "@/components/layout/Breadcrumbs.astro";
+import Footer from "@/components/layout/Footer.astro";
+import ToTop from "@/components/layout/ToTop.astro";
+
+interface Props {
+  /** Thẻ <title> */
+  title: string;
+  description?: string;
+  image?: string;
+  type?: "website" | "article";
+  schema?: Record<string, unknown>[];
+
+  /** Tiêu đề banner bản desktop */
+  heroTitle: string;
+  /** Bản mobile, nếu bản gốc dùng chuỗi khác. Render bằng set:html nên chèn được <br>. */
+  heroMobileTitle?: string;
+  /** Mặc định `"{heroTitle} | Fresh Dog Food Delivery"` — đúng với mọi trang hiện có */
+  heroAlt?: string;
+  /**
+   * Mặc định BẰNG `heroAlt`, KHÔNG suy từ `heroMobileTitle`: bản gốc dùng chung
+   * một chuỗi alt cho cả hai banner kể cả khi tiêu đề mobile khác (vd /knowledge/
+   * ghi "Knowledge Center" nhưng alt vẫn là "Knowledge | ..."). Suy máy còn có
+   * nguy cơ nhét cả thẻ <br> vào thuộc tính alt.
+   */
+  heroMobileAlt?: string;
+  /** Căn tiêu đề lên đầu banner — các trang nội dung phẳng và trang 404 */
+  isTitleTop?: boolean;
+
+  crumbs: Crumb[];
+}
+
+const {
+  title,
+  description,
+  image,
+  type,
+  schema,
+  heroTitle,
+  heroMobileTitle = heroTitle,
+  heroAlt = `${heroTitle} | Fresh Dog Food Delivery`,
+  heroMobileAlt = heroAlt,
+  isTitleTop = false,
+  crumbs,
+} = Astro.props;
+---
+
+<BaseLayout title={title} description={description} image={image} type={type} schema={schema}>
+  <Header />
+  <HeroInner
+    isTitleTop={isTitleTop}
+    title={heroTitle}
+    mobileTitle={heroMobileTitle}
+    alt={heroAlt}
+    mobileAlt={heroMobileAlt}
+  />
+  <Breadcrumbs items={crumbs} />
+  <slot />
+  <Footer />
+  <ToTop />
+</BaseLayout>

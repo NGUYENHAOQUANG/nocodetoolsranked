@@ -1,27 +1,18 @@
 ---
-import BaseLayout from "@/layouts/BaseLayout.astro";
-import Header from "@/components/layout/Header.astro";
-import HeroInner from "@/components/sections/HeroInner.astro";
-import Breadcrumbs from "@/components/layout/Breadcrumbs.astro";
+import InnerPageLayout from "@/layouts/InnerPageLayout.astro";
 import ReviewsList from "@/components/sections/ReviewsList.astro";
-import Footer from "@/components/layout/Footer.astro";
-import ToTop from "@/components/layout/ToTop.astro";
 
 const TITLE = "Top Dog Food Delivery Reviews";
 ---
 
-<BaseLayout title="Dog Food Subscription Reviews">
-  <Header />
-  {/* Bản gốc mobile xuống dòng cứng sau "Delivery" (<br>), desktop để 1 dòng */}
-  <HeroInner
-    title={TITLE}
-    mobileTitle="Top Dog Food Delivery <br> Reviews"
-    alt={`${TITLE} | Fresh Dog Food Delivery`}
-  />
-  <Breadcrumbs items={[{ text: "Home" }, { text: TITLE }]} />
+{/* Bản gốc mobile xuống dòng cứng sau "Delivery" (<br>), desktop để 1 dòng */}
+<InnerPageLayout
+  title="Dog Food Subscription Reviews"
+  heroTitle={TITLE}
+  heroMobileTitle="Top Dog Food Delivery <br> Reviews"
+  crumbs={[{ text: "Home" }, { text: TITLE }]}
+>
   <main>
     <ReviewsList />
   </main>
-  <Footer />
-  <ToTop />
-</BaseLayout>
+</InnerPageLayout>
