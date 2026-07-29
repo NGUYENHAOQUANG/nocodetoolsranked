@@ -2,8 +2,8 @@
  * Dữ liệu bài viết cho các danh sách/sidebar.
  *
  * Trước đây cùng 6 bài bị khai ở SÁU nơi (knowledge.ts, mustReads.ts,
- * reviewPage.sidebarArticles, ARTICLE_MAP trong BlogSidebar.astro, frontmatter,
- * và các chuỗi alt). Giờ tất cả lấy từ collection `blog`.
+ * reviewPage.sidebarArticles, ARTICLE_MAP trong PostSidebar.astro, frontmatter,
+ * và các chuỗi alt). Giờ tất cả lấy từ collection `posts`.
  *
  * Alt được sinh theo đúng quy ước RIÊNG của từng vị trí — bản gốc dùng 5 quy
  * ước khác nhau cho cùng một bài, và chúng phải giữ nguyên từng ký tự.

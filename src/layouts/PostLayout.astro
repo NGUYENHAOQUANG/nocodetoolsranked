@@ -1,22 +1,22 @@
 ---
-/* Khung chung cho mọi bài blog (src/content/blog/*.mdx). Trang chỉ cần truyền
+/* Khung chung cho mọi bài viết (src/content/posts/*.mdx). Trang chỉ cần truyền
    `slug`; layout tự lấy entry, render thân bài + TOC, và dựng đủ Header/Hero/
-   Breadcrumbs/BlogIntro/BlogSidebar/Footer. */
+   Breadcrumbs/PostIntro/PostSidebar/Footer. */
 import { getEntry, render } from "astro:content";
 import BaseLayout from "./BaseLayout.astro";
 import Header from "@/components/layout/Header.astro";
 import Hero from "@/components/sections/Hero.astro";
 import Breadcrumbs from "@/components/layout/Breadcrumbs.astro";
 import InnerNavigator from "@/components/article/InnerNavigator.astro";
-import BlogIntro from "@/components/article/BlogIntro.astro";
-import BlogSidebar from "@/components/sidebar/BlogSidebar.astro";
+import PostIntro from "@/components/article/PostIntro.astro";
+import PostSidebar from "@/components/sidebar/PostSidebar.astro";
 import Footer from "@/components/layout/Footer.astro";
 import ToTop from "@/components/layout/ToTop.astro";
 import { KNOWLEDGE_INDEX, postUrl } from "@/lib/links";
 import { breadcrumbSchema, articleSchema } from "@/lib/schema-org";
 
 interface Props {
-  /** id của bài trong collection `blog` (tên file .mdx không đuôi) */
+  /** id của bài trong collection `posts` (tên file .mdx không đuôi) */
   slug: string;
 }
 
@@ -74,12 +74,12 @@ const schema = [
     {/* TOC "Navigate" lấy từ h3 trong thân bài */}
     <InnerNavigator headings={headings} />
     <main class="post-layout__main">
-      <BlogIntro title={title} date={date} readTime={readTime} author={author} avatar={author.avatar} />
+      <PostIntro title={title} date={date} readTime={readTime} author={author} avatar={author.avatar} />
       <div class="post__body">
         <Content />
       </div>
     </main>
-    <BlogSidebar postId={entry.id} />
+    <PostSidebar postId={entry.id} />
   </div>
 
   <Footer />

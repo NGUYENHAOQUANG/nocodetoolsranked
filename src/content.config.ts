@@ -130,7 +130,7 @@ const articles = defineCollection({
 
     Gộp về đây dữ liệu vốn nằm rải ở SÁU nơi: frontmatter, knowledge.ts,
     mustReads.ts, reviewPage.sidebarArticles, ARTICLE_MAP hardcode trong
-    BlogSidebar.astro, và các chuỗi alt sinh theo 5 quy ước khác nhau. */
+    PostSidebar.astro, và các chuỗi alt sinh theo 5 quy ước khác nhau. */
 const posts = defineCollection({
   loader: glob({ pattern: "**/*.mdx", base: "./src/content/posts" }),
   schema: ({ image }) =>
@@ -175,7 +175,7 @@ const faq = defineCollection({
   }),
 });
 
-/** Thẻ liên hệ trang /contact/. Tách riêng khỏi mini-review: gộp chung một
+/** Thẻ liên hệ trang /contact/. Tách riêng khỏi mini-reviews: gộp chung một
     collection thì mọi trường phải optional và mất sạch tác dụng validate. */
 const contactCards = defineCollection({
   loader: glob({ pattern: "**/*.yaml", base: "./src/content/contact-cards" }),
