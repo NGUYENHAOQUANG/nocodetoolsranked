@@ -39,8 +39,8 @@ const mustReads = await getMustReads();
     width: 100%;
     height: max-content;
     padding: 10px 40px;
-    background-color: #f5f5f5;
-    box-shadow: 0 0 3px rgba(0, 0, 0, 0.1);
+    background-color: var(--color-surface-muted);
+    box-shadow: 0 0 3px var(--color-shadow);
   }
 
   .must-reads__title {
@@ -50,14 +50,14 @@ const mustReads = await getMustReads();
     padding-bottom: 10px;
     font-size: 1.6rem;
     font-weight: 400;
-    color: #2d2d2d;
+    color: var(--color-text-body);
   }
 
   .must-reads__item {
     display: block;
     height: max-content;
     position: relative;
-    color: #000;
+    color: var(--color-text);
     font-weight: 100;
     cursor: pointer;
     --hover-color: var(--color-primary);

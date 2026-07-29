@@ -247,7 +247,7 @@ const mobileLogo = logoMobile ?? logo;
   .partner {
     position: relative;
     margin: 15px 0;
-    background-color: #fff;
+    background-color: var(--color-surface);
     z-index: 1;
   }
 
@@ -276,7 +276,7 @@ const mobileLogo = logoMobile ?? logo;
     align-items: center;
     justify-content: center;
     background-color: var(--color-primary);
-    color: #fff;
+    color: var(--color-text-on-primary);
     border-bottom-right-radius: 7px;
   }
   /* Bản tròn viền đen chỉ dùng ở desktop (nằm trong lưới card) */
@@ -297,7 +297,7 @@ const mobileLogo = logoMobile ?? logo;
     align-items: center;
     justify-content: center;
     background-color: var(--color-accent);
-    color: #fff;
+    color: var(--color-text-on-primary);
     font-size: 0.9rem;
     font-weight: 400;
     white-space: nowrap;
@@ -331,7 +331,7 @@ const mobileLogo = logoMobile ?? logo;
     height: 27px;
     padding: 3px;
     background-color: var(--color-accent);
-    color: #fff;
+    color: var(--color-text-on-primary);
     font-size: 1.3rem;
     border-bottom-left-radius: 7px;
     cursor: pointer;
@@ -433,7 +433,7 @@ const mobileLogo = logoMobile ?? logo;
     margin-right: 3px;
     font-size: 1.05rem;
     font-weight: 500;
-    color: #2d2d2d;
+    color: var(--color-text-body);
   }
 
   .partner__tagline {
@@ -444,7 +444,7 @@ const mobileLogo = logoMobile ?? logo;
     font-weight: 400;
     line-height: 1.5em;
     letter-spacing: 0;
-    color: #2d2d2d;
+    color: var(--color-text-body);
     cursor: pointer;
     --hover-color: var(--color-primary);
   }
@@ -530,7 +530,7 @@ const mobileLogo = logoMobile ?? logo;
     flex-shrink: 0;
     border-radius: 3px;
     background-color: var(--color-primary);
-    color: #fff;
+    color: var(--color-text-on-primary);
     font-size: 1.4rem;
     font-weight: 700;
     line-height: 1rem;
@@ -552,7 +552,7 @@ const mobileLogo = logoMobile ?? logo;
     /* Lato chỉ nạp 400/700/900 (global.css). Khai 600 thì trình duyệt vẫn chọn
        700 — ghi 700 cho đúng thứ đang render. */
     font-weight: 700;
-    color: #fff;
+    color: var(--color-text-on-primary);
   }
 
   /* Icon mũi tên: ẩn sẵn trong nút, chỉ hiện dần khi hover (từ 768px, xem media
@@ -789,8 +789,8 @@ const mobileLogo = logoMobile ?? logo;
       width: 35px;
       height: 35px;
       padding: 0;
-      background: #fff;
-      color: #000;
+      background: var(--color-surface);
+      color: var(--color-text);
       border: 1px solid #000;
       border-radius: 100%;
       transform: translateX(-55%);

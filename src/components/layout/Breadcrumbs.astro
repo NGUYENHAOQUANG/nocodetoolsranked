@@ -44,7 +44,7 @@ const { items } = Astro.props;
     width: 100%;
     max-width: 1060px;
     margin: 15px auto auto;
-    color: #2d2d2d;
+    color: var(--color-text-body);
   }
 
   /* Mốc cuối (và "Home") không bấm được, chỉ in đậm */
@@ -54,7 +54,7 @@ const { items } = Astro.props;
   }
   /* Mốc là link: chữ thường và đen hơn phần còn lại */
   a.breadcrumbs__crumb {
-    color: #000;
+    color: var(--color-text);
     font-weight: 400;
   }
   a.breadcrumbs__crumb:hover {

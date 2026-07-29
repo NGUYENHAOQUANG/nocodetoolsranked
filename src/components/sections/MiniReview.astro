@@ -230,7 +230,7 @@ const reviewsMobile = `(${brand.reviews}) Reviews`;
        này. Ở đây hai section là block cạnh nhau nên margin gộp → dồn về một bên. */
     margin: 40px 0 20px;
     /* Bản gốc đặt màu chữ này ở wrapper trang rồi cho kế thừa xuống */
-    color: #2d2d2d;
+    color: var(--color-text-body);
   }
 
   .mini-review__title {
@@ -269,7 +269,7 @@ const reviewsMobile = `(${brand.reviews}) Reviews`;
   }
   .mini-review__reviews {
     font-size: 1rem;
-    color: #6b7280;
+    color: var(--color-text-muted);
   }
 
   /* ----- Nút "Visit Site" (dùng chung) ----- */
@@ -293,7 +293,7 @@ const reviewsMobile = `(${brand.reviews}) Reviews`;
     flex-shrink: 0;
     border-radius: 3px;
     background-color: var(--color-primary);
-    color: #fff;
+    color: var(--color-text-on-primary);
     font-size: 1.4rem;
     font-weight: 700;
     line-height: 1rem;
@@ -310,7 +310,7 @@ const reviewsMobile = `(${brand.reviews}) Reviews`;
     background: #f9f9f9;
     border-radius: 0.5rem;
     box-shadow:
-      0 0 3px rgba(0, 0, 0, 0.1),
+      0 0 3px var(--color-shadow),
       0 2px 4px -1px rgba(0, 0, 0, 0.06);
   }
   .mini-review__mobile-top {
@@ -358,7 +358,7 @@ const reviewsMobile = `(${brand.reviews}) Reviews`;
     background: none;
     border: none;
     text-align: left;
-    color: #000;
+    color: var(--color-text);
     transition: all 0.2s ease;
   }
   .mini-review__drawer-title {
@@ -382,9 +382,9 @@ const reviewsMobile = `(${brand.reviews}) Reviews`;
   }
   .mini-review__drawer-text {
     padding: 1rem;
-    background-color: #fff;
+    background-color: var(--color-surface);
     border-radius: 8px;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 1px 3px var(--color-shadow);
     font-size: 1rem;
     line-height: 1.6;
   }
@@ -431,7 +431,7 @@ const reviewsMobile = `(${brand.reviews}) Reviews`;
       background: #f8f9fa;
       border-radius: 5px;
       box-shadow:
-        0 4px 6px -1px rgba(0, 0, 0, 0.1),
+        0 4px 6px -1px var(--color-shadow),
         0 2px 4px -1px rgba(0, 0, 0, 0.06);
     }
 
@@ -509,8 +509,8 @@ const reviewsMobile = `(${brand.reviews}) Reviews`;
       display: flex;
       flex-direction: column;
       gap: 5px;
-      background: #fff;
-      border: 1px solid rgba(0, 0, 0, 0.1);
+      background: var(--color-surface);
+      border: 1px solid var(--color-shadow);
       border-radius: 8px;
     }
     .mini-review__proscons-item {

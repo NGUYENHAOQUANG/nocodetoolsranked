@@ -34,7 +34,7 @@
    ========================================================================== */
 
 .post__body {
-  color: #2d2d2d;
+  color: var(--color-text-body);
   font-size: 1rem;
   line-height: 1.7rem;
 }
@@ -45,7 +45,7 @@
 .post__body h3 {
   /* Bản gốc: h3 margin 1.25rem trên+dưới (co ở mobile); RIÊNG h3 đầu tiên mt 0 */
   margin: 1.25rem 0;
-  color: #2d2d2d;
+  color: var(--color-text-body);
   font-size: 1.25rem;
   font-weight: 700;
   line-height: 2.2rem;
@@ -57,7 +57,7 @@
    margin 0.83em (mặc định h2); mục h2 ĐẦU TIÊN bỏ margin trên */
 .post__body h2 {
   margin: 0.83em 0;
-  color: #2d2d2d;
+  color: var(--color-text-body);
   font-size: 1.5625rem;
   font-weight: 700;
   line-height: 2.2rem;
@@ -111,7 +111,7 @@
 }
 .paragraph__content h2,
 .paragraph__content h3 {
-  color: #2d2d2d;
+  color: var(--color-text-body);
   opacity: 1;
   line-height: 2.2rem;
 }
@@ -142,7 +142,7 @@
   width: max-content;
   min-width: 100%;
   overflow: hidden;
-  background-color: #fff;
+  background-color: var(--color-surface);
   border-collapse: separate;
   border-spacing: 0;
 }
@@ -191,7 +191,7 @@
      có một đoạn). Ba trang kia dài hơn 70dvh nên rule này là no-op với chúng. */
   min-height: 70dvh;
   margin: 0 auto;
-  color: #2d2d2d;
+  color: var(--color-text-body);
   font-size: 1rem;
   line-height: 1.7rem;
 }

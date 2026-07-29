@@ -128,7 +128,7 @@ const lastUpdated = new Intl.DateTimeFormat("en-US", {
     display: block;
     width: fit-content;
     font-size: 1rem;
-    color: #000;
+    color: var(--color-text);
   }
   .hero__updated svg {
     position: relative;
@@ -147,7 +147,7 @@ const lastUpdated = new Intl.DateTimeFormat("en-US", {
     z-index: 11;
     font-size: 1rem;
     line-height: 1.7;
-    color: #2d2d2d;
+    color: var(--color-text-body);
     cursor: pointer;
   }
   /* Khi mở phải vượt lên trên toplist (z-index 20) — nếu không, side banner của
@@ -161,8 +161,8 @@ const lastUpdated = new Intl.DateTimeFormat("en-US", {
     right: -16px;
     width: 320px;
     padding: 10px;
-    background: #fff;
-    color: #000;
+    background: var(--color-surface);
+    color: var(--color-text);
     font-size: 0.8125rem;
     line-height: 1.2rem;
     border-radius: 5px;

@@ -67,8 +67,8 @@ const partners = await getSidebarPartners();
     flex-flow: column;
     align-items: center;
     /* Không có trong CSS module, bản gốc đặt bằng style inline */
-    background-color: #f5f5f5;
-    box-shadow: 0 0 8px rgba(0, 0, 0, 0.1);
+    background-color: var(--color-surface-muted);
+    box-shadow: 0 0 8px var(--color-shadow);
   }
   .sidebar-partners * {
     transition: 0.2s linear;
@@ -89,7 +89,7 @@ const partners = await getSidebarPartners();
     align-items: flex-start;
     justify-content: center;
     gap: 10px;
-    border-bottom: 1px solid rgba(160, 160, 160, 0.576);
+    border-bottom: 1px solid var(--color-divider);
     cursor: pointer;
   }
   .sidebar-partners__icon-wrap {
@@ -116,7 +116,7 @@ const partners = await getSidebarPartners();
   }
   .sidebar-partners__name {
     margin: 0;
-    color: #2d2d2d;
+    color: var(--color-text-body);
     font-size: 1.125rem;
     font-weight: 500;
   }
@@ -146,7 +146,7 @@ const partners = await getSidebarPartners();
     justify-content: center;
     border-radius: 3px;
     background-color: var(--color-primary);
-    color: #fff;
+    color: var(--color-text-on-primary);
     font-size: 1.125rem;
     font-weight: 500;
   }
@@ -171,7 +171,7 @@ const partners = await getSidebarPartners();
   /* ===== ≥481px: chuyển thành lưới 3 cột tự xuống hàng ===== */
   @media (min-width: 481px) and (min-height: 420px) {
     .sidebar-partners {
-      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      box-shadow: 0 0 10px var(--color-shadow);
     }
     .sidebar-partners__content {
       width: 100%;
@@ -229,7 +229,7 @@ const partners = await getSidebarPartners();
       gap: 10px;
     }
     .sidebar-partners__node:not(:last-of-type) {
-      border-bottom: 1px solid rgba(160, 160, 160, 0.576);
+      border-bottom: 1px solid var(--color-divider);
     }
     /* Bắt buộc: thiếu 2 dòng này ảnh ăn theo thuộc tính width/height rồi bị
        max-height kẹp ở 70px → node cao 91px thay vì để phần chữ quyết định */

@@ -111,13 +111,13 @@ const ARROW =
     display: flex;
     flex-direction: column;
     padding: 20px;
-    box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 0 20px var(--color-shadow);
   }
   .k-card__meta {
     /* Bản gốc: opacity 0.7 → chữ nhạt hơn; đồng thời tạo layer riêng nên chữ
        khử răng cưa GRAYSCALE (không subpixel như tiêu đề) — khớp y hệt. */
     opacity: 0.7;
-    color: #2d2d2d;
+    color: var(--color-text-body);
     font-size: 0.9rem;
     line-height: 1.7rem;
   }
@@ -131,14 +131,14 @@ const ARROW =
   }
   .k-card__title {
     margin: 5px 0;
-    color: #000;
+    color: var(--color-text);
     font-size: 1.125rem;
     font-weight: 600;
     line-height: 1.7rem;
   }
   .k-card__excerpt {
     margin: 0;
-    color: #2d2d2d;
+    color: var(--color-text-body);
     font-size: 1rem;
     line-height: 1.7rem;
   }
@@ -148,7 +148,7 @@ const ARROW =
     align-items: center;
     gap: 3px;
     width: max-content;
-    color: #000;
+    color: var(--color-text);
     font-size: 1.1rem;
     font-weight: 500;
     line-height: 1.7rem;

@@ -21,7 +21,7 @@ const { name, href } = Astro.props;
     /* Margin do bản gốc đặt ở cha (.review > div > div) */
     margin: 10px 0 30px;
     /* Màu chữ mặc định của trang gốc là #2d2d2d, không phải #000 kế thừa từ body */
-    color: #2d2d2d;
+    color: var(--color-text-body);
     cursor: pointer;
   }
   .text-link__inner {

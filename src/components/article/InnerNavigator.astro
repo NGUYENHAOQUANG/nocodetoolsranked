@@ -31,7 +31,7 @@ const headings = allHeadings.filter((h) => h.text.trim());
 
 <style>
   .inner-nav {
-    --inner-nav-bg: #f5f5f5;
+    --inner-nav-bg: var(--color-surface-muted);
 
     /* Bản gốc ẩn hẳn TOC dưới 1025px */
     display: none;
@@ -45,7 +45,7 @@ const headings = allHeadings.filter((h) => h.text.trim());
     /* CSS bản gốc ghi #e8e8e8 nhưng inline style đặt #f5f5f5 → màu thật là #f5f5f5 */
     background-color: var(--inner-nav-bg);
     border-radius: 5px;
-    box-shadow: 0 0 3px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 0 3px var(--color-shadow);
   }
 
   .inner-nav__content {
@@ -66,7 +66,7 @@ const headings = allHeadings.filter((h) => h.text.trim());
   .inner-nav__item {
     padding: 10px 3px;
     line-height: 1.5rem;
-    border-bottom: 1px solid rgba(160, 160, 160, 0.576);
+    border-bottom: 1px solid var(--color-divider);
   }
 
   /* Mục đang xem: bản gốc làm đậm bằng text-shadow chứ không đổi font-weight

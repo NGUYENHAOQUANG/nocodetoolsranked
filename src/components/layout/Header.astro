@@ -115,7 +115,7 @@ const isActive = (href: string) => href.replace(/\/+$/, "") === currentPath;
   /* Để static (KHÔNG z-index): bóng đổ phải nằm dưới để hero phủ lên như bản gốc.
      z-index nâng nav lên trên nội dung được đặt ở .site-header__inner. */
   .site-header {
-    background: #fff;
+    background: var(--color-surface);
     box-shadow: 0 0 5px rgba(0, 0, 0, 0.08);
   }
 
@@ -156,7 +156,7 @@ const isActive = (href: string) => href.replace(/\/+$/, "") === currentPath;
     padding: 0;
     background: none;
     border: 0;
-    color: #2d2d2d;
+    color: var(--color-text-body);
   }
 
   /* ----- Desktop nav (ẩn dưới 1025px) ----- */
@@ -199,7 +199,7 @@ const isActive = (href: string) => href.replace(/\/+$/, "") === currentPath;
     left: 0;
     transform: translateX(-57%);
     min-width: 175px;
-    background: #fff;
+    background: var(--color-surface);
     max-height: 0;
     overflow: hidden;
     transition: max-height 0.2s linear;
@@ -220,7 +220,7 @@ const isActive = (href: string) => href.replace(/\/+$/, "") === currentPath;
   }
   .site-nav__submenu a:hover {
     color: var(--color-primary);
-    background: #f5f5f5;
+    background: var(--color-surface-muted);
   }
   /* Mục trang hiện tại (navbar_active ở bản gốc): cam + đậm 600 */
   .site-nav__submenu a.is-active {
@@ -241,7 +241,7 @@ const isActive = (href: string) => href.replace(/\/+$/, "") === currentPath;
   .mobile-drawer__overlay {
     position: absolute;
     inset: 0;
-    background: rgba(0, 0, 0, 0.5);
+    background: var(--color-overlay);
     opacity: 0;
     transition: opacity 0.25s ease;
   }
@@ -256,7 +256,7 @@ const isActive = (href: string) => href.replace(/\/+$/, "") === currentPath;
     right: 0;
     width: 255px;
     height: 100%;
-    background: #fff;
+    background: var(--color-surface);
     /* will-change:transform ép panel nằm trên layer riêng (composited) NGAY TỪ
        lúc vẽ → chữ dùng khử răng cưa GRAYSCALE như bản gốc, không lên màu kiểu
        subpixel (viền chữ ánh xanh/cam). translate3d(0) đơn thuần bị Chromium ép
@@ -280,7 +280,7 @@ const isActive = (href: string) => href.replace(/\/+$/, "") === currentPath;
     padding: 0;
     background: none;
     border: 0;
-    color: #2d2d2d;
+    color: var(--color-text-body);
   }
 
   .mobile-drawer__list {
@@ -304,14 +304,14 @@ const isActive = (href: string) => href.replace(/\/+$/, "") === currentPath;
     border-bottom: 1px solid #808080;
     font-size: 18px;
     font-weight: 400;
-    color: #2d2d2d;
+    color: var(--color-text-body);
     text-align: left;
     text-decoration: none;
     cursor: pointer;
   }
   .mobile-drawer__chevron {
     flex-shrink: 0;
-    color: #2d2d2d;
+    color: var(--color-text-body);
     transition: transform 0.2s ease;
   }
   .mobile-drawer__toggle[aria-expanded="true"] .mobile-drawer__chevron {
@@ -334,7 +334,7 @@ const isActive = (href: string) => href.replace(/\/+$/, "") === currentPath;
     width: calc(100% - 10px);
     margin-left: 10px;
     font-weight: 300;
-    color: #000;
+    color: var(--color-text);
   }
 
   /* ===== Desktop (≥ 1025px) ===== */

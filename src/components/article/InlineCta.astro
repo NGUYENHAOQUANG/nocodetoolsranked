@@ -62,9 +62,9 @@ const { logo, logoAlt, promo, buttonText, href } = Astro.props;
     align-items: center;
     justify-content: space-around;
     gap: 5px;
-    background-color: #f5f5f5;
+    background-color: var(--color-surface-muted);
     /* Viền cùng màu nền — không nhìn thấy nhưng vẫn ăn 3px mỗi bên */
-    border: 3px solid #f5f5f5;
+    border: 3px solid var(--color-surface-muted);
   }
 
   .inline-cta__logo {
@@ -88,7 +88,7 @@ const { logo, logoAlt, promo, buttonText, href } = Astro.props;
     line-height: 1.2rem;
     text-align: center;
     text-transform: capitalize;
-    color: #000;
+    color: var(--color-text);
     cursor: pointer;
   }
 
@@ -124,7 +124,7 @@ const { logo, logoAlt, promo, buttonText, href } = Astro.props;
        nằm dưới một div bo 5px, nên hình nhìn thấy là góc bo ÍT hơn = 3px */
     border-radius: 3px;
     background-color: var(--color-primary);
-    color: #fff;
+    color: var(--color-text-on-primary);
     /* Hai dòng này quyết định bề rộng chữ: `em` tính theo font-size CỦA THẺ NÀY
        (1.123rem = 17.968px) ra 0.35936px rồi kế thừa xuống <span> bên trong (dù
        span để 1.3rem). Thiếu nó chữ hụt 3.6px và lệch tâm 1.8px. */

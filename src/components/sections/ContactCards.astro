@@ -82,7 +82,7 @@ const contactCards = (await getEntry("contactCards", "contact"))!.data.cards;
   }
   .contact__subtitle {
     margin: 1.33em 0;
-    color: #2d2d2d;
+    color: var(--color-text-body);
     font-size: 1rem;
     font-weight: 400;
     line-height: 1.7rem;
@@ -135,7 +135,7 @@ const contactCards = (await getEntry("contactCards", "contact"))!.data.cards;
   }
   .c-card__title {
     margin: 1em 0;
-    color: #2d2d2d;
+    color: var(--color-text-body);
     font-size: 1.4rem;
     font-weight: 700;
     line-height: 1.7rem;
@@ -145,7 +145,7 @@ const contactCards = (await getEntry("contactCards", "contact"))!.data.cards;
   .c-card__subtitle {
     margin: auto 0 1em;
     padding: 0 5px;
-    color: #2d2d2d;
+    color: var(--color-text-body);
     font-size: 1rem;
     line-height: 1.2rem;
   }
@@ -159,8 +159,8 @@ const contactCards = (await getEntry("contactCards", "contact"))!.data.cards;
     box-sizing: border-box;
     height: 46.44px;
     padding: 1px 6px;
-    background: #f97132;
-    color: #fff;
+    background: var(--color-primary);
+    color: var(--color-text-on-primary);
     font-size: 1rem;
     font-weight: 600;
     text-align: center;
@@ -207,7 +207,7 @@ const contactCards = (await getEntry("contactCards", "contact"))!.data.cards;
   .c-modal__backdrop {
     position: absolute;
     inset: 0;
-    background: rgba(0, 0, 0, 0.5);
+    background: var(--color-overlay);
   }
   .c-modal__box {
     position: relative;
@@ -217,7 +217,7 @@ const contactCards = (await getEntry("contactCards", "contact"))!.data.cards;
     max-height: 95dvh;
     overflow-y: auto;
     padding: 7px 12px;
-    background: #fff;
+    background: var(--color-surface);
     border-radius: 3px;
     box-shadow: 0 0 12px 1px #454545;
     font-family:
@@ -240,17 +240,17 @@ const contactCards = (await getEntry("contactCards", "contact"))!.data.cards;
     display: block;
     width: 23px;
     height: 23px;
-    fill: #2d2d2d;
+    fill: var(--color-text-body);
   }
   .c-modal__title {
     margin: 5px 0;
-    color: #2d2d2d;
+    color: var(--color-text-body);
     font-size: 1.4rem;
     font-weight: 700;
   }
   .c-modal__subtitle {
     margin: 0;
-    color: #2d2d2d;
+    color: var(--color-text-body);
     font-size: 0.8125rem;
     line-height: 1.7rem;
   }
@@ -284,25 +284,25 @@ const contactCards = (await getEntry("contactCards", "contact"))!.data.cards;
     font-weight: 600;
     height: 45px;
     padding: 2px 6px;
-    background: #f97132;
-    color: #fff;
+    background: var(--color-primary);
+    color: var(--color-text-on-primary);
     border: none;
     border-radius: 5px;
     cursor: pointer;
   }
   .c-modal__disclaimer {
     margin: 0;
-    color: #2d2d2d;
+    color: var(--color-text-body);
     font-size: 0.7rem;
     line-height: 1.7rem;
     text-align: left;
   }
   .c-modal__disclaimer a {
-    color: #f97132;
+    color: var(--color-primary);
     text-decoration: none;
   }
   .c-modal__disclaimer a.c-modal__link-bold {
-    color: #000;
+    color: var(--color-text);
     font-weight: 600;
     text-decoration: underline;
   }

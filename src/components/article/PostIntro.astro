@@ -36,7 +36,7 @@ const { title, date, readTime, author, avatar } = Astro.props;
   /* Meta + tiêu đề đều màu slate #2d364d (khác thân bài #2d2d2d) */
   .post-intro__meta {
     margin: 0;
-    color: #2d364d;
+    color: var(--color-text-intro);
     font-size: 0.9375rem;
     font-weight: 200;
     line-height: 1.7rem;
@@ -44,7 +44,7 @@ const { title, date, readTime, author, avatar } = Astro.props;
   .post-intro__title {
     /* margin 0.83em (mặc định h2) — top-container không tính margin đáy này */
     margin: 0.83em 0;
-    color: #2d364d;
+    color: var(--color-text-intro);
     font-size: 1.40625rem;
     font-weight: 500;
     line-height: 1.7rem;
@@ -70,14 +70,14 @@ const { title, date, readTime, author, avatar } = Astro.props;
   }
   .post-intro__author-name {
     margin: 0;
-    color: #2d364d;
+    color: var(--color-text-intro);
     font-size: 0.85rem;
     font-weight: 600;
     line-height: 1.4;
   }
   .post-intro__author-role {
     margin: 0;
-    color: #2d364d;
+    color: var(--color-text-intro);
     font-size: 0.85rem;
     font-weight: 400;
     line-height: 1.4;

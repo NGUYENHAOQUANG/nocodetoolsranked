@@ -124,7 +124,7 @@ const starPaths = starList(stars);
     grid-template-rows: auto 0.7fr 1fr;
     border: 1px solid #ddd;
     /* Bản gốc đặt màu chữ này ở wrapper trang rồi cho kế thừa xuống */
-    color: #2d2d2d;
+    color: var(--color-text-body);
   }
 
   /* Ô logo để trống hoàn toàn: bản gốc có sẵn CSS cho nó (rộng 90%, viền phải)
@@ -278,7 +278,7 @@ const starPaths = starList(stars);
     flex-shrink: 0;
     border-radius: 3px;
     background-color: var(--color-primary);
-    color: #fff;
+    color: var(--color-text-on-primary);
     /* Mobile đậm hơn desktop: 1.4rem/700 → 1.2rem/600 từ 768px. Chữ hiển thị lấy
        cỡ từ <span> (1.12rem) nhưng ĐỘ ĐẬM thì kế thừa từ thẻ này. */
     font-size: 1.4rem;
