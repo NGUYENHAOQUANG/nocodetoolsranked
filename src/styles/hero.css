@@ -1,0 +1,89 @@
+/* ==========================================================================
+   Khung banner đầu trang — dùng chung cho `HeroHome` và `HeroInner`.
+
+   Vì sao là file CSS global chứ không nằm trong <style> của component: hai
+   component render cùng bộ class khung này, mà scoped style của Astro không
+   xuyên qua ranh giới component. Chép 59 dòng vào cả hai file là tạo lại đúng
+   thứ trùng lặp vừa gỡ xong; để ở đây thì chỉ có một bản.
+
+   Cùng lý do `prose.css` tồn tại: style phải khớp markup nằm ngoài template
+   của chính file khai nó.
+
+   Cascade: rule ở đây là selector class trần (0,1,0), còn rule riêng của từng
+   component là scoped (0,2,0) nên LUÔN thắng — khung là nền, nhánh đè lên.
+   ========================================================================== */
+
+/* Ô chừa chỗ cho banner: chỉ min-height 170px. Chiều cao THẬT (172px) do banner
+   bên trong quyết định — nhờ vậy lúc không banner nào hiện (768-782px, xem
+   HeroInner) vẫn còn đúng 170px trắng như bản gốc. */
+.hero {
+  position: relative;
+  min-height: 170px;
+  background: #eaf4fb;
+}
+.hero__banner {
+  position: relative;
+  min-height: 172px;
+  display: grid;
+}
+
+.hero__bg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: right top;
+  z-index: 0;
+}
+
+/* Bản gốc dùng margin 12px 0 (không phải padding) và để grid kéo giãn ô này */
+.hero__content {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  max-width: min(1060px, 95dvw);
+  margin: 12px auto;
+  display: flex;
+  flex-direction: column;
+}
+
+/* flex column để margin title/subtitle KHÔNG collapse */
+.hero__text {
+  display: flex;
+  flex-direction: column;
+}
+
+.hero__title {
+  margin: 5px 0;
+  font-size: 1.7rem;
+  font-weight: 700;
+  line-height: 1.2;
+  letter-spacing: 0.2px;
+  color: var(--color-text);
+}
+
+@media (min-width: 768px) {
+  /* Bản gốc: banner MOBILE để tiêu đề chạy full chiều ngang (max-width none);
+     chỉ banner DESKTOP mới giới hạn 95% để tiêu đề dài (bài blog) ngắt 2 dòng.
+     Vì vậy chỉ áp max-width từ 768px trở lên (nơi banner desktop hiện). */
+  .hero__title {
+    max-width: 95%;
+  }
+}
+
+/* ===== Desktop (>= 1025px): kích thước đầy đủ ===== */
+@media (min-width: 1025px) {
+  .hero {
+    min-height: 220px;
+  }
+  .hero__banner {
+    min-height: 220px;
+  }
+  .hero__content {
+    margin-block: 22px;
+  }
+  .hero__title {
+    font-size: 2.35rem;
+  }
+}

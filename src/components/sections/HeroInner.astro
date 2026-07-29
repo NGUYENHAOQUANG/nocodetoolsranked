@@ -1,0 +1,91 @@
+---
+/**
+ * Banner đầu trang cho MỌI trang trong: chỉ có tiêu đề, không phụ đề, không
+ * "Last Updated", không tooltip disclosure.
+ *
+ * Tách khỏi `HeroHome` vì hai thứ chỉ dùng chung `<section class="hero">` và bộ
+ * ảnh nền. `title` và `alt` để BẮT BUỘC: bản gộp trước đây mặc định `title = ""`
+ * nên quên truyền là ra banner rỗng mà `astro check` vẫn xanh.
+ *
+ * Khung dùng chung nằm ở `@/styles/hero.css`.
+ */
+import { Image } from "astro:assets";
+import heroImgDesktop from "@/assets/images/hero/hero.jpg";
+import heroImgMobile from "@/assets/images/hero/hero-mobile.jpg";
+import "@/styles/hero.css";
+
+interface Props {
+  /** Tiêu đề bản desktop */
+  title: string;
+  /** Tiêu đề bản mobile (<768px). Bản gốc để chuỗi KHÁC hẳn desktop ở vài trang. */
+  mobileTitle?: string;
+  /** Căn tiêu đề LÊN ĐẦU banner thay vì giữa (các trang nội dung phẳng) */
+  isTitleTop?: boolean;
+  alt: string;
+  /** Mặc định BẰNG `alt`, không suy từ `mobileTitle`: bản gốc dùng chung một
+      chuỗi alt cho cả hai banner kể cả khi tiêu đề mobile khác. */
+  mobileAlt?: string;
+}
+
+const { title, mobileTitle = title, isTitleTop = false, alt, mobileAlt = alt } = Astro.props;
+
+const innerContentClass = [
+  "hero__content",
+  "hero__content--inner",
+  isTitleTop && "hero__content--top",
+]
+  .filter(Boolean)
+  .join(" ");
+---
+
+<section class="hero">
+  {/* Bản gốc dựng banner mobile/desktop thành HAI cây riêng: JS chọn cây theo
+      `clientWidth` (mốc 768), còn CSS lại ẩn theo `innerWidth` — lệch nhau đúng
+      15px thanh cuộn nên ở 768–782px KHÔNG cây nào hiện, chừa 170px trắng.
+      Tái hiện y hệt bằng 2 mốc ẩn lệch nhau ở cuối file. */}
+  <div class="hero__banner hero__banner--mobile-only">
+    <Image class="hero__bg" src={heroImgMobile} alt={mobileAlt} sizes="100vw" loading="eager" />
+    <div class={innerContentClass}>
+      <div class="hero__text">
+        {/* set:html để tiêu đề mobile chèn <br> cứng như bản gốc (vd
+            "Top Dog Food Delivery" xuống dòng rồi "Reviews") — không tự wrap */}
+        <h1 class="hero__title" set:html={mobileTitle} />
+      </div>
+    </div>
+  </div>
+  <div class="hero__banner hero__banner--desktop-only">
+    <Image class="hero__bg" src={heroImgDesktop} alt={alt} sizes="100vw" loading="eager" />
+    <div class={innerContentClass}>
+      <div class="hero__text">
+        <h1 class="hero__title" set:html={title} />
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  /* Bản gốc chỉ đổi justify-content: trang chủ đẩy "Last Updated" xuống đáy
+     (space-between), trang trong căn giữa tiêu đề. Padding đối xứng nên tâm
+     tiêu đề rơi đúng giữa banner. */
+  .hero__content--inner {
+    justify-content: center;
+  }
+  /* /about/: tiêu đề căn LÊN ĐẦU (bản gốc dùng space-between/flex-start,
+     một con nên nằm sát trên) — đè lên căn-giữa của --inner */
+  .hero__content--top {
+    justify-content: flex-start;
+  }
+
+  /* Hai mốc ẩn LỆCH NHAU 15px (đúng bằng thanh cuộn) — xem chú thích ở markup.
+     Kết quả: <768 hiện bản mobile, ≥783 hiện bản desktop, 768–782 trắng. */
+  @media (min-width: 768px) {
+    .hero__banner--mobile-only {
+      display: none;
+    }
+  }
+  @media (max-width: 782px) {
+    .hero__banner--desktop-only {
+      display: none;
+    }
+  }
+</style>

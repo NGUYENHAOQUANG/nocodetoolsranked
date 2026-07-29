@@ -2,7 +2,7 @@
 import { organizationSchema, websiteSchema } from "@/lib/schema-org";
 import BaseLayout from "@/layouts/BaseLayout.astro";
 import Header from "@/components/layout/Header.astro";
-import Hero from "@/components/sections/Hero.astro";
+import HeroHome from "@/components/sections/HeroHome.astro";
 import Toplist from "@/components/sections/Toplist.astro";
 import BestOverall from "@/components/sections/BestOverall.astro";
 import MiniReview from "@/components/sections/MiniReview.astro";
@@ -15,7 +15,7 @@ import ExitPopup from "@/components/layout/ExitPopup.astro";
 <BaseLayout schema={[organizationSchema(), websiteSchema()]}>
   <Header />
   <main>
-    <Hero />
+    <HeroHome />
     <Toplist />
     <BestOverall />
     <MiniReview />

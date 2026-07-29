@@ -1,40 +1,29 @@
 ---
+/**
+ * Banner đầu trang chủ: tiêu đề + phụ đề + "Last Updated" + tooltip
+ * "Advertising Disclosure".
+ *
+ * Tách khỏi banner trang trong (`HeroInner`) vì hai thứ chỉ dùng chung đúng một
+ * dòng markup (`<section class="hero">`) và một bộ ảnh nền. Trước đây gộp làm
+ * một, nên 8 trang trong phải tải ~90 dòng CSS chết cộng một script luôn trả
+ * `null`, còn interface props thì có ba trường vô nghĩa với trang chủ.
+ *
+ * Khung dùng chung nằm ở `@/styles/hero.css`.
+ */
 import { Image } from "astro:assets";
 import heroImgDesktop from "@/assets/images/hero/hero.jpg";
 import heroImgMobile from "@/assets/images/hero/hero-mobile.jpg";
+import "@/styles/hero.css";
 
 interface Props {
-  /** Trang trong (vd /reviews/): chỉ hiện tiêu đề và căn giữa theo chiều dọc —
-      bỏ subtitle, "Last Updated" và tooltip "Advertising Disclosure" */
-  isInner?: boolean;
-  /** Chỉ dùng cho biến thể `inner` — tiêu đề bản DESKTOP */
-  title?: string;
-  /** Tiêu đề bản MOBILE (<768px). Bản gốc để chuỗi KHÁC hẳn desktop; không
-      truyền thì dùng lại `title`. */
-  mobileTitle?: string;
-  /** Biến thể `inner`: căn tiêu đề LÊN ĐẦU banner thay vì giữa (trang /about-page/
-      dùng space-between/flex-start, khác /reviews/ và /knowledge/ căn giữa). */
-  isTitleTop?: boolean;
   alt?: string;
   mobileAlt?: string;
 }
 
 const {
-  isInner = false,
-  title = "",
-  mobileTitle = title,
-  isTitleTop = false,
   alt = "Best Dog Food Delivery Brands 2026 — Fresh Dog Food Delivery",
   mobileAlt = alt,
 } = Astro.props;
-
-const innerContentClass = [
-  "hero__content",
-  "hero__content--inner",
-  isTitleTop && "hero__content--top",
-]
-  .filter(Boolean)
-  .join(" ");
 
 // Trang gốc tự hiển thị ngày = hôm nay; lấy ngày lúc build cho khớp hành vi đó.
 const lastUpdated = new Intl.DateTimeFormat("en-US", {
@@ -45,34 +34,7 @@ const lastUpdated = new Intl.DateTimeFormat("en-US", {
 ---
 
 <section class="hero">
-  {
-    isInner ? (
-      <>
-        {/* Bản gốc dựng banner mobile/desktop thành HAI cây riêng: JS chọn cây theo
-            `clientWidth` (mốc 768), còn CSS lại ẩn theo `innerWidth` — lệch nhau đúng
-            15px thanh cuộn nên ở 768–782px KHÔNG cây nào hiện, chừa 170px trắng.
-            Tái hiện y hệt bằng 2 mốc ẩn lệch nhau ở cuối file. */}
-        <div class="hero__banner hero__banner--mobile-only">
-          <Image class="hero__bg" src={heroImgMobile} alt={mobileAlt} sizes="100vw" loading="eager" />
-          <div class={innerContentClass}>
-            <div class="hero__text">
-              {/* set:html để tiêu đề mobile chèn <br> cứng như bản gốc (vd
-                  "Top Dog Food Delivery" xuống dòng rồi "Reviews") — không tự wrap */}
-              <h1 class="hero__title" set:html={mobileTitle} />
-            </div>
-          </div>
-        </div>
-        <div class="hero__banner hero__banner--desktop-only">
-          <Image class="hero__bg" src={heroImgDesktop} alt={alt} sizes="100vw" loading="eager" />
-          <div class={innerContentClass}>
-            <div class="hero__text">
-              <h1 class="hero__title" set:html={title} />
-            </div>
-          </div>
-        </div>
-      </>
-    ) : (
-      <div class="hero__banner">
+  <div class="hero__banner">
   <Image
     class="hero__bg hero__bg--desktop"
     src={heroImgDesktop}
@@ -83,7 +45,7 @@ const lastUpdated = new Intl.DateTimeFormat("en-US", {
   <Image
     class="hero__bg hero__bg--mobile"
     src={heroImgMobile}
-    alt={alt}
+    alt={mobileAlt}
     sizes="100vw"
     loading="eager"
   />
@@ -126,35 +88,9 @@ const lastUpdated = new Intl.DateTimeFormat("en-US", {
     </span>
   </div>
       </div>
-    )
-  }
 </section>
 
 <style>
-  /* ===== Base = mobile (< 615px) ===== */
-  /* Ô chừa chỗ cho banner: chỉ min-height 170px. Chiều cao THẬT (172px) do banner
-     bên trong quyết định — nhờ vậy lúc không banner nào hiện (768–782px) vẫn còn
-     đúng 170px trắng như bản gốc. */
-  .hero {
-    position: relative;
-    min-height: 170px;
-    background: #eaf4fb;
-  }
-  .hero__banner {
-    position: relative;
-    min-height: 172px;
-    display: grid;
-  }
-
-  .hero__bg {
-    position: absolute;
-    inset: 0;
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    object-position: right top;
-    z-index: 0;
-  }
   .hero__bg--desktop {
     display: none;
   }
@@ -163,43 +99,6 @@ const lastUpdated = new Intl.DateTimeFormat("en-US", {
     object-position: right center;
   }
 
-  /* Bản gốc dùng margin 12px 0 (không phải padding) và để grid kéo giãn ô này */
-  .hero__content {
-    position: relative;
-    z-index: 1;
-    width: 100%;
-    max-width: min(1060px, 95dvw);
-    margin: 12px auto;
-    display: flex;
-    flex-direction: column;
-  }
-
-  /* Bản gốc chỉ đổi justify-content: trang chủ đẩy "Last Updated" xuống đáy
-     (space-between), trang trong căn giữa tiêu đề. Padding đối xứng nên tâm
-     tiêu đề rơi đúng giữa banner. */
-  .hero__content--inner {
-    justify-content: center;
-  }
-  /* /about-page/: tiêu đề căn LÊN ĐẦU (bản gốc dùng space-between/flex-start,
-     một con nên nằm sát trên) — đè lên căn-giữa của --inner */
-  .hero__content--top {
-    justify-content: flex-start;
-  }
-
-  /* flex column để margin title/subtitle KHÔNG collapse */
-  .hero__text {
-    display: flex;
-    flex-direction: column;
-  }
-
-  .hero__title {
-    margin: 5px 0;
-    font-size: 1.7rem;
-    font-weight: 700;
-    line-height: 1.2;
-    letter-spacing: 0.2px;
-    color: var(--color-text);
-  }
   /* "Brands" chỉ hiện từ 615px trở lên */
   .hero__title-word {
     display: none;
@@ -278,12 +177,6 @@ const lastUpdated = new Intl.DateTimeFormat("en-US", {
 
   /* ===== Từ 768px: đổi sang ảnh + nội dung bản desktop (KHÔNG phải 615px) ===== */
   @media (min-width: 768px) {
-    /* Bản gốc: banner MOBILE để tiêu đề chạy full chiều ngang (max-width none);
-       chỉ banner DESKTOP mới giới hạn 95% để tiêu đề dài (bài blog) ngắt 2 dòng.
-       Vì vậy chỉ áp max-width từ 768px trở lên (nơi banner desktop hiện). */
-    .hero__title {
-      max-width: 95%;
-    }
     .hero__bg--desktop {
       display: block;
     }
@@ -301,33 +194,7 @@ const lastUpdated = new Intl.DateTimeFormat("en-US", {
     }
   }
 
-  /* Hai mốc ẩn LỆCH NHAU 15px (đúng bằng thanh cuộn) — xem chú thích ở markup.
-     Kết quả: <768 hiện bản mobile, ≥783 hiện bản desktop, 768–782 trắng. */
-  @media (min-width: 768px) {
-    .hero__banner--mobile-only {
-      display: none;
-    }
-  }
-  @media (max-width: 782px) {
-    .hero__banner--desktop-only {
-      display: none;
-    }
-  }
-
-  /* ===== Desktop (≥ 1025px): kích thước đầy đủ ===== */
   @media (min-width: 1025px) {
-    .hero {
-      min-height: 220px;
-    }
-    .hero__banner {
-      min-height: 220px;
-    }
-    .hero__content {
-      margin-block: 22px;
-    }
-    .hero__title {
-      font-size: 2.35rem;
-    }
     .hero__subtitle {
       line-height: 1.6rem;
     }

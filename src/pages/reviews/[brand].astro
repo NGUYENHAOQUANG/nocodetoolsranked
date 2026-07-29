@@ -2,7 +2,7 @@
 import { getCollection, getEntry, render } from "astro:content";
 import BaseLayout from "@/layouts/BaseLayout.astro";
 import Header from "@/components/layout/Header.astro";
-import Hero from "@/components/sections/Hero.astro";
+import HeroInner from "@/components/sections/HeroInner.astro";
 import Breadcrumbs from "@/components/layout/Breadcrumbs.astro";
 import InnerNavigator from "@/components/article/InnerNavigator.astro";
 import ReviewIntro from "@/components/article/ReviewIntro.astro";
@@ -61,8 +61,7 @@ const schema = [
 <BaseLayout title={title} description={promo} type="article" schema={schema}>
   <Header />
   {/* Bản gốc: desktop ghi "Reviews", mobile lại ghi tên bài */}
-  <Hero
-    isInner
+  <HeroInner
     title="Reviews"
     alt="Reviews | Fresh Dog Food Delivery"
     mobileTitle={heroTitle}

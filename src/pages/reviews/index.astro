@@ -1,7 +1,7 @@
 ---
 import BaseLayout from "@/layouts/BaseLayout.astro";
 import Header from "@/components/layout/Header.astro";
-import Hero from "@/components/sections/Hero.astro";
+import HeroInner from "@/components/sections/HeroInner.astro";
 import Breadcrumbs from "@/components/layout/Breadcrumbs.astro";
 import ReviewsList from "@/components/sections/ReviewsList.astro";
 import Footer from "@/components/layout/Footer.astro";
@@ -13,8 +13,7 @@ const TITLE = "Top Dog Food Delivery Reviews";
 <BaseLayout title="Dog Food Subscription Reviews">
   <Header />
   {/* Bản gốc mobile xuống dòng cứng sau "Delivery" (<br>), desktop để 1 dòng */}
-  <Hero
-    isInner
+  <HeroInner
     title={TITLE}
     mobileTitle="Top Dog Food Delivery <br> Reviews"
     alt={`${TITLE} | Fresh Dog Food Delivery`}
