@@ -1,6 +1,7 @@
 ---
 import { getCollection, getEntry, render } from "astro:content";
 import InnerPageLayout from "@/layouts/InnerPageLayout.astro";
+import ArticleGrid from "@/components/layout/ArticleGrid.astro";
 import InnerNavigator from "@/components/article/InnerNavigator.astro";
 import ReviewIntro from "@/components/article/ReviewIntro.astro";
 import ProsCons from "@/components/brand/ProsCons.astro";
@@ -63,10 +64,10 @@ const schema = [
   heroMobileAlt={`${heroTitle} | Fresh Dog Food Delivery`}
   crumbs={crumbs}
 >
-  <div class="review-layout">
+  <ArticleGrid>
     {/* TOC lấy thẳng từ heading của bài — không khai tay, khỏi lệch khi sửa bài */}
-    <InnerNavigator headings={headings} />
-    <main class="review-layout__main">
+    <InnerNavigator slot="nav" headings={headings} />
+    <main slot="main" class="review__main">
       <ReviewIntro
         logo={brand.logo}
         logoAlt={brand.logoAltShort!}
@@ -75,7 +76,7 @@ const schema = [
         author={author}
       />
       {/* Bản gốc gom Pros/Cons + toàn bộ bài + link cuối vào CHUNG một section */}
-      <section class="review">
+      <section class="review__content">
         <div class="review__body">
           <ProsCons pros={pros} cons={cons} />
           <Content />
@@ -84,23 +85,14 @@ const schema = [
         </div>
       </section>
     </main>
-    <ReviewSidebar partner={partnerKey} />
-  </div>
+    <ReviewSidebar slot="sidebar" partner={partnerKey} />
+  </ArticleGrid>
 </InnerPageLayout>
 
 <style>
-  /* Dưới 1025px: 1 cột (nội dung rồi tới sidebar), TOC ẩn hẳn */
-  .review-layout {
-    width: 95%;
-    margin: 10px;
-    display: grid;
-    grid-template-areas:
-      "main"
-      "sidebar";
-    grid-template-columns: 100%;
-  }
-
-  .review-layout__main {
+  /* Cột nội dung: dưới 1025px bản gốc đóng khung nó bằng một viền mảnh (bài
+     blog thì không) — nên viền này thuộc về trang, không thuộc về ArticleGrid. */
+  .review__main {
     width: 100%;
     margin: 0 auto 10px;
     border: 1px solid #ecebeb;
@@ -108,26 +100,19 @@ const schema = [
 
   /* Section bọc Pros/Cons + bài + link cuối. Rule chung cho mọi <section> của
      bản gốc: padding 0 10px, margin 0 (đổi thành 2px auto 30px từ 1025px). */
-  .review {
+  .review__content {
     position: relative;
     margin: 0;
     padding-inline: 10px;
   }
 
   @media (min-width: 1025px) and (min-height: 420px) {
-    .review-layout {
-      max-width: 1060px;
-      margin: 25px auto;
-      grid-template-areas: "nav main sidebar";
-      grid-template-columns: 1fr 2.8fr 1fr;
-      gap: 10px;
-    }
-    .review-layout__main {
+    .review__main {
       margin-right: 0;
       padding-right: 20px;
       border: none;
     }
-    .review {
+    .review__content {
       margin: 2px auto 30px;
     }
   }

@@ -81,14 +81,43 @@ nguồn sự thật cho URL từng gây ra một URL sai chính tả trong dự 
 Mọi URL nội bộ dựng qua **`src/lib/links.ts`**. Đừng gõ tay đường dẫn trong
 component — đổi cấu trúc URL sẽ phải sửa một chỗ thay vì tám chỗ.
 
+### `layouts/` chỉ chứa thứ bọc trang khác
+
+Phép thử: một file thuộc về `layouts/` khi nó có **`<slot />`**. Không có slot
+thì nó không bọc ai — nó _là_ thân của một trang, và chỗ của nó là `pages/`.
+
+Đúng hai file, xếp hai tầng, ranh giới là **tài liệu** so với **khung nhìn thấy được**:
+
+|         | `BaseLayout`                                            | `InnerPageLayout`                                                                                  |
+| ------- | ------------------------------------------------------- | -------------------------------------------------------------------------------------------------- |
+| Phát ra | `<html>` · `<head>` · Seo · `global.css`                | Header · HeroInner · Breadcrumbs · Footer · ToTop                                                  |
+| Props   | metadata: `title` `description` `image` `type` `schema` | banner + breadcrumb: `heroTitle` `heroMobileTitle` `heroAlt` `heroMobileAlt` `isTitleTop` `crumbs` |
+
+Hai bộ props không giao nhau: `InnerPageLayout` chuyển thẳng 5 props metadata
+xuống dưới mà không đọc cái nào. Cần cả hai tầng vì trang chủ dùng riêng
+`BaseLayout` — nó không có breadcrumb, banner là `HeroHome` với cây DOM khác
+hẳn, `<main>` bọc luôn banner, và chỉ nó có `ExitPopup`. Gộp một tầng thì trang
+chủ phải tắt từng thứ bằng prop `showBreadcrumbs={false}` — prop trình bày trá
+hình, đúng thứ quy ước cấm.
+
+`InnerPageLayout` **không phát `<main>`**: trang review và bài blog đặt `<main>`
+bên trong lưới ba cột, bọc sẵn sẽ thành `<main>` lồng `<main>`.
+
+Lưới ba cột đó là `components/layout/ArticleGrid.astro` — component, không phải
+layout, vì nó là một khối bố cục chứ không phải vỏ trang (cùng lý do
+`ContentGrid` của trang chủ nằm ở `components/`). Nó có ba slot **có tên**
+(`nav` / `main` / `sidebar`) nên thứ tự cột do nó quyết; và nó cố ý **không**
+khai `grid-template-areas`, vì trước đây cả hai trang đều khai mà không con nào
+nhận `grid-area` — thứ xếp cột thật luôn là auto-placement theo thứ tự DOM.
+
 ### Style
 
-| File                | Vai trò                                                    |
-| ------------------- | ---------------------------------------------------------- |
-| `styles/tokens.css` | Token đặt theo VAI TRÒ (`--color-text-body`, `--font-*`)   |
-| `styles/global.css` | `@font-face`, reset, import ba file kia                    |
-| `styles/prose.css`  | Style cho thân bài do MDX render — BA khối, cố ý không gộp |
-| `styles/hero.css`   | Khung banner dùng chung của `HeroHome` và `HeroInner`      |
+| File                | Vai trò                                                     |
+| ------------------- | ----------------------------------------------------------- |
+| `styles/tokens.css` | Token đặt theo VAI TRÒ (`--color-text-body`, `--font-*`)    |
+| `styles/global.css` | `@font-face`, reset, import ba file kia                     |
+| `styles/prose.css`  | Style cho thân bài do MDX render — BỐN khối, cố ý không gộp |
+| `styles/hero.css`   | Khung banner dùng chung của `HeroHome` và `HeroInner`       |
 
 Ngoài ra mỗi component tự giữ style trong `<style>` scoped của nó.
 
@@ -193,13 +222,14 @@ sẽ ngừng khớp. Muốn tách component lớn (`PartnerCard`, `MiniReview`,
 
 Cùng lý do: nội dung đưa vào qua `<slot />` hoặc do MDX render nằm **ngoài**
 phạm vi scoped. Đó là vì sao style thân bài sống ở `styles/prose.css` (file
-global) chứ không nằm trong `<style>` của `PostLayout.astro` hay
-`Paragraph.astro` — hai component đó chỉ giữ style cho khung bao ngoài.
+global) chứ không nằm trong `<style>` của `pages/knowledge/[slug].astro` hay
+`Paragraph.astro` — hai file đó chỉ giữ style cho khung bao ngoài.
 
-### `prose.css` có ba khối, cố ý không gộp
+### `prose.css` có bốn khối, cố ý không gộp
 
-`.post__body` (bài viết), `.paragraph__content` (bài review) và `.page__body`
-(trang nội dung phẳng) trông na ná nhau nhưng khác ở chỗ quan trọng.
+`.post__body` (bài viết), `.paragraph__content` (bài review), `.page__body`
+(trang nội dung phẳng) và `.article` (khối bài ở trang chủ) trông na ná nhau
+nhưng khác ở chỗ quan trọng.
 
 `.post__body` có `h2/h3:first-of-type { margin-top: 0 }`, `.paragraph__content`
 không có — vì **một trang review chứa nhiều khối `<Paragraph>`**, nên

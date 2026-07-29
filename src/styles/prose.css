@@ -1,7 +1,7 @@
 /* ==========================================================================
    Style thân bài do MDX render.
 
-   ⚠️ BA KHỐI DƯỚI ĐÂY CỐ Ý KHÔNG GỘP. Đừng "dọn" chúng thành một.
+   ⚠️ BỐN KHỐI DƯỚI ĐÂY CỐ Ý KHÔNG GỘP. Đừng "dọn" chúng thành một.
 
    Chúng trông na ná nhau nhưng khác ở chỗ chí mạng:
 
@@ -25,12 +25,14 @@
    Khối 3 (`.page__body`) dùng `h2:first-child` chứ KHÔNG phải `:first-of-type`
    như khối 1 — xem chú thích tại chỗ, dùng nhầm là xoá margin giữa bài.
 
-   FeaturedArticle.astro có bộ rule prose THỨ TƯ (`.article`) — cố ý để nguyên
-   tại chỗ, không đưa vào đây.
+   Khối 4 (`.article`, khối bài viết ở trang chủ) nằm ở CUỐI file này chứ không
+   ở `<style>` của FeaturedArticle.astro: nội dung do MDX render nằm ngoài phạm
+   vi scoped, nên để trong component thì phải bọc `:global()` từng rule — mà bọc
+   rồi thì chúng đã là global, chỉ khác là nằm lạc chỗ.
    ========================================================================== */
 
 /* ==========================================================================
-   1. Thân bài viết — PostLayout.astro  (/knowledge/<slug>/)
+   1. Thân bài viết — pages/knowledge/[slug].astro  (/knowledge/<slug>/)
    ========================================================================== */
 
 .post__body {

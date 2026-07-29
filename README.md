@@ -100,7 +100,7 @@ src/
 │  └─ pages/     4 trang nội dung phẳng: about, terms, privacy, disclosure
 │
 ├─ components/
-│  ├─ layout/     Header, Footer, Breadcrumbs, ToTop, ExitPopup, Seo
+│  ├─ layout/     Header, Footer, Breadcrumbs, ToTop, ExitPopup, Seo, ArticleGrid
 │  ├─ sections/   HeroHome, HeroInner, Toplist, BestOverall, MiniReview…
 │  ├─ brand/      PartnerCard, ReviewCard, ProsCons
 │  ├─ article/    FeaturedArticle, InnerNavigator, PostIntro, ReviewIntro…
@@ -108,7 +108,7 @@ src/
 │  └─ ui/         ScoreRing, Coupon, Paragraph, PartnerTooltip
 │
 ├─ layouts/       BaseLayout (html+head+SEO), InnerPageLayout (khung trang
-│                 trong), PostLayout
+│                 trong). Chỉ hai file, đều có <slot/>
 ├─ pages/         route — xem bản đồ URL dưới
 ├─ lib/           links (nguồn duy nhất dựng URL), rankings, posts,
 │                 schema-org, stars

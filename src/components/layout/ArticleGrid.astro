@@ -1,0 +1,49 @@
+---
+/**
+ * Lưới ba cột dùng chung cho hai loại trang bài viết: trang review
+ * (`pages/reviews/[slug].astro`) và bài blog (`pages/knowledge/[slug].astro`).
+ *
+ * Trước đây mỗi trang tự khai lưới này, và hai khối CSS trùng nhau nguyên văn
+ * từng byte — cả bản mobile lẫn bản @1025. Sửa tỉ lệ cột ở một chỗ mà quên chỗ
+ * kia thì hai trang song sinh lệch nhau âm thầm.
+ *
+ * Ba slot có tên chứ không phải một slot chung: thứ tự cột do component quyết,
+ * không phụ thuộc thứ tự người gọi viết thẻ. Xem ghi chú về auto-placement dưới.
+ *
+ * `<main>` KHÔNG nằm ở đây — mỗi trang tự viết, vì hai cột nội dung khác nhau
+ * thật (trang review có viền + margin đáy ở mobile, bài blog thì không), và
+ * nội dung slot mang scope của trang gọi nên trang mới style được nó.
+ */
+---
+
+<div class="article-grid">
+  <slot name="nav" />
+  <slot name="main" />
+  <slot name="sidebar" />
+</div>
+
+<style>
+  /*
+   * Không khai `grid-template-areas`: cả hai trang trước đây đều có
+   * `"nav main sidebar"` nhưng KHÔNG con nào nhận `grid-area`, nên ba cái tên
+   * đó chưa bao giờ có tác dụng — thứ xếp cột thật là auto-placement theo thứ
+   * tự DOM, và thứ tự DOM thì ba slot ở trên đã cố định.
+   */
+
+  /* <1025px: một cột, nội dung rồi tới sidebar. TOC tự ẩn (CSS của InnerNavigator). */
+  .article-grid {
+    width: 95%;
+    margin: 10px;
+    display: grid;
+    grid-template-columns: 100%;
+  }
+
+  @media (min-width: 1025px) and (min-height: 420px) {
+    .article-grid {
+      max-width: 1060px;
+      margin: 25px auto;
+      grid-template-columns: 1fr 2.8fr 1fr;
+      gap: 10px;
+    }
+  }
+</style>
