@@ -72,9 +72,6 @@ const reviewsPageRow = z.object({
   /** Đoạn mở đầu thân bài review. Nâng lên đây thay vì bóc từ MDX: chuỗi chứa
       ’ và — phải sống sót byte-exact dưới smartypants:false. */
   excerpt: z.string(),
-  /** Bản gốc có một đoạn &nbsp; rỗng sau nội dung (rác CMS) — trông thừa nhưng
-      chiếm 27.2px nên card cao 314.83 thay vì 310. Chỉ Ollie có. */
-  hasTrailingBlank: z.boolean().default(false),
 });
 
 /**

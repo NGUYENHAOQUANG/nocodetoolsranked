@@ -16,7 +16,6 @@ const {
   ratingLabel,
   stars,
   href,
-  hasTrailingBlank = false,
 } = Astro.props.review;
 
 // Cung tròn r=47.5 trong viewBox 100×100 — cùng cách dựng với vòng điểm trang chủ
@@ -38,7 +37,6 @@ const starPaths = starList(stars);
       {/* Bản gốc bọc nội dung trong <p> (margin mặc định 1em) rồi để "Read More"
           là link INLINE ngay sau — nhờ vậy khối cao 249.63 chứ không phải 217.63 */}
       <p>{text}</p>
-      {hasTrailingBlank && <p>&nbsp;</p>}
       <a class="review__more" href={readMoreHref}>Read More</a>
     </div>
   </div>

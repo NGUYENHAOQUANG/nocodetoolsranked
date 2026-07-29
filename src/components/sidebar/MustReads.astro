@@ -13,9 +13,6 @@ const mustReads = await getMustReads();
         <h4 class="must-reads__item-title">{item.title}</h4>
         <div class="must-reads__excerpt">
           <p>{item.excerpt}</p>
-          {/* Đoạn rỗng có sẵn trong nội dung CMS của bản gốc — trông thừa nhưng
-              chiếm 24px + margin, bỏ đi là ảnh bị kéo lên 37px */}
-          <p>&nbsp;</p>
         </div>
         <div class="must-reads__image">
           <Image src={item.image} alt={item.imageAlt} width={320} height={219} />

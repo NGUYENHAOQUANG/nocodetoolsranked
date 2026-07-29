@@ -70,6 +70,13 @@
   max-width: 100%;
   height: auto;
 }
+/* Bản gốc chừa thêm khoảng trắng quanh ảnh bằng một ĐOẠN VĂN RỖNG (`&nbsp;`)
+   ở trên và dưới — rác trình soạn thảo, và screen reader vẫn duyệt qua nó.
+   Thay bằng margin: 1em (của đoạn kề) + 1.7rem (chiều cao dòng rỗng) + 1em
+   = 3.7rem, tức đúng khoảng cách cũ ở mọi cỡ root. */
+.post__body p:has(img) {
+  margin: 3.7rem 0;
+}
 /* Danh sách gạch đầu dòng (vd bài "gut health"): bản gốc dùng bullet rỗng
    (circle), thụt 40px, ul không margin, mỗi mục cách nhau 15px */
 .post__body ul {

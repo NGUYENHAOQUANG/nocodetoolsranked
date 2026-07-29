@@ -42,7 +42,6 @@ export interface ReviewsPageRow {
   ratingLabel: string;
   stars: number;
   href: string;
-  hasTrailingBlank?: boolean;
 }
 
 export interface SidebarPartner {
@@ -143,7 +142,6 @@ export async function getReviewsPageEntries(): Promise<ReviewsPageRow[]> {
     ratingLabel: row.ratingLabel,
     stars: row.stars,
     href: brand.affiliateUrl,
-    ...(row.hasTrailingBlank ? { hasTrailingBlank: true } : {}),
   }));
 }
 

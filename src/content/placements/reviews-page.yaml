@@ -13,7 +13,6 @@ entries:
     ratingLabel: "Excellent"
     stars: 4.5
     excerpt: "We cherish our dogs as part of the family, but do we put as much thought into their meals as we do our own? Ollie, a premium subscription-based dog food brand, aims to transform the way our furry friends eat. The company claims benefits like better weight management, a longer life, and improved digestion - boasting that 90% of its customers notice positive changes in their dogs, including increased energy, better digestion, and improved allergy and weight control."
-    hasTrailingBlank: true
   - brand: "we-feed-raw"
     rating: "8.7"
     ratingLabel: "Excellent"
