@@ -1,0 +1,277 @@
+---
+/**
+ * Ô khuyến mãi xoay vòng ở sidebar trang review — chỉ hiện từ 1025px.
+ *
+ * Tự chứa: nguồn dữ liệu riêng, CSS riêng, và script riêng chỉ truy vấn bên
+ * trong chính nó. Nhận `partner` vì đó là thứ duy nhất nơi gọi biết mà nó không
+ * tự suy ra được.
+ */
+import { getCarouselPartners } from "@/lib/rankings";
+import { CHEVRON_RIGHT } from "@/lib/icon-paths";
+
+interface Props {
+  /** Key đối tác của trang hiện tại — quyết định slide bắt đầu */
+  partner: string;
+}
+
+const { partner } = Astro.props;
+
+const partners = await getCarouselPartners();
+
+/* Carousel duyệt qua ĐỦ 6 đối tác, bắt đầu ở đối tác của trang hiện tại. */
+const startIndex = Math.max(
+  0,
+  partners.findIndex((p) => p.key === partner),
+);
+const current = partners[startIndex];
+/* Dữ liệu cho JS client: chỉ cần src ảnh (đã bundle) + text + link */
+const slides = partners.map((p) => ({
+  logoSrc: p.logo.src,
+  logoAlt: p.logoAlt,
+  promo: p.promo,
+  href: p.href,
+}));
+
+/* Mũi tên tròn — path lấy thẳng từ DOM gốc (viewBox 512, không phải chevron
+   trần viewBox 320 dùng ở chỗ khác) nên không gom vào lib/icon-paths. */
+const CIRCLE_ARROW_LEFT =
+  "M256 48C141.1 48 48 141.1 48 256s93.1 208 208 208 208-93.1 208-208S370.9 48 256 48zm43.4 289.1c7.5 7.5 7.5 19.8 0 27.3-3.8 3.8-8.7 5.6-13.6 5.6s-9.9-1.9-13.7-5.7l-94-94.3c-6.9-7.6-6.7-19.3.6-26.6l95.4-95.7c7.5-7.5 19.7-7.6 27.3 0 7.5 7.5 7.6 19.7 0 27.3l-81.9 81 79.9 81.1z";
+const CIRCLE_ARROW_RIGHT =
+  "M48 256c0 114.9 93.1 208 208 208s208-93.1 208-208S370.9 48 256 48 48 141.1 48 256zm244.5 0l-81.9-81.1c-7.5-7.5-7.5-19.8 0-27.3s19.8-7.5 27.3 0l95.4 95.7c7.3 7.3 7.5 19.1.6 26.6l-94 94.3c-3.8 3.8-8.7 5.7-13.7 5.7-4.9 0-9.9-1.9-13.6-5.6-7.5-7.5-7.6-19.7 0-27.3l79.9-81z";
+---
+
+{/* Mũi tên trái disable khi ở slide đầu, mũi tên phải disable khi ở slide cuối.
+    Nội dung được JS đổi tại chỗ (bản gốc cũng chỉ giữ 1 slide trong DOM). */}
+<div class="promo-carousel" data-index={startIndex} data-slides={JSON.stringify(slides)}>
+  <div class="promo-carousel__viewport">
+    <div class="promo-carousel__slide">
+      <a
+        class="promo-carousel__link"
+        href={current.href}
+        target="_blank"
+        rel="noopener nofollow"
+        referrerpolicy="strict-origin"
+      >
+        <img
+          class="promo-carousel__logo"
+          src={current.logo.src}
+          alt={current.logoAlt}
+          width="215"
+          height="115"
+        />
+        <p class="promo-carousel__promo">{current.promo}</p>
+        {/* Ô bọc nút: margin auto canh giữa nút (cao 40px) trong hàng grid cao
+            72.8px — thiếu ô này nút bị kéo giãn hết hàng */}
+        <div class="promo-carousel__cta">
+          <span class="promo-carousel__button">
+            View Rates
+            <svg viewBox="0 0 320 512" width="1em" height="1em" aria-hidden="true">
+              <path d={CHEVRON_RIGHT}></path>
+            </svg>
+          </span>
+        </div>
+      </a>
+    </div>
+  </div>
+  <div class="promo-carousel__controls">
+    <div
+      class:list={["promo-carousel__arrow promo-carousel__arrow--left", { "is-disabled": startIndex === 0 }]}
+      data-dir="-1"
+    >
+      <svg viewBox="0 0 512 512" width="25" height="25" aria-hidden="true">
+        <path d={CIRCLE_ARROW_LEFT}></path>
+      </svg>
+    </div>
+    <div
+      class:list={[
+        "promo-carousel__arrow promo-carousel__arrow--right",
+        { "is-disabled": startIndex === slides.length - 1 },
+      ]}
+      data-dir="1"
+    >
+      <svg viewBox="0 0 512 512" width="25" height="25" aria-hidden="true">
+        <path d={CIRCLE_ARROW_RIGHT}></path>
+      </svg>
+    </div>
+  </div>
+</div>
+
+<style>
+  .promo-carousel {
+    display: none;
+    flex-direction: column;
+    width: 100%;
+    max-width: 250px;
+    height: 300px;
+    min-height: fit-content;
+    margin-left: auto;
+    margin-bottom: 15px;
+    overflow: hidden;
+    /* Bản gốc khai #e8e8e8 trong CSS module nhưng ghi đè bằng style inline
+       #f5f5f5 → trang chạy thật là #f5f5f5 */
+    background-color: #f5f5f5;
+    box-shadow: 0 0 8px rgba(0, 0, 0, 0.1);
+  }
+  .promo-carousel__viewport {
+    width: 100%;
+    height: 100%;
+    margin: auto;
+    display: flex;
+  }
+  .promo-carousel__slide {
+    position: relative;
+    width: 100%;
+    padding: 10px;
+    /* Mờ dần khi đổi đối tác (bản gốc dùng framer-motion fade opacity) */
+    transition: opacity 0.15s linear;
+  }
+  .promo-carousel__slide.is-switching {
+    opacity: 0;
+  }
+  .promo-carousel__link {
+    height: 100%;
+    display: grid;
+    grid-template-columns: 1fr;
+    justify-content: space-between;
+    justify-items: center;
+  }
+  .promo-carousel__logo {
+    height: 100px;
+    max-width: 140px;
+    max-height: 100px;
+    object-fit: contain;
+  }
+  .promo-carousel__promo {
+    margin: 0 auto;
+    padding: 0;
+    color: #2d2d2d;
+    font-weight: 600;
+    line-height: 1.3;
+    text-align: center;
+  }
+  .promo-carousel__cta {
+    position: relative;
+    width: 100%;
+    min-width: 157px;
+    margin: auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .promo-carousel__button {
+    --hover-bg-color: var(--color-secondary);
+
+    position: relative;
+    width: max-content;
+    min-width: 150px;
+    max-width: 80%;
+    height: 100%;
+    min-height: 40px;
+    padding: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 3px;
+    background-color: var(--color-primary);
+    color: #fff;
+    font-size: 1.2rem;
+    font-weight: 500;
+    line-height: 1rem;
+    letter-spacing: 0.02em;
+    transition: 0.2s linear;
+  }
+  /* Mũi tên trượt ra khi hover nút CTA */
+  .promo-carousel__button svg {
+    position: absolute;
+    top: calc(50% + 2px);
+    right: 10px;
+    opacity: 0;
+    font-size: 1rem;
+    fill: currentColor;
+    transform: translateY(-50%);
+    transition: 0.2s ease-in-out;
+  }
+  .promo-carousel__controls {
+    height: 30px;
+    width: max-content;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+  }
+  .promo-carousel__arrow svg {
+    fill: #858585;
+    cursor: pointer;
+  }
+  /* Chỉ 1 slide → mũi tên trái luôn mờ, không bấm được */
+  .promo-carousel__arrow.is-disabled svg {
+    fill: #d3d3d3;
+    cursor: default;
+  }
+
+  @media (min-width: 1025px) and (min-height: 420px) {
+    .promo-carousel {
+      display: flex;
+    }
+  }
+
+  /* ===== ≥615px — hiệu ứng hover (bản gốc chỉ bật từ mốc này) ===== */
+  @media (min-width: 615px) {
+    .promo-carousel__arrow:not(.is-disabled):hover svg {
+      fill: var(--color-primary);
+    }
+    .promo-carousel__promo:hover {
+      color: var(--color-primary);
+    }
+    .promo-carousel__button:hover {
+      background-color: var(--hover-bg-color);
+    }
+    .promo-carousel__button:hover svg {
+      opacity: 1;
+      right: 3%;
+    }
+  }
+</style>
+
+<script>
+  /* Duyệt qua 6 đối tác: đổi nội dung slide tại chỗ (như bản gốc) + bật/tắt
+     disable hai mũi tên ở hai đầu danh sách. */
+  interface Slide {
+    logoSrc: string;
+    logoAlt: string;
+    promo: string;
+    href: string;
+  }
+  document.querySelectorAll<HTMLElement>(".promo-carousel").forEach((carousel) => {
+    const slides: Slide[] = JSON.parse(carousel.dataset.slides || "[]");
+    let index = Number.parseInt(carousel.dataset.index || "0", 10);
+    const slide = carousel.querySelector<HTMLElement>(".promo-carousel__slide");
+    const logo = carousel.querySelector<HTMLImageElement>(".promo-carousel__logo");
+    const promo = carousel.querySelector<HTMLElement>(".promo-carousel__promo");
+    const link = carousel.querySelector<HTMLAnchorElement>(".promo-carousel__link");
+    const leftArrow = carousel.querySelector<HTMLElement>(".promo-carousel__arrow--left");
+    const rightArrow = carousel.querySelector<HTMLElement>(".promo-carousel__arrow--right");
+    if (!slide || !logo || !promo || !link || !leftArrow || !rightArrow || slides.length < 2) return;
+
+    const render = () => {
+      const p = slides[index];
+      logo.src = p.logoSrc;
+      logo.alt = p.logoAlt;
+      promo.textContent = p.promo;
+      link.href = p.href;
+      leftArrow.classList.toggle("is-disabled", index === 0);
+      rightArrow.classList.toggle("is-disabled", index === slides.length - 1);
+    };
+    const go = (dir: number) => {
+      const next = index + dir;
+      if (next < 0 || next >= slides.length) return;
+      index = next;
+      slide.classList.add("is-switching");
+      window.setTimeout(() => {
+        render();
+        slide.classList.remove("is-switching");
+      }, 150);
+    };
+    leftArrow.addEventListener("click", () => go(-1));
+    rightArrow.addEventListener("click", () => go(1));
+  });
+</script>
