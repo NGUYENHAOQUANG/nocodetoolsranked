@@ -33,9 +33,9 @@ component. Thêm brand hay bài viết là thêm file nội dung, không sửa c
 
 Đây là chỗ dễ hiểu nhầm nhất nếu chỉ nhìn thư mục.
 
-- **`content/brands/`** — *đối tác LÀ AI*: tên, logo, alt, link affiliate.
+- **`content/brands/`** — _đối tác LÀ AI_: tên, logo, alt, link affiliate.
   Bất biến, khai một lần.
-- **`content/placements/`** — *đối tác XUẤT HIỆN THẾ NÀO ở từng trang*: thứ tự,
+- **`content/placements/`** — _đối tác XUẤT HIỆN THẾ NÀO ở từng trang_: thứ tự,
   điểm số, số sao, coupon.
 
 Tách như vậy vì trang chủ và `/reviews/` xếp hạng **khác nhau** cho cùng một tập
@@ -57,10 +57,10 @@ bài viết là **lỗi build**, không phải `undefined` âm thầm lúc chạ
 
 Route sinh từ tên file trong collection:
 
-| Route | Sinh từ |
-|---|---|
-| `pages/reviews/[brand].astro` | `content/reviews/*.mdx` |
-| `pages/knowledge/[slug].astro` | `content/posts/*.mdx` |
+| Route                          | Sinh từ                 |
+| ------------------------------ | ----------------------- |
+| `pages/reviews/[brand].astro`  | `content/reviews/*.mdx` |
+| `pages/knowledge/[slug].astro` | `content/posts/*.mdx`   |
 
 Slug **là** id của entry (tên file) — không khai `slug` trong frontmatter. Hai
 nguồn sự thật cho URL từng gây ra một URL sai chính tả trong dự án này.
@@ -70,11 +70,11 @@ component — đổi cấu trúc URL sẽ phải sửa một chỗ thay vì tám
 
 ### Style
 
-| File | Vai trò |
-|---|---|
-| `styles/tokens.css` | Biến CSS (`--color-*`, `--font-*`) |
+| File                | Vai trò                                  |
+| ------------------- | ---------------------------------------- |
+| `styles/tokens.css` | Biến CSS (`--color-*`, `--font-*`)       |
 | `styles/global.css` | `@font-face`, reset, import hai file kia |
-| `styles/prose.css` | Style cho thân bài do MDX render |
+| `styles/prose.css`  | Style cho thân bài do MDX render         |
 
 Ngoài ra mỗi component tự giữ style trong `<style>` scoped của nó.
 
@@ -82,14 +82,14 @@ Ngoài ra mỗi component tự giữ style trong `<style>` scoped của nó.
 
 **File**
 
-| Loại | Quy ước | Ví dụ |
-|---|---|---|
-| Component, layout | PascalCase, tên file = tên component | `ReviewCard.astro` |
-| Page | kebab-case, khớp URL | `advertiser-disclosure.astro` |
-| Route động | `[tham-số].astro` | `[brand].astro` |
-| Module `lib/`, `config/` | kebab-case | `schema-org.ts` |
-| File nội dung | kebab-case, chính là slug | `what-makes-healthy-pet-food.mdx` |
-| Asset, thư mục | kebab-case | `author-steve-diller.png` |
+| Loại                     | Quy ước                              | Ví dụ                             |
+| ------------------------ | ------------------------------------ | --------------------------------- |
+| Component, layout        | PascalCase, tên file = tên component | `ReviewCard.astro`                |
+| Page                     | kebab-case, khớp URL                 | `advertiser-disclosure.astro`     |
+| Route động               | `[tham-số].astro`                    | `[brand].astro`                   |
+| Module `lib/`, `config/` | kebab-case                           | `schema-org.ts`                   |
+| File nội dung            | kebab-case, chính là slug            | `what-makes-healthy-pet-food.mdx` |
+| Asset, thư mục           | kebab-case                           | `author-steve-diller.png`         |
 
 Không dùng tên chung chung như `utils.ts` / `helpers.ts` — đặt theo việc nó làm.
 
@@ -119,17 +119,17 @@ Viết bằng **tiếng Việt**, ngắn gọn. Dạng: `type(scope): mô tả` 
 
 **Type** dùng đúng chuẩn conventional commits:
 
-| Type | Dùng khi |
-|---|---|
-| `feat` | Thêm tính năng |
-| `fix` | Sửa lỗi |
-| `refactor` | Đổi cấu trúc, không đổi hành vi |
-| `style` | Chỉ đụng định dạng/giao diện, không đổi logic |
-| `perf` | Cải thiện hiệu năng |
-| `docs` | Tài liệu |
-| `test` | Kiểm thử |
-| `build` | Dependency, cấu hình build |
-| `chore` | Việc lặt vặt còn lại |
+| Type       | Dùng khi                                      |
+| ---------- | --------------------------------------------- |
+| `feat`     | Thêm tính năng                                |
+| `fix`      | Sửa lỗi                                       |
+| `refactor` | Đổi cấu trúc, không đổi hành vi               |
+| `style`    | Chỉ đụng định dạng/giao diện, không đổi logic |
+| `perf`     | Cải thiện hiệu năng                           |
+| `docs`     | Tài liệu                                      |
+| `test`     | Kiểm thử                                      |
+| `build`    | Dependency, cấu hình build                    |
+| `chore`    | Việc lặt vặt còn lại                          |
 
 **Scope** thêm khi phạm vi rõ ràng, bỏ khi thay đổi trải rộng nhiều phần:
 

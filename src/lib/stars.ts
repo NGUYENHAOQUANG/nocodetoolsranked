@@ -25,8 +25,7 @@ export function starList(stars: number): Star[] {
   const hasHalf = stars - full >= 0.5;
   return Array.from({ length: 5 }, (_, i) => {
     if (i < full) return { kind: "full", d: STAR_OUTLINE };
-    if (i === full && hasHalf)
-      return { kind: "half", d: STAR_OUTLINE + STAR_HALF_CUTOUT };
+    if (i === full && hasHalf) return { kind: "half", d: STAR_OUTLINE + STAR_HALF_CUTOUT };
     return { kind: "empty", d: STAR_OUTLINE + STAR_EMPTY_CUTOUT };
   });
 }

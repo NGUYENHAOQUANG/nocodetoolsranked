@@ -27,11 +27,7 @@ const { title, date, readTime, heroMobileTitle } = entry.data;
    chứ không phải avatar `undefined` âm thầm. */
 const author = (await getEntry(entry.data.author))!.data;
 
-const crumbs = [
-  { text: "Home" },
-  { text: "Knowledge", href: KNOWLEDGE_INDEX },
-  { text: title },
-];
+const crumbs = [{ text: "Home" }, { text: "Knowledge", href: KNOWLEDGE_INDEX }, { text: title }];
 
 const schema = [
   breadcrumbSchema(crumbs),
@@ -45,11 +41,13 @@ const schema = [
 ];
 ---
 
-{/* Bài viết: banner hiện chính tiêu đề bài (cả desktop lẫn mobile).
+{
+  /* Bài viết: banner hiện chính tiêu đề bài (cả desktop lẫn mobile).
 
     Mốc breadcrumb giữa: bản gốc ghi "-" — chuyên mục RỖNG, di chứng của việc
     bài viết nằm ở gốc site không thuộc đâu cả. Giờ bài nằm dưới /knowledge/ nên
-    mốc đó có tên thật. Đây là 1 trong 3 khác biệt được phép (CLAUDE.md §4). */}
+    mốc đó có tên thật. Đây là 1 trong 3 khác biệt được phép (CLAUDE.md §4). */
+}
 <InnerPageLayout
   title={title}
   description={entry.data.excerpt}
@@ -64,7 +62,13 @@ const schema = [
     {/* TOC "Navigate" lấy từ h3 trong thân bài */}
     <InnerNavigator headings={headings} />
     <main class="post-layout__main">
-      <PostIntro title={title} date={date} readTime={readTime} author={author} avatar={author.avatar} />
+      <PostIntro
+        title={title}
+        date={date}
+        readTime={readTime}
+        author={author}
+        avatar={author.avatar}
+      />
       <div class="post__body">
         <Content />
       </div>
@@ -105,5 +109,4 @@ const schema = [
       border: none;
     }
   }
-
 </style>

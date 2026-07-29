@@ -5,29 +5,34 @@ import discount from "@/assets/promos/popup-pets-discount.png";
 import logo from "@/assets/promos/popup-pets-logo.svg";
 ---
 
-{/* Popup exit-intent "The Pet's Table" — hiện khi chuột rời mép trên cửa sổ
-    (exit-intent). Xem/đóng rồi thì thôi tới hết PHIÊN (lưu cookie phiên petsTablePopup). */}
+{
+  /* Popup exit-intent "The Pet's Table" — hiện khi chuột rời mép trên cửa sổ
+    (exit-intent). Xem/đóng rồi thì thôi tới hết PHIÊN (lưu cookie phiên petsTablePopup). */
+}
 <div class="exit-popup" hidden>
   <div class="exit-popup__backdrop" data-close></div>
   <div class="exit-popup__box" role="dialog" aria-modal="true" aria-label="The Pets Table offer">
     {/* Ảnh chó (phải) — khung cắt 285×466, ảnh tràn ra ngoài như bản gốc */}
     <div class="exit-popup__dog">
-      {/* Giữ TỈ LỆ GỐC (786×1100 ≈ 2000×2800) để astro KHÔNG cắt; CSS thu về 393×549
-          (scale nguyên ảnh như bản gốc), rồi lệch −48/−85 trong khung cắt 285×466 */}
+      {
+        /* Giữ TỈ LỆ GỐC (786×1100 ≈ 2000×2800) để astro KHÔNG cắt; CSS thu về 393×549
+          (scale nguyên ảnh như bản gốc), rồi lệch −48/−85 trong khung cắt 285×466 */
+      }
       <Image src={dog} alt="The Pets Table dog" width={786} height={1100} />
     </div>
     {/* Logo "the Pets Table — BROUGHT TO YOU BY HelloFresh" (vector) */}
-    <img class="exit-popup__logo" src={logo.src} alt="The Pets Table - brought to you by HelloFresh" />
+    <img
+      class="exit-popup__logo"
+      src={logo.src}
+      alt="The Pets Table - brought to you by HelloFresh"
+    />
     {/* Ưu đãi 60% OFF 1st BOX + 20% OFF YOUR 2nd */}
     <img class="exit-popup__discount" src={discount.src} alt="60% off 1st box + 20% off your 2nd" />
 
     <button class="exit-popup__close" type="button" data-close aria-label="Close">
       <svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true">
-        <path
-          d="M18 6L6 18M6 6l12 12"
-          stroke="currentColor"
-          stroke-width="2"
-          stroke-linecap="round"></path>
+        <path d="M18 6L6 18M6 6l12 12" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+        ></path>
       </svg>
     </button>
 
@@ -79,9 +84,7 @@ import logo from "@/assets/promos/popup-pets-logo.svg";
     border-radius: 12px;
     overflow: hidden;
     box-shadow: 0 6px 30px rgba(0, 0, 0, 0.25);
-    transform: scale(
-      min(1, calc((100vw - 32px) / 700), calc((100vh - 32px) / 500))
-    );
+    transform: scale(min(1, calc((100vw - 32px) / 700), calc((100vh - 32px) / 500)));
   }
   .exit-popup__box > * {
     position: absolute;
@@ -177,8 +180,7 @@ import logo from "@/assets/promos/popup-pets-logo.svg";
 
     // Lưu bằng COOKIE PHIÊN (không đặt expires/max-age) → tự mất khi đóng trình duyệt.
     // Không còn khoá theo ngày: mỗi phiên hiện tối đa 1 lần.
-    const seen = () =>
-      document.cookie.split("; ").some((c) => c.startsWith(COOKIE + "="));
+    const seen = () => document.cookie.split("; ").some((c) => c.startsWith(COOKIE + "="));
     const markSeen = () => {
       document.cookie = COOKIE + "=1; path=/; SameSite=Lax";
     };
@@ -198,9 +200,7 @@ import logo from "@/assets/promos/popup-pets-logo.svg";
     document.addEventListener("mouseout", (e) => {
       if (e.clientY <= 0 && !e.relatedTarget) show();
     });
-    popup.querySelectorAll("[data-close]").forEach((el) =>
-      el.addEventListener("click", close)
-    );
+    popup.querySelectorAll("[data-close]").forEach((el) => el.addEventListener("click", close));
     document.addEventListener("keydown", (e) => {
       if (e.key === "Escape" && !popup.hidden) close();
     });

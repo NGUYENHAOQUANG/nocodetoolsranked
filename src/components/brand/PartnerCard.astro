@@ -18,12 +18,7 @@ interface Props {
   isBestOverall?: boolean;
 }
 
-const {
-  brand,
-  hasSideBanner = false,
-  shouldShowRank = true,
-  isBestOverall = false,
-} = Astro.props;
+const { brand, hasSideBanner = false, shouldShowRank = true, isBestOverall = false } = Astro.props;
 const {
   rank,
   logo,
@@ -70,15 +65,15 @@ const mobileLogo = logoMobile ?? logo;
     )
   }
 
-  {/* Cả thẻ bấm được như bản gốc: div `cursor: pointer` + click handler, KHÔNG dùng
-      thẻ <a> phủ toàn card — overlay như vậy sẽ nuốt hover của chữ/gạch đầu dòng/vòng điểm */}
+  {
+    /* Cả thẻ bấm được như bản gốc: div `cursor: pointer` + click handler, KHÔNG dùng
+      thẻ <a> phủ toàn card — overlay như vậy sẽ nuốt hover của chữ/gạch đầu dòng/vòng điểm */
+  }
   <div class="partner__frame" data-href={href}>
     {shouldShowRank && <span class="partner__rank partner__rank--compact">{rank}</span>}
     {
       isEditorsChoice && (
-        <span
-          class:list={["partner__tag", { "partner__tag--full": isBestOverall }]}
-        >
+        <span class:list={["partner__tag", { "partner__tag--full": isBestOverall }]}>
           Exclusive Offer
         </span>
       )
@@ -94,12 +89,7 @@ const mobileLogo = logoMobile ?? logo;
     }
 
     <div class="partner__wrapper">
-      <div
-        class:list={[
-          "partner__card",
-          { "partner__card--editors-choice": isEditorsChoice },
-        ]}
-      >
+      <div class:list={["partner__card", { "partner__card--editors-choice": isEditorsChoice }]}>
         {shouldShowRank && <span class="partner__rank partner__rank--wide">{rank}</span>}
 
         <div class="partner__logo">
@@ -138,7 +128,13 @@ const mobileLogo = logoMobile ?? logo;
               <ul class="partner__bullets partner__bullets--compact">
                 {bulletsMobile.map((item) => (
                   <li>
-                    <svg viewBox="0 0 1024 1024" width="13" height="13" fill="currentColor" aria-hidden="true">
+                    <svg
+                      viewBox="0 0 1024 1024"
+                      width="13"
+                      height="13"
+                      fill="currentColor"
+                      aria-hidden="true"
+                    >
                       <path d={CHECK_THIN} />
                     </svg>
                     <span>{item}</span>
@@ -152,7 +148,13 @@ const mobileLogo = logoMobile ?? logo;
             {
               bullets.map((item) => (
                 <li>
-                  <svg viewBox="0 0 1024 1024" width="13" height="13" fill="currentColor" aria-hidden="true">
+                  <svg
+                    viewBox="0 0 1024 1024"
+                    width="13"
+                    height="13"
+                    fill="currentColor"
+                    aria-hidden="true"
+                  >
                     <path d={CHECK_THIN} />
                   </svg>
                   <span>{item}</span>
@@ -171,12 +173,7 @@ const mobileLogo = logoMobile ?? logo;
           )
         }
 
-        <ScoreRing
-          rating={rating}
-          label={ratingLabel}
-          stars={stars}
-          reviews={reviewsCount}
-        />
+        <ScoreRing rating={rating} label={ratingLabel} stars={stars} reviews={reviewsCount} />
 
         <div class="partner__separator"></div>
 
@@ -208,7 +205,7 @@ const mobileLogo = logoMobile ?? logo;
                     fill="currentColor"
                     aria-hidden="true"
                   >
-                    <path d={CHEVRON_RIGHT} />
+                    <path d={CHEVRON_RIGHT}></path>
                   </svg>
                 </div>
               </a>
@@ -223,21 +220,19 @@ const mobileLogo = logoMobile ?? logo;
 <script>
   // Bản gốc không có thẻ <a> phủ card: cả khung là div `cursor: pointer` gắn onClick.
   // Làm y hệt để hover của tagline / gạch đầu dòng / vòng điểm không bị overlay chặn.
-  document
-    .querySelectorAll<HTMLElement>(".partner__frame[data-href]")
-    .forEach((frame) => {
-      const href = frame.dataset.href!;
+  document.querySelectorAll<HTMLElement>(".partner__frame[data-href]").forEach((frame) => {
+    const href = frame.dataset.href!;
 
-      frame.addEventListener("click", (event) => {
-        const target = event.target as HTMLElement;
-        // Bấm trúng link thật bên trong (nút "Visit Site") thì để nó tự xử lý
-        if (target.closest("a")) return;
-        // Bỏ qua khi người dùng đang bôi đen chữ
-        if (!window.getSelection()?.isCollapsed) return;
+    frame.addEventListener("click", (event) => {
+      const target = event.target as HTMLElement;
+      // Bấm trúng link thật bên trong (nút "Visit Site") thì để nó tự xử lý
+      if (target.closest("a")) return;
+      // Bỏ qua khi người dùng đang bôi đen chữ
+      if (!window.getSelection()?.isCollapsed) return;
 
-        window.open(href, "_blank", "noopener");
-      });
+      window.open(href, "_blank", "noopener");
     });
+  });
 </script>
 
 <style>

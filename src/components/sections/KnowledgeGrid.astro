@@ -16,7 +16,12 @@ const ARROW =
         <a class="knowledge-card__image" href={card.href} aria-label={card.title}>
           {/* Giữ NGUYÊN tỉ lệ ảnh gốc (không ép 350×239 kẻo méo) — để CSS object-fit
               cover cắt giữa lúc hiển thị, y hệt bản gốc */}
-          <Image src={card.image} alt={card.imageAlt} width={card.image.width} height={card.image.height} />
+          <Image
+            src={card.image}
+            alt={card.imageAlt}
+            width={card.image.width}
+            height={card.image.height}
+          />
           <span class="knowledge-card__overlay" aria-hidden="true" />
         </a>
         <div class="knowledge-card__content">
@@ -29,7 +34,13 @@ const ARROW =
           <p class="knowledge-card__excerpt">{card.excerpt}</p>
           <a class="knowledge-card__more" href={card.href}>
             Read More
-            <svg viewBox="0 0 1024 1024" width="1em" height="1em" fill="currentColor" aria-hidden="true">
+            <svg
+              viewBox="0 0 1024 1024"
+              width="1em"
+              height="1em"
+              fill="currentColor"
+              aria-hidden="true"
+            >
               <path d={ARROW} />
             </svg>
           </a>

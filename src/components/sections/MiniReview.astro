@@ -24,8 +24,10 @@ const reviewsMobile = `(${brand.reviewsCount}) Reviews`;
 <section class="mini-review">
   <h2 class="mini-review__title">Best Dog Food Brands Reviewed</h2>
 
-  {/* Bản gốc dựng 2 cây DOM riêng rồi đổi bằng `display` chứ không chỉ sắp xếp lại:
-      desktop có Pros/Cons, mobile thay bằng drawer "Summary" → nội dung khác nhau */}
+  {
+    /* Bản gốc dựng 2 cây DOM riêng rồi đổi bằng `display` chứ không chỉ sắp xếp lại:
+      desktop có Pros/Cons, mobile thay bằng drawer "Summary" → nội dung khác nhau */
+  }
 
   {/* ===== Bản mobile (<768px, hoặc màn hình thấp <420px) ===== */}
   <div class="mini-review__mobile">
@@ -85,7 +87,7 @@ const reviewsMobile = `(${brand.reviewsCount}) Reviews`;
           stroke-linejoin="round"
           aria-hidden="true"
         >
-          <path d="m112 184 144 144 144-144" />
+          <path d="m112 184 144 144 144-144"></path>
         </svg>
       </button>
       <div class="mini-review__drawer-content">
@@ -135,7 +137,7 @@ const reviewsMobile = `(${brand.reviewsCount}) Reviews`;
               fill="currentColor"
               aria-hidden="true"
             >
-              <path d={CHECK} />
+              <path d={CHECK}></path>
             </svg>
             Pros
           </h5>
@@ -167,7 +169,7 @@ const reviewsMobile = `(${brand.reviewsCount}) Reviews`;
               fill="currentColor"
               aria-hidden="true"
             >
-              <path d={CROSS} />
+              <path d={CROSS}></path>
             </svg>
             Cons
           </h5>
@@ -335,7 +337,7 @@ const reviewsMobile = `(${brand.reviewsCount}) Reviews`;
     margin-bottom: 1rem;
   }
 
-  /* ----- Hạng mục chấm điểm ----- */
+  /* ----- Hạng mục chấm điểm ----- */
 
   /* ----- Drawer "Summary" (chỉ có ở bản mobile) ----- */
   .mini-review__drawer {
@@ -473,7 +475,6 @@ const reviewsMobile = `(${brand.reviewsCount}) Reviews`;
     .mini-review__reviews {
       font-size: 0.875rem;
     }
-
 
     /* ----- Pros / Cons ----- */
     .mini-review__proscons {
@@ -547,21 +548,19 @@ const reviewsMobile = `(${brand.reviewsCount}) Reviews`;
   const CHEVRON_DOWN = "m112 184 144 144 144-144";
   const CHEVRON_UP = "m112 328 144-144 144 144";
 
-  document
-    .querySelectorAll<HTMLButtonElement>(".mini-review__drawer-button")
-    .forEach((button) => {
-      /* Tìm theo khối cha chứ không dùng `nextElementSibling`: cách cũ gãy im
+  document.querySelectorAll<HTMLButtonElement>(".mini-review__drawer-button").forEach((button) => {
+    /* Tìm theo khối cha chứ không dùng `nextElementSibling`: cách cũ gãy im
          lặng nếu về sau chèn thêm element nào vào giữa nút và phần nội dung. */
-      const content = button
-        .closest(".mini-review__drawer")
-        ?.querySelector(".mini-review__drawer-content");
-      const path = button.querySelector("path");
-      if (!content || !path) return;
+    const content = button
+      .closest(".mini-review__drawer")
+      ?.querySelector(".mini-review__drawer-content");
+    const path = button.querySelector("path");
+    if (!content || !path) return;
 
-      button.addEventListener("click", () => {
-        const open = content.classList.toggle("is-open");
-        button.setAttribute("aria-expanded", String(open));
-        path.setAttribute("d", open ? CHEVRON_UP : CHEVRON_DOWN);
-      });
+    button.addEventListener("click", () => {
+      const open = content.classList.toggle("is-open");
+      button.setAttribute("aria-expanded", String(open));
+      path.setAttribute("d", open ? CHEVRON_UP : CHEVRON_DOWN);
     });
+  });
 </script>

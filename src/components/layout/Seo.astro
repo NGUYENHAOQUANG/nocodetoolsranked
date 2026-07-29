@@ -47,8 +47,4 @@ const ogImage = image ? new URL(image, Astro.site).href : undefined;
 <meta name="twitter:description" content={description} />
 {ogImage && <meta name="twitter:image" content={ogImage} />}
 
-{
-  schema.map((node) => (
-    <script type="application/ld+json" set:html={JSON.stringify(node)} />
-  ))
-}
+{schema.map((node) => <script type="application/ld+json" set:html={JSON.stringify(node)} />)}

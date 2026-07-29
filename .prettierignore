@@ -1,19 +1,24 @@
 # ============================================================================
-# KHÔNG format .astro và .mdx — đây là hàng rào an toàn, không phải tuỳ chọn.
+# .astro và .mdx GIỜ ĐƯỢC FORMAT.
 #
-# prettier-plugin-astro reformat template HTML, mà KHOẢNG TRẮNG GIỮA CÁC INLINE
-# ELEMENT RENDER THÀNH DẤU CÁCH. Trên codebase này — nơi "Visit Site " có dấu
-# cách cuối, alt là "Ollie  logo" hai dấu cách, và <p>&nbsp;</p> là spacer cố ý —
-# chạy formatter lên template là cách nhanh nhất để phá vỡ ràng buộc §4.
+# Hàng rào cũ chặn hai đuôi đó với lý do: prettier-plugin-astro reflow template,
+# mà khoảng trắng giữa các inline element render thành dấu cách — nguy hiểm trên
+# một codebase có `"Visit Site "` dấu cách cuối, `alt="Ollie  logo"` hai dấu
+# cách, và `<p>&nbsp;</p>` làm spacer.
 #
-# Xem CLAUDE.md §8.7. Muốn format toàn bộ thì phải là một commit riêng, sau khi
-# tái cấu trúc xong, với đầy đủ harness làm gate.
+# Cả ba thứ đó nay đã bị xoá, nên lý do hết hiệu lực. Đã chạy thử và đối chiếu
+# `dist/`: format toàn bộ 26 file .astro cho ra body và CSS GIỐNG HỆT.
+#
+# Chỗ duy nhất còn nhạy cảm với khoảng trắng là những dòng cố ý viết sát nhau
+# (vd `</svg><span>` trong HeroHome) — chúng có comment cảnh báo tại chỗ.
 # ============================================================================
-**/*.astro
-**/*.mdx
 
-# Nội dung + build output
+# Nội dung do người viết, KHÔNG format tự động: Markdown nhạy cảm với khoảng
+# trắng (thụt lề quyết định danh sách lồng, dòng trống quyết định loose/tight),
+# và các file này được chỉnh tay để render đúng nhịp dọc của bản gốc.
 src/content/**
+
+# Sinh ra hoặc do công cụ khác quản
 dist/
 .astro/
 node_modules/

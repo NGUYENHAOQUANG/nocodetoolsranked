@@ -33,11 +33,7 @@ const partnerKey = typeof entry.data.brand === "string" ? entry.data.brand : ent
 
 /* Bản gốc: "Home" KHÔNG có href (không phải link), mốc giữa mới là link, và
    mốc cuối lại ghi "Reviews" chứ không phải tên bài. Giữ nguyên cả ba. */
-const crumbs = [
-  { text: "Home" },
-  { text: "Reviews", href: REVIEWS_INDEX },
-  { text: "Reviews" },
-];
+const crumbs = [{ text: "Home" }, { text: "Reviews", href: REVIEWS_INDEX }, { text: "Reviews" }];
 
 /* KHÔNG phát Review/AggregateRating: Google cấm self-serving review markup cho
    sản phẩm bên thứ ba. Điểm số vẫn hiện cho người đọc, chỉ không khai schema. */
@@ -53,8 +49,10 @@ const schema = [
 ];
 ---
 
-{/* Bản gốc: desktop ghi "Reviews", mobile lại ghi tên bài — nên đây là trang
-    DUY NHẤT phải truyền `heroMobileAlt` tường minh. */}
+{
+  /* Bản gốc: desktop ghi "Reviews", mobile lại ghi tên bài — nên đây là trang
+    DUY NHẤT phải truyền `heroMobileAlt` tường minh. */
+}
 <InnerPageLayout
   title={title}
   description={promo}
@@ -69,7 +67,13 @@ const schema = [
     {/* TOC lấy thẳng từ heading của bài — không khai tay, khỏi lệch khi sửa bài */}
     <InnerNavigator headings={headings} />
     <main class="review-layout__main">
-      <ReviewIntro logo={brand.logo} logoAlt={brand.logoAltShort!} promo={promo} href={brand.affiliateUrl} author={author} />
+      <ReviewIntro
+        logo={brand.logo}
+        logoAlt={brand.logoAltShort!}
+        promo={promo}
+        href={brand.affiliateUrl}
+        author={author}
+      />
       {/* Bản gốc gom Pros/Cons + toàn bộ bài + link cuối vào CHUNG một section */}
       <section class="review">
         <div class="review__body">

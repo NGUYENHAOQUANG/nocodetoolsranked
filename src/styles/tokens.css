@@ -57,15 +57,17 @@
   --color-overlay: rgba(0, 0, 0, 0.5);
 
   /* ----- Chữ viết ----- */
-  --font-base: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
-    "Helvetica Neue", Arial, "Noto Sans", sans-serif;
+  --font-base:
+    system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", "Helvetica Neue", Arial, "Noto Sans",
+    sans-serif;
   --font-brand: "Lato", var(--font-base);
   /* Stack riêng cho tooltip đối tác — trang gốc khai báo Work Sans nhưng không nạp,
      nên thực tế lấy font hệ thống nếu máy có, không thì rơi về stack dưới.
      ĐỪNG "sửa" — đây là tái tạo có chủ ý lỗi của bản gốc (§8.7). */
-  --font-ui: "Work Sans", -apple-system, BlinkMacSystemFont, "Segoe UI",
-    "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji",
-    "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+  --font-ui:
+    "Work Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", "Helvetica Neue", Arial,
+    "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol",
+    "Noto Color Emoji";
 
   /* ----- Bố cục ----- */
   --container-max: 1200px;

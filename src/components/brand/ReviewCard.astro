@@ -7,16 +7,7 @@ interface Props {
 }
 
 const { review } = Astro.props;
-const {
-  logo,
-  logoAlt,
-  text,
-  readMoreHref,
-  rating,
-  ratingLabel,
-  stars,
-  href,
-} = Astro.props.review;
+const { logo, logoAlt, text, readMoreHref, rating, ratingLabel, stars, href } = Astro.props.review;
 
 // Cung tròn r=47.5 trong viewBox 100×100 — cùng cách dựng với vòng điểm trang chủ
 const RADIUS = 47.5;
@@ -34,8 +25,10 @@ const starPaths = starList(stars);
 
   <div class="review__body">
     <div class="review__text">
-      {/* Bản gốc bọc nội dung trong <p> (margin mặc định 1em) rồi để "Read More"
-          là link INLINE ngay sau — nhờ vậy khối cao 249.63 chứ không phải 217.63 */}
+      {
+        /* Bản gốc bọc nội dung trong <p> (margin mặc định 1em) rồi để "Read More"
+          là link INLINE ngay sau — nhờ vậy khối cao 249.63 chứ không phải 217.63 */
+      }
       <p>{text}</p>
       <a class="review__more" href={readMoreHref}>Read More</a>
     </div>
@@ -57,7 +50,8 @@ const starPaths = starList(stars);
             d={ARC}
             stroke-width="5"
             fill-opacity="0"
-            style={`stroke-dasharray: ${CIRCUMFERENCE}px, ${CIRCUMFERENCE}px; stroke-dashoffset: ${dashOffset}px;`}></path>
+            style={`stroke-dasharray: ${CIRCUMFERENCE}px, ${CIRCUMFERENCE}px; stroke-dashoffset: ${dashOffset}px;`}
+          ></path>
         </svg>
 
         {/* Lớp phủ PHẢI absolute — để relative nó ăn vào chiều cao ô và vòng hụt mất */}
@@ -86,9 +80,11 @@ const starPaths = starList(stars);
     </div>
 
     <div class="review__cta">
-      {/* Cần lớp trong này: nút dùng height:100% nên phải quy chiếu vào một ô cao
+      {
+        /* Cần lớp trong này: nút dùng height:100% nên phải quy chiếu vào một ô cao
           `auto` (min-height 45) — nếu bám thẳng ô ngoài cao 45px thì ở mobile nút
-          cao 45 thay vì 40 và không được căn giữa. */}
+          cao 45 thay vì 40 và không được căn giữa. */
+      }
       <div class="review__cta-inner">
         <a
           class="review__button"

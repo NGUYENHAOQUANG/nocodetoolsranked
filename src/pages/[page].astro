@@ -36,7 +36,9 @@ const crumbs = [{ text: "Home" }, { text: heroTitle }];
   crumbs={crumbs}
 >
   <main>
-    <article class:list={["page__body", { "page__body--plain-headings": headingStyle === "plain" }]}>
+    <article
+      class:list={["page__body", { "page__body--plain-headings": headingStyle === "plain" }]}
+    >
       <Content />
     </article>
   </main>

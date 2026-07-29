@@ -60,8 +60,9 @@ function renderedTextOf(file, src) {
   if (file.endsWith(".mdx") || file.endsWith(".md")) {
     // frontmatter là YAML: bỏ dòng comment `#` trong đó (chỉ trong đó, vì `#`
     // ở thân bài là tiêu đề Markdown)
-    s = s.replace(/^(---\r?\n)([\s\S]*?)(\r?\n---)/, (_, open, body, close) =>
-      open + body.replace(/^\s*#.*$/gm, "") + close,
+    s = s.replace(
+      /^(---\r?\n)([\s\S]*?)(\r?\n---)/,
+      (_, open, body, close) => open + body.replace(/^\s*#.*$/gm, "") + close,
     );
   }
   return s;

@@ -13,18 +13,14 @@ interface Props {
 const { logo, logoAlt, promo, buttonText, href } = Astro.props;
 ---
 
-{/* Bản gốc lồng 3 div (background-wrapper > border-wrapper > content) nhưng viền
+{
+  /* Bản gốc lồng 3 div (background-wrapper > border-wrapper > content) nhưng viền
     cùng màu nền và lớp giữa chỉ căn giữa bằng top:50%/translateY(-50%) — vốn triệt
     tiêu nhau vì cùng cao 100px. Gộp làm 1: nền + viền 3px + padding 10px cho ra
-    đúng hộp nội dung 574×74 như bản gốc. */}
+    đúng hộp nội dung 574×74 như bản gốc. */
+}
 <div class="inline-cta">
-  <img
-    class="inline-cta__logo"
-    src={logo.src}
-    alt={logoAlt}
-    width="142"
-    height="70"
-  />
+  <img class="inline-cta__logo" src={logo.src} alt={logoAlt} width="142" height="70" />
   <p class="inline-cta__promo">{promo}</p>
   <div class="inline-cta__action">
     <div class="inline-cta__button-box">
@@ -37,15 +33,8 @@ const { logo, logoAlt, promo, buttonText, href } = Astro.props;
         referrerpolicy="strict-origin"
       >
         <span class="inline-cta__button-text">{buttonText}</span>
-        <svg
-          class="inline-cta__arrow"
-          viewBox="0 0 320 512"
-          fill="currentColor"
-          aria-hidden="true"
-        >
-          <path
-            d={CHEVRON_RIGHT}
-          />
+        <svg class="inline-cta__arrow" viewBox="0 0 320 512" fill="currentColor" aria-hidden="true">
+          <path d={CHEVRON_RIGHT}></path>
         </svg>
       </a>
     </div>

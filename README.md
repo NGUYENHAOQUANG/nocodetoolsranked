@@ -14,13 +14,13 @@ npm install
 npm run dev        # http://localhost:4321
 ```
 
-| Lệnh | Việc |
-|---|---|
-| `npm run dev` | Máy chủ phát triển |
-| `npm run build` | Dựng site tĩnh vào `dist/` |
-| `npm run preview` | Xem thử bản đã dựng |
-| `npm run check` | Kiểm kiểu (`astro check`) — phải luôn 0 lỗi |
-| `npm run format` | Format `.ts`/`.yaml`/`.json`. **Cố ý KHÔNG đụng `.astro`/`.mdx`** — xem CLAUDE.md §8.7 |
+| Lệnh              | Việc                                                                                   |
+| ----------------- | -------------------------------------------------------------------------------------- |
+| `npm run dev`     | Máy chủ phát triển                                                                     |
+| `npm run build`   | Dựng site tĩnh vào `dist/`                                                             |
+| `npm run preview` | Xem thử bản đã dựng                                                                    |
+| `npm run check`   | Kiểm kiểu (`astro check`) — phải luôn 0 lỗi                                            |
+| `npm run format`  | Format `.ts`/`.yaml`/`.json`. **Cố ý KHÔNG đụng `.astro`/`.mdx`** — xem CLAUDE.md §8.7 |
 
 Cần Node ≥ 22.12.
 
@@ -38,10 +38,10 @@ review — đều lấy từ đây.
 
 Bảng xếp hạng nằm ở `src/content/placements/`:
 
-| File | Dùng cho |
-|---|---|
-| `homepage.yaml` | Toplist trang chủ (9 brand) |
-| `reviews-page.yaml` | Danh sách `/reviews/` (6 brand) |
+| File                  | Dùng cho                            |
+| --------------------- | ----------------------------------- |
+| `homepage.yaml`       | Toplist trang chủ (9 brand)         |
+| `reviews-page.yaml`   | Danh sách `/reviews/` (6 brand)     |
 | `review-sidebar.yaml` | Thứ tự partner ở sidebar bài review |
 
 Sửa `rank` / `rating` / `stars` / `coupon` ngay trong file tương ứng.

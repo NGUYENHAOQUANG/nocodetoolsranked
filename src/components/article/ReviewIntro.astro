@@ -20,22 +20,34 @@ const { logo, logoAlt, promo, href, author } = Astro.props;
   <div class="review-intro__promote">
     <img class="review-intro__logo" src={logo.src} alt={logoAlt} width="215" height="70" />
     <div class="review-intro__promo-text">
-      {/* Ô bọc BLOCK (bản gốc là div cursor:pointer): nhờ nó là block nên margin
+      {
+        /* Ô bọc BLOCK (bản gốc là div cursor:pointer): nhờ nó là block nên margin
           của like-icon và <p> thu gọn (collapse). Nếu để like-icon + <p> làm con
-          trực tiếp của flex thì margin không collapse → promo rỗng dư 16px. */}
+          trực tiếp của flex thì margin không collapse → promo rỗng dư 16px. */
+      }
       <div class="review-intro__promo-inner">
-        {/* Ô bọc icon: dưới 1240px nó là BLOCK nên <img> nằm INLINE trên baseline →
-            cao 44.8px chứ không phải 38px. Từ 1240px mới chuyển sang flex. */}
+        {
+          /* Ô bọc icon: dưới 1240px nó là BLOCK nên <img> nằm INLINE trên baseline →
+            cao 44.8px chứ không phải 38px. Từ 1240px mới chuyển sang flex. */
+        }
         <div class="review-intro__like-icon">
           {/* Bản gốc dùng ẢNH PNG 44×38 cho icon này, không phải SVG */}
-          <img class="review-intro__thumb" src={likeIcon.src} alt="Like icon" width="44" height="38" />
+          <img
+            class="review-intro__thumb"
+            src={likeIcon.src}
+            alt="Like icon"
+            width="44"
+            height="38"
+          />
         </div>
         <p>{promo}</p>
       </div>
     </div>
     <div class="review-intro__cta">
-      {/* Ô trong rộng 157px nằm trong ô ngoài 140px: bản gốc cho nút tràn phải
-          bằng margin âm -17px, rồi kéo cả cụm sang trái 10px */}
+      {
+        /* Ô trong rộng 157px nằm trong ô ngoài 140px: bản gốc cho nút tràn phải
+          bằng margin âm -17px, rồi kéo cả cụm sang trái 10px */
+      }
       <div class="review-intro__cta-inner">
         <a
           class="review-intro__button"

@@ -39,16 +39,20 @@ const innerContentClass = [
 ---
 
 <section class="hero">
-  {/* Bản gốc dựng banner mobile/desktop thành HAI cây riêng: JS chọn cây theo
+  {
+    /* Bản gốc dựng banner mobile/desktop thành HAI cây riêng: JS chọn cây theo
       `clientWidth` (mốc 768), còn CSS lại ẩn theo `innerWidth` — lệch nhau đúng
       15px thanh cuộn nên ở 768–782px KHÔNG cây nào hiện, chừa 170px trắng.
-      Tái hiện y hệt bằng 2 mốc ẩn lệch nhau ở cuối file. */}
+      Tái hiện y hệt bằng 2 mốc ẩn lệch nhau ở cuối file. */
+  }
   <div class="hero__banner hero__banner--mobile-only">
     <Image class="hero__bg" src={heroImgMobile} alt={mobileAlt} sizes="100vw" loading="eager" />
     <div class={innerContentClass}>
       <div class="hero__text">
-        {/* set:html để tiêu đề mobile chèn <br> cứng như bản gốc (vd
-            "Top Dog Food Delivery" xuống dòng rồi "Reviews") — không tự wrap */}
+        {
+          /* set:html để tiêu đề mobile chèn <br> cứng như bản gốc (vd
+            "Top Dog Food Delivery" xuống dòng rồi "Reviews") — không tự wrap */
+        }
         <h1 class="hero__title" set:html={mobileTitle} />
       </div>
     </div>

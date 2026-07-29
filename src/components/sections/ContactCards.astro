@@ -25,7 +25,9 @@ const contactCards = (await getEntry("contactCards", "contact"))!.data.cards;
             <h3 class="contact-card__title">{card.title}</h3>
             <p class="contact-card__subtitle">{card.subtitle}</p>
           </div>
-          <button class="contact-card__button" type="button">{card.button}</button>
+          <button class="contact-card__button" type="button">
+            {card.button}
+          </button>
         </article>
       ))
     }
@@ -35,7 +37,12 @@ const contactCards = (await getEntry("contactCards", "contact"))!.data.cards;
 {/* Modal dùng chung — điền tiêu đề/subtitle/nút theo card lúc mở (bản gốc portal ra body) */}
 <div class="contact-modal" hidden>
   <div class="contact-modal__backdrop" data-close></div>
-  <div class="contact-modal__box" role="dialog" aria-modal="true" aria-labelledby="contact-modal-title">
+  <div
+    class="contact-modal__box"
+    role="dialog"
+    aria-modal="true"
+    aria-labelledby="contact-modal-title"
+  >
     <button class="contact-modal__close" type="button" data-close aria-label="Close">
       <svg viewBox="0 0 512 512" width="23" height="23" aria-hidden="true">
         <path
@@ -59,12 +66,9 @@ const contactCards = (await getEntry("contactCards", "contact"))!.data.cards;
         class="contact-modal__link-bold"
         href="/"
         target="_blank">Privacy Policy.</a
-      > This site is protected by reCAPTCHA and the Google <a
-        href="#"
-        target="_blank">Privacy Policy</a
-      > and <a href="#" target="_blank"
-        >Terms of Service</a
-      > apply.
+      > This site is protected by reCAPTCHA and the Google <a href="#" target="_blank"
+        >Privacy Policy</a
+      > and <a href="#" target="_blank">Terms of Service</a> apply.
     </p>
   </div>
 </div>
@@ -221,8 +225,14 @@ const contactCards = (await getEntry("contactCards", "contact"))!.data.cards;
     border-radius: 3px;
     box-shadow: 0 0 12px 1px #454545;
     font-family:
-      system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
-      "Helvetica Neue", Arial, "Noto Sans", sans-serif;
+      system-ui,
+      -apple-system,
+      BlinkMacSystemFont,
+      "Segoe UI",
+      "Helvetica Neue",
+      Arial,
+      "Noto Sans",
+      sans-serif;
     text-align: left;
   }
   .contact-modal__close {
@@ -334,9 +344,7 @@ const contactCards = (await getEntry("contactCards", "contact"))!.data.cards;
       el.addEventListener("click", close);
     });
     // Không cho form thật sự gửi (bản clone tĩnh)
-    modal
-      .querySelector("form")
-      ?.addEventListener("submit", (e) => e.preventDefault());
+    modal.querySelector("form")?.addEventListener("submit", (e) => e.preventDefault());
     document.addEventListener("keydown", (e) => {
       if (e.key === "Escape" && !modal.hidden) close();
     });
