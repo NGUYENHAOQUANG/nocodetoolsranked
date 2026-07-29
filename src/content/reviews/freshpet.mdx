@@ -1,11 +1,14 @@
 ---
 title: "Freshpet Review"
+# Tiêu đề hero bản MOBILE — desktop luôn ghi "Reviews"
 heroTitle: "Freshpet Review"
+# Dòng khuyến mãi ở thanh trên cùng bài
 promo: ""
-href: "#"
-author:
-  name: "Aditi Patel"
-  role: "Dog Food Reviews Editor"
+# reference() — gõ sai là LỖI BUILD, không phải undefined âm thầm.
+# Logo, alt, tên hiển thị, link affiliate và promo carousel đều lấy từ brand,
+# nên href/carouselPromo/articleLinkName không còn khai ở đây nữa.
+brand: "freshpet"
+author: "aditi-patel"
 pros:
   - "Uses real meat as the first ingredient in most recipes."
   - "Food stays moist, soft, and easy to chew."
@@ -16,9 +19,6 @@ cons:
   - "Requires refrigeration at all times after opening."
   - "Higher cost than standard dry dog food."
   - "Shorter shelf life once packaging is opened."
-partner: "freshpet"
-carouselPromo: "Formulated by veterinary nutritionists"
-articleLinkName: "Freshpet"
 ---
 
 import Paragraph from "@/components/ui/Paragraph.astro";

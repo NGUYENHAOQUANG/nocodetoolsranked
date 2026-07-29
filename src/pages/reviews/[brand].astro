@@ -1,5 +1,5 @@
 ---
-import { getCollection, render } from "astro:content";
+import { getCollection, getEntry, render } from "astro:content";
 import BaseLayout from "@/layouts/BaseLayout.astro";
 import Header from "@/components/layout/Header.astro";
 import Hero from "@/components/sections/Hero.astro";
@@ -11,7 +11,6 @@ import ArticleLink from "@/components/article/ArticleLink.astro";
 import ReviewSidebar from "@/components/sidebar/ReviewSidebar.astro";
 import Footer from "@/components/layout/Footer.astro";
 import ToTop from "@/components/layout/ToTop.astro";
-import { getPartnerLogos } from "@/lib/rankings";
 import { REVIEWS_INDEX, reviewUrl } from "@/lib/links";
 import { breadcrumbSchema, articleSchema } from "@/lib/schema-org";
 
@@ -29,11 +28,13 @@ export async function getStaticPaths() {
 
 const { entry } = Astro.props;
 const { Content, headings } = await render(entry);
-const { title, heroTitle, promo, href, author, pros, cons, partner, articleLinkName } = entry.data;
+const { title, heroTitle, promo, pros, cons } = entry.data;
 
-/* Logo đối tác cho thanh trên (ReviewIntro). Carousel sidebar tự dựng từ
-   carouselPartners, chỉ cần biết đối tác hiện tại (`partner`). */
-const { logo, logoAlt } = (await getPartnerLogos())[partner];
+/* Mọi thứ thuộc về đối tác — logo, alt, tên ở link cuối bài, link affiliate —
+   lấy từ collection `brands` qua reference(), không khai lại trong frontmatter. */
+const brand = (await getEntry(entry.data.brand))!.data;
+const author = (await getEntry(entry.data.author))!.data;
+const partnerKey = typeof entry.data.brand === "string" ? entry.data.brand : entry.data.brand.id;
 
 /* Bản gốc: "Home" KHÔNG có href (không phải link), mốc giữa mới là link, và
    mốc cuối lại ghi "Reviews" chứ không phải tên bài. Giữ nguyên cả ba. */
@@ -51,7 +52,7 @@ const schema = [
     title,
     description: promo,
     url: reviewUrl(entry.id),
-    image: logo.src,
+    image: brand.logo.src,
     authorName: author.name,
   }),
 ];
@@ -73,18 +74,18 @@ const schema = [
     {/* TOC lấy thẳng từ heading của bài — không khai tay, khỏi lệch khi sửa bài */}
     <InnerNavigator headings={headings} />
     <main class="review-layout__main">
-      <ReviewIntro logo={logo} logoAlt={logoAlt} promo={promo} href={href} author={author} />
+      <ReviewIntro logo={brand.logo} logoAlt={brand.logoAltShort!} promo={promo} href={brand.affiliateUrl} author={author} />
       {/* Bản gốc gom Pros/Cons + toàn bộ bài + link cuối vào CHUNG một section */}
       <section class="review">
         <div class="review__body">
           <ProsCons pros={pros} cons={cons} />
           <Content />
           {/* Tên đối tác ở link cuối bài (không có dấu nháy) */}
-          <ArticleLink name={articleLinkName} href={href} />
+          <ArticleLink name={brand.articleLinkName!} href={brand.affiliateUrl} />
         </div>
       </section>
     </main>
-    <ReviewSidebar partner={partner} />
+    <ReviewSidebar partner={partnerKey} />
   </div>
 
   <Footer />

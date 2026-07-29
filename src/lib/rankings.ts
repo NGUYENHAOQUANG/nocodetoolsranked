@@ -8,7 +8,7 @@
  * Shape trả về cố tình giữ y hệt `src/data/*.ts` cũ, nên việc chuyển đổi chỉ
  * là đổi dòng import trong component — không đụng markup, không đổi props.
  */
-import { getCollection, getEntry } from "astro:content";
+import { getEntry } from "astro:content";
 import type { ImageMetadata } from "astro";
 import { reviewUrl } from "@/lib/links";
 
@@ -148,20 +148,6 @@ export async function getCarouselPartners(): Promise<CarouselPartner[]> {
     promo: brand.carouselPromo!,
     href: brand.affiliateUrl,
   }));
-}
-
-/** Logo + alt dạng ngắn, tra theo khoá brand — dùng cho thanh trên bài review */
-export async function getPartnerLogos(): Promise<
-  Record<string, { logo: ImageMetadata; logoAlt: string }>
-> {
-  const brands = await getCollection("brands");
-  const out: Record<string, { logo: ImageMetadata; logoAlt: string }> = {};
-  for (const b of brands) {
-    if (b.data.logoAltShort) {
-      out[b.id] = { logo: b.data.logo, logoAlt: b.data.logoAltShort };
-    }
-  }
-  return out;
 }
 
 /**

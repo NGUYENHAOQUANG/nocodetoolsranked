@@ -97,8 +97,9 @@ const authors = defineCollection({
 });
 
 /** Bài review từng brand — MDX. Thân bài là nội dung; TOC tự sinh từ heading.
-    GHI CHÚ: frontmatter còn giữ `author` inline và `partner` dạng chuỗi. Bước B
-    của GĐ3 sẽ đổi sang reference("authors") / reference("brands"). */
+
+    Logo, alt, tên hiển thị, link affiliate và promo carousel KHÔNG khai ở đây —
+    tất cả lấy từ `brand`. Đó là lớp trùng lặp cuối cùng đã được xoá. */
 const reviews = defineCollection({
   loader: glob({ pattern: "**/*.mdx", base: "./src/content/reviews" }),
   schema: z.object({
@@ -108,15 +109,11 @@ const reviews = defineCollection({
     heroTitle: z.string(),
     /** Dòng khuyến mãi ở thanh trên cùng bài */
     promo: z.string(),
-    /** Link nút "View Rates". Bước B: bỏ, lấy từ brands.affiliateUrl */
-    href: z.string(),
-    author: z.object({ name: z.string(), role: z.string() }),
+    /** Đối tác của bài. Gõ sai = lỗi build. */
+    brand: reference("brands"),
+    author: reference("authors"),
     pros: z.array(z.string()),
     cons: z.array(z.string()),
-    /** Khoá brand. Bước B: đổi thành reference("brands") */
-    partner: z.string(),
-    carouselPromo: z.string(),
-    articleLinkName: z.string(),
   }),
 });
 
