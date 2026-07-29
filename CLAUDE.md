@@ -22,6 +22,10 @@ npm run format   # prettier cho mọi thứ trừ src/content/**
 Luật thứ hai là điều kiện để giữ `gfm` bật: gfm tự biến URL trần thành thẻ `<a>`,
 và trên site affiliate đó là rò traffic ra ngoài mà không có gì báo.
 
+Luật ASCII quét cả `.ts`, không chỉ `.astro`/`.mdx`/`.yaml`: `config/site.ts` giữ
+tiêu đề và mô tả mặc định, tức là chuỗi RENDER RA TRANG. Bỏ sót nó nên một em
+dash từng sống sót ở đó và ship ra 8 trang trong khi mọi chỗ khác đã đổi.
+
 ## Kiến trúc
 
 Astro 7, static site, **không dùng UI framework**. Mọi tương tác (popup thoát
@@ -44,15 +48,66 @@ component. Thêm brand hay bài viết là thêm file nội dung, không sửa c
 - **`content/placements/`** — _đối tác XUẤT HIỆN THẾ NÀO ở từng trang_: thứ tự,
   điểm số, số sao, coupon.
 
-Tách như vậy vì trang chủ và `/reviews/` xếp hạng **khác nhau** cho cùng một tập
-brand. Nếu gộp làm một thì hoặc phải nhân đôi dữ liệu, hoặc mất khả năng cho hai
-trang xếp khác nhau.
+Tách như vậy vì mỗi trang toplist (trang chủ và từng ngách) cùng `/reviews/` xếp
+hạng **khác nhau** cho cùng một tập brand. Gộp làm một thì hoặc phải nhân đôi dữ
+liệu, hoặc mất khả năng cho mỗi trang xếp một kiểu — mà đó chính là lý do tồn tại
+của các ngách.
 
 Hệ quả thực tế: đổi link affiliate là sửa **một dòng** trong `brands/`, và mọi
 nơi hiển thị nó đều đổi theo.
 
 `src/lib/rankings.ts` nối hai thứ đó lại. `src/lib/posts.ts` làm việc tương tự
 cho bài viết.
+
+### Trang toplist: một file = một trang
+
+`content/toplists/<id>.mdx` là MỘT trang toplist hoàn chỉnh. Trang chủ là entry
+`home`; mọi ngách khác lấy id làm slug ở gốc site. Thân MDX là bài viết dài dưới
+bảng xếp hạng; frontmatter giữ tiêu đề, hero, FAQ, mini-review.
+
+Bốn collection cũ (`featuredArticles`, `faq`, `miniReviews`, và chữ nghĩa hero
+vốn viết cứng trong component) đều chỉ có ĐÚNG MỘT entry tên `homepage` — tức là
+đã sẵn hình dạng "khoá theo trang", chỉ là mới có một trang. Gộp lại nên thêm một
+ngách là thêm **một** file nội dung, không phải bốn.
+
+Bảng xếp hạng thì KHÔNG gộp vào đó: nó dài 120 dòng cho 9 brand x 12 trường, và
+nhịp sửa khác hẳn phần còn lại (điểm/coupon/thứ tự đổi hàng tuần, bài viết hàng
+quý). Nó ở `content/placements/toplist/<id>.yaml`, nối bằng `reference()`.
+
+**Bài kiểm nghiệm thu của mô hình này:** thêm một ngách phải chạy được với **0
+dòng code**. Đã chạy thật — tạo hai file nội dung, build ra `/puppy-food/` với
+cùng bộ khối, cùng thứ tự, 10 card, chỉ khác nội dung và thứ hạng. Đổi cấu trúc
+gì sau này cũng phải giữ được tính chất đó.
+
+### `components/` chia theo phạm vi trang phục vụ
+
+Luật, không có chỗ nào cần phán đoán:
+
+> Component nằm ở thư mục của loại trang duy nhất dùng nó. Dùng ở nhiều loại
+> trang thì lên tầng chung gần nhất — `article/` nếu là review + blog, `layout/`
+> nếu gần như mọi trang.
+
+| Thư mục      | Phục vụ                         |
+| ------------ | ------------------------------- |
+| `layout/`    | mọi trang (6 file)              |
+| `toplist/`   | trang chủ + mọi ngách (16 file) |
+| `article/`   | trang review + bài blog (12)    |
+| `reviews/`   | `/reviews/` (2)                 |
+| `knowledge/` | `/knowledge/` (1)               |
+| `contact/`   | `/contact/` (1)                 |
+
+Trục này chọn vì **đơn vị lớn lên của repo là loại trang**: thêm brand hay thêm
+bài chỉ là thêm file nội dung, còn component mới chỉ sinh ra khi có loại trang
+mới — và khi đó sinh ra cả cụm. Thêm loại trang = tạo một thư mục, bỏ = xoá một
+thư mục.
+
+Đo được: lan truyền import từ mỗi page cho thấy **28/38 component chỉ xuất hiện ở
+đúng một loại trang**, 6 cái ở gần như mọi trang, 4 cái ở đúng hai (review +
+blog). Không cái nào ở giữa — nên luật trên gần như không có ca biên.
+
+Trục CŨ (`sections/` `sidebar/` `ui/` `brand/`) cắt theo bốn thứ khác nhau cùng
+lúc, và vị trí là thuộc tính của CÁCH DÙNG chứ không phải của component: dời một
+khối từ sidebar vào thân bài là nó sai thư mục dù bản thân nó không đổi gì.
 
 ### Quan hệ giữa collection
 
@@ -63,11 +118,18 @@ bài viết là **lỗi build**, không phải `undefined` âm thầm lúc chạ
 
 Route sinh từ tên file trong collection:
 
-| Route                          | Sinh từ                 |
-| ------------------------------ | ----------------------- |
-| `pages/reviews/[slug].astro`   | `content/reviews/*.mdx` |
-| `pages/knowledge/[slug].astro` | `content/posts/*.mdx`   |
-| `pages/[page].astro`           | `content/pages/*.mdx`   |
+| Route                          | Sinh từ                  |
+| ------------------------------ | ------------------------ |
+| `pages/[...toplist].astro`     | `content/toplists/*.mdx` |
+| `pages/reviews/[slug].astro`   | `content/reviews/*.mdx`  |
+| `pages/knowledge/[slug].astro` | `content/posts/*.mdx`    |
+| `pages/[page].astro`           | `content/pages/*.mdx`    |
+
+`[...toplist].astro` là route **rest**, sinh cả `/` lẫn mọi ngách ở gốc site.
+Entry `home` cho ra param `undefined` → URL `/`, nên trang chủ và mọi ngách dùng
+CHUNG một khuôn, không có `index.astro` riêng. Route rest xếp hạng thấp hơn route
+động có tên nên nó KHÔNG nuốt `[page].astro` — đã kiểm bằng build. Ràng buộc: id
+trong `toplists/` không được trùng id trong `pages/`, và `home` là id dành riêng.
 
 `[page].astro` sinh 4 trang nội dung phẳng ở gốc site (`/about/`,
 `/terms-of-use/`, `/privacy-policy/`, `/advertiser-disclosure/`). Nó KHÔNG nuốt
@@ -95,7 +157,7 @@ thì nó không bọc ai — nó _là_ thân của một trang, và chỗ của 
 
 Hai bộ props không giao nhau: `InnerPageLayout` chuyển thẳng 5 props metadata
 xuống dưới mà không đọc cái nào. Cần cả hai tầng vì trang chủ dùng riêng
-`BaseLayout` — nó không có breadcrumb, banner là `HeroHome` với cây DOM khác
+`BaseLayout` — nó không có breadcrumb, banner là `HeroToplist` với cây DOM khác
 hẳn, `<main>` bọc luôn banner, và chỉ nó có `ExitPopup`. Gộp một tầng thì trang
 chủ phải tắt từng thứ bằng prop `showBreadcrumbs={false}` — prop trình bày trá
 hình, đúng thứ quy ước cấm.
@@ -117,7 +179,7 @@ nhận `grid-area` — thứ xếp cột thật luôn là auto-placement theo th
 | `styles/tokens.css` | Token đặt theo VAI TRÒ (`--color-text-body`, `--font-*`)    |
 | `styles/global.css` | `@font-face`, reset, import ba file kia                     |
 | `styles/prose.css`  | Style cho thân bài do MDX render — BỐN khối, cố ý không gộp |
-| `styles/hero.css`   | Khung banner dùng chung của `HeroHome` và `HeroInner`       |
+| `styles/hero.css`   | Khung banner dùng chung của `HeroToplist` và `HeroInner`    |
 
 Ngoài ra mỗi component tự giữ style trong `<style>` scoped của nó.
 
@@ -225,6 +287,33 @@ phạm vi scoped. Đó là vì sao style thân bài sống ở `styles/prose.css
 global) chứ không nằm trong `<style>` của `pages/knowledge/[slug].astro` hay
 `Paragraph.astro` — hai file đó chỉ giữ style cho khung bao ngoài.
 
+### `set:html` sinh HTML KHÔNG mang `data-astro-cid`
+
+Hệ quả: rule scoped nhắm vào thẻ bên trong chuỗi `set:html` sẽ **không khớp gì cả**.
+
+`heroTitle` của trang toplist chứa một `<span>` (từ chỉ hiện từ 768px). Viết
+`.hero__title span { display: none }` thì Astro biên dịch thành
+`.hero__title span[data-astro-cid-x]` — span đó là HTML thô nên không có thuộc
+tính ấy, rule chết, từ này hiện luôn ở mobile và tiêu đề cao 57px thay vì 28.5px.
+
+Cách đúng: neo `:global()` vào phần tử cha do template sinh ra —
+`.hero__title :global(span)`. Cid nằm ở cha nên style vẫn không rò ra ngoài
+component.
+
+Đây là lỗi **chỉ nhìn thấy khi đo**: HTML đúng, `astro check` sạch, diff body
+không thấy gì.
+
+### `render()` phải gọi ngay tại component đặt `<Content />`
+
+Truyền entry xuống component thì được; render sẵn ở trang rồi truyền `Content`
+xuống thì **mất style**.
+
+Astro gom style của component mà MDX import (vd `InlineCta` trong bài trang chủ)
+bằng phân tích tĩnh nơi đặt `<Content />`. Truyền component factory qua props thì
+nó mất dấu: bản thử làm trang chủ mất nguyên khối `<style>` 2175 ký tự, CTA hiện
+trần không style. HTML vẫn đúng nên chỉ lộ khi so **CSS** của `dist/`, không lộ
+khi so body.
+
 ### `prose.css` có bốn khối, cố ý không gộp
 
 `.post__body` (bài viết), `.paragraph__content` (bài review), `.page__body`
@@ -269,7 +358,7 @@ quyết định danh sách lồng, dòng trống quyết định loose/tight (v�
 các mục theo đó mà đổi).
 
 Vài chỗ trong template cố ý viết sát nhau, không có khoảng trắng (vd
-`</svg><span>` trong `HeroHome`) — chúng đều có comment cảnh báo tại chỗ.
+`</svg><span>` trong `HeroToplist`) — chúng đều có comment cảnh báo tại chỗ.
 
 ## Nội dung đến từ nguồn ngoài
 

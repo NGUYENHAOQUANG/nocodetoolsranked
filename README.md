@@ -40,9 +40,11 @@ Bảng xếp hạng nằm ở `src/content/placements/`:
 
 | File                  | Dùng cho                            |
 | --------------------- | ----------------------------------- |
-| `homepage.yaml`       | Toplist trang chủ (9 brand)         |
+| `toplist/<id>.yaml`   | Toplist của một trang toplist       |
 | `reviews-page.yaml`   | Danh sách `/reviews/` (6 brand)     |
 | `review-sidebar.yaml` | Thứ tự partner ở sidebar bài review |
+
+`toplist/` có MỘT FILE MỖI NGÁCH — `home.yaml` là trang chủ.
 
 Sửa `rank` / `rating` / `stars` / `coupon` ngay trong file tương ứng.
 
@@ -54,7 +56,7 @@ Sửa `rank` / `rating` / `stars` / `coupon` ngay trong file tương ứng.
 
 1. Logo vào `src/assets/brands/<brand>.svg`
 2. Tạo `src/content/brands/<brand>.yaml` — tên, logo, alt, link affiliate
-3. Thêm một mục vào `src/content/placements/homepage.yaml`
+3. Thêm một mục vào `src/content/placements/toplist/<ngách>.yaml`
 
 Muốn brand đó có trang review riêng thì thêm bước 4–5:
 
@@ -73,9 +75,27 @@ Frontmatter cần: `title`, `date`, `readTime`, `author`, `excerpt`, `images.car
 > trí (lưới knowledge, Must Reads trang chủ, sidebar review, sidebar bài viết).
 > Chỉ `card` là bắt buộc.
 
-### Sửa FAQ, thẻ liên hệ, đánh giá chi tiết
+### Thêm một trang toplist (ngách mới)
 
-`src/content/faq/`, `src/content/contact-cards/`, `src/content/mini-reviews/`.
+**Hai file, không sửa dòng code nào:**
+
+1. `src/content/toplists/<slug>.mdx` — URL thành `/<slug>/`.
+   Frontmatter: `title`, `description`, `heroTitle`, `heroAlt`, `heroSubtitle`,
+   `heroSubtitleCompact`, `ranking`, `articleTitle`, `faq`, `miniReview`;
+   `promo` là tuỳ chọn. Thân MDX là bài viết dài dưới bảng xếp hạng.
+2. `src/content/placements/toplist/<slug>.yaml` — thứ hạng riêng của ngách đó.
+
+Trang chủ chính là entry `toplists/home.mdx`; id `home` cho ra URL `/`. Nó dùng
+CHUNG khuôn với mọi ngách, không có `index.astro` riêng.
+
+> `home` là id dành riêng. Ngoài ra id ngách không được trùng id trong
+> `content/pages/` (`about`, `terms-of-use`, `privacy-policy`,
+> `advertiser-disclosure`) và không được là `contact`, `reviews`, `knowledge`.
+
+### Sửa FAQ, đánh giá chi tiết, thẻ liên hệ
+
+FAQ và mini-review nằm trong frontmatter của chính trang toplist
+(`src/content/toplists/<slug>.mdx`). Thẻ liên hệ ở `src/content/contact-cards/`.
 
 ### Gõ sai thì sao?
 
@@ -93,19 +113,21 @@ src/
 │
 ├─ content/       ← NỘI DUNG Ở ĐÂY
 │  ├─ brands/     danh tính đối tác (logo, tên, link affiliate)
+│  ├─ toplists/   MỘT FILE = MỘT TRANG TOPLIST (home.mdx là trang chủ)
 │  ├─ placements/ brand được xếp hạng thế nào ở từng trang
+│  │              └─ toplist/  một file mỗi ngách
 │  ├─ reviews/    bài review (.mdx)   ├─ posts/    bài viết (.mdx)
-│  ├─ authors/    ├─ faq/  ├─ contact-cards/  ├─ mini-reviews/
-│  ├─ featured-articles/  khối bài viết dài nhúng vào trang chủ
-│  └─ pages/     4 trang nội dung phẳng: about, terms, privacy, disclosure
+│  ├─ authors/    ├─ contact-cards/
+│  └─ pages/      4 trang nội dung phẳng: about, terms, privacy, disclosure
 │
-├─ components/
-│  ├─ layout/     Header, Footer, Breadcrumbs, ToTop, ExitPopup, Seo, ArticleGrid
-│  ├─ sections/   HeroHome, HeroInner, Toplist, BestOverall, MiniReview…
-│  ├─ brand/      PartnerCard, ReviewCard, ProsCons
-│  ├─ article/    FeaturedArticle, InnerNavigator, PostIntro, ReviewIntro…
-│  ├─ sidebar/    SidebarPartners, SidebarArticles, PromoCarousel, MustReads…
-│  └─ ui/         ScoreRing, Coupon, Paragraph, PartnerTooltip
+├─ components/    thư mục = LOẠI TRANG mà component phục vụ
+│  ├─ layout/     mọi trang: Header, Footer, Breadcrumbs, ToTop, Seo, HeroInner
+│  ├─ toplist/    trang chủ + mọi ngách: HeroToplist, PartnerList, PartnerCard,
+│  │              ScoreRing, MiniReview, ContentGrid, FaqAccordion, ExitPopup…
+│  ├─ article/    trang review + bài blog: ArticleGrid, InnerNavigator,
+│  │              SidebarPartners, ReviewIntro, PostIntro, ProsCons…
+│  ├─ reviews/    ReviewsList, ReviewCard      ├─ knowledge/ KnowledgeGrid
+│  └─ contact/    ContactCards
 │
 ├─ layouts/       BaseLayout (html+head+SEO), InnerPageLayout (khung trang
 │                 trong). Chỉ hai file, đều có <slot/>
@@ -117,7 +139,11 @@ src/
 └─ ../scripts/    check-content.mjs (kiểm quy ước nội dung)
 ```
 
-Ý tưởng cốt lõi: **tách "brand là ai" khỏi "brand được xếp hạng thế nào ở trang
+Component: **thư mục là loại trang phục vụ nó**. Chỉ một trang dùng thì nằm ở
+thư mục trang đó; nhiều loại trang dùng thì lên tầng chung gần nhất (`article/`
+cho review + blog, `layout/` cho gần như mọi trang).
+
+Nội dung: **tách "brand là ai" khỏi "brand được xếp hạng thế nào ở trang
 nào"**. `brands/` giữ danh tính (bất biến), `placements/` giữ thứ hạng (đổi theo
 trang). Nhờ vậy đổi link affiliate là sửa một chỗ, mà hai trang vẫn xếp hạng
 khác nhau được.
@@ -125,7 +151,7 @@ khác nhau được.
 ## URL
 
 ```
-/                                    /reviews/            /knowledge/
+/  và  /<ngách>/   (content/toplists/)   /reviews/            /knowledge/
 /reviews/<brand>/                    /knowledge/<slug>/
 /about/   /contact/   /privacy-policy/   /terms-of-use/   /advertiser-disclosure/
 ```
