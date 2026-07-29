@@ -24,9 +24,10 @@ interface Props {
 const { title, description, image, type = "website", schema = [] } = Astro.props;
 
 /* Canonical dựng từ `site` trong astro.config + đường dẫn hiện tại.
+   `Astro.site` đọc thẳng khoá `site` nên không có bản sao domain nào để lệch.
    Astro.url.pathname đã kèm "/" cuối do trailingSlash: "always". */
-const canonical = new URL(Astro.url.pathname, SITE.url).href;
-const ogImage = image ? new URL(image, SITE.url).href : undefined;
+const canonical = new URL(Astro.url.pathname, Astro.site).href;
+const ogImage = image ? new URL(image, Astro.site).href : undefined;
 ---
 
 <link rel="canonical" href={canonical} />

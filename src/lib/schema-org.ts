@@ -10,14 +10,17 @@
  */
 import { SITE } from "@/config/site";
 
-const abs = (p: string) => new URL(p, SITE.url).href;
+/** Domain lấy thẳng từ khoá `site` của astro.config — module .ts không có `Astro.site`. */
+const SITE_URL = import.meta.env.SITE;
+
+const abs = (p: string) => new URL(p, SITE_URL).href;
 
 export function organizationSchema() {
   return {
     "@context": "https://schema.org",
     "@type": "Organization",
     name: SITE.name,
-    url: SITE.url,
+    url: SITE_URL,
   };
 }
 
@@ -26,7 +29,7 @@ export function websiteSchema() {
     "@context": "https://schema.org",
     "@type": "WebSite",
     name: SITE.name,
-    url: SITE.url,
+    url: SITE_URL,
   };
 }
 

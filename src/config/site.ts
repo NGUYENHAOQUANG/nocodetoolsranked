@@ -1,8 +1,12 @@
-/** Cấu hình cấp site — nguồn duy nhất cho tên, mô tả, thông tin mạng xã hội. */
+/**
+ * Cấu hình cấp site — tên, mô tả, ngôn ngữ.
+ *
+ * KHÔNG khai domain ở đây. Domain là `site` trong `astro.config.mjs`; đọc lại
+ * bằng `Astro.site` (trong file .astro) hoặc `import.meta.env.SITE` (trong
+ * module .ts). Khai hai chỗ là hai nguồn sự thật và chắc chắn có ngày lệch.
+ */
 
 export const SITE = {
-  /** Phải khớp `site` trong astro.config.mjs */
-  url: "https://top10dogfood.com",
   name: "top10dogfood.com",
   /** Thẻ <title> mặc định khi trang không tự đặt */
   defaultTitle: "Top 10 Dog Food Subscriptions 2026",

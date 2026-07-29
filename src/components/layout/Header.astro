@@ -1,7 +1,7 @@
 ---
 import logo from "@/assets/site/logo.svg";
 import { getReviewNavLinks } from "@/lib/rankings";
-import { REVIEWS_INDEX, KNOWLEDGE_INDEX } from "@/lib/links";
+import { mainNav } from "@/config/navigation";
 
 /* Menu con "Reviews" — đúng thứ tự bản gốc (trùng thứ tự sidebar): 6 mục,
    KHÔNG có Golden Child. Trước đây là 6 dòng gõ tay ở đây, tức nguồn thứ hai
@@ -28,8 +28,8 @@ const isActive = (href: string) => href.replace(/\/+$/, "") === currentPath;
       <ul class="site-nav__list">
         <li class="site-nav__item site-nav__item--has-menu">
           <a
-            class:list={["site-nav__link", { "is-active": isActive("/reviews/") }]}
-            href={REVIEWS_INDEX}>Reviews</a
+            class:list={["site-nav__link", { "is-active": isActive(mainNav.reviews.href) }]}
+            href={mainNav.reviews.href}>{mainNav.reviews.label}</a
           >
           <ul class="site-nav__submenu">
             {
@@ -45,8 +45,8 @@ const isActive = (href: string) => href.replace(/\/+$/, "") === currentPath;
         </li>
         <li class="site-nav__item">
           <a
-            class:list={["site-nav__link", { "is-active": isActive("/knowledge/") }]}
-            href={KNOWLEDGE_INDEX}>Learn</a
+            class:list={["site-nav__link", { "is-active": isActive(mainNav.knowledge.href) }]}
+            href={mainNav.knowledge.href}>{mainNav.knowledge.label}</a
           >
         </li>
       </ul>
@@ -83,7 +83,7 @@ const isActive = (href: string) => href.replace(/\/+$/, "") === currentPath;
     <ul class="mobile-drawer__list">
       <li class="mobile-drawer__group">
         <button class="mobile-drawer__item mobile-drawer__toggle" type="button" aria-expanded="false">
-          <span>Reviews</span>
+          <span>{mainNav.reviews.label}</span>
           <svg class="mobile-drawer__chevron" viewBox="0 0 448 512" width="17" height="17" fill="currentColor" aria-hidden="true">
             <path
               d="M207.029 381.476L12.686 187.132c-9.373-9.373-9.373-24.569 0-33.941l22.667-22.667c9.357-9.357 24.522-9.375 33.901-.04L224 284.505l154.745-154.021c9.379-9.335 24.544-9.317 33.901.04l22.667 22.667c9.373 9.373 9.373 24.569 0 33.941L240.971 381.476c-9.373 9.372-24.569 9.372-33.942 0z"
@@ -105,7 +105,7 @@ const isActive = (href: string) => href.replace(/\/+$/, "") === currentPath;
         </div>
       </li>
       <li class="mobile-drawer__group">
-        <a class="mobile-drawer__item" href={KNOWLEDGE_INDEX}>Learn</a>
+        <a class="mobile-drawer__item" href={mainNav.knowledge.href}>{mainNav.knowledge.label}</a>
       </li>
     </ul>
   </aside>
