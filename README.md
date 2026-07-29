@@ -14,13 +14,13 @@ npm install
 npm run dev        # http://localhost:4321
 ```
 
-| Lệnh              | Việc                                                                                   |
-| ----------------- | -------------------------------------------------------------------------------------- |
-| `npm run dev`     | Máy chủ phát triển                                                                     |
-| `npm run build`   | Dựng site tĩnh vào `dist/`                                                             |
-| `npm run preview` | Xem thử bản đã dựng                                                                    |
-| `npm run check`   | Kiểm kiểu (`astro check`) — phải luôn 0 lỗi                                            |
-| `npm run format`  | Format `.ts`/`.yaml`/`.json`. **Cố ý KHÔNG đụng `.astro`/`.mdx`** — xem CLAUDE.md §8.7 |
+| Lệnh              | Việc                                                                      |
+| ----------------- | ------------------------------------------------------------------------- |
+| `npm run dev`     | Máy chủ phát triển                                                        |
+| `npm run build`   | Chạy `check` rồi dựng site tĩnh vào `dist/`                               |
+| `npm run preview` | Xem thử bản đã dựng                                                       |
+| `npm run check`   | `astro check` (kiểu) + `check-content.mjs` (ASCII, URL trần) — luôn 0 lỗi |
+| `npm run format`  | Format mọi thứ trừ `src/content/**` (nội dung chỉnh tay) — xem CLAUDE.md  |
 
 Cần Node ≥ 22.12.
 
@@ -67,7 +67,7 @@ Tạo **đúng một file** `src/content/posts/<slug>.mdx`. URL tự thành
 `/knowledge/<slug>/`, và bài tự xuất hiện ở lưới `/knowledge/`.
 
 Frontmatter cần: `title`, `date`, `readTime`, `author`, `excerpt`, `images.card`,
-`relatedPosts`. Ảnh để trong `src/assets/images/posts/`.
+`relatedPosts`. Ảnh để trong `src/assets/posts/`.
 
 > `images` có tới **bốn** slot vì cùng một bài dùng bốn ảnh khác nhau ở bốn vị
 > trí (lưới knowledge, Must Reads trang chủ, sidebar review, sidebar bài viết).
@@ -89,29 +89,32 @@ src/
 ├─ assets/        ảnh qua astro:assets
 │  ├─ brands/     logo đối tác        ├─ authors/   ảnh tác giả
 │  ├─ site/       logo của site       ├─ icons/
-│  └─ images/{hero,posts,promos,contact}/
+│  ├─ hero/ ├─ posts/ ├─ promos/ ├─ contact/
 │
 ├─ content/       ← NỘI DUNG Ở ĐÂY
 │  ├─ brands/     danh tính đối tác (logo, tên, link affiliate)
 │  ├─ placements/ brand được xếp hạng thế nào ở từng trang
 │  ├─ reviews/    bài review (.mdx)   ├─ posts/    bài viết (.mdx)
 │  ├─ authors/    ├─ faq/  ├─ contact-cards/  ├─ mini-reviews/
-│  └─ articles/   bài viết nhúng ở trang chủ
+│  ├─ sections/  khối nội dung nhúng vào trang (không có route riêng)
+│  └─ pages/     4 trang nội dung phẳng: about, terms, privacy, disclosure
 │
 ├─ components/
 │  ├─ layout/     Header, Footer, Breadcrumbs, ToTop, ExitPopup, Seo
-│  ├─ sections/   Hero, Toplist, BestOverall, MiniReview, ContentGrid…
+│  ├─ sections/   HeroHome, HeroInner, Toplist, BestOverall, MiniReview…
 │  ├─ brand/      PartnerCard, ReviewCard, ProsCons
 │  ├─ article/    FeaturedArticle, InnerNavigator, PostIntro, ReviewIntro…
-│  ├─ sidebar/    PostSidebar, ReviewSidebar, MustReads
+│  ├─ sidebar/    SidebarPartners, SidebarArticles, PromoCarousel, MustReads…
 │  └─ ui/         ScoreRing, Coupon, Paragraph, PartnerTooltip
 │
-├─ layouts/       BaseLayout (html+head+SEO), PostLayout
+├─ layouts/       BaseLayout (html+head+SEO), InnerPageLayout (khung trang
+│                 trong), PostLayout
 ├─ pages/         route — xem bản đồ URL dưới
 ├─ lib/           links (nguồn duy nhất dựng URL), rankings, posts,
 │                 schema-org, stars
 ├─ config/site.ts tên site, mô tả mặc định
-└─ styles/        tokens.css · global.css · prose.css
+├─ styles/        tokens.css · global.css · prose.css · hero.css
+└─ ../scripts/    check-content.mjs (kiểm quy ước nội dung)
 ```
 
 Ý tưởng cốt lõi: **tách "brand là ai" khỏi "brand được xếp hạng thế nào ở trang

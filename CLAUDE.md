@@ -11,10 +11,16 @@ Bối cảnh dự án, lệnh chạy và công thức thêm nội dung nằm ở
 
 ```sh
 npm run dev      # máy chủ phát triển, localhost:4321
-npm run build    # dựng site tĩnh vào dist/
-npm run check    # astro check — kiểm kiểu, giữ ở mức 0 lỗi
-npm run format   # prettier cho .ts/.yaml/.json
+npm run check    # astro check (kiểu) + check-content.mjs (quy ước nội dung)
+npm run build    # chạy check rồi dựng site tĩnh vào dist/
+npm run format   # prettier cho mọi thứ trừ src/content/**
 ```
+
+`scripts/check-content.mjs` gánh hai luật mà `astro check` không thấy được:
+**nội dung hiển thị chỉ dùng ASCII**, và **URL trần trong `src/content/**` phải
+được bọc** (`{'https://...'}` để giữ dạng chữ, `[chữ](url)` để thành link).
+Luật thứ hai là điều kiện để giữ `gfm` bật: gfm tự biến URL trần thành thẻ `<a>`,
+và trên site affiliate đó là rò traffic ra ngoài mà không có gì báo.
 
 ## Kiến trúc
 
@@ -59,8 +65,15 @@ Route sinh từ tên file trong collection:
 
 | Route                          | Sinh từ                 |
 | ------------------------------ | ----------------------- |
-| `pages/reviews/[brand].astro`  | `content/reviews/*.mdx` |
+| `pages/reviews/[slug].astro`   | `content/reviews/*.mdx` |
 | `pages/knowledge/[slug].astro` | `content/posts/*.mdx`   |
+| `pages/[page].astro`           | `content/pages/*.mdx`   |
+
+`[page].astro` sinh 4 trang nội dung phẳng ở gốc site (`/about/`,
+`/terms-of-use/`, `/privacy-policy/`, `/advertiser-disclosure/`). Nó KHÔNG nuốt
+route khác: build tĩnh chỉ phát đúng path mà `getStaticPaths` trả về, và
+`[page]` chỉ khớp một segment. Ràng buộc kèm theo: id entry trong `content/pages`
+không được trùng `contact`, `reviews`, `knowledge`.
 
 Slug **là** id của entry (tên file) — không khai `slug` trong frontmatter. Hai
 nguồn sự thật cho URL từng gây ra một URL sai chính tả trong dự án này.
@@ -70,13 +83,23 @@ component — đổi cấu trúc URL sẽ phải sửa một chỗ thay vì tám
 
 ### Style
 
-| File                | Vai trò                                  |
-| ------------------- | ---------------------------------------- |
-| `styles/tokens.css` | Biến CSS (`--color-*`, `--font-*`)       |
-| `styles/global.css` | `@font-face`, reset, import hai file kia |
-| `styles/prose.css`  | Style cho thân bài do MDX render         |
+| File                | Vai trò                                                    |
+| ------------------- | ---------------------------------------------------------- |
+| `styles/tokens.css` | Token đặt theo VAI TRÒ (`--color-text-body`, `--font-*`)   |
+| `styles/global.css` | `@font-face`, reset, import ba file kia                    |
+| `styles/prose.css`  | Style cho thân bài do MDX render — BA khối, cố ý không gộp |
+| `styles/hero.css`   | Khung banner dùng chung của `HeroHome` và `HeroInner`      |
 
 Ngoài ra mỗi component tự giữ style trong `<style>` scoped của nó.
+
+`hero.css` là file global vì hai component hero render cùng bộ class khung, mà
+scoped style không xuyên qua ranh giới component — chép vào cả hai file là tạo
+lại đúng thứ trùng lặp vừa gỡ. Rule ở đó là class trần (0,1,0) nên luôn thua rule
+scoped (0,2,0) của từng nhánh: khung là nền, nhánh đè lên.
+
+`tokens.css` ghi sẵn quy tắc để một giá trị được thành token: **dùng ≥3 chỗ VÀ
+mọi chỗ cùng một vai trò**. Vì vậy có ba token cùng `#ffffff` (`--color-bg`,
+`--color-surface`, `--color-text-on-primary`) — cố ý, đừng "dọn" thành một.
 
 ## Quy ước đặt tên
 
@@ -85,11 +108,11 @@ Ngoài ra mỗi component tự giữ style trong `<style>` scoped của nó.
 | Loại                     | Quy ước                              | Ví dụ                             |
 | ------------------------ | ------------------------------------ | --------------------------------- |
 | Component, layout        | PascalCase, tên file = tên component | `ReviewCard.astro`                |
-| Page                     | kebab-case, khớp URL                 | `advertiser-disclosure.astro`     |
-| Route động               | `[tham-số].astro`                    | `[brand].astro`                   |
+| Page                     | kebab-case, khớp URL                 | `contact.astro`                   |
+| Route động               | `[tham-số].astro`                    | `[slug].astro`                    |
 | Module `lib/`, `config/` | kebab-case                           | `schema-org.ts`                   |
 | File nội dung            | kebab-case, chính là slug            | `what-makes-healthy-pet-food.mdx` |
-| Asset, thư mục           | kebab-case                           | `author-steve-diller.png`         |
+| Asset, thư mục           | kebab-case                           | `steve-diller.png`                |
 
 Không dùng tên chung chung như `utils.ts` / `helpers.ts` — đặt theo việc nó làm.
 
@@ -173,16 +196,22 @@ phạm vi scoped. Đó là vì sao style thân bài sống ở `styles/prose.css
 global) chứ không nằm trong `<style>` của `PostLayout.astro` hay
 `Paragraph.astro` — hai component đó chỉ giữ style cho khung bao ngoài.
 
-### `prose.css` có hai khối, cố ý không gộp
+### `prose.css` có ba khối, cố ý không gộp
 
-`.post__body` (bài viết) và `.paragraph__content` (bài review) trông na ná nhau
-nhưng khác ở chỗ quan trọng: `.post__body` có `h2/h3:first-of-type
-{ margin-top: 0 }`, `.paragraph__content` không có — vì **một trang review chứa
-nhiều khối `<Paragraph>`**, nên `:first-of-type` sẽ khớp một lần mỗi khối thay vì
-một lần mỗi trang.
+`.post__body` (bài viết), `.paragraph__content` (bài review) và `.page__body`
+(trang nội dung phẳng) trông na ná nhau nhưng khác ở chỗ quan trọng.
 
-Muốn gộp thì phải xử lý điểm đó trước, không thì margin đầu mục biến mất ở trang
-review.
+`.post__body` có `h2/h3:first-of-type { margin-top: 0 }`, `.paragraph__content`
+không có — vì **một trang review chứa nhiều khối `<Paragraph>`**, nên
+`:first-of-type` sẽ khớp một lần mỗi khối thay vì một lần mỗi trang.
+
+`.page__body` dùng `> h2:first-child`, KHÔNG phải `:first-of-type`. Khác biệt
+này là bắt buộc: khối đầu của trang privacy là `<p>` (câu mở đầu vốn bị bản gốc
+đánh dấu `<h4>` nhầm), nên `h2:first-of-type` sẽ khớp một tiêu đề nằm GIỮA bài và
+xoá margin ở đó. Cũng không được rút gọn thành `> :first-child`: rule đó sẽ ăn cả
+`<p>` đầu của terms/disclosure và kéo hai trang lên 16px.
+
+Muốn gộp thì phải xử lý cả hai điểm trên trước.
 
 ### Tên file asset nằm trong URL
 
@@ -197,32 +226,42 @@ sinh ra, vì `ImageMetadata.src` phải trỏ tới file có thật. Nếu marku
 `<Image>`, bản gốc nằm trong `dist/` mà không trang nào tham chiếu (~150KB hiện
 tại). Không ảnh hưởng người dùng, chỉ là dung lượng deploy.
 
-### Prettier không format `.astro` / `.mdx`
+### Prettier format `.astro`, KHÔNG format `src/content/**`
 
-`.prettierignore` cố ý loại hai loại đó. Lý do: `prettier-plugin-astro` reformat
-template HTML, mà khoảng trắng giữa các inline element **render thành dấu cách**
-— reflow một dòng dài có thể làm layout dịch đi một ký tự.
+Hàng rào cũ chặn cả `.astro` vì `prettier-plugin-astro` reflow template, mà
+khoảng trắng giữa các inline element **render thành dấu cách**. Lý do đó gắn với
+ba thứ nay đã bị xoá: `"Visit Site "` dấu cách cuối, `alt="Ollie  logo"` hai dấu
+cách, `<p>&nbsp;</p>` làm spacer. Đã chạy thử và đối chiếu `dist/`: format toàn
+bộ 26 file `.astro` cho ra body và CSS giống hệt.
 
-Muốn bật thì cứ bật, nhưng nên làm thành một commit riêng và so lại giao diện,
-đừng trộn chung với thay đổi khác.
+`src/content/**` vẫn không format: Markdown nhạy cảm với khoảng trắng — thụt lề
+quyết định danh sách lồng, dòng trống quyết định loose/tight (và nhịp dọc giữa
+các mục theo đó mà đổi).
+
+Vài chỗ trong template cố ý viết sát nhau, không có khoảng trắng (vd
+`</svg><span>` trong `HeroHome`) — chúng đều có comment cảnh báo tại chỗ.
 
 ## Nội dung đến từ nguồn ngoài
 
-Nội dung ban đầu được nhập từ một site có sẵn, nên vài chuỗi mang dấu vết của
-nguồn đó:
+Nội dung ban đầu được nhập từ một site có sẵn. Phần lớn dấu vết đã được dọn, ghi
+lại đây để biết chúng từng tồn tại và vì sao không còn:
 
-- Dấu cách đôi và dấu cách cuối trong `alt` và tên brand
-  (`"Ollie  logo"`, `sidebarName: "Ollie "`)
-- Một brand có tới năm biến thể tên (`name`, `logoAlt`, `logoAltShort`,
-  `sidebarName`, `articleLinkName`) vì nguồn dùng chuỗi khác nhau ở từng vị trí
-- Vài `<p>&nbsp;</p>` đóng vai spacer
-- Trang `terms-of-use` không có heading nào — tiêu đề mục là `<p>` in hoa; danh
-  sách dựng bằng `<br />` thay vì `<ul>`
-- Bài review dùng `#` (h1) cho mục kết bài, nên nó xuất hiện trong mục lục
+| Dấu vết                                                           | Đã xử lý                                                  |
+| ----------------------------------------------------------------- | --------------------------------------------------------- |
+| Dấu cách đôi/cuối trong `alt` và tên brand                        | bỏ — dữ liệu giữ TÊN, template và CSS giữ KHOẢNG CÁCH     |
+| `<p>&nbsp;</p>` và dòng `&nbsp;` làm spacer                       | bỏ — thay bằng `margin` trong `prose.css`                 |
+| Trang `terms-of-use` không có heading, danh sách dựng bằng `<br>` | `<h2>` + `<ul>`/`<ol>` thật, CSS giữ nguyên hình          |
+| 54 `style={{...}}` vẽ viền trên từng `<td>`                       | gom về `prose.css`                                        |
+| Nháy cong, em dash, ellipsis, ký tự chấm tròn                     | ASCII; `scripts/check-content.mjs` giữ cho không trôi lại |
 
-Những chỗ này **sửa được** nếu muốn chuẩn hoá. Chỉ cần biết chúng là dữ liệu
-nhập chứ không phải lỗi ngẫu nhiên, và sửa thì nên sửa nhất quán cả cụm — ví dụ
-bỏ dấu cách thừa thì bỏ ở cả năm trường tên, đừng bỏ lẻ một chỗ.
+Còn lại, cố ý giữ:
+
+- Một brand có tới **năm biến thể tên** (`name`, `logoAlt`, `logoAltShort`,
+  `sidebarName`, `articleLinkName`) vì nguồn dùng chuỗi khác nhau ở từng vị trí.
+  Đây là dữ liệu thật, không phải trùng lặp.
+- Bài review dùng `#` (h1) cho mục kết bài, nên nó xuất hiện trong mục lục.
+- `--font-ui` khai `"Work Sans"` mà không nạp font đó — tái tạo có chủ ý lỗi của
+  bản gốc.
 
 ## Khi thay đổi ảnh hưởng giao diện
 
