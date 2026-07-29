@@ -142,6 +142,37 @@ const reviews = defineCollection({
   }),
 });
 
+/**
+ * Trang nội dung phẳng: about, terms, privacy, advertiser disclosure.
+ *
+ * id file = slug URL, không khai `slug` trong frontmatter. Route sinh ở
+ * `src/pages/[page].astro`.
+ */
+const pages = defineCollection({
+  loader: glob({ pattern: "**/*.mdx", base: "./src/content/pages" }),
+  schema: z.object({
+    /** Thẻ <title>. BỐN chuỗi này lệch quy luật của nhau ở bản gốc (trang
+        privacy đảo vế, trang about thiếu chữ "10" và dùng nhãn khác hero) nên
+        KHÔNG sinh máy được từ `heroTitle` — phải là dữ liệu. */
+    title: z.string(),
+    /** Nhãn ở banner đầu trang, đồng thời là mốc cuối của breadcrumb */
+    heroTitle: z.string(),
+    /** Chỉ khai khi bản mobile khác desktop. Render bằng set:html nên chèn được <br>. */
+    heroMobileTitle: z.string().optional(),
+    /** Bỏ trống thì dùng SITE.defaultDescription */
+    description: z.string().optional(),
+    /**
+     * Tiêu đề mục trông thế nào.
+     *
+     * Bản gốc dựng bốn trang này từ HAI template CMS khác nhau: ba trang có tiêu
+     * đề mục nổi bật (15px/700), riêng `terms-of-use` để tiêu đề mục cùng cỡ và
+     * cùng độ đậm với thân bài, chỉ phân biệt bằng CHỮ IN HOA. Giữ khác biệt đó
+     * thay vì ép về một kiểu — ép sẽ làm trang terms dài thêm khoảng 130px.
+     */
+    headingStyle: z.enum(["plain", "distinct"]).default("distinct"),
+  }),
+});
+
 /** Bài viết trang chủ — MDX (prose + <InlineCta/>). */
 const articles = defineCollection({
   loader: glob({ pattern: "**/*.mdx", base: "./src/content/articles" }),
@@ -245,6 +276,7 @@ export const collections = {
   authors,
   reviews,
   articles,
+  pages,
   posts,
   faq,
   contactCards,

@@ -1,0 +1,50 @@
+---
+/**
+ * Bốn trang nội dung phẳng: /about/, /terms-of-use/, /privacy-policy/,
+ * /advertiser-disclosure/. Thêm một trang là thêm ĐÚNG MỘT file .mdx.
+ *
+ * KHÔNG nuốt route khác: build tĩnh chỉ phát đúng những path `getStaticPaths`
+ * trả về, và `[page]` chỉ khớp MỘT segment nên /reviews/<brand>/ và
+ * /knowledge/<slug>/ không thể rơi vào đây.
+ *
+ * ⚠️ id của entry không được trùng "contact", "reviews", "knowledge" — đó là các
+ * route tĩnh đã có.
+ */
+import { getCollection, render } from "astro:content";
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import Header from "@/components/layout/Header.astro";
+import HeroInner from "@/components/sections/HeroInner.astro";
+import Breadcrumbs from "@/components/layout/Breadcrumbs.astro";
+import Footer from "@/components/layout/Footer.astro";
+import ToTop from "@/components/layout/ToTop.astro";
+import { breadcrumbSchema } from "@/lib/schema-org";
+
+export async function getStaticPaths() {
+  const entries = await getCollection("pages");
+  return entries.map((entry) => ({ params: { page: entry.id }, props: { entry } }));
+}
+
+const { entry } = Astro.props;
+const { title, heroTitle, heroMobileTitle = heroTitle, description, headingStyle } = entry.data;
+const { Content } = await render(entry);
+
+const crumbs = [{ text: "Home" }, { text: heroTitle }];
+---
+
+<BaseLayout title={title} description={description} schema={[breadcrumbSchema(crumbs)]}>
+  <Header />
+  <HeroInner
+    isTitleTop
+    title={heroTitle}
+    mobileTitle={heroMobileTitle}
+    alt={`${heroTitle} | Fresh Dog Food Delivery`}
+  />
+  <Breadcrumbs items={crumbs} />
+  <main>
+    <article class:list={["page__body", { "page__body--plain-headings": headingStyle === "plain" }]}>
+      <Content />
+    </article>
+  </main>
+  <Footer />
+  <ToTop />
+</BaseLayout>

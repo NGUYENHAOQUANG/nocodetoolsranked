@@ -11,6 +11,7 @@
  * Khung dùng chung nằm ở `@/styles/hero.css`.
  */
 import { Image } from "astro:assets";
+import { getEntry, render } from "astro:content";
 import heroImgDesktop from "@/assets/images/hero/hero.jpg";
 import heroImgMobile from "@/assets/images/hero/hero-mobile.jpg";
 import "@/styles/hero.css";
@@ -24,6 +25,14 @@ const {
   alt = "Best Dog Food Delivery Brands 2026 — Fresh Dog Food Delivery",
   mobileAlt = alt,
 } = Astro.props;
+
+/* Đoạn "Advertising Disclosure" dùng CHUNG với trang /advertiser-disclosure/ —
+   trước đây hai nơi chép rời nhau và đã trôi lệch tới mức bản ở trang kia nói về
+   bảo hiểm thú cưng. Ánh xạ `p` sang `span` vì tooltip là inline: <p> nằm trong
+   <span> là HTML sai, trình duyệt sẽ tự sửa và phá layout. */
+const disclosure = await getEntry("pages", "advertiser-disclosure");
+if (!disclosure) throw new Error("Thiếu src/content/pages/advertiser-disclosure.mdx");
+const { Content: DisclosureText } = await render(disclosure);
 
 // Trang gốc tự hiển thị ngày = hôm nay; lấy ngày lúc build cho khớp hành vi đó.
 const lastUpdated = new Intl.DateTimeFormat("en-US", {
@@ -79,12 +88,7 @@ const lastUpdated = new Intl.DateTimeFormat("en-US", {
   <div class="hero__disclosure">
     <span class="hero__disclosure-label">Advertising Disclosure</span>
     <span class="hero__disclosure-tooltip" role="tooltip">
-      top10dogfood.com is an independent review and comparison website funded by
-      referral fees. We may be paid compensation when a user purchases a dog food
-      subscription through our website links. This does not affect our reviews and
-      ratings which are based on thousands of ratings and testing our team made. We
-      regularly review new dog food delivery services but do not feature every dog
-      food product on the market due to high amount of companies.
+      <DisclosureText components={{ p: "span" }} />
     </span>
   </div>
       </div>

@@ -1,7 +1,7 @@
 /* ==========================================================================
    Style thân bài do MDX render.
 
-   ⚠️ HAI KHỐI DƯỚI ĐÂY CỐ Ý KHÔNG GỘP. Đừng "dọn" chúng thành một.
+   ⚠️ BA KHỐI DƯỚI ĐÂY CỐ Ý KHÔNG GỘP. Đừng "dọn" chúng thành một.
 
    Chúng trông na ná nhau nhưng khác ở chỗ chí mạng:
 
@@ -22,7 +22,10 @@
    Tên class giữ nguyên `.post__body` / `.paragraph__content` (không đổi thành
    .prose--post/.prose--review) để HTML không đổi một ký tự nào.
 
-   FeaturedArticle.astro có bộ rule prose THỨ BA (`.article`) — cố ý để nguyên
+   Khối 3 (`.page__body`) dùng `h2:first-child` chứ KHÔNG phải `:first-of-type`
+   như khối 1 — xem chú thích tại chỗ, dùng nhầm là xoá margin giữa bài.
+
+   FeaturedArticle.astro có bộ rule prose THỨ TƯ (`.article`) — cố ý để nguyên
    tại chỗ, không đưa vào đây.
    ========================================================================== */
 
@@ -164,5 +167,79 @@
 @media (min-width: 1025px) and (min-height: 420px) {
   .paragraph__content table {
     width: 100%;
+  }
+}
+
+/* ==========================================================================
+   3. Trang nội dung phẳng — [page].astro  (/about/, /terms-of-use/,
+      /privacy-policy/, /advertiser-disclosure/)
+   ========================================================================== */
+
+/* Bản gốc dựng bốn trang này bằng HAI template CMS, khác nhau ở hai chỗ:
+   - terms + disclosure: `display: flow-root`, margin đáy 30px
+   - privacy + about:    không BFC, margin đáy 46px, `h4:first-of-type{mt:0}`
+
+   Hai cách cho ra CÙNG một khoảng cách 46px từ chữ cuối tới footer:
+   có BFC thì 16px margin của <p> cuối nằm TRONG khối rồi cộng 30 = 46;
+   không BFC thì margin đó collapse ra ngoài, max(16, 46) = 46.
+   Vì vậy gộp được: flow-root cho cả bốn + margin đáy 30px. */
+.page__body {
+  display: flow-root;
+  width: 95%;
+  max-width: 1060px;
+  /* Giữ footer không trôi lên giữa màn ở trang ngắn (advertiser-disclosure chỉ
+     có một đoạn). Ba trang kia dài hơn 70dvh nên rule này là no-op với chúng. */
+  min-height: 70dvh;
+  margin: 0 auto;
+  color: #2d2d2d;
+  font-size: 1rem;
+  line-height: 1.7rem;
+}
+
+.page__body p {
+  margin: 1em 0;
+}
+
+.page__body h2 {
+  margin: 1.33em 0;
+  font-size: 0.9375rem;
+  font-weight: 700;
+  line-height: 2.1rem;
+}
+
+/* PHẢI là `:first-child`, KHÔNG được dùng `:first-of-type`: sau khi chuẩn hoá,
+   khối đầu của privacy là <p> (câu mở đầu vốn bị đánh dấu <h4> nhầm), nên
+   `h2:first-of-type` sẽ khớp tiêu đề nằm GIỮA bài và xoá margin ở đó.
+   Cũng không được bỏ `h2` khỏi selector: `> :first-child` sẽ ăn cả <p> đầu của
+   terms/disclosure và kéo hai trang đó lên 16px. */
+.page__body > h2:first-child {
+  margin-top: 0;
+}
+
+.page__body ul {
+  margin: 1em 0;
+  padding-left: 40px;
+  list-style: circle;
+}
+
+.page__body ol {
+  margin: 1em 0;
+  padding-left: 40px;
+  list-style: decimal;
+}
+
+/* terms-of-use: bản gốc để tiêu đề mục cùng cỡ và độ đậm với thân bài, chỉ phân
+   biệt bằng CHỮ IN HOA. Phải đứng SAU rule `.page__body h2` ở trên — cùng
+   specificity (0,2,1), thắng nhờ thứ tự. */
+.page__body--plain-headings h2 {
+  margin: 1em 0;
+  font-size: 1rem;
+  font-weight: 400;
+  line-height: 1.7rem;
+}
+
+@media (min-width: 1025px) {
+  .page__body {
+    margin: 2px auto 30px;
   }
 }
