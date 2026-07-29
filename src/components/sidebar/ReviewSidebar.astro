@@ -1,12 +1,17 @@
 ---
-import { Image } from "astro:assets";
+/**
+ * Sidebar trang review = carousel khuyến mãi + danh sách brand + thẻ bài viết.
+ *
+ * Hai khối dưới dùng chung với sidebar bài blog nên nằm ở component riêng; ở đây
+ * chỉ còn carousel, thứ duy nhất trang review có mà trang blog không có.
+ */
+import SidebarPartners from "@/components/sidebar/SidebarPartners.astro";
+import SidebarArticles from "@/components/sidebar/SidebarArticles.astro";
 import { getReviewSidebarArticles } from "@/lib/posts";
-import { HOME } from "@/lib/links";
-import { getCarouselPartners, getSidebarPartners } from "@/lib/rankings";
+import { getCarouselPartners } from "@/lib/rankings";
 import { CHEVRON_RIGHT } from "@/lib/icon-paths";
 
 const carouselPartners = await getCarouselPartners();
-const sidebarPartners = await getSidebarPartners();
 const sidebarArticles = await getReviewSidebarArticles();
 
 interface Props {
@@ -96,63 +101,8 @@ const CIRCLE_ARROW_RIGHT =
     </div>
   </div>
 
-  <div class="sidebar-partners">
-    <div class="sidebar-partners__content">
-      {
-        sidebarPartners.map((p) => (
-          <div class="sidebar-partners__node" data-href={p.href}>
-            <div class="sidebar-partners__icon-wrap">
-              <img
-                class="sidebar-partners__icon"
-                src={p.logo.src}
-                alt={p.logoAlt}
-                width="215"
-                height="115"
-              />
-            </div>
-            <div class="sidebar-partners__text">
-              <p class="sidebar-partners__name">{p.name}</p>
-              <a class="sidebar-partners__link" href={p.href}>
-                <div>Read review</div>
-              </a>
-            </div>
-          </div>
-        ))
-      }
-    </div>
-    <div class="sidebar-partners__compare">
-      <a href={HOME}>
-        Compare All
-        <svg viewBox="0 0 320 512" width="1em" height="1em" aria-hidden="true">
-          <path d={CHEVRON_RIGHT}></path>
-        </svg>
-      </a>
-    </div>
-  </div>
-
-  <div class="sidebar-articles">
-    <div class="sidebar-articles__list">
-      {
-        sidebarArticles.map((a) => (
-          <div class="sidebar-articles__node">
-            <a class="sidebar-articles__image" href={a.href}>
-              {/* Giữ đúng tỉ lệ ảnh gốc: 2 ảnh 600×400 và 1 ảnh 597×400 nên thẻ
-                  thứ 3 cao lệch nhẹ — bản gốc cũng vậy */}
-              <Image src={a.image} alt={a.imageAlt} width={a.image.width} height={a.image.height} />
-            </a>
-            {/* Tiêu đề + link nằm trong 1 ô bọc: node chỉ có 2 con nên chỉ có 1
-                gap. Để 3 con ngang cấp là thừa 1 gap → mỗi thẻ dư đúng 10px. */}
-            <div class="sidebar-articles__content">
-              <a class="sidebar-articles__title-link" href={a.href}>
-                <p class="sidebar-articles__title">{a.title}</p>
-              </a>
-              <a class="sidebar-articles__link" href={a.href}>Read more</a>
-            </div>
-          </div>
-        ))
-      }
-    </div>
-  </div>
+  <SidebarPartners />
+  <SidebarArticles articles={sidebarArticles} />
 </div>
 
 <style>
@@ -258,8 +208,7 @@ const CIRCLE_ARROW_RIGHT =
   }
 
   /* Mũi tên trượt ra khi hover nút CTA */
-  .promo-carousel__button svg,
-  .sidebar-partners__compare svg {
+  .promo-carousel__button svg {
     position: absolute;
     top: calc(50% + 2px);
     right: 10px;
@@ -270,297 +219,9 @@ const CIRCLE_ARROW_RIGHT =
     transition: 0.2s ease-in-out;
   }
 
-  /* ===== Danh sách brand — mặc định là bản MOBILE (<481px), các mốc min-width
-     bên dưới chồng lên đúng như bản gốc ===== */
-  .sidebar-partners {
-    width: 100%;
-    max-width: 600px;
-    height: max-content;
-    margin: auto auto 20px;
-    padding: 10px;
-    display: flex;
-    flex-flow: column;
-    align-items: center;
-    /* Không có trong CSS module, bản gốc đặt bằng style inline */
-    background-color: #f5f5f5;
-    box-shadow: 0 0 8px rgba(0, 0, 0, 0.1);
-  }
-  .sidebar-partners * {
-    transition: 0.2s linear;
-  }
-  .sidebar-partners__content {
-    width: 100%;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-  }
-  .sidebar-partners__node {
-    width: 100%;
-    height: max-content;
-    padding: 10px 0;
-    display: flex;
-    flex-direction: row;
-    align-items: flex-start;
-    justify-content: center;
-    gap: 10px;
-    border-bottom: 1px solid rgba(160, 160, 160, 0.576);
-    cursor: pointer;
-  }
-  .sidebar-partners__icon-wrap {
-    flex: 1 1 0%;
-    height: 100%;
-    margin: auto;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-  .sidebar-partners__icon {
-    max-width: 100px;
-    max-height: 70px;
-    margin: auto;
-    object-fit: contain;
-  }
-  .sidebar-partners__text {
-    flex: 1 1 0%;
-    margin: auto;
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    justify-content: space-evenly;
-  }
-  .sidebar-partners__name {
-    margin: 0;
-    color: #2d2d2d;
-    font-size: 1.125rem;
-    font-weight: 500;
-  }
-  .sidebar-partners__link {
-    --hover-color: var(--color-primary);
-
-    font-size: 0.9375rem;
-    font-weight: 500;
-    white-space: nowrap;
-  }
-  .sidebar-partners__link div {
-    font-weight: 400;
-  }
-
-  .sidebar-partners__compare {
-    --hover-bg-color: var(--color-secondary);
-
-    position: relative;
-    width: max-content;
-    min-width: 180px;
-    height: max-content;
-    min-height: 55px;
-    margin: 10px auto;
-    padding: 12px 10px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    border-radius: 3px;
-    background-color: var(--color-primary);
-    color: #fff;
-    font-size: 1.125rem;
-    font-weight: 500;
-  }
-  .sidebar-partners__compare a {
-    background-color: inherit;
-    color: inherit;
-    font-weight: 600;
-    transition: none;
-  }
-
-  /* ===== Thẻ bài viết ===== */
-  .sidebar-articles {
-    max-width: 600px;
-    margin: 20px auto;
-    padding: 10px;
-    background-color: #f5f5f5;
-    border-radius: 4px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-  }
-  .sidebar-articles__node {
-    width: 100%;
-    margin: 10px auto 30px;
-    padding: 0 20px;
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-  }
-  .sidebar-articles__image {
-    position: relative;
-    width: 100%;
-    height: calc(100% - 30px);
-    margin: auto;
-    display: flex;
-    flex-shrink: 0;
-    /* Chỉ ló ra lúc ảnh chưa tải xong — bản gốc vẫn đặt */
-    background-color: var(--color-primary);
-  }
-  .sidebar-articles__image :global(img) {
-    width: 100%;
-    height: auto;
-    max-width: 100%;
-    max-height: 100%;
-    object-fit: cover;
-    transition: 0.2s linear;
-  }
-  .sidebar-articles__image :global(img):hover {
-    opacity: 0.8;
-  }
-  .sidebar-articles__content {
-    display: flex;
-    flex-direction: column;
-    justify-content: space-evenly;
-  }
-  .sidebar-articles__title-link {
-    --hover-color: var(--color-primary);
-  }
-  .sidebar-articles__title {
-    position: relative;
-    top: -1px;
-    margin: 0;
-    font-size: 1.125rem;
-    font-weight: 500;
-    line-height: 1.15rem;
-  }
-  .sidebar-articles__link {
-    color: var(--color-primary);
-    font-size: 1rem;
-    font-weight: 400;
-  }
-  .sidebar-articles__link:hover {
-    opacity: 0.5;
-  }
-
-  /* ===== ≥481px: danh sách brand chuyển thành lưới 3 cột tự xuống hàng ===== */
-  @media (min-width: 481px) and (min-height: 420px) {
-    .sidebar-partners {
-      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-    }
-    .sidebar-partners__content {
-      width: 100%;
-      height: 100%;
-      flex-flow: wrap;
-      justify-content: space-between;
-      /* Mốc 1025 KHÔNG bỏ gap này đi — thiếu 5 gap thì khung hụt đúng 50px */
-      gap: 10px;
-    }
-    .sidebar-partners__node {
-      width: 30%;
-      height: auto;
-      padding: 10px 0;
-      flex-direction: column;
-      align-items: center;
-      justify-content: space-between;
-      gap: 10px;
-      border: none;
-    }
-    .sidebar-partners__icon {
-      display: flex;
-      align-items: flex-start;
-      justify-content: flex-start;
-    }
-    .sidebar-partners__compare {
-      min-width: 40%;
-    }
-  }
-
-  /* ===== ≥768px: thẻ bài viết thành lưới 2 cột ===== */
-  @media (min-width: 768px) and (min-height: 420px) {
-    .sidebar-articles__list {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-    }
-  }
-
-  /* Bản gốc chỉ render 3 brand khi `clientWidth` trong khoảng 768–1024 (JS đo
-     clientWidth, đã trừ thanh cuộn 15px) → mốc CSS tương ứng là 783–1039. */
-  @media (min-width: 783px) and (max-width: 1039px) and (min-height: 420px) {
-    .sidebar-partners__node:nth-child(n + 4) {
-      display: none;
-    }
-  }
-
   @media (min-width: 1025px) and (min-height: 420px) {
     .promo-carousel {
       display: flex;
-    }
-    .sidebar-partners {
-      max-width: 250px;
-      margin-right: 0;
-      margin-bottom: 20px;
-    }
-    .sidebar-partners__content {
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-    }
-    .sidebar-partners__node {
-      width: 100%;
-      height: max-content;
-      padding: 10px 0;
-      flex-direction: row;
-      align-items: flex-start;
-      gap: 10px;
-    }
-    .sidebar-partners__node:not(:last-of-type) {
-      border-bottom: 1px solid rgba(160, 160, 160, 0.576);
-    }
-    /* Bắt buộc: thiếu 2 dòng này ảnh ăn theo thuộc tính width/height rồi bị
-       max-height kẹp ở 70px → node cao 91px thay vì để phần chữ quyết định */
-    .sidebar-partners__icon {
-      width: 100%;
-      height: 100%;
-      margin: auto;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-    .sidebar-partners__text {
-      line-height: 1.5rem;
-    }
-    .sidebar-partners__name {
-      font-size: 1rem;
-      font-weight: 600;
-      line-height: 1.25rem;
-    }
-    .sidebar-partners__link div {
-      font-weight: unset;
-    }
-    .sidebar-partners__compare {
-      min-width: max(50%, 147px);
-      min-height: unset;
-      padding: 5px;
-    }
-    .sidebar-partners__compare a {
-      font-weight: unset;
-    }
-    .sidebar-partners__compare:hover svg {
-      opacity: 1;
-      right: 2%;
-    }
-    .sidebar-articles {
-      max-width: 250px;
-      margin: 0 0 0 auto;
-      display: flex;
-      flex-direction: column;
-    }
-    .sidebar-articles__list {
-      display: initial;
-    }
-    .sidebar-articles__node {
-      margin-bottom: 20px;
-    }
-    .sidebar-articles__title {
-      font-size: 1rem;
-      font-weight: 400;
-      line-height: 1.2rem;
-    }
-    .sidebar-articles__link {
-      font-size: 0.9375rem;
     }
   }
 
@@ -579,29 +240,10 @@ const CIRCLE_ARROW_RIGHT =
       opacity: 1;
       right: 3%;
     }
-    .sidebar-partners__link div:hover {
-      color: var(--hover-color);
-    }
-    .sidebar-partners__compare:hover {
-      background-color: var(--hover-bg-color);
-    }
-    .sidebar-articles__title-link:hover {
-      color: var(--hover-color);
-    }
   }
 </style>
 
 <script>
-  /* Bản gốc để cả hàng brand click được (div + onClick, không phải thẻ <a> vì bên
-     trong đã có link "Read review") */
-  document.querySelectorAll<HTMLElement>(".sidebar-partners__node").forEach((node) => {
-    node.addEventListener("click", (event) => {
-      if ((event.target as HTMLElement).closest("a")) return;
-      const href = node.dataset.href;
-      if (href) window.location.href = href;
-    });
-  });
-
   /* Carousel khuyến mãi: duyệt qua 6 đối tác. Đổi nội dung slide tại chỗ (như bản
      gốc) + bật/tắt disable hai mũi tên ở hai đầu danh sách. */
   interface Slide {

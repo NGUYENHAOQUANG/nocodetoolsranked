@@ -1,0 +1,146 @@
+---
+/**
+ * Khối thẻ bài viết ở sidebar, dùng chung cho trang review và trang blog.
+ *
+ * Nhận `articles` qua prop (khác `SidebarPartners` tự lấy dữ liệu): hai nơi gọi
+ * dùng hai nguồn thật sự khác nhau — trang review lấy danh sách cố định
+ * (`getReviewSidebarArticles`), trang blog lấy bài liên quan của chính bài đang
+ * xem (`getRelatedPosts`). Prop tồn tại ở chỗ hành vi thật sự khác.
+ */
+import { Image } from "astro:assets";
+import type { SidebarArticle } from "@/lib/posts";
+
+interface Props {
+  articles: SidebarArticle[];
+}
+
+const { articles } = Astro.props;
+---
+
+<div class="sidebar-articles">
+  <div class="sidebar-articles__list">
+    {
+      articles.map((a) => (
+        <div class="sidebar-articles__node">
+          <a class="sidebar-articles__image" href={a.href}>
+            {/* Giữ đúng tỉ lệ ảnh gốc: 2 ảnh 600×400 và 1 ảnh 597×400 nên thẻ
+                thứ 3 cao lệch nhẹ — bản gốc cũng vậy */}
+            <Image src={a.image} alt={a.imageAlt} width={a.image.width} height={a.image.height} />
+          </a>
+          {/* Tiêu đề + link nằm trong 1 ô bọc: node chỉ có 2 con nên chỉ có 1
+              gap. Để 3 con ngang cấp là thừa 1 gap → mỗi thẻ dư đúng 10px. */}
+          <div class="sidebar-articles__content">
+            <a class="sidebar-articles__title-link" href={a.href}>
+              {/* <p> chứ không phải heading: tiêu đề thẻ gợi ý trong sidebar
+                  không thuộc dàn ý của trang. Bản blog trước đây dùng <h6>. */}
+              <p class="sidebar-articles__title">{a.title}</p>
+            </a>
+            <a class="sidebar-articles__link" href={a.href}>Read more</a>
+          </div>
+        </div>
+      ))
+    }
+  </div>
+</div>
+
+<style>
+  .sidebar-articles {
+    max-width: 600px;
+    margin: 20px auto;
+    padding: 10px;
+    background-color: #f5f5f5;
+    border-radius: 4px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  }
+  .sidebar-articles__node {
+    width: 100%;
+    margin: 10px auto 30px;
+    padding: 0 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  .sidebar-articles__image {
+    position: relative;
+    width: 100%;
+    height: calc(100% - 30px);
+    margin: auto;
+    display: flex;
+    flex-shrink: 0;
+    /* Chỉ ló ra lúc ảnh chưa tải xong — bản gốc vẫn đặt */
+    background-color: var(--color-primary);
+  }
+  .sidebar-articles__image :global(img) {
+    width: 100%;
+    height: auto;
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: cover;
+    transition: 0.2s linear;
+  }
+  .sidebar-articles__image :global(img):hover {
+    opacity: 0.8;
+  }
+  .sidebar-articles__content {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+  }
+  .sidebar-articles__title-link {
+    --hover-color: var(--color-primary);
+  }
+  .sidebar-articles__title {
+    position: relative;
+    top: -1px;
+    margin: 0;
+    font-size: 1.125rem;
+    font-weight: 500;
+    line-height: 1.15rem;
+  }
+  .sidebar-articles__link {
+    color: var(--color-primary);
+    font-size: 1rem;
+    font-weight: 400;
+  }
+  .sidebar-articles__link:hover {
+    opacity: 0.5;
+  }
+
+  /* ===== ≥768px: thẻ bài viết thành lưới 2 cột ===== */
+  @media (min-width: 768px) and (min-height: 420px) {
+    .sidebar-articles__list {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+
+  @media (min-width: 1025px) and (min-height: 420px) {
+    .sidebar-articles {
+      max-width: 250px;
+      margin: 0 0 0 auto;
+      display: flex;
+      flex-direction: column;
+    }
+    .sidebar-articles__list {
+      display: initial;
+    }
+    .sidebar-articles__node {
+      margin-bottom: 20px;
+    }
+    .sidebar-articles__title {
+      font-size: 1rem;
+      font-weight: 400;
+      line-height: 1.2rem;
+    }
+    .sidebar-articles__link {
+      font-size: 0.9375rem;
+    }
+  }
+
+  /* ===== ≥615px — hiệu ứng hover (bản gốc chỉ bật từ mốc này) ===== */
+  @media (min-width: 615px) {
+    .sidebar-articles__title-link:hover {
+      color: var(--hover-color);
+    }
+  }
+</style>
