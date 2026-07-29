@@ -1,144 +1,84 @@
 # CLAUDE.md
 
-Bối cảnh dự án, lệnh chạy và cách thêm nội dung nằm ở **`README.md`** — đọc file
-đó trước, ở đây không lặp lại.
+Hướng dẫn cho AI agent làm việc trong repo này.
 
-File này chỉ ghi những gì **không suy ra được từ code**: ràng buộc bắt buộc,
-những chỗ trông như bug nhưng là cố ý, và lý do một số việc "dọn dẹp" hiển nhiên
-lại bị cấm.
+Bối cảnh dự án, lệnh chạy và công thức thêm nội dung nằm ở **`README.md`** —
+đọc file đó trước. Ở đây chỉ ghi những gì không đọc ra được từ code.
 
 ---
 
-## 1. Nền tảng
-
-Site tái tạo **pixel-perfect** một trang có sẵn. Hệ quả: rất nhiều chi tiết
-trông thừa hoặc sai lại là bản sao có chủ ý, và "sửa" chúng chính là làm hỏng.
-
-Thay đổi giao diện có chủ đích thì **được phép** — dự án không còn bị đóng băng
-như thời tái cấu trúc. Nhưng thay đổi giao diện **ngoài ý muốn** là lỗi, và §5
-nói cách phân biệt hai thứ đó.
-
-## 2. Ràng buộc bắt buộc
-
-### 2.1 URL đã đóng băng
-
-Bản đồ URL ở README. Đổi URL = mất thứ hạng tìm kiếm, và phải kèm 301 ở tầng
-host. Chỉ đổi khi có yêu cầu rõ ràng và chấp nhận cái giá đó.
-
-Mọi URL nội bộ dựng qua `src/lib/links.ts`. Đừng gõ tay đường dẫn ở component —
-đó chính là thứ đã mất công gom lại.
-
-### 2.2 Không cài thêm những thứ này
-
-| Cấm | Lý do |
-|---|---|
-| **Tailwind** | CSS hiện tại là bản sao pixel của bản gốc và đã có design token. Chuyển sang Tailwind = viết lại 100% CSS = rủi ro lệch cao nhất có thể, đổi lấy gần như không lợi ích cho một site 10 trang tĩnh. |
-| **React / Vue / Svelte** | Không chỗ nào cần. ExitPopup, ToTop, FaqAccordion, carousel đều chạy bằng `<script>` vanilla. Zero JS framework là **tính năng** — Core Web Vitals ảnh hưởng trực tiếp tới thứ hạng và doanh thu affiliate. |
-| **`astro-seo`** | Tiết kiệm ~40 dòng, đổi lấy một dependency. `components/layout/Seo.astro` đã tự làm. |
-| **`astro-compress`** | Astro đã minify khi build. |
-
-Muốn người không biết code sửa nội dung → **Keystatic** ghép rất hợp với content
-collection, gần như không tốn công.
-
-### 2.3 Không chạy prettier lên `.astro` / `.mdx`
-
-`prettier-plugin-astro` reformat template HTML, mà **khoảng trắng giữa các inline
-element render thành dấu cách**. Trên codebase cố ý giữ `"Visit Site "` và
-`<p>&nbsp;</p>`, đây là hành động rủi ro/lợi ích tệ nhất có thể.
-
-`.prettierignore` đã chặn cứng. Script `npm run format` cũng chỉ nhắm `.ts`/
-`.yaml`/`.json`. Đừng nới hai chỗ đó. Tương tự: **đừng thêm `.gitattributes`** —
-`* text=auto` renormalize toàn bộ file và phá sạch khả năng đọc diff.
-
-### 2.4 Không đổi tên file asset
-
-Astro phát `/_astro/<basename>.<hash>.<ext>` — **basename nằm trong URL**, nên
-đổi tên file là đổi URL của ảnh trên trang. Dời thư mục thì được, đổi tên thì
-không. Đó là lý do vẫn còn `blog-*.jpg` trong `assets/images/posts/` dù không
-còn khái niệm "blog" nào.
-
-## 3. Những chỗ trông như bug nhưng là cố ý
-
-Đừng "sửa" bất kỳ mục nào dưới đây.
-
-**Chuỗi và khoảng trắng**
-- `alt="Ollie  Official Logo…"` — dấu cách đôi
-- `sidebarName: "Ollie "` — dấu cách cuối, khác `name: "Ollie"`
-- `"Visit Site "`, `"Contact Us "` — dấu cách cuối
-- `<p>&nbsp;</p>` trong bài The Pet's Table — spacer chiếm 27.2px
-- `hasTrailingBlank` của Ollie — đoạn rỗng làm card cao 314.83 thay vì 310
-
-Một brand có **năm biến thể tên** (`name`, `logoAlt`, `logoAltShort`,
-`sidebarName`, `articleLinkName`) vì chúng **không suy ra được từ nhau**:
-`name: "Fresh Pet"` (hai từ) nhưng `articleLinkName: "Freshpet"` (một từ);
-`name: "Ollie"` nhưng `sidebarName: "Ollie "` có dấu cách cuối.
-
-**CSS**
-- `--font-ui` khai `"Work Sans"` mà không nạp font — lỗi của bản gốc, tái tạo có chủ ý
-- `html { font-size: 14px }` → `16px` tại `1025px` — **mọi `rem` toàn site đi qua đây**
-- `body { line-height: 1.7em }` — là `em` chứ không phải unitless. Tính một lần trên body rồi kế thừa dạng px; đổi sang unitless sẽ tính lại trên từng element và làm lệch hàng loạt component
-- `html { width: 100vw; overflow-x: hidden }` — căn giữa theo 100vw *kể cả* thanh cuộn. Bỏ `100vw` sẽ dịch mọi thứ ~15px
-- Lưới bài viết gate `(min-width:1025px) and (min-height:420px)`; trang prose chỉ gate width. Bất đối xứng này là thật
-
-**Markup 4 trang prose** (`about`, `privacy-policy`, `terms-of-use`, `advertiser-disclosure`)
-- `terms-of-use` có **0 heading**; 9 tiêu đề mục là `<p>` in hoa styled y hệt body
-- Danh sách là **giả**, dựng bằng `<br />` trong một `<p>` — đừng đổi thành `<ul>`
-- `display: flow-root` có ở terms + disclosure nhưng **không** ở about + privacy
-- Margin đáy 46px vs 30px cùng ra một khoảng cách nhờ margin-collapse
-
-**Nội dung**
-- Bài review dùng `#` (h1) cho mục kết và **nó có xuất hiện trong TOC**
-- `images.reviewSidebar` của bài "a-detailed-look…" trỏ ảnh `must-reads-fresh-food.jpg` — tréo tên nhưng đúng bản gốc
-- `articles/why-fresh-dog-food.mdx` gần trùng `posts/why-fresh-food-is-the-best-for-dogs.mdx`, **khác đúng một từ** ("The Pet's Table" vs "The Farmer's Dog"). Giữ cả hai
-- 5 quy ước sinh `alt` khác nhau cho cùng một bài, tuỳ vị trí hiển thị
-
-## 4. Hai chỗ cấm gộp / cấm tách
-
-### `styles/prose.css` — dùng chung FILE, không dùng chung RULE
-
-Có **ba** bộ rule prose độc lập: `.post__body` (PostLayout), `.paragraph__content`
-(Paragraph), `.article` (FeaturedArticle — cố ý để nguyên trong component).
-
-`.post__body` có `h2/h3:first-of-type { margin-top: 0 }`, `.paragraph__content`
-**không có** — và **một trang review chứa bốn khối `<Paragraph>`**. Gộp rule lại
-thì `:first-of-type` khớp 4 lần mỗi trang thay vì 1, âm thầm xoá `0.83em` margin
-bốn lần. Vài giá trị trùng nhau chỉ là trùng hợp (`h3 margin 1em` và `1.25rem`
-cùng ra 20px vì font-size h3 đúng bằng 1.25rem).
-
-### Không tách nhỏ component lớn
-
-`PartnerCard` (858 dòng), `MiniReview` (715), `ReviewSidebar` (648) giữ nguyên.
-Scoped style của Astro chỉ áp cho element nằm trong template của **chính**
-component đó — tách markup ra component con đẩy element khỏi scope cha và mọi
-rule cha nhắm tới chúng ngừng khớp.
-
-## 5. Kiểm chứng khi đụng vào giao diện
-
-Có sẵn bộ so sánh ở `../_verify/` (ngoài repo):
+## Lệnh
 
 ```sh
-cd web && npm run build
-cd ../_verify/tool && MSYS_NO_PATHCONV=1 node verify.js --side=after
-diff -r ../baseline/layout ../after/layout    # tín hiệu chính
-diff -r ../baseline/dom ../after/dom
+npm run dev      # máy chủ phát triển, localhost:4321
+npm run build    # dựng site tĩnh vào dist/
+npm run check    # astro check — kiểm kiểu, giữ ở mức 0 lỗi
+npm run format   # prettier cho .ts/.yaml/.json
 ```
 
-`layout` ghi `getBoundingClientRect()` + ~35 computed property của **mọi element,
-mọi trang, 11 khổ màn** — đủ nhạy để bắt lệch 1px hay đổi một thuộc tính CSS.
-`../baseline/` là bản dựng trước tái cấu trúc; muốn lấy mốc mới thì copy `dist/`
-đè lên.
+## Kiến trúc
 
-**Lưu ý vận hành**
-- **Đừng build lại trong lúc harness đang chụp** — `dist/` bị ghi đè giữa chừng làm hỏng cả lần chụp
-- Git Bash biến `--pages=/` thành đường dẫn Windows → đặt `MSYS_NO_PATHCONV=1`
-- Probe `hover/` nhạy thời điểm đo; thấy lệch thì chạy lại riêng trang đó trước khi kết luận
-- Self-test phải chạy **nhiều trang**, không chỉ 1–2
+Astro 7, static site, **không dùng UI framework**. Mọi tương tác (popup thoát
+trang, accordion, carousel, drawer mobile, cuộn lên đầu) viết bằng `<script>`
+vanilla trong chính component. Đây là lựa chọn có chủ đích: site sống bằng
+traffic tìm kiếm, và zero JS framework giúp Core Web Vitals.
 
-`astro check` **không** bắt được lỗi giao diện. Từng có lần đổi tên prop mà quên
-phần destructure — mọi trang render nhầm biến thể hero, `astro check` vẫn báo 0
-lỗi, chỉ harness phát hiện.
+### Nội dung tách khỏi code
 
-## 6. Quy tắc đặt tên
+Toàn bộ nội dung biên tập nằm trong `src/content/` dưới dạng content collection
+có schema Zod. Không có mảng dữ liệu nào nằm trong `.ts` hay hardcode trong
+component. Thêm brand hay bài viết là thêm file nội dung, không sửa code.
+
+### Ý tưởng trung tâm: brands vs placements
+
+Đây là chỗ dễ hiểu nhầm nhất nếu chỉ nhìn thư mục.
+
+- **`content/brands/`** — *đối tác LÀ AI*: tên, logo, alt, link affiliate.
+  Bất biến, khai một lần.
+- **`content/placements/`** — *đối tác XUẤT HIỆN THẾ NÀO ở từng trang*: thứ tự,
+  điểm số, số sao, coupon.
+
+Tách như vậy vì trang chủ và `/reviews/` xếp hạng **khác nhau** cho cùng một tập
+brand. Nếu gộp làm một thì hoặc phải nhân đôi dữ liệu, hoặc mất khả năng cho hai
+trang xếp khác nhau.
+
+Hệ quả thực tế: đổi link affiliate là sửa **một dòng** trong `brands/`, và mọi
+nơi hiển thị nó đều đổi theo.
+
+`src/lib/rankings.ts` nối hai thứ đó lại. `src/lib/posts.ts` làm việc tương tự
+cho bài viết.
+
+### Quan hệ giữa collection
+
+Dùng `reference()` chứ không dùng chuỗi tra bảng. Gõ sai tên brand, tác giả hay
+bài viết là **lỗi build**, không phải `undefined` âm thầm lúc chạy.
+
+### Routing
+
+Route sinh từ tên file trong collection:
+
+| Route | Sinh từ |
+|---|---|
+| `pages/reviews/[brand].astro` | `content/reviews/*.mdx` |
+| `pages/knowledge/[slug].astro` | `content/posts/*.mdx` |
+
+Slug **là** id của entry (tên file) — không khai `slug` trong frontmatter. Hai
+nguồn sự thật cho URL từng gây ra một URL sai chính tả trong dự án này.
+
+Mọi URL nội bộ dựng qua **`src/lib/links.ts`**. Đừng gõ tay đường dẫn trong
+component — đổi cấu trúc URL sẽ phải sửa một chỗ thay vì tám chỗ.
+
+### Style
+
+| File | Vai trò |
+|---|---|
+| `styles/tokens.css` | Biến CSS (`--color-*`, `--font-*`) |
+| `styles/global.css` | `@font-face`, reset, import hai file kia |
+| `styles/prose.css` | Style cho thân bài do MDX render |
+
+Ngoài ra mỗi component tự giữ style trong `<style>` scoped của nó.
+
+## Quy ước đặt tên
 
 **File**
 
@@ -151,46 +91,123 @@ lỗi, chỉ harness phát hiện.
 | File nội dung | kebab-case, chính là slug | `what-makes-healthy-pet-food.mdx` |
 | Asset, thư mục | kebab-case | `author-steve-diller.png` |
 
-Không có file `utils.ts` / `helpers.ts` / `misc.ts` — đặt tên theo việc nó làm.
+Không dùng tên chung chung như `utils.ts` / `helpers.ts` — đặt theo việc nó làm.
 
 **Code**
+
 - Biến, hàm, thuộc tính: `camelCase`; hàm mở đầu bằng động từ
 - Boolean có tiền tố `is` / `has` / `should` / `can`
 - Type, interface: `PascalCase`, không tiền tố `I`. Props component luôn tên `Props`
 - Hằng bất biến cấp module: `UPPER_SNAKE_CASE`
-- Collection và mảng dùng **số nhiều**; phần tử số ít
-- Tên nói **cái đó là gì**, không nói nó nằm ở đâu; không đặt theo trang đang dùng nếu thứ đó dùng lại được
+- Collection và mảng dùng số nhiều, phần tử số ít
+- Tên nói **cái đó là gì**, không nói nó nằm ở đâu
 
 **CSS**
+
 - BEM: `block__element--modifier`, kebab-case
-- Custom property theo nhóm `--color-*`, `--font-*`, `--container-*`, đặt theo
-  **vai trò** chứ không theo giá trị (`--color-primary`, không phải `--color-orange`)
+- Custom property đặt theo **vai trò**, không theo giá trị —
+  `--color-primary`, không phải `--color-orange`
 
 **Nội dung**
+
 - Trường frontmatter: `camelCase`, khớp schema Zod
-- Quan hệ giữa collection dùng `reference()` — gõ sai thành lỗi build
-- Không khai `slug` bằng tay; slug là **id của entry** (tên file)
+- Quan hệ giữa collection dùng `reference()`
 
-## 7. Lịch sử
+## Những điều dễ vấp
 
-Dự án từng qua một đợt tái cấu trúc lớn (18 commit): gom nội dung từ `src/data/`
-vào content collection, xoá trùng lặp brand 4 nơi và bài viết 6 nơi, lồng URL
-theo chuyên mục, thêm SEO.
+Không phải điều cấm — chỉ là những chỗ hành xử khác trực giác. Biết trước thì
+đỡ mất thời gian truy nguyên.
 
-Toàn bộ diễn biến, lý do từng quyết định và kết quả kiểm chứng nằm trong
-commit message:
+### `rem` co theo breakpoint
 
-```sh
-git log pre-refactor..HEAD        # tag pre-refactor = trạng thái trước đợt đó
-```
+`global.css` đặt `html { font-size: 14px }` và đổi thành `16px` từ `1025px`.
+**Mọi giá trị `rem` trong site đều đi qua đây** — một component trông đúng ở
+desktop có thể lệch ở mobile chỉ vì điều này. Đổi hai con số đó là đổi tỉ lệ
+toàn site.
 
-## 8. Development
+### `body { line-height: 1.7em }` dùng `em`, không phải unitless
 
-```sh
-astro dev --background            # quản lý: astro dev stop | status | logs
-```
+`em` được tính **một lần** trên `body` rồi kế thừa xuống dưới dạng px cố định.
+Unitless (`1.7`) sẽ tính lại trên từng element theo font-size riêng của nó. Hai
+cách cho kết quả khác nhau ở mọi element có font-size khác body — đổi thì nhớ
+kiểm lại toàn site.
 
-Tài liệu Astro: https://docs.astro.build —
+### Scoped style không xuyên qua ranh giới component
+
+Astro chỉ áp scoped style cho element nằm trong template của **chính** component
+đó. Tách một phần markup ra component con thì mọi rule của cha nhắm tới phần đó
+sẽ ngừng khớp. Muốn tách component lớn (`PartnerCard`, `MiniReview`,
+`ReviewSidebar` đều >600 dòng) thì phải chuyển style theo, hoặc dùng `:global()`.
+
+Cùng lý do: nội dung đưa vào qua `<slot />` hoặc do MDX render nằm **ngoài**
+phạm vi scoped. Đó là vì sao style thân bài sống ở `styles/prose.css` (file
+global) chứ không nằm trong `<style>` của `PostLayout.astro` hay
+`Paragraph.astro` — hai component đó chỉ giữ style cho khung bao ngoài.
+
+### `prose.css` có hai khối, cố ý không gộp
+
+`.post__body` (bài viết) và `.paragraph__content` (bài review) trông na ná nhau
+nhưng khác ở chỗ quan trọng: `.post__body` có `h2/h3:first-of-type
+{ margin-top: 0 }`, `.paragraph__content` không có — vì **một trang review chứa
+nhiều khối `<Paragraph>`**, nên `:first-of-type` sẽ khớp một lần mỗi khối thay vì
+một lần mỗi trang.
+
+Muốn gộp thì phải xử lý điểm đó trước, không thì margin đầu mục biến mất ở trang
+review.
+
+### Tên file asset nằm trong URL
+
+Astro phát ảnh thành `/_astro/<basename>.<hash>.<ext>` — **basename là tên file
+gốc**. Dời thư mục không ảnh hưởng URL, nhưng đổi tên file thì có. Nếu site đã
+chạy thật, đổi tên ảnh sẽ làm hỏng link ảnh đã được index hoặc cache.
+
+### `image()` trong schema phát cả file gốc
+
+Ảnh khai bằng `image()` luôn được phát bản gốc bên cạnh bản `.webp` mà `<Image>`
+sinh ra, vì `ImageMetadata.src` phải trỏ tới file có thật. Nếu markup chỉ dùng
+`<Image>`, bản gốc nằm trong `dist/` mà không trang nào tham chiếu (~150KB hiện
+tại). Không ảnh hưởng người dùng, chỉ là dung lượng deploy.
+
+### Prettier không format `.astro` / `.mdx`
+
+`.prettierignore` cố ý loại hai loại đó. Lý do: `prettier-plugin-astro` reformat
+template HTML, mà khoảng trắng giữa các inline element **render thành dấu cách**
+— reflow một dòng dài có thể làm layout dịch đi một ký tự.
+
+Muốn bật thì cứ bật, nhưng nên làm thành một commit riêng và so lại giao diện,
+đừng trộn chung với thay đổi khác.
+
+## Nội dung đến từ nguồn ngoài
+
+Nội dung ban đầu được nhập từ một site có sẵn, nên vài chuỗi mang dấu vết của
+nguồn đó:
+
+- Dấu cách đôi và dấu cách cuối trong `alt` và tên brand
+  (`"Ollie  logo"`, `sidebarName: "Ollie "`)
+- Một brand có tới năm biến thể tên (`name`, `logoAlt`, `logoAltShort`,
+  `sidebarName`, `articleLinkName`) vì nguồn dùng chuỗi khác nhau ở từng vị trí
+- Vài `<p>&nbsp;</p>` đóng vai spacer
+- Trang `terms-of-use` không có heading nào — tiêu đề mục là `<p>` in hoa; danh
+  sách dựng bằng `<br />` thay vì `<ul>`
+- Bài review dùng `#` (h1) cho mục kết bài, nên nó xuất hiện trong mục lục
+
+Những chỗ này **sửa được** nếu muốn chuẩn hoá. Chỉ cần biết chúng là dữ liệu
+nhập chứ không phải lỗi ngẫu nhiên, và sửa thì nên sửa nhất quán cả cụm — ví dụ
+bỏ dấu cách thừa thì bỏ ở cả năm trường tên, đừng bỏ lẻ một chỗ.
+
+## Khi thay đổi ảnh hưởng giao diện
+
+`astro check` chỉ kiểm kiểu — nó **không** phát hiện được lỗi giao diện. Một prop
+đổi tên mà quên phần destructure vẫn qua `astro check` sạch trong khi cả trang
+render sai biến thể.
+
+Với thay đổi đụng vào CSS, layout hay tên prop, nên dựng site trước/sau rồi so
+`dist/` — chú ý bỏ qua `data-astro-cid-*` và hash trong `/_astro/`, vì hai thứ
+đó đổi mỗi khi file component đổi đường dẫn.
+
+## Tài liệu
+
+Astro: https://docs.astro.build —
 [routing](https://docs.astro.build/en/guides/routing/) ·
 [content collections](https://docs.astro.build/en/guides/content-collections/) ·
 [images](https://docs.astro.build/en/guides/images/) ·

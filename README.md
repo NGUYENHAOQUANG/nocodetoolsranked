@@ -128,19 +128,22 @@ khác nhau được.
 ```
 
 Route sinh từ tên file trong `content/reviews/` và `content/posts/`.
-Mọi URL nội bộ dựng qua `src/lib/links.ts` — đừng gõ tay đường dẫn ở nơi khác.
 
-> ⚠️ **URL đã đóng băng.** Đổi URL là mất thứ hạng tìm kiếm và phải kèm 301 ở
-> tầng host. Xem CLAUDE.md §7.
+Mọi URL nội bộ dựng qua **`src/lib/links.ts`** — đổi cấu trúc URL thì sửa một
+chỗ đó, đừng gõ tay đường dẫn trong component.
 
-## Trước khi sửa giao diện
+> Nếu site đã chạy thật và được index, đổi URL cần kèm 301 ở tầng host, nếu
+> không sẽ mất thứ hạng tìm kiếm đã có.
 
-Dự án tái tạo pixel-perfect một site có sẵn, nên **nhiều chỗ trông như lỗi lại là
-cố ý** — dấu cách đôi trong `alt`, `<p>&nbsp;</p>` làm spacer, font khai báo mà
-không nạp, trang Terms dùng `<p>` in hoa thay cho heading.
+## Ghi chú
 
-**Đọc `CLAUDE.md` trước khi đụng vào CSS hoặc markup.** Ở đó liệt kê đủ những chỗ
-đó cùng lý do, và cách kiểm chứng thay đổi không làm lệch giao diện.
+Nội dung ban đầu nhập từ một site có sẵn, nên vài chuỗi còn mang dấu vết của
+nguồn (dấu cách thừa trong `alt`, `<p>&nbsp;</p>` làm spacer, trang Terms không
+dùng heading). Sửa được nếu muốn chuẩn hoá — `CLAUDE.md` liệt kê đủ.
+
+`CLAUDE.md` cũng ghi những chỗ hành xử khác trực giác (`rem` co theo breakpoint,
+scoped style không xuyên component, tên file ảnh nằm trong URL). Đáng đọc trước
+khi sửa CSS.
 
 ## Tài liệu
 

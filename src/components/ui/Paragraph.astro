@@ -1,10 +1,11 @@
 ---
-/* Một khối nội dung của bài review. Bản gốc chia bài thành nhiều
-   `.paragraph_paragraph`, mỗi khối margin 10px 0 30px và tự là BFC nhờ
-   `overflow-x: scroll` (để bảng rộng cuộn ngang được).
+/* Một khối nội dung của bài review. Bài được chia thành nhiều khối, mỗi khối
+   margin 10px 0 30px và tự là BFC nhờ `overflow-x: scroll` (để bảng rộng cuộn
+   ngang được).
 
-   Nội dung đưa vào qua <slot /> nên nằm NGOÀI phạm vi scoped CSS → mọi rule cho
-   thẻ bên trong phải bọc :global(). */
+   Nội dung đưa vào qua <slot /> nên nằm NGOÀI phạm vi scoped CSS. Vì vậy style
+   cho các thẻ bên trong (h1–h3, p, ul/ol, table) đặt ở `styles/prose.css` dưới
+   khối `.paragraph__content`, không đặt trong <style> của file này. */
 ---
 
 <div class="paragraph">
