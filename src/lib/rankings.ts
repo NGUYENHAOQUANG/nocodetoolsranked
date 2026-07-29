@@ -20,7 +20,7 @@ export interface Brand {
   logoAlt: string;
   tagline: string;
   taglineMobile: string;
-  taglineMobileBold?: boolean;
+  isTaglineMobileBold?: boolean;
   bullets: string[];
   bulletsMobile?: string[];
   coupon?: string;
@@ -29,7 +29,7 @@ export interface Brand {
   stars: number;
   reviews: string;
   href: string;
-  editorsChoice?: boolean;
+  isEditorsChoice?: boolean;
   hoverTooltip?: { highlight: string; text: string };
 }
 
@@ -42,7 +42,7 @@ export interface ReviewEntry {
   ratingLabel: string;
   stars: number;
   href: string;
-  trailingBlank?: boolean;
+  hasTrailingBlank?: boolean;
 }
 
 export interface SidebarPartner {
@@ -97,7 +97,7 @@ export async function getHomepageBrands(): Promise<Brand[]> {
     logoAlt: brand.logoAlt,
     tagline: row.tagline,
     taglineMobile: row.taglineMobile,
-    ...(row.isTaglineMobileBold ? { taglineMobileBold: true } : {}),
+    ...(row.isTaglineMobileBold ? { isTaglineMobileBold: true } : {}),
     bullets: row.bullets,
     ...(row.bulletsMobile ? { bulletsMobile: row.bulletsMobile } : {}),
     ...(row.coupon ? { coupon: row.coupon } : {}),
@@ -106,7 +106,7 @@ export async function getHomepageBrands(): Promise<Brand[]> {
     stars: row.stars,
     reviews: row.reviewsCount,
     href: brand.affiliateUrl,
-    ...(row.isEditorsChoice ? { editorsChoice: true } : {}),
+    ...(row.isEditorsChoice ? { isEditorsChoice: true } : {}),
     ...(row.hoverTooltip ? { hoverTooltip: row.hoverTooltip } : {}),
   }));
 }
@@ -123,7 +123,7 @@ export async function getReviewsPageEntries(): Promise<ReviewEntry[]> {
     ratingLabel: row.ratingLabel,
     stars: row.stars,
     href: brand.affiliateUrl,
-    ...(row.hasTrailingBlank ? { trailingBlank: true } : {}),
+    ...(row.hasTrailingBlank ? { hasTrailingBlank: true } : {}),
   }));
 }
 

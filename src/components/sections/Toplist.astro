@@ -23,7 +23,7 @@ const promo = {
     {
       brands.map((brand, i) => (
         <>
-          <PartnerCard brand={brand} sideBanner={i === 0} />
+          <PartnerCard brand={brand} hasSideBanner={i === 0} />
           {brand.rank === PROMO_AFTER_RANK && <PromoBanner {...promo} />}
         </>
       ))

@@ -6,13 +6,13 @@ interface Props {
   highlight: string;
   text: string;
   /** Card đầu danh sách tự mở tooltip sau 1s thay vì chờ hover */
-  stayOpen?: boolean;
+  shouldStayOpen?: boolean;
 }
 
-const { highlight, text, stayOpen = false } = Astro.props;
+const { highlight, text, shouldStayOpen = false } = Astro.props;
 ---
 
-<div class:list={["tooltip", { "tooltip--stay-open": stayOpen }]}>
+<div class:list={["tooltip", { "tooltip--stay-open": shouldStayOpen }]}>
   <img
     class="tooltip__icon"
     src={visitorsIcon.src}

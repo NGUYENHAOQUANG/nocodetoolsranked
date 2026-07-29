@@ -21,7 +21,7 @@ interface Props {
 }
 
 const { slug } = Astro.props;
-const entry = await getEntry("blog", slug);
+const entry = await getEntry("posts", slug);
 if (!entry) throw new Error(`Không có bài "${slug}" trong collection blog`);
 const { Content, headings } = await render(entry);
 const { title, date, readTime, heroMobileTitle } = entry.data;
@@ -59,7 +59,7 @@ const schema = [
   <Header />
   {/* Blog: hero hiện chính tiêu đề bài (cả desktop lẫn mobile) */}
   <Hero
-    inner
+    isInner
     title={title}
     alt={`${title} | Fresh Dog Food Delivery`}
     mobileTitle={heroMobileTitle ?? title}

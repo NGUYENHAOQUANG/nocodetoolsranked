@@ -3,7 +3,7 @@ import { getEntry } from "astro:content";
 import { getHomepageBrands } from "@/lib/rankings";
 
 const brands = await getHomepageBrands();
-const miniReview = (await getEntry("miniReview", "homepage"))!.data;
+const miniReview = (await getEntry("miniReviews", "homepage"))!.data;
 
 /** Bản gốc chỉ đánh giá chi tiết brand hạng 1 (The Pet's Table) */
 const brand = brands[0];

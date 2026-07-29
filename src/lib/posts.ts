@@ -65,7 +65,7 @@ const REVIEW_SIDEBAR_ORDER = [
 ];
 
 async function ordered(ids: string[]) {
-  const all = await getCollection("blog");
+  const all = await getCollection("posts");
   const byId = new Map(all.map((e) => [e.id, e]));
   return ids.map((id) => {
     const e = byId.get(id);
@@ -110,12 +110,12 @@ export async function getReviewSidebarArticles(): Promise<SidebarArticle[]> {
 
 /** Sidebar bài viết — 2 bài gợi ý lấy từ `relatedPosts` của chính bài đó */
 export async function getRelatedPosts(postId: string): Promise<SidebarArticle[]> {
-  const entry = await getEntry("blog", postId);
+  const entry = await getEntry("posts", postId);
   if (!entry) throw new Error(`Không có bài "${postId}"`);
   return Promise.all(
     entry.data.relatedPosts.map(async (ref) => {
       const id = typeof ref === "string" ? ref : (ref as { id: string }).id;
-      const p = await getEntry("blog", id);
+      const p = await getEntry("posts", id);
       if (!p) throw new Error(`relatedPosts trỏ tới bài không tồn tại: "${id}"`);
       return {
         image: p.data.images.blogSidebar ?? p.data.images.mustRead ?? p.data.images.card,

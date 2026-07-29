@@ -6,7 +6,7 @@ import heroImgMobile from "@/assets/images/hero/hero-mobile.jpg";
 interface Props {
   /** Trang trong (vd /reviews/): chỉ hiện tiêu đề và căn giữa theo chiều dọc —
       bỏ subtitle, "Last Updated" và tooltip "Advertising Disclosure" */
-  inner?: boolean;
+  isInner?: boolean;
   /** Chỉ dùng cho biến thể `inner` — tiêu đề bản DESKTOP */
   title?: string;
   /** Tiêu đề bản MOBILE (<768px). Bản gốc để chuỗi KHÁC hẳn desktop; không
@@ -14,16 +14,16 @@ interface Props {
   mobileTitle?: string;
   /** Biến thể `inner`: căn tiêu đề LÊN ĐẦU banner thay vì giữa (trang /about-page/
       dùng space-between/flex-start, khác /reviews/ và /knowledge/ căn giữa). */
-  titleTop?: boolean;
+  isTitleTop?: boolean;
   alt?: string;
   mobileAlt?: string;
 }
 
 const {
-  inner = false,
+  isInner = false,
   title = "",
   mobileTitle = title,
-  titleTop = false,
+  isTitleTop = false,
   alt = "Best Dog Food Delivery Brands 2026 — Fresh Dog Food Delivery",
   mobileAlt = alt,
 } = Astro.props;
@@ -31,7 +31,7 @@ const {
 const innerContentClass = [
   "hero__content",
   "hero__content--inner",
-  titleTop && "hero__content--top",
+  isTitleTop && "hero__content--top",
 ]
   .filter(Boolean)
   .join(" ");
@@ -46,7 +46,7 @@ const lastUpdated = new Intl.DateTimeFormat("en-US", {
 
 <section class="hero">
   {
-    inner ? (
+    isInner ? (
       <>
         {/* Bản gốc dựng banner mobile/desktop thành HAI cây riêng: JS chọn cây theo
             `clientWidth` (mốc 768), còn CSS lại ẩn theo `innerWidth` — lệch nhau đúng

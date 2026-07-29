@@ -131,8 +131,8 @@ const articles = defineCollection({
     Gộp về đây dữ liệu vốn nằm rải ở SÁU nơi: frontmatter, knowledge.ts,
     mustReads.ts, reviewPage.sidebarArticles, ARTICLE_MAP hardcode trong
     BlogSidebar.astro, và các chuỗi alt sinh theo 5 quy ước khác nhau. */
-const blog = defineCollection({
-  loader: glob({ pattern: "**/*.mdx", base: "./src/content/blog" }),
+const posts = defineCollection({
+  loader: glob({ pattern: "**/*.mdx", base: "./src/content/posts" }),
   schema: ({ image }) =>
     z.object({
       title: z.string(),
@@ -163,7 +163,7 @@ const blog = defineCollection({
       }),
       /** 2 bài gợi ý ở sidebar. Bài nào TỰ là must-read thì trỏ bài khác để
           không tự trỏ về chính nó. reference() nên gõ sai = lỗi build. */
-      relatedPosts: z.array(reference("blog")),
+      relatedPosts: z.array(reference("posts")),
     }),
 });
 
@@ -194,8 +194,8 @@ const contactCards = defineCollection({
 
 /** Đánh giá chi tiết brand hạng 1 ở trang chủ. Logo/điểm/sao/link lấy từ
     placements + brands; file này chỉ giữ nội dung riêng của section. */
-const miniReview = defineCollection({
-  loader: glob({ pattern: "**/*.yaml", base: "./src/content/mini-review" }),
+const miniReviews = defineCollection({
+  loader: glob({ pattern: "**/*.yaml", base: "./src/content/mini-reviews" }),
   schema: ({ image }) =>
     z.object({
       brand: reference("brands"),
@@ -221,8 +221,8 @@ export const collections = {
   authors,
   reviews,
   articles,
-  blog,
+  posts,
   faq,
   contactCards,
-  miniReview,
+  miniReviews,
 };
