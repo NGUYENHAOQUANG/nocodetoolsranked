@@ -280,3 +280,58 @@
     margin: 2px auto 30px;
   }
 }
+
+/* ==========================================================================
+   4. Khối bài viết ở trang chủ — FeaturedArticle.astro
+
+   Trước đây bộ rule này nằm trong `<style>` của component, mỗi rule bọc
+   `:global()` vì nội dung do MDX sinh không mang scope. Bọc global rồi thì nó
+   đã là global — chỉ khác là nằm lạc chỗ, tách khỏi ba khối prose anh em.
+   ========================================================================== */
+
+.article {
+  width: 100%;
+  /* Dưới 1025px khối này nằm thẳng trong section (không còn lưới) nên mới lộ
+     giới hạn 95dvw của bản gốc — ở desktop nó bị cột lưới 680px che mất */
+  max-width: min(95dvw, 1060px);
+  margin-inline: auto;
+  /* Bản gốc tạo BFC bằng `overflow-x: scroll` (để bảng rộng cuộn ngang được).
+     Tác dụng phụ mới là thứ quyết định layout: nó giữ margin 16px của đoạn
+     cuối nằm TRONG khối — bỏ đi thì khối hụt 16px. Trang này không có bảng
+     nên dùng flow-root cho đúng ý đồ. */
+  display: flow-root;
+  line-height: 1.7rem;
+  font-weight: 400;
+  color: var(--color-text-body);
+}
+
+/* global.css reset margin h2/h3/p về 0 → khai lại đúng mặc định UA */
+.article h2,
+.article__title {
+  margin: 0.83em 0;
+  font-size: 1.5625rem;
+  line-height: 2.2rem;
+  color: var(--color-text-body);
+}
+
+/* Tiêu đề khối do component render, luôn là phần tử ĐẦU — dùng `.article__title`
+   chứ không dùng `h2:first-of-type` như khối 1: các `<h2>` còn lại nằm giữa bài
+   và phải giữ nguyên margin trên. */
+.article__title {
+  margin-top: 0;
+}
+
+/* Tiểu mục trong bài. Bản gốc gõ `**chữ**` (ra <p><strong>) làm tiêu đề — nay
+   là <h3> thật, và CSS giữ đúng hình cũ: cùng cỡ chữ thân bài, đậm 700, cùng
+   nhịp margin của một đoạn văn. */
+.article h3 {
+  margin: 1em 0;
+  font-size: 1rem;
+  font-weight: 700;
+  line-height: 1.7rem;
+  color: var(--color-text-body);
+}
+
+.article p {
+  margin: 1em 0;
+}

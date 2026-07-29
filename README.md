@@ -96,7 +96,7 @@ src/
 │  ├─ placements/ brand được xếp hạng thế nào ở từng trang
 │  ├─ reviews/    bài review (.mdx)   ├─ posts/    bài viết (.mdx)
 │  ├─ authors/    ├─ faq/  ├─ contact-cards/  ├─ mini-reviews/
-│  ├─ sections/  khối nội dung nhúng vào trang (không có route riêng)
+│  ├─ featured-articles/  khối bài viết dài nhúng vào trang chủ
 │  └─ pages/     4 trang nội dung phẳng: about, terms, privacy, disclosure
 │
 ├─ components/

@@ -1,16 +1,25 @@
 ---
-import type { ImageMetadata } from "astro";
+import { getEntry } from "astro:content";
 import { CHEVRON_RIGHT } from "@/lib/icon-paths";
 
 interface Props {
-  logo: ImageMetadata;
-  logoAlt: string;
+  /**
+   * id của brand trong `content/brands`. Logo, alt và link affiliate lấy từ đó
+   * chứ KHÔNG truyền rời: trước đây file nội dung tự import logo, tự gõ alt và
+   * tự khai href, nên nó thành bản sao thứ hai của dữ liệu brand — và đã trôi
+   * lệch thật (alt ở đây có hai dấu cách, ở collection thì một).
+   */
+  brand: string;
+  /** Dòng khuyến mãi — riêng của từng chỗ đặt CTA, không thuộc về brand */
   promo: string;
-  buttonText: string;
-  href: string;
+  buttonText?: string;
 }
 
-const { logo, logoAlt, promo, buttonText, href } = Astro.props;
+const { brand: brandId, promo, buttonText = "Visit Site" } = Astro.props;
+
+const brand = await getEntry("brands", brandId);
+if (!brand) throw new Error(`InlineCta tro toi brand khong ton tai: "${brandId}"`);
+const { logo, logoAlt, affiliateUrl: href } = brand.data;
 ---
 
 {

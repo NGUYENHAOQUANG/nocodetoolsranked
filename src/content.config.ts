@@ -170,9 +170,21 @@ const pages = defineCollection({
   }),
 });
 
-/** Bài viết trang chủ — MDX (prose + <InlineCta/>). */
-const sections = defineCollection({
-  loader: glob({ pattern: "**/*.mdx", base: "./src/content/sections" }),
+/**
+ * Khối bài viết dài nhúng vào một trang, KHÔNG có route riêng.
+ *
+ * Đặt tên theo đúng quy ước của ba khối cùng loại (`faq/homepage.yaml`,
+ * `mini-reviews/homepage.yaml`, `contact-cards/contact.yaml`): thư mục là TÊN
+ * KHỐI, file là TÊN TRANG chứa nó. File KHÔNG đặt theo chủ đề bài — đổi chủ đề
+ * thì không phải đổi tên file, và id trùng với chuỗi component đi tìm.
+ *
+ * `.mdx` chứ không phải `.md`: thân bài nhúng `<InlineCta />`, là widget
+ * (logo + nút + link affiliate) chứ không phải văn bản — tầng 3 của thang
+ * Markdown → HTML → component ở CLAUDE.md workspace mục 4.
+ */
+const featuredArticles = defineCollection({
+  loader: glob({ pattern: "**/*.mdx", base: "./src/content/featured-articles" }),
+  /** Tiêu đề khối. Component render nó; thân bài KHÔNG lặp lại. */
   schema: z.object({ title: z.string() }),
 });
 
@@ -272,7 +284,7 @@ export const collections = {
   sidebarPlacement,
   authors,
   reviews,
-  sections,
+  featuredArticles,
   pages,
   posts,
   faq,
