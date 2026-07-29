@@ -1,5 +1,5 @@
 /* ==========================================================================
-   Khung banner đầu trang — dùng chung cho `HeroHome` và `HeroInner`.
+   Khung banner đầu trang — dùng chung cho `HeroToplist` và `HeroInner`.
 
    Vì sao là file CSS global chứ không nằm trong <style> của component: hai
    component render cùng bộ class khung này, mà scoped style của Astro không

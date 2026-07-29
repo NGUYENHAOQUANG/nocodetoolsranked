@@ -15,14 +15,14 @@ import { organizationSchema, websiteSchema } from "@/lib/schema-org";
 import { getToplistBrands } from "@/lib/rankings";
 import BaseLayout from "@/layouts/BaseLayout.astro";
 import Header from "@/components/layout/Header.astro";
-import HeroHome from "@/components/sections/HeroHome.astro";
-import Toplist from "@/components/sections/Toplist.astro";
-import BestOverall from "@/components/sections/BestOverall.astro";
-import MiniReview from "@/components/sections/MiniReview.astro";
-import ContentGrid from "@/components/sections/ContentGrid.astro";
+import HeroToplist from "@/components/toplist/HeroToplist.astro";
+import PartnerList from "@/components/toplist/PartnerList.astro";
+import BestOverall from "@/components/toplist/BestOverall.astro";
+import MiniReview from "@/components/toplist/MiniReview.astro";
+import ContentGrid from "@/components/toplist/ContentGrid.astro";
 import Footer from "@/components/layout/Footer.astro";
 import ToTop from "@/components/layout/ToTop.astro";
-import ExitPopup from "@/components/layout/ExitPopup.astro";
+import ExitPopup from "@/components/toplist/ExitPopup.astro";
 
 /* "home" là id DÀNH RIÊNG cho trang chủ, đừng đặt cho ngách nào khác. Viết
    thẳng chuỗi ở cả hai chỗ vì `getStaticPaths` được Astro hoist ra ngoài, không
@@ -68,14 +68,14 @@ const schema = entry.id === "home" ? [organizationSchema(), websiteSchema()] : [
 <BaseLayout title={data.title} description={data.description} schema={schema}>
   <Header />
   <main>
-    <HeroHome
+    <HeroToplist
       title={data.heroTitle}
       subtitle={data.heroSubtitle}
       subtitleCompact={data.heroSubtitleCompact}
       alt={data.heroAlt}
       mobileAlt={data.heroMobileAlt}
     />
-    <Toplist brands={brands} promo={promo} />
+    <PartnerList brands={brands} promo={promo} />
     <BestOverall brand={brands[0]} />
     <MiniReview
       brand={brands[0]}

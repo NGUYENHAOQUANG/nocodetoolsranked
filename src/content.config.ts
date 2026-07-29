@@ -176,7 +176,7 @@ const pages = defineCollection({
  * mọi ngách khác lấy id làm slug ở gốc site (`fresh-dog-food.mdx` -> "/fresh-dog-food/").
  *
  * Gom bốn collection cũ (`featuredArticles` + `faq` + `miniReviews` + tiêu đề
- * hero vốn viết cứng trong `HeroHome.astro`) về đây. Bốn cái đó đều có ĐÚNG MỘT
+ * hero vốn viết cứng trong `HeroToplist.astro`) về đây. Bốn cái đó đều có ĐÚNG MỘT
  * entry tên `homepage` — tức là đã sẵn hình dạng "khoá theo trang", chỉ là mới
  * có một trang. Gộp lại thì thêm một ngách là thêm một file, không phải bốn.
  *

@@ -5,9 +5,9 @@
  * Ba khối đều là component riêng: hai khối dưới dùng chung với sidebar bài blog,
  * carousel thì chỉ trang này có. File này chỉ còn việc ghép chúng lại.
  */
-import PromoCarousel from "@/components/sidebar/PromoCarousel.astro";
-import SidebarPartners from "@/components/sidebar/SidebarPartners.astro";
-import SidebarArticles from "@/components/sidebar/SidebarArticles.astro";
+import PromoCarousel from "@/components/article/PromoCarousel.astro";
+import SidebarPartners from "@/components/article/SidebarPartners.astro";
+import SidebarArticles from "@/components/article/SidebarArticles.astro";
 import { getReviewSidebarArticles } from "@/lib/posts";
 
 interface Props {

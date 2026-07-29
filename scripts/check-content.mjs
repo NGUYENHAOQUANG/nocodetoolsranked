@@ -71,7 +71,10 @@ function renderedTextOf(file, src) {
 const problems = [];
 
 for (const file of walk(SRC)) {
-  if (!/\.(astro|mdx|md|yaml|yml)$/.test(file)) continue;
+  /* `.ts` cũng phải quét: `config/site.ts` giữ tiêu đề và mô tả mặc định — tức
+     là chuỗi RENDER RA TRANG. Bỏ sót nó nên một em dash sống sót ở đó và ship
+     ra 8 trang, trong khi mọi chỗ khác đã đổi sang gạch nối. */
+  if (!/\.(astro|mdx|md|yaml|yml|ts)$/.test(file)) continue;
   const rel = relative(".", file).split("\\").join("/");
   const src = readFileSync(file, "utf8");
   const text = renderedTextOf(file, src);

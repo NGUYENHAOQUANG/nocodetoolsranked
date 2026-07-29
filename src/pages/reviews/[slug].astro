@@ -1,12 +1,12 @@
 ---
 import { getCollection, getEntry, render } from "astro:content";
 import InnerPageLayout from "@/layouts/InnerPageLayout.astro";
-import ArticleGrid from "@/components/layout/ArticleGrid.astro";
+import ArticleGrid from "@/components/article/ArticleGrid.astro";
 import InnerNavigator from "@/components/article/InnerNavigator.astro";
 import ReviewIntro from "@/components/article/ReviewIntro.astro";
-import ProsCons from "@/components/brand/ProsCons.astro";
+import ProsCons from "@/components/article/ProsCons.astro";
 import ArticleLink from "@/components/article/ArticleLink.astro";
-import ReviewSidebar from "@/components/sidebar/ReviewSidebar.astro";
+import ReviewSidebar from "@/components/article/ReviewSidebar.astro";
 import { REVIEWS_INDEX, reviewUrl } from "@/lib/links";
 import { breadcrumbSchema, articleSchema } from "@/lib/schema-org";
 

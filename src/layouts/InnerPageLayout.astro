@@ -10,12 +10,12 @@
  * cột (`main.review-layout__main`), nên nếu layout bọc sẵn thì sẽ thành `<main>`
  * lồng `<main>`. Mỗi nơi gọi tự viết `<main>` của mình.
  *
- * Trang chủ KHÔNG dùng layout này: nó không có breadcrumb, banner là `HeroHome`
+ * Trang chủ KHÔNG dùng layout này: nó không có breadcrumb, banner là `HeroToplist`
  * với cây DOM khác hẳn, và `<main>` bọc luôn cả banner.
  */
 import BaseLayout from "@/layouts/BaseLayout.astro";
 import Header from "@/components/layout/Header.astro";
-import HeroInner from "@/components/sections/HeroInner.astro";
+import HeroInner from "@/components/layout/HeroInner.astro";
 import Breadcrumbs from "@/components/layout/Breadcrumbs.astro";
 import type { Crumb } from "@/components/layout/Breadcrumbs.astro";
 import Footer from "@/components/layout/Footer.astro";
