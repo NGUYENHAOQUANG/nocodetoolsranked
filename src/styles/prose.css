@@ -1,0 +1,168 @@
+/* ==========================================================================
+   Style thân bài do MDX render.
+
+   ⚠️ HAI KHỐI DƯỚI ĐÂY CỐ Ý KHÔNG GỘP. Đừng "dọn" chúng thành một.
+
+   Chúng trông na ná nhau nhưng khác ở chỗ chí mạng:
+
+   1. `.post__body` có `h2:first-of-type` / `h3:first-of-type { margin-top: 0 }`.
+      `.paragraph__content` KHÔNG có — và một trang review chứa BỐN khối
+      <Paragraph>, nên nếu gộp rule thì `:first-of-type` sẽ khớp 4 lần mỗi trang
+      thay vì 1, âm thầm xoá 0.83em margin bốn lần.
+
+   2. `.paragraph__content` sở hữu riêng `h1`, `ol` và toàn bộ style bảng giá —
+      `.post__body` không có.
+
+   3. Vài giá trị trùng nhau chỉ là TRÙNG HỢP: `h3 { margin: 1em }` và
+      `margin: 1.25rem` cùng ra 20px vì font-size của h3 đúng bằng 1.25rem. Gộp
+      lại thì mất mối liên hệ đó và lần sửa font-size sau sẽ lệch.
+
+   Dùng chung FILE, không dùng chung RULE. Xem CLAUDE.md §8.6.
+
+   Tên class giữ nguyên `.post__body` / `.paragraph__content` (không đổi thành
+   .prose--post/.prose--review) để HTML không đổi một ký tự nào.
+
+   FeaturedArticle.astro có bộ rule prose THỨ BA (`.article`) — cố ý để nguyên
+   tại chỗ, không đưa vào đây.
+   ========================================================================== */
+
+/* ==========================================================================
+   1. Thân bài viết — PostLayout.astro  (/knowledge/<slug>/)
+   ========================================================================== */
+
+.post__body {
+  color: #2d2d2d;
+  font-size: 1rem;
+  line-height: 1.7rem;
+}
+.post__body p {
+  /* 1em (không phải 16px cứng) để co theo root 14px ở mobile như bản gốc */
+  margin: 1em 0;
+}
+.post__body h3 {
+  /* Bản gốc: h3 margin 1.25rem trên+dưới (co ở mobile); RIÊNG h3 đầu tiên mt 0 */
+  margin: 1.25rem 0;
+  color: #2d2d2d;
+  font-size: 1.25rem;
+  font-weight: 700;
+  line-height: 2.2rem;
+}
+.post__body h3:first-of-type {
+  margin-top: 0;
+}
+/* Một số bài (vd "why-fresh-food") dùng h2 cho mục thay vì h3: 25px, đậm,
+   margin 0.83em (mặc định h2); mục h2 ĐẦU TIÊN bỏ margin trên */
+.post__body h2 {
+  margin: 0.83em 0;
+  color: #2d2d2d;
+  font-size: 1.5625rem;
+  font-weight: 700;
+  line-height: 2.2rem;
+}
+.post__body h2:first-of-type {
+  margin-top: 0;
+}
+/* Ảnh trong bài giữ đúng kích thước gốc (300×300), căn trái */
+.post__body img {
+  max-width: 100%;
+  height: auto;
+}
+/* Danh sách gạch đầu dòng (vd bài "gut health"): bản gốc dùng bullet rỗng
+   (circle), thụt 40px, ul không margin, mỗi mục cách nhau 15px */
+.post__body ul {
+  margin: 0;
+  padding-left: 40px;
+  list-style-type: circle;
+}
+.post__body li {
+  margin: 15px 0;
+  line-height: 1.5;
+}
+
+/* ==========================================================================
+   2. Thân bài review — Paragraph.astro  (/reviews/<brand>/)
+   Một trang review có NHIỀU khối .paragraph__content — đó là lý do không có
+   rule :first-of-type ở đây.
+   ========================================================================== */
+
+.paragraph__content {
+  max-width: min(95dvw, 1060px);
+  margin-left: auto;
+  margin-right: auto;
+  line-height: 1.7rem;
+}
+
+/* global.css reset margin h1–h6 + p về 0 → khai lại đúng mặc định UA của từng
+   cấp (h1 .67em, h2 .83em, h3 1em, p 1em) vì bản gốc không reset. */
+.paragraph__content h1 {
+  margin: 0.67em 0;
+  font-size: 2rem;
+}
+.paragraph__content h2 {
+  margin: 0.83em 0;
+  font-size: 1.5625rem;
+}
+.paragraph__content h3 {
+  margin: 1em 0;
+  font-size: 1.25rem;
+}
+.paragraph__content h2,
+.paragraph__content h3 {
+  color: #2d2d2d;
+  opacity: 1;
+  line-height: 2.2rem;
+}
+.paragraph__content p {
+  margin: 1em 0;
+}
+.paragraph__content ul {
+  margin: 0;
+  padding-left: 40px;
+  list-style: circle;
+}
+.paragraph__content ul li {
+  margin: 15px 0;
+  line-height: 1.5rem;
+}
+/* Danh sách CÓ SỐ (ol) khác ul: số thập phân, li không có margin và line-height
+   kế thừa 1.7rem (không phải 1.5rem như ul li). Margin khối 1em (mặc định ol) →
+   16px desktop / 14px mobile; ĐỪNG hardcode 16px kẻo mobile dư 4px. */
+.paragraph__content ol {
+  margin: 1em 0;
+  padding-left: 40px;
+  list-style: decimal;
+}
+
+/* Bảng giá: bản gốc dựng từ CMS nên viền nằm ở style inline của từng ô;
+   ở đây chỉ giữ phần khung + kẻ sọc + hover. */
+.paragraph__content table {
+  width: max-content;
+  min-width: 100%;
+  overflow: hidden;
+  background-color: #fff;
+  border-collapse: separate;
+  border-spacing: 0;
+}
+.paragraph__content table * {
+  overflow: hidden;
+}
+.paragraph__content td {
+  padding: 7px;
+  line-height: 1.5;
+}
+.paragraph__content tbody tr {
+  background: transparent;
+  transition: background 0.2s;
+}
+.paragraph__content tbody tr:nth-child(2n) {
+  background: rgba(245, 245, 245, 0.1);
+}
+.paragraph__content tbody tr:hover {
+  background: rgba(245, 245, 245, 0.02);
+}
+
+@media (min-width: 1025px) and (min-height: 420px) {
+  .paragraph__content table {
+    width: 100%;
+  }
+}
