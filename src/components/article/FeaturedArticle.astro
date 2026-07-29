@@ -1,6 +1,6 @@
 ---
 /**
- * Khối bài viết dài dưới bảng xếp hạng. Nội dung là thân MDX của chính trang
+ * Khối bài viết dài dưới bảng xếp hạng. Thân bài là phần MDX của chính entry
  * toplist đó - prose viết Markdown thường, CTA chèn bằng `<InlineCta brand="..." />`.
  *
  * Nhận ENTRY chứ không tự đi lấy: mỗi ngách có bài riêng, trang là nơi biết
@@ -22,7 +22,7 @@ import type { CollectionEntry } from "astro:content";
 import { render } from "astro:content";
 
 interface Props {
-  entry: CollectionEntry<"featuredArticles">;
+  entry: CollectionEntry<"toplists">;
 }
 
 const { entry } = Astro.props;
@@ -34,6 +34,6 @@ const { Content } = await render(entry);
     /* Tiêu đề lấy từ frontmatter, thân bài KHÔNG lặp lại — trước đây cùng một
       chuỗi nằm ở cả hai chỗ và trường `title` thì không nơi nào dùng tới. */
   }
-  <h2 class="article__title">{entry.data.title}</h2>
+  <h2 class="article__title">{entry.data.articleTitle}</h2>
   <Content />
 </div>

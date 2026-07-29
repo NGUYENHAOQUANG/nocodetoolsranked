@@ -87,11 +87,12 @@ const reviewsPageRow = z.object({
  * Tách ra thì mỗi file có đúng một schema chặt, và `loadPlacement` không còn phải
  * ép kiểu `Record<string, any>`.
  *
- * Cả ba file vẫn ở chung `src/content/placements/` vì chúng cùng một khái niệm;
- * `pattern` trỏ đích danh từng file.
+ * Cả ba vẫn ở chung `src/content/placements/` vì chúng cùng một khái niệm.
+ * Hai cái dưới chỉ có đúng một file nên `pattern` trỏ đích danh; `toplist` thì
+ * MỖI NGÁCH một file nên nó có thư mục con riêng.
  */
-const homepagePlacement = defineCollection({
-  loader: glob({ pattern: "homepage.yaml", base: "./src/content/placements" }),
+const toplistPlacements = defineCollection({
+  loader: glob({ pattern: "*.yaml", base: "./src/content/placements/toplist" }),
   schema: z.object({ entries: z.array(homepageRow) }),
 });
 
@@ -171,21 +172,75 @@ const pages = defineCollection({
 });
 
 /**
- * Khối bài viết dài nhúng vào một trang, KHÔNG có route riêng.
+ * MỘT FILE = MỘT TRANG TOPLIST. Trang chủ là entry `home` (id đó cho ra URL "/");
+ * mọi ngách khác lấy id làm slug ở gốc site (`fresh-dog-food.mdx` -> "/fresh-dog-food/").
  *
- * Đặt tên theo đúng quy ước của ba khối cùng loại (`faq/homepage.yaml`,
- * `mini-reviews/homepage.yaml`, `contact-cards/contact.yaml`): thư mục là TÊN
- * KHỐI, file là TÊN TRANG chứa nó. File KHÔNG đặt theo chủ đề bài — đổi chủ đề
- * thì không phải đổi tên file, và id trùng với chuỗi component đi tìm.
+ * Gom bốn collection cũ (`featuredArticles` + `faq` + `miniReviews` + tiêu đề
+ * hero vốn viết cứng trong `HeroHome.astro`) về đây. Bốn cái đó đều có ĐÚNG MỘT
+ * entry tên `homepage` — tức là đã sẵn hình dạng "khoá theo trang", chỉ là mới
+ * có một trang. Gộp lại thì thêm một ngách là thêm một file, không phải bốn.
+ *
+ * Bảng xếp hạng thì KHÔNG gộp: nó dài 120 dòng cho 9 brand x 12 trường, và nhịp
+ * sửa khác hẳn phần còn lại (điểm/coupon/thứ tự đổi hàng tuần, bài viết hàng quý).
+ * Nối bằng `reference()` nên gõ sai id là lỗi build, không phải bảng trống.
  *
  * `.mdx` chứ không phải `.md`: thân bài nhúng `<InlineCta />`, là widget
  * (logo + nút + link affiliate) chứ không phải văn bản — tầng 3 của thang
  * Markdown → HTML → component ở CLAUDE.md workspace mục 4.
  */
-const featuredArticles = defineCollection({
-  loader: glob({ pattern: "**/*.mdx", base: "./src/content/featured-articles" }),
-  /** Tiêu đề khối. Component render nó; thân bài KHÔNG lặp lại. */
-  schema: z.object({ title: z.string() }),
+const toplists = defineCollection({
+  loader: glob({ pattern: "**/*.mdx", base: "./src/content/toplists" }),
+  schema: ({ image }) =>
+    z.object({
+      /** Thẻ <title> và meta description — riêng từng ngách, không dùng chung */
+      title: z.string(),
+      description: z.string(),
+
+      /** <h1>. Chứa HTML thô nên render bằng set:html — `<span>` là từ chỉ hiện
+          từ 615px, không tách được thành hai <h1> vì mỗi trang chỉ một <h1>. */
+      heroTitle: z.string(),
+      heroAlt: z.string(),
+      heroMobileAlt: z.string().optional(),
+      /** Hai phụ đề cho hai mốc màn hình — bản gốc dùng hai câu KHÁC nhau */
+      heroSubtitle: z.string(),
+      heroSubtitleCompact: z.string(),
+
+      ranking: reference("toplistPlacements"),
+
+      /** Banner khuyến mãi chèn giữa danh sách. Không khai thì không chèn. */
+      promo: z
+        .object({
+          brand: reference("brands"),
+          afterRank: z.number(),
+          logoAlt: z.string(),
+          title: z.string(),
+          buttonText: z.string(),
+        })
+        .optional(),
+
+      /** Tiêu đề khối bài viết. Thân bài KHÔNG lặp lại nó. */
+      articleTitle: z.string(),
+
+      /** `answer` là chuỗi HTML (bản gốc có <strong>) → set:html */
+      faq: z.array(z.object({ question: z.string(), answer: z.string() })),
+
+      /** Đánh giá chi tiết brand hạng 1. Logo/điểm/sao/link lấy từ `ranking`. */
+      miniReview: z.object({
+        categories: z.array(
+          z.object({
+            title: z.string(),
+            icon: image(),
+            /** 0–10; quyết định màu ô điểm (≥9 xanh, ≥7 vàng, còn lại xám) */
+            score: z.number(),
+            description: z.string(),
+          }),
+        ),
+        pros: z.array(z.string()),
+        cons: z.array(z.string()),
+        /** Chỉ hiện dưới 768px, trong drawer "Summary" */
+        summary: z.string(),
+      }),
+    }),
 });
 
 /** Bài blog. Thân MDX = prose + ảnh; TOC lấy từ heading trong thân.
@@ -229,14 +284,6 @@ const posts = defineCollection({
     }),
 });
 
-/** FAQ trang chủ — `answer` là chuỗi HTML (bản gốc có <strong>) → set:html */
-const faq = defineCollection({
-  loader: glob({ pattern: "**/*.yaml", base: "./src/content/faq" }),
-  schema: z.object({
-    items: z.array(z.object({ question: z.string(), answer: z.string() })),
-  }),
-});
-
 /** Thẻ liên hệ trang /contact/. Tách riêng khỏi mini-reviews: gộp chung một
     collection thì mọi trường phải optional và mất sạch tác dụng validate. */
 const contactCards = defineCollection({
@@ -254,40 +301,15 @@ const contactCards = defineCollection({
     }),
 });
 
-/** Đánh giá chi tiết brand hạng 1 ở trang chủ. Logo/điểm/sao/link lấy từ
-    placements + brands; file này chỉ giữ nội dung riêng của section. */
-const miniReviews = defineCollection({
-  loader: glob({ pattern: "**/*.yaml", base: "./src/content/mini-reviews" }),
-  schema: ({ image }) =>
-    z.object({
-      brand: reference("brands"),
-      categories: z.array(
-        z.object({
-          title: z.string(),
-          icon: image(),
-          /** 0–10; quyết định màu ô điểm (≥9 xanh, ≥7 vàng, còn lại xám) */
-          score: z.number(),
-          description: z.string(),
-        }),
-      ),
-      pros: z.array(z.string()),
-      cons: z.array(z.string()),
-      /** Chỉ hiện dưới 768px, trong drawer "Summary" */
-      summary: z.string(),
-    }),
-});
-
 export const collections = {
   brands,
-  homepagePlacement,
+  toplistPlacements,
   reviewsPagePlacement,
   sidebarPlacement,
   authors,
   reviews,
-  featuredArticles,
+  toplists,
   pages,
   posts,
-  faq,
   contactCards,
-  miniReviews,
 };

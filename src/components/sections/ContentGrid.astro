@@ -5,15 +5,15 @@ import FaqAccordion from "@/components/article/FaqAccordion.astro";
 import MustReads from "@/components/sidebar/MustReads.astro";
 
 interface Props {
-  article: CollectionEntry<"featuredArticles">;
+  toplist: CollectionEntry<"toplists">;
   faq: { question: string; answer: string }[];
 }
 
-const { article, faq } = Astro.props;
+const { toplist, faq } = Astro.props;
 ---
 
 <section class="content-grid">
-  <FeaturedArticle entry={article} />
+  <FeaturedArticle entry={toplist} />
   <FaqAccordion items={faq} />
   <MustReads />
 </section>

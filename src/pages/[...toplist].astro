@@ -1,0 +1,92 @@
+---
+/**
+ * Mỗi file trong `content/toplists/` -> một trang toplist ở GỐC site.
+ *
+ * Entry `home` cho ra param `undefined`, tức URL "/" — nhờ vậy trang chủ và mọi
+ * ngách dùng CHUNG một khuôn, không có `index.astro` chép lại thân trang.
+ *
+ * Route rest nên nó xếp hạng THẤP hơn `[page].astro` (4 trang nội dung phẳng) và
+ * các page tĩnh — đã kiểm bằng build: /about/, /contact/, /reviews/, /knowledge/
+ * không bị nuốt. Ràng buộc kèm theo: id trong `toplists/` không được trùng id
+ * trong `pages/`, cũng không được là `contact`, `reviews`, `knowledge`.
+ */
+import { getCollection, getEntry } from "astro:content";
+import { organizationSchema, websiteSchema } from "@/lib/schema-org";
+import { getToplistBrands } from "@/lib/rankings";
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import Header from "@/components/layout/Header.astro";
+import HeroHome from "@/components/sections/HeroHome.astro";
+import Toplist from "@/components/sections/Toplist.astro";
+import BestOverall from "@/components/sections/BestOverall.astro";
+import MiniReview from "@/components/sections/MiniReview.astro";
+import ContentGrid from "@/components/sections/ContentGrid.astro";
+import Footer from "@/components/layout/Footer.astro";
+import ToTop from "@/components/layout/ToTop.astro";
+import ExitPopup from "@/components/layout/ExitPopup.astro";
+
+/* "home" là id DÀNH RIÊNG cho trang chủ, đừng đặt cho ngách nào khác. Viết
+   thẳng chuỗi ở cả hai chỗ vì `getStaticPaths` được Astro hoist ra ngoài, không
+   thấy hằng khai ở thân module. */
+
+export async function getStaticPaths() {
+  const entries = await getCollection("toplists");
+  return entries.map((entry) => ({
+    params: { toplist: entry.id === "home" ? undefined : entry.id },
+    props: { entry },
+  }));
+}
+
+const { entry } = Astro.props;
+const data = entry.data;
+
+const brands = await getToplistBrands(
+  typeof data.ranking === "string" ? data.ranking : data.ranking.id,
+);
+
+/* Banner khuyến mãi: logo và link affiliate lấy từ `brands`, không khai lại —
+   đổi link đối tác vẫn chỉ là sửa một dòng trong content/brands/. */
+let promo;
+if (data.promo) {
+  const promoBrandId =
+    typeof data.promo.brand === "string" ? data.promo.brand : data.promo.brand.id;
+  const promoBrand = (await getEntry("brands", promoBrandId))!.data;
+  promo = {
+    logo: promoBrand.logo,
+    logoAlt: data.promo.logoAlt,
+    title: data.promo.title,
+    buttonText: data.promo.buttonText,
+    href: promoBrand.affiliateUrl,
+    afterRank: data.promo.afterRank,
+  };
+}
+
+/* organization + website schema chỉ phát ở trang chủ: hai kiểu đó mô tả CẢ SITE,
+   phát lại ở từng ngách là khai trùng. */
+const schema = entry.id === "home" ? [organizationSchema(), websiteSchema()] : [];
+---
+
+<BaseLayout title={data.title} description={data.description} schema={schema}>
+  <Header />
+  <main>
+    <HeroHome
+      title={data.heroTitle}
+      subtitle={data.heroSubtitle}
+      subtitleCompact={data.heroSubtitleCompact}
+      alt={data.heroAlt}
+      mobileAlt={data.heroMobileAlt}
+    />
+    <Toplist brands={brands} promo={promo} />
+    <BestOverall brand={brands[0]} />
+    <MiniReview
+      brand={brands[0]}
+      categories={data.miniReview.categories}
+      pros={data.miniReview.pros}
+      cons={data.miniReview.cons}
+      summary={data.miniReview.summary}
+    />
+    <ContentGrid toplist={entry} faq={data.faq} />
+  </main>
+  <Footer />
+  <ToTop />
+  <ExitPopup />
+</BaseLayout>

@@ -107,7 +107,7 @@ async function rowsOf<T>(entry: { data: { entries: T[] } } | undefined, id: stri
  */
 export async function getToplistBrands(placementId: string): Promise<ToplistRow[]> {
   const rows = await withBrands(
-    await rowsOf(await getEntry("homepagePlacement", placementId), placementId),
+    await rowsOf(await getEntry("toplistPlacements", placementId), placementId),
     placementId,
   );
   return rows.map(({ row, brand }) => ({

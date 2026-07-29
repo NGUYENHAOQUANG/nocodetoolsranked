@@ -1,7 +1,8 @@
 ---
 /**
- * Banner đầu trang chủ: tiêu đề + phụ đề + "Last Updated" + tooltip
- * "Advertising Disclosure".
+ * Banner đầu trang toplist: tiêu đề + phụ đề + "Last Updated" + tooltip
+ * "Advertising Disclosure". Dùng cho trang chủ và mọi ngách — chữ nghĩa đến từ
+ * entry `toplists`, component không giữ chuỗi nào của riêng một trang.
  *
  * Tách khỏi banner trang trong (`HeroInner`) vì hai thứ chỉ dùng chung đúng một
  * dòng markup (`<section class="hero">`) và một bộ ảnh nền. Trước đây gộp làm
@@ -17,12 +18,17 @@ import heroImgMobile from "@/assets/hero/hero-mobile.jpg";
 import "@/styles/hero.css";
 
 interface Props {
-  alt?: string;
+  /** HTML thô: `<span>` bọc từ chỉ hiện từ 768px. Một trang một <h1> nên không
+      tách được thành hai tiêu đề ẩn/hiện. */
+  title: string;
+  /** Hai phụ đề cho hai mốc màn hình — bản gốc dùng hai câu KHÁC nhau */
+  subtitle: string;
+  subtitleCompact: string;
+  alt: string;
   mobileAlt?: string;
 }
 
-const { alt = "Best Dog Food Delivery Brands 2026 - Fresh Dog Food Delivery", mobileAlt = alt } =
-  Astro.props;
+const { title, subtitle, subtitleCompact, alt, mobileAlt = alt } = Astro.props;
 
 /* Đoạn "Advertising Disclosure" dùng CHUNG với trang /advertiser-disclosure/ —
    trước đây hai nơi chép rời nhau và đã trôi lệch tới mức bản ở trang kia nói về
@@ -58,19 +64,9 @@ const lastUpdated = new Intl.DateTimeFormat("en-US", {
     />
     <div class="hero__content">
       <div class="hero__text">
-        <h1 class="hero__title">
-          Best Dog Food Delivery <span class="hero__title-word">Brands </span>2026
-        </h1>
-        <p class="hero__subtitle hero__subtitle--wide">
-          The best for your best friend! Discover top dog food subscriptions for fresh, nutritious
-          meals delivered to your door. Compare and choose today!
-        </p>
-        {/* Bản gốc xuống dòng bằng <br> cứng, dòng 2 có dấu cách đầu — không phải tự wrap */}
-        <p class="hero__subtitle hero__subtitle--compact">
-          <span>Compare Top Dog Food Delivery</span><br /><span>
-            Services for Healthier, Happier Pets.</span
-          >
-        </p>
+        <h1 class="hero__title" set:html={title} />
+        <p class="hero__subtitle hero__subtitle--wide">{subtitle}</p>
+        <p class="hero__subtitle hero__subtitle--compact" set:html={subtitleCompact} />
       </div>
 
       {
@@ -103,8 +99,16 @@ const lastUpdated = new Intl.DateTimeFormat("en-US", {
     object-position: right center;
   }
 
-  /* "Brands" chỉ hiện từ 615px trở lên */
-  .hero__title-word {
+  /* Từ trong <span> của `heroTitle` chỉ hiện từ mốc rộng trở lên. Thẻ trần chứ
+     không phải class: nội dung không nên mang tên class trình bày.
+
+     `:global(span)` là BẮT BUỘC, không phải tuỳ chọn. `heroTitle` render bằng
+     set:html nên <span> đó là HTML thô, KHÔNG mang `data-astro-cid` — viết
+     `.hero__title span` thì Astro biên dịch thành `.hero__title span[data-astro-cid]`
+     và không khớp gì cả, từ này hiện luôn ở mobile (tiêu đề cao 57px thay vì
+     28.5px). Neo `:global()` vào `.hero__title` thì cid nằm ở phần tử cha vốn
+     do template sinh ra, nên vẫn không rò ra ngoài component. */
+  .hero__title :global(span) {
     display: none;
   }
 
@@ -187,7 +191,7 @@ const lastUpdated = new Intl.DateTimeFormat("en-US", {
     .hero__bg--mobile {
       display: none;
     }
-    .hero__title-word {
+    .hero__title :global(span) {
       display: inline;
     }
     .hero__subtitle--wide {
