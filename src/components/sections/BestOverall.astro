@@ -1,11 +1,13 @@
 ---
-import { getHomepageBrands } from "@/lib/rankings";
-
-const brands = await getHomepageBrands();
+import type { ToplistRow } from "@/lib/rankings";
 import PartnerCard from "@/components/brand/PartnerCard.astro";
 
-/** Bản gốc lặp lại đúng card hạng 1 (The Pet's Table) ở cuối trang */
-const brand = brands[0];
+interface Props {
+  /** Card hạng 1 của trang, lặp lại ở cuối trang đúng như bản gốc */
+  brand: ToplistRow;
+}
+
+const { brand } = Astro.props;
 ---
 
 <section class="best-overall">

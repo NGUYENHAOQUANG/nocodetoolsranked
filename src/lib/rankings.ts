@@ -99,11 +99,16 @@ async function rowsOf<T>(entry: { data: { entries: T[] } } | undefined, id: stri
   return entry.data.entries;
 }
 
-/** Toplist trang chủ — 9 brand, thứ tự và điểm RIÊNG của trang chủ */
-export async function getHomepageBrands(): Promise<ToplistRow[]> {
+/**
+ * Bảng xếp hạng của MỘT trang toplist.
+ *
+ * Nhận id chứ không khoá cứng "homepage": mỗi ngách là một file placement riêng,
+ * cùng một brand xếp hạng khác nhau ở từng ngách. Trang chủ chỉ là ngách `home`.
+ */
+export async function getToplistBrands(placementId: string): Promise<ToplistRow[]> {
   const rows = await withBrands(
-    await rowsOf(await getEntry("homepagePlacement", "homepage"), "homepage"),
-    "homepage",
+    await rowsOf(await getEntry("homepagePlacement", placementId), placementId),
+    placementId,
   );
   return rows.map(({ row, brand }) => ({
     rank: row.rank,

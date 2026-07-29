@@ -1,18 +1,31 @@
 ---
 /**
- * Khối bài viết dài ở trang chủ. Nội dung nằm ở
- * `content/featured-articles/homepage.mdx` — prose viết Markdown thường, CTA
- * chèn bằng `<InlineCta brand="..." />`.
+ * Khối bài viết dài dưới bảng xếp hạng. Nội dung là thân MDX của chính trang
+ * toplist đó - prose viết Markdown thường, CTA chèn bằng `<InlineCta brand="..." />`.
  *
- * Component chỉ bọc và render. Style thân bài nằm ở `styles/prose.css` cùng ba
- * khối prose kia: nội dung do MDX sinh nằm NGOÀI phạm vi scoped, nên để trong
- * `<style>` của file này thì phải bọc `:global()` từng rule — mà như vậy thì
- * chúng đã là global rồi, chỉ khác là nằm lạc chỗ.
+ * Nhận ENTRY chứ không tự đi lấy: mỗi ngách có bài riêng, trang là nơi biết
+ * phải render bài nào.
+ *
+ * Nhưng `render()` phải gọi TẠI ĐÂY, không phải ở trang rồi truyền `Content`
+ * xuống. Astro gom style của component mà MDX import (ở đây là `InlineCta`)
+ * bằng phân tích tĩnh nơi đặt `<Content />`; truyền factory qua props thì nó
+ * mất dấu và trang chủ build ra KHÔNG có khối <style> nào - đã dính đúng lỗi
+ * này một lần, CTA hiện trần không style mà HTML thì vẫn đúng nên nhìn diff
+ * body không thấy.
+ *
+ * Style thân bài nằm ở `styles/prose.css` cùng ba khối prose kia: nội dung do
+ * MDX sinh nằm NGOÀI phạm vi scoped, nên để trong `<style>` của file này thì
+ * phải bọc `:global()` từng rule - mà như vậy thì chúng đã là global rồi, chỉ
+ * khác là nằm lạc chỗ.
  */
-import { getEntry, render } from "astro:content";
+import type { CollectionEntry } from "astro:content";
+import { render } from "astro:content";
 
-const entry = await getEntry("featuredArticles", "homepage");
-if (!entry) throw new Error("Thieu src/content/featured-articles/homepage.mdx");
+interface Props {
+  entry: CollectionEntry<"featuredArticles">;
+}
+
+const { entry } = Astro.props;
 const { Content } = await render(entry);
 ---
 

@@ -1,16 +1,20 @@
 ---
-import { getEntry } from "astro:content";
-import { getHomepageBrands } from "@/lib/rankings";
-
+import type { ImageMetadata } from "astro";
+import type { ToplistRow } from "@/lib/rankings";
 import { STAR_OUTLINE } from "@/lib/icon-paths";
 import MiniReviewCategories from "@/components/sections/MiniReviewCategories.astro";
 
-const brands = await getHomepageBrands();
-const miniReview = (await getEntry("miniReviews", "homepage"))!.data;
+interface Props {
+  /** Bản gốc chỉ đánh giá chi tiết brand hạng 1 (The Pet's Table) */
+  brand: ToplistRow;
+  categories: { title: string; icon: ImageMetadata; score: number; description: string }[];
+  pros: string[];
+  cons: string[];
+  /** Chỉ hiện dưới 768px, trong drawer "Summary" */
+  summary: string;
+}
 
-/** Bản gốc chỉ đánh giá chi tiết brand hạng 1 (The Pet's Table) */
-const brand = brands[0];
-const { categories, pros, cons, summary } = miniReview;
+const { brand, categories, pros, cons, summary } = Astro.props;
 
 const CHECK = "M186.301 339.893L96 249.461l-32 30.507L186.301 402 448 140.506 416 110z";
 const CROSS =

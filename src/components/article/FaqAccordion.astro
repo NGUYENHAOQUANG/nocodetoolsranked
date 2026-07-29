@@ -1,7 +1,10 @@
 ---
-import { getEntry } from "astro:content";
+interface Props {
+  /** `answer` là chuỗi HTML (bản gốc có <strong>) — render bằng set:html */
+  items: { question: string; answer: string }[];
+}
 
-const faqItems = (await getEntry("faq", "homepage"))!.data.items;
+const { items: faqItems } = Astro.props;
 
 /** Bản gốc mở sẵn câu đầu tiên */
 const DEFAULT_OPEN = 0;

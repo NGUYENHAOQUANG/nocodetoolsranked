@@ -1,12 +1,20 @@
 ---
+import type { CollectionEntry } from "astro:content";
 import FeaturedArticle from "@/components/article/FeaturedArticle.astro";
 import FaqAccordion from "@/components/article/FaqAccordion.astro";
 import MustReads from "@/components/sidebar/MustReads.astro";
+
+interface Props {
+  article: CollectionEntry<"featuredArticles">;
+  faq: { question: string; answer: string }[];
+}
+
+const { article, faq } = Astro.props;
 ---
 
 <section class="content-grid">
-  <FeaturedArticle />
-  <FaqAccordion />
+  <FeaturedArticle entry={article} />
+  <FaqAccordion items={faq} />
   <MustReads />
 </section>
 
