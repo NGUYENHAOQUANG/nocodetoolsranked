@@ -113,6 +113,35 @@ Không dùng tên chung chung như `utils.ts` / `helpers.ts` — đặt theo vi�
 - Trường frontmatter: `camelCase`, khớp schema Zod
 - Quan hệ giữa collection dùng `reference()`
 
+## Quy ước commit
+
+Viết bằng **tiếng Việt**, ngắn gọn. Dạng: `type(scope): mô tả` — `scope` không bắt buộc.
+
+**Type** dùng đúng chuẩn conventional commits:
+
+| Type | Dùng khi |
+|---|---|
+| `feat` | Thêm tính năng |
+| `fix` | Sửa lỗi |
+| `refactor` | Đổi cấu trúc, không đổi hành vi |
+| `style` | Chỉ đụng định dạng/giao diện, không đổi logic |
+| `perf` | Cải thiện hiệu năng |
+| `docs` | Tài liệu |
+| `test` | Kiểm thử |
+| `build` | Dependency, cấu hình build |
+| `chore` | Việc lặt vặt còn lại |
+
+**Scope** thêm khi phạm vi rõ ràng, bỏ khi thay đổi trải rộng nhiều phần:
+
+```
+feat(toplist): thêm huy hiệu giảm giá cho card hạng 1
+fix(header): drawer mobile không đóng khi bấm overlay
+refactor: gom logic dựng URL về lib/links.ts
+docs: cập nhật công thức thêm brand
+```
+
+Không thêm dòng `Co-Authored-By`.
+
 ## Những điều dễ vấp
 
 Không phải điều cấm — chỉ là những chỗ hành xử khác trực giác. Biết trước thì
