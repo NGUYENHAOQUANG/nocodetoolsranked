@@ -174,8 +174,8 @@ const pages = defineCollection({
 });
 
 /** Bài viết trang chủ — MDX (prose + <InlineCta/>). */
-const articles = defineCollection({
-  loader: glob({ pattern: "**/*.mdx", base: "./src/content/articles" }),
+const sections = defineCollection({
+  loader: glob({ pattern: "**/*.mdx", base: "./src/content/sections" }),
   schema: z.object({ title: z.string() }),
 });
 
@@ -275,7 +275,7 @@ export const collections = {
   sidebarPlacement,
   authors,
   reviews,
-  articles,
+  sections,
   pages,
   posts,
   faq,

@@ -12,7 +12,7 @@ import { getEntry } from "astro:content";
 import type { ImageMetadata } from "astro";
 import { reviewUrl } from "@/lib/links";
 
-export interface Brand {
+export interface ToplistRow {
   rank: number;
   name: string;
   logo: ImageMetadata;
@@ -27,13 +27,13 @@ export interface Brand {
   rating: string;
   ratingLabel: string;
   stars: number;
-  reviews: string;
+  reviewsCount: string;
   href: string;
   isEditorsChoice?: boolean;
   hoverTooltip?: { highlight: string; text: string };
 }
 
-export interface ReviewEntry {
+export interface ReviewsPageRow {
   logo: ImageMetadata;
   logoAlt: string;
   text: string;
@@ -101,7 +101,7 @@ async function rowsOf<T>(entry: { data: { entries: T[] } } | undefined, id: stri
 }
 
 /** Toplist trang chủ — 9 brand, thứ tự và điểm RIÊNG của trang chủ */
-export async function getHomepageBrands(): Promise<Brand[]> {
+export async function getHomepageBrands(): Promise<ToplistRow[]> {
   const rows = await withBrands(
     await rowsOf(await getEntry("homepagePlacement", "homepage"), "homepage"),
     "homepage",
@@ -121,7 +121,7 @@ export async function getHomepageBrands(): Promise<Brand[]> {
     rating: row.rating,
     ratingLabel: row.ratingLabel,
     stars: row.stars,
-    reviews: row.reviewsCount,
+    reviewsCount: row.reviewsCount,
     href: brand.affiliateUrl,
     ...(row.isEditorsChoice ? { isEditorsChoice: true } : {}),
     ...(row.hoverTooltip ? { hoverTooltip: row.hoverTooltip } : {}),
@@ -129,7 +129,7 @@ export async function getHomepageBrands(): Promise<Brand[]> {
 }
 
 /** Danh sách trang /reviews/ — 6 brand, thứ tự và điểm KHÁC trang chủ (có chủ ý) */
-export async function getReviewsPageEntries(): Promise<ReviewEntry[]> {
+export async function getReviewsPageEntries(): Promise<ReviewsPageRow[]> {
   const rows = await withBrands(
     await rowsOf(await getEntry("reviewsPagePlacement", "reviews-page"), "reviews-page"),
     "reviews-page",

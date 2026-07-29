@@ -21,7 +21,7 @@ const { postId } = Astro.props;
 const articles = await getRelatedPosts(postId);
 ---
 
-<div class="blog-sidebar">
+<div class="post-sidebar">
   <SidebarPartners />
   <SidebarArticles articles={articles} />
 </div>

@@ -1,8 +1,8 @@
 ---
 import { Image } from "astro:assets";
-import dog from "@/assets/images/promos/popup-pets-dog.png";
-import discount from "@/assets/images/promos/popup-pets-discount.png";
-import logo from "@/assets/images/promos/popup-pets-logo.svg";
+import dog from "@/assets/promos/popup-pets-dog.png";
+import discount from "@/assets/promos/popup-pets-discount.png";
+import logo from "@/assets/promos/popup-pets-logo.svg";
 ---
 
 {/* Popup exit-intent "The Pet's Table" — hiện khi chuột rời mép trên cửa sổ
@@ -11,17 +11,17 @@ import logo from "@/assets/images/promos/popup-pets-logo.svg";
   <div class="exit-popup__backdrop" data-close></div>
   <div class="exit-popup__box" role="dialog" aria-modal="true" aria-label="The Pets Table offer">
     {/* Ảnh chó (phải) — khung cắt 285×466, ảnh tràn ra ngoài như bản gốc */}
-    <div class="ep-dog">
+    <div class="exit-popup__dog">
       {/* Giữ TỈ LỆ GỐC (786×1100 ≈ 2000×2800) để astro KHÔNG cắt; CSS thu về 393×549
           (scale nguyên ảnh như bản gốc), rồi lệch −48/−85 trong khung cắt 285×466 */}
       <Image src={dog} alt="The Pets Table dog" width={786} height={1100} />
     </div>
     {/* Logo "the Pets Table — BROUGHT TO YOU BY HelloFresh" (vector) */}
-    <img class="ep-logo" src={logo.src} alt="The Pets Table — brought to you by HelloFresh" />
+    <img class="exit-popup__logo" src={logo.src} alt="The Pets Table — brought to you by HelloFresh" />
     {/* Ưu đãi 60% OFF 1st BOX + 20% OFF YOUR 2nd */}
-    <img class="ep-discount" src={discount.src} alt="60% off 1st box + 20% off your 2nd" />
+    <img class="exit-popup__discount" src={discount.src} alt="60% off 1st box + 20% off your 2nd" />
 
-    <button class="ep-close" type="button" data-close aria-label="Close">
+    <button class="exit-popup__close" type="button" data-close aria-label="Close">
       <svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true">
         <path
           d="M18 6L6 18M6 6l12 12"
@@ -31,8 +31,8 @@ import logo from "@/assets/images/promos/popup-pets-logo.svg";
       </svg>
     </button>
 
-    <a class="ep-cta" href="#" data-close>Get Started</a>
-    <button class="ep-notnow" type="button" data-close>Not Now, Thanks.</button>
+    <a class="exit-popup__cta" href="#" data-close>Get Started</a>
+    <button class="exit-popup__not-now" type="button" data-close>Not Now, Thanks.</button>
   </div>
 </div>
 
@@ -88,14 +88,14 @@ import logo from "@/assets/images/promos/popup-pets-logo.svg";
   }
 
   /* Ảnh chó: khung cắt 285×466 tại (377,36); ảnh tràn (393×549 tại −48,−85) */
-  .ep-dog {
+  .exit-popup__dog {
     left: 377px;
     top: 36px;
     width: 285px;
     height: 466px;
     overflow: hidden;
   }
-  .ep-dog :global(img) {
+  .exit-popup__dog :global(img) {
     position: absolute;
     left: -48px;
     top: -85px;
@@ -106,20 +106,20 @@ import logo from "@/assets/images/promos/popup-pets-logo.svg";
     object-fit: cover;
   }
 
-  .ep-logo {
+  .exit-popup__logo {
     left: 41px;
     top: 23px;
     width: 236px;
     height: 76px;
   }
-  .ep-discount {
+  .exit-popup__discount {
     left: 50px;
     top: 161px;
     width: 217px;
     height: auto;
   }
 
-  .ep-close {
+  .exit-popup__close {
     top: 10px;
     right: 11px;
     width: 27px;
@@ -135,7 +135,7 @@ import logo from "@/assets/images/promos/popup-pets-logo.svg";
   }
 
   /* Nút "Get Started" xanh (Poppins UA), bo 4px */
-  .ep-cta {
+  .exit-popup__cta {
     left: 50px;
     top: 406px;
     width: 217px;
@@ -152,7 +152,7 @@ import logo from "@/assets/images/promos/popup-pets-logo.svg";
     line-height: 1;
     text-decoration: none;
   }
-  .ep-notnow {
+  .exit-popup__not-now {
     left: 62px;
     top: 469px;
     width: 193px;

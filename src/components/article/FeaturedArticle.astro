@@ -1,10 +1,10 @@
 ---
-/* Bài viết nay là MDX trong content collection (src/content/articles) cho dễ
+/* Bài viết nay là MDX trong content collection (src/content/sections) cho dễ
    soạn: prose viết markdown thường, chèn CTA bằng <InlineCta/>. Component này
    chỉ bọc + style. */
 import { getEntry, render } from "astro:content";
 
-const entry = await getEntry("articles", "why-fresh-dog-food");
+const entry = await getEntry("sections", "why-fresh-dog-food");
 const { Content } = await render(entry!);
 ---
 

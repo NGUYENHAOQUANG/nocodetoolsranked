@@ -12,22 +12,22 @@ const ARROW =
 <div class="knowledge-grid">
   {
     knowledgeCards.map((card) => (
-      <article class="k-card">
-        <a class="k-card__image" href={card.href} aria-label={card.title}>
+      <article class="knowledge-card">
+        <a class="knowledge-card__image" href={card.href} aria-label={card.title}>
           {/* Giữ NGUYÊN tỉ lệ ảnh gốc (không ép 350×239 kẻo méo) — để CSS object-fit
               cover cắt giữa lúc hiển thị, y hệt bản gốc */}
           <Image src={card.image} alt={card.imageAlt} width={card.image.width} height={card.image.height} />
-          <span class="k-card__overlay" aria-hidden="true" />
+          <span class="knowledge-card__overlay" aria-hidden="true" />
         </a>
-        <div class="k-card__content">
-          <div class="k-card__meta">
+        <div class="knowledge-card__content">
+          <div class="knowledge-card__meta">
             <span>{card.date}</span> {card.readTime}
           </div>
-          <a class="k-card__title-link" href={card.href}>
-            <h5 class="k-card__title">{card.title}</h5>
+          <a class="knowledge-card__title-link" href={card.href}>
+            <h5 class="knowledge-card__title">{card.title}</h5>
           </a>
-          <p class="k-card__excerpt">{card.excerpt}</p>
-          <a class="k-card__more" href={card.href}>
+          <p class="knowledge-card__excerpt">{card.excerpt}</p>
+          <a class="knowledge-card__more" href={card.href}>
             Read More
             <svg viewBox="0 0 1024 1024" width="1em" height="1em" fill="currentColor" aria-hidden="true">
               <path d={ARROW} />
@@ -51,7 +51,7 @@ const ARROW =
     justify-items: center;
   }
 
-  .k-card {
+  .knowledge-card {
     /* Bản gốc: mỗi thẻ có margin 10px → hàng đầu lùi 10px, khe hàng hiệu dụng
        = 10 + gap 20 + 10 = 40px */
     width: 100%;
@@ -62,20 +62,20 @@ const ARROW =
   }
 
   /* ----- Ảnh + lớp phủ cam khi hover ----- */
-  .k-card__image {
+  .knowledge-card__image {
     position: relative;
     display: block;
     width: 100%;
     height: 239px;
     overflow: hidden;
   }
-  .k-card__image :global(img) {
+  .knowledge-card__image :global(img) {
     width: 100%;
     height: 100%;
     object-fit: cover;
     display: block;
   }
-  .k-card__overlay {
+  .knowledge-card__overlay {
     position: absolute;
     inset: 0;
     background: var(--color-primary);
@@ -83,7 +83,7 @@ const ARROW =
     transition: opacity 0.2s linear;
   }
   /* Khung viền trắng zoom vào khi hover (bản gốc: overlay::after) */
-  .k-card__overlay::after {
+  .knowledge-card__overlay::after {
     content: "";
     position: absolute;
     top: 4%;
@@ -95,16 +95,16 @@ const ARROW =
     transform: scale(0.7);
     transition: 0.5s linear;
   }
-  .k-card:hover .k-card__overlay {
+  .knowledge-card:hover .knowledge-card__overlay {
     opacity: 0.4;
   }
-  .k-card:hover .k-card__overlay::after {
+  .knowledge-card:hover .knowledge-card__overlay::after {
     opacity: 1;
     transform: scale(1);
   }
 
   /* ----- Nội dung: hộp có bóng đổ, chữ ----- */
-  .k-card__content {
+  .knowledge-card__content {
     /* Cao CỐ ĐỊNH → mọi thẻ bằng nhau, "Read More" đẩy xuống đáy.
        <1025px = 250px; ≥1025px = 300px (xem media query) */
     height: 250px;
@@ -113,7 +113,7 @@ const ARROW =
     padding: 20px;
     box-shadow: 0 0 20px var(--color-shadow);
   }
-  .k-card__meta {
+  .knowledge-card__meta {
     /* Bản gốc: opacity 0.7 → chữ nhạt hơn; đồng thời tạo layer riêng nên chữ
        khử răng cưa GRAYSCALE (không subpixel như tiêu đề) — khớp y hệt. */
     opacity: 0.7;
@@ -122,27 +122,27 @@ const ARROW =
     line-height: 1.7rem;
   }
   /* Dấu "|" ngăn ngày với thời lượng đọc = viền phải mảnh xám của ô ngày */
-  .k-card__meta span {
+  .knowledge-card__meta span {
     padding-right: 5px;
     border-right: 1px solid #dadada;
   }
-  .k-card__title-link {
+  .knowledge-card__title-link {
     color: inherit;
   }
-  .k-card__title {
+  .knowledge-card__title {
     margin: 5px 0;
     color: var(--color-text);
     font-size: 1.125rem;
     font-weight: 600;
     line-height: 1.7rem;
   }
-  .k-card__excerpt {
+  .knowledge-card__excerpt {
     margin: 0;
     color: var(--color-text-body);
     font-size: 1rem;
     line-height: 1.7rem;
   }
-  .k-card__more {
+  .knowledge-card__more {
     margin-top: auto;
     display: inline-flex;
     align-items: center;
@@ -153,12 +153,12 @@ const ARROW =
     font-weight: 500;
     line-height: 1.7rem;
   }
-  .k-card__more svg {
+  .knowledge-card__more svg {
     position: relative;
     top: 1px;
   }
   /* Bản gốc: hover tiêu đề = GẠCH CHÂN (không đổi màu); "Read More" không có hover */
-  .k-card__title:hover {
+  .knowledge-card__title:hover {
     text-decoration: underline;
     cursor: pointer;
   }
@@ -176,7 +176,7 @@ const ARROW =
       max-width: 1200px;
       margin: 2px auto 30px;
     }
-    .k-card__content {
+    .knowledge-card__content {
       height: 300px;
     }
   }

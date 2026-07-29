@@ -1,14 +1,14 @@
 ---
 import { Image } from "astro:assets";
-import type { Brand } from "@/lib/rankings";
+import type { ToplistRow } from "@/lib/rankings";
 import ScoreRing from "@/components/ui/ScoreRing.astro";
 import Coupon from "@/components/ui/Coupon.astro";
 import PartnerTooltip from "@/components/ui/PartnerTooltip.astro";
-import sideBannerImg from "@/assets/images/promos/pets-table-side-banner.png";
+import sideBannerImg from "@/assets/promos/pets-table-side-banner.png";
 import { CHEVRON_RIGHT, STAR_OUTLINE, CHECK_THIN } from "@/lib/icon-paths";
 
 interface Props {
-  brand: Brand;
+  brand: ToplistRow;
   /** Banner dọc nổi bên phải card, chỉ hiện từ 1525px */
   hasSideBanner?: boolean;
   /** Ẩn huy hiệu số thứ hạng (dùng cho khối "Best Overall" lặp lại cuối trang) */
@@ -38,7 +38,7 @@ const {
   rating,
   ratingLabel,
   stars,
-  reviews,
+  reviewsCount,
   href,
   isEditorsChoice = false,
   hoverTooltip,
@@ -175,7 +175,7 @@ const mobileLogo = logoMobile ?? logo;
           rating={rating}
           label={ratingLabel}
           stars={stars}
-          reviews={reviews}
+          reviews={reviewsCount}
         />
 
         <div class="partner__separator"></div>

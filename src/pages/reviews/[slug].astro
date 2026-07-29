@@ -16,7 +16,7 @@ import { breadcrumbSchema, articleSchema } from "@/lib/schema-org";
 export async function getStaticPaths() {
   const entries = await getCollection("reviews");
   return entries.map((entry) => ({
-    params: { brand: entry.id },
+    params: { slug: entry.id },
     props: { entry },
   }));
 }
