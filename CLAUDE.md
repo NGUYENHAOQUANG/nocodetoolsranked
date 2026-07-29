@@ -522,6 +522,7 @@ Branch `refactor/astro-architecture`, tag `pre-refactor` = trạng thái trướ
 | 5 | **Lồng URL + route động** | route khớp §8.3 từng dòng; body diff chỉ breadcrumb |
 | 6 | SEO: canonical, OG/Twitter, JSON-LD, sitemap, robots | body diff 0; head thuần cộng thêm |
 | 7 | Format | **hoãn có chủ ý** — xem §8.7 |
+| 8 | Dọn đặt tên (§7), tách `tokens.css` + `prose.css`, frontmatter review → `reference()` | body diff 0/20 |
 
 Xác minh đầy đủ GĐ3 bằng harness (20 trang × 11 khổ + 13 probe):
 `dom` / `layout` / `assets` **giống hệt**; `behavior` giống hệt sau khi vá 2 lỗi
@@ -537,25 +538,24 @@ description tiếng Việt → tiếng Anh.
 
 ### Việc tồn đọng đã biết
 
-- **6 file orphan trong `dist/_astro/` (~120KB)** — `image()` trong schema
-  collection khiến Astro phát cả file gốc bên cạnh bản `.webp` mà `<Image>` sinh:
-  `author-{peri-elgrot,steve-diller}.png`, `contact-{feedback,help,partner}.png`,
-  `must-reads-alternatives.jpg`. **Không trang nào tham chiếu** → không lệch giao
-  diện, chỉ là rác build.
-  Đã thử truy nguyên: không phải do cách gọi `<Image>` (mọi consumer đều dùng
-  `<Image>` giống nhau), cũng không theo định dạng file. `must-reads-fresh-food.jpg`
-  dùng ở HAI vị trí thì KHÔNG sinh orphan, còn `must-reads-alternatives.jpg` dùng ở
-  một vị trí thì có — nên có vẻ liên quan số biến thể `<Image>` sinh ra.
-  Là hành vi nội bộ của Astro khi resolve ảnh qua `image()`. **Chưa xử lý** —
-  cần điều tra riêng, không đáng chặn tiến độ vì không ảnh hưởng render.
-- **Chưa làm, cân nhắc sau:** tách `styles/tokens.css` + `styles/prose.css` khỏi
-  `global.css`/`BlogPost.astro` (§8.6). Nhớ cảnh báo ở §8.6: dùng chung FILE,
-  KHÔNG dùng chung RULE.
-- **Chưa làm:** frontmatter review vẫn giữ `author` inline, `partner` dạng chuỗi,
-  `href`, `carouselPromo`, `articleLinkName` — trùng với `content/brands/*.yaml`.
-  Đổi sang `reference()` sẽ xoá nốt lớp trùng lặp cuối cùng.
-- **Chưa làm:** `data-dump.json` trong `_verify/reports/` là bản trích dữ liệu cũ,
-  giữ để đối chiếu; xoá được khi đã yên tâm.
+- **8 file orphan trong `dist/_astro/` (~152KB) — ĐÃ TRUY NGUYÊN, CHẤP NHẬN.**
+  `author-*.png`, `contact-*.png`, `must-reads-*.jpg`.
+
+  Cơ chế: `image()` trong schema đưa ảnh vào asset graph, và `ImageMetadata.src`
+  bắt buộc phải trỏ tới một file có thật (nó là API công khai — code có quyền
+  dùng `.src` làm `src` thô). Nên Astro luôn phát bản GỐC. Nếu markup chỉ dùng
+  `<Image>` (sinh `.webp`) và không nơi nào đọc `.src`, bản gốc thành mồ côi.
+
+  Bằng chứng: các ảnh slot `card` KHÔNG mồ côi, vì `.src` của chúng được dùng làm
+  `og:image` trong `<head>`. Đúng cùng một cơ chế, chỉ khác ở chỗ có ai đọc `.src`.
+
+  Đã xác nhận 0 tham chiếu từ cả HTML, CSS, JS lẫn XML. **Không ảnh hưởng người
+  dùng** — host tĩnh chỉ phục vụ file được yêu cầu, nên đây thuần tuý là dung
+  lượng deploy. **Cố ý không viết script xoá sau build:** rủi ro xoá nhầm cao hơn
+  hẳn lợi ích 152KB.
+
+- **`data-dump.json`** trong `_verify/reports/` là bản trích dữ liệu cũ, giữ để
+  đối chiếu; xoá được khi đã yên tâm.
 
 ### Giới hạn đã biết của harness
 
