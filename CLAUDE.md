@@ -22,7 +22,7 @@ nó chỉ kiểm KIỂU:
 | Script              | Kiểm gì                               | Chạy lúc          |
 | ------------------- | ------------------------------------- | ----------------- |
 | `check-content.mjs` | nội dung chỉ ASCII; URL trần phải bọc | `npm run check`   |
-| `check-html.mjs`    | 10 luật HTML trên `dist/`             | sau `astro build` |
+| `check-html.mjs`    | 12 luật HTML trên `dist/`             | sau `astro build` |
 
 `check-html.mjs` chạy trên `dist/` chứ không phải `src/`, vì "trang này có mấy
 `<h1>`" chỉ trả lời được trên HTML đã render. Nó nhận tham số thư mục nên soi

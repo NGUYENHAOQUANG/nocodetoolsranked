@@ -67,13 +67,12 @@ const { logo, logoAlt, promo, href, author } = Astro.props;
 
 <section class="review-intro__author-section">
   <div class="review-intro__author">
-    <img
-      class="review-intro__avatar"
-      src={author.avatar.src}
-      alt="Author image"
-      width="45"
-      height="45"
-    />
+    {
+      /* Ảnh trang trí: tên và vai trò tác giả nằm ngay bên cạnh dưới dạng chữ, nên
+      alt rỗng để trình đọc màn hình khỏi đọc lặp. `alt="Author image"` trước đây
+      vừa lặp vừa chứa chữ "image" mà trình đọc đã tự thông báo. */
+    }
+    <img class="review-intro__avatar" src={author.avatar.src} alt="" width="45" height="45" />
     <div class="review-intro__author-text">
       <p class="review-intro__author-name">{author.name}</p>
       <p>{author.role}</p>

@@ -1,5 +1,5 @@
 /**
- * Kiểm HTML của bản build theo 10 luật mà `astro check` không thấy được.
+ * Kiểm HTML của bản build theo 12 luật mà `astro check` không thấy được.
  *
  * `astro check` chỉ kiểm KIỂU. Nó không biết một trang có hai `<h1>`, hay
  * heading nhảy từ h1 xuống h4, hay ô nhập không có nhãn. Những thứ đó chỉ lộ ra
@@ -80,7 +80,20 @@ for (const file of walk(DIST).filter((f) => f.endsWith(".html"))) {
 
   // 5. <img> luôn phải có alt (rỗng nếu là ảnh trang trí)
   for (const m of body.matchAll(/<img\b[^>]*>/g)) {
-    if (!/\salt\s*=/.test(m[0])) add("img-alt", `${rel}: ${m[0].slice(0, 70)}`);
+    /* `\salt[\s=>]` chứ không phải `\salt\s*=`: `alt=""` được Astro phát ra thành
+       thuộc tính TRẦN `alt`, hợp lệ HTML5. Bản đầu của rule này báo nhầm 6 chỗ. */
+    if (!/\salt[\s=>]/.test(m[0])) add("img-alt", `${rel}: ${m[0].slice(0, 70)}`);
+    /* Trình đọc màn hình đã tự thông báo "hình ảnh", nên viết lại trong alt là
+       thừa. Bắt được `alt="Author image"` mà mắt thường đọc qua thấy bình thường. */
+    const alt = m[0].match(/\salt="([^"]*)"/);
+    if (alt && /\b(image|photo|picture|graphic)\b/i.test(alt[1])) {
+      add("img-alt-thua", `${rel}: alt="${alt[1].slice(0, 40)}"`);
+    }
+  }
+
+  // 5b. Heading rỗng — nhất là khi có id để `aria-labelledby` trỏ vào
+  for (const m of body.matchAll(/<h([1-6])\b[^>]*>([\s\S]*?)<\/h\1>/g)) {
+    if (!m[2].replace(/<[^>]+>/g, "").trim()) add("heading-rong", `${rel}: <h${m[1]}> rong`);
   }
 
   // 6. <a> không href thì không phải link — điều hướng phải bấm được bằng bàn phím
@@ -122,6 +135,8 @@ const LABEL = {
   obsolete: "Thuoc tinh loi thoi",
   "btn-type": "<button> thieu type",
   "img-alt": "<img> thieu alt",
+  "img-alt-thua": 'alt lap lai chu "image"/"photo"',
+  "heading-rong": "Heading khong co chu",
   "a-nohref": "<a> khong href",
   rel: 'target="_blank" thieu rel=noopener',
   label: "Form control thieu nhan",
@@ -146,4 +161,4 @@ if (problems.length) {
   process.exit(1);
 }
 
-console.log("check-html: HTML dat ca 10 luat.");
+console.log("check-html: HTML dat ca 12 luat.");

@@ -24,7 +24,8 @@ const { title, date, readTime, author, avatar } = Astro.props;
 
   {/* Tác giả: avatar tròn 45px + tên (đậm) / vai trò */}
   <div class="post-intro__author">
-    <Image class="post-intro__avatar" src={avatar} alt={author.name} width={45} height={45} />
+    {/* Ảnh trang trí: tên tác giả nằm ngay bên cạnh dưới dạng chữ */}
+    <Image class="post-intro__avatar" src={avatar} alt="" width={45} height={45} />
     <div class="post-intro__author-text">
       <p class="post-intro__author-name">{author.name}</p>
       <p class="post-intro__author-role">{author.role}</p>

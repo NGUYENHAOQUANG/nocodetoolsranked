@@ -54,7 +54,12 @@ const contactCards = (await getEntry("contactCards", "contact"))!.data.cards;
         ></path>
       </svg>
     </button>
-    <h2 class="contact-modal__title" id="contact-modal-title"></h2>
+    {
+      /* Có chữ mặc định chứ không để rỗng: `aria-labelledby` trỏ vào đây, nên
+      heading rỗng là hộp thoại không có tên. JS ghi đè bằng tiêu đề của thẻ
+      được bấm ngay lúc mở. */
+    }
+    <h2 class="contact-modal__title" id="contact-modal-title">Contact us</h2>
     <p class="contact-modal__subtitle"></p>
     {
       /* Mỗi ô có <label> thật, ẩn bằng CSS chứ không thay bằng placeholder:
