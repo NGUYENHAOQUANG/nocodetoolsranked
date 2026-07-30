@@ -3,7 +3,6 @@ import { defineConfig } from "astro/config";
 
 import mdx from "@astrojs/mdx";
 import sitemap from "@astrojs/sitemap";
-import { satteri } from "@astrojs/markdown-satteri";
 
 /**
  * Nguyên tắc: ưu tiên mặc định của Astro. Chỉ khai một khoá khi giá trị muốn
@@ -30,26 +29,26 @@ export default defineConfig({
    */
   trailingSlash: "always",
 
-  integrations: [mdx(), sitemap()],
-
-  markdown: {
-    /**
-     * PHẢI khai `smartPunctuation: false` tường minh, không được bỏ khoá này.
-     *
-     * Sätteri (processor mặc định của Astro 7) để `smartPunctuation` mặc định
-     * TẮT, nhưng `@astrojs/mdx` có mặc định RIÊNG là BẬT
-     * (@astrojs/internal-helpers/dist/markdown.js: `smartypants: true`) và chỉ
-     * kế thừa từ processor khi giá trị là boolean tường minh
-     * (@astrojs/mdx/dist/index.js: `typeof features.smartPunctuation === "boolean"`).
-     *
-     * Bỏ khoá này thì file .md giữ nguyên ký tự còn file .mdx bị đổi nháy thẳng
-     * thành nháy cong lúc build — đúng thứ quy ước "nội dung chỉ ASCII" cấm.
-     *
-     * `gfm` KHÔNG khai: mặc định BẬT, và đó là điều muốn (bảng Markdown,
-     * footnote). URL trần trong nội dung bọc bằng {'...'} để không tự thành link.
-     */
-    processor: satteri({ features: { smartPunctuation: false } }),
-  },
+  /**
+   * `smartypants: false` là BẮT BUỘC, không phải trang trí.
+   *
+   * `@astrojs/mdx` có mặc định RIÊNG là BẬT
+   * (`@astrojs/internal-helpers/dist/markdown.js`: `smartypants: true`), khác
+   * mặc định của processor. Bỏ khoá này thì build đổi nháy thẳng thành nháy
+   * cong — đã đo: sinh 234 ký tự cong trong `dist/`, trong khi nguồn vẫn ASCII
+   * nên nhìn source không thấy gì. Đúng thứ quy ước "nội dung chỉ ASCII" cấm.
+   *
+   * Khai ở ĐÂY chứ không qua `markdown.processor: satteri(...)`: cách kia phải
+   * `import { satteri } from "@astrojs/markdown-satteri"`, mà gói đó KHÔNG có
+   * trong package.json — nó chỉ tồn tại vì `astro` phụ thuộc nó. Import một gói
+   * mình không khai là chạy nhờ, gãy lúc Astro đổi dependency nội bộ.
+   * `@astrojs/mdx/dist/index.js` cho thấy option truyền thẳng cho `mdx()` THẮNG
+   * processor, nên cách này vừa đủ vừa không nợ ai.
+   *
+   * Repo không có file `.md` nào (toàn `.mdx`) nên mặc định của processor
+   * không ảnh hưởng gì.
+   */
+  integrations: [mdx({ smartypants: false }), sitemap()],
 
   /** <Image> tự sinh srcset + sizes để điện thoại không phải tải ảnh cỡ desktop. */
   image: { layout: "constrained" },
