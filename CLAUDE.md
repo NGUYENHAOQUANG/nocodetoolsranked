@@ -1,73 +1,97 @@
 # CLAUDE.md
 
-Hướng dẫn cho AI agent làm việc trong repo này.
+Hướng dẫn cho AI agent và người sửa code trong repo này.
 
-Bối cảnh dự án, lệnh chạy và công thức thêm nội dung nằm ở **`README.md`** —
-đọc file đó trước. Ở đây chỉ ghi những gì không đọc ra được từ code.
+Bối cảnh dự án, lệnh chạy và công thức thêm nội dung nằm ở
+**[`README.md`](./README.md)** — đọc file đó trước. Ở đây chỉ ghi những gì **không
+đọc ra được từ code**: lý do đằng sau các quyết định, và những chỗ hành xử khác
+trực giác.
 
 ---
 
-## Lệnh
+## Bộ kiểm
 
-```sh
-npm run dev      # máy chủ phát triển, localhost:4321
-npm run check    # astro check (kiểu) + check-content.mjs (quy ước nội dung)
-npm run build    # chạy check rồi dựng site tĩnh vào dist/
-npm run format   # prettier cho mọi thứ trừ src/content/**
-```
-
-Hai script trong `scripts/` gánh những luật mà `astro check` không thấy được —
-nó chỉ kiểm KIỂU:
+`astro check` chỉ kiểm **kiểu**. Hai script trong `scripts/` gánh phần còn lại:
 
 | Script              | Kiểm gì                               | Chạy lúc          |
 | ------------------- | ------------------------------------- | ----------------- |
 | `check-content.mjs` | nội dung chỉ ASCII; URL trần phải bọc | `npm run check`   |
 | `check-html.mjs`    | 13 luật HTML trên `dist/`             | sau `astro build` |
 
-`check-html.mjs` chạy trên `dist/` chứ không phải `src/`, vì "trang này có mấy
-`<h1>`" chỉ trả lời được trên HTML đã render. Nó nhận tham số thư mục nên soi
-được một bản build khác: `node scripts/check-html.mjs ../ban-cu/dist`.
+**`check-content.mjs`** cắt bỏ phần không render ra trang (comment, `<style>`,
+`<script>`, chuỗi trong `new Error`) rồi soi phần còn lại. Nó quét cả `.ts`, vì
+`config/site.ts` giữ tiêu đề và mô tả mặc định — tức là chuỗi RENDER RA TRANG.
+Bỏ sót nó nên một em dash từng sống sót ở đó và ship ra 8 trang.
 
-**Hai điều kiện để một luật đáng có script.** Thiếu một trong hai thì đừng viết.
+Luật URL trần là **điều kiện để giữ `gfm` bật**: gfm tự biến URL trần thành thẻ
+`<a>`, và trên site affiliate đó là rò traffic mà không có gì báo.
 
-1. **Người viết code không tự thấy được vi phạm.** Ký tự vô hình thì không thấy;
-   `<h1>` thứ hai do layout cộng với thân MDX cũng không. Còn "file nằm sai thư
-   mục" thì nhìn đường dẫn là thấy — luật đó để người giữ.
-2. **Script không chặn nhầm thay đổi hợp lệ.** Nếu nó cần một bảng khai tay thì
-   sớm muộn bảng lạc hậu và nó báo sai vào đúng lúc người ta đang làm kiến trúc.
+**`check-html.mjs`** chạy trên `dist/` chứ không phải `src/`: "trang này có mấy
+`<h1>`" chỉ trả lời được sau khi render, vì một `<h1>` có thể đến từ layout, một
+cái nữa từ thân MDX. Nó nhận tham số thư mục nên soi được bản build khác:
+`node scripts/check-html.mjs ../ban-cu/dist`.
 
-Hai script đã viết rồi bỏ, vì trượt điều kiện thứ hai:
+13 luật: một `<h1>` mỗi trang · heading không nhảy cấp · heading không rỗng ·
+không thuộc tính lỗi thời · `<button>` có `type` · `<img>` có `alt` · `alt` không
+lặp chữ "image" · `<a>` có `href` · `target="_blank"` kèm `noopener` · ô nhập có
+nhãn · skip link có đích · `<p>` không chứa thẻ block · `<ul>`/`<ol>` chỉ chứa `<li>`.
 
-- `check-structure.mjs` (component nằm đúng thư mục) — cần bảng `page -> loại
-trang`; thêm một loại trang mới là nó báo "không trang nào dùng, xoá đi" cho
-  chính component của trang mới.
-- `check-unused.mjs` (component/ảnh không ai dùng) — chặn việc tạm gỡ một
-  section để A/B test rồi dùng lại sau, vốn là thao tác bình thường.
+### Hai điều kiện để một luật đáng có script
+
+Thiếu một trong hai thì **đừng viết** — script sai còn hại hơn không có.
+
+1. **Người viết code KHÔNG tự thấy được vi phạm.** Ký tự vô hình thì không thấy;
+   `<h1>` thứ hai do layout cộng thân MDX cũng không. Ngược lại, "file nằm sai
+   thư mục" thì nhìn đường dẫn là thấy — luật đó để người giữ.
+2. **Script KHÔNG chặn nhầm thay đổi hợp lệ.** Cần một bảng khai tay là sớm muộn
+   bảng lạc hậu, và nó báo sai vào đúng lúc người ta đang làm kiến trúc.
+
+Đã viết rồi bỏ hai script vì trượt điều kiện thứ hai:
+
+- `check-structure.mjs` (component nằm đúng thư mục) — cần bảng
+  `page -> loại trang`; thêm một loại trang mới là nó báo "không trang nào dùng,
+  xoá đi" cho chính component của trang mới.
+- `check-unused.mjs` (component/ảnh không ai dùng) — chặn việc tạm gỡ một section
+  để A/B test rồi dùng lại sau, vốn là thao tác bình thường.
 
 Hai luật đó vẫn còn hiệu lực, chỉ là do người giữ chứ không do máy.
 
-`scripts/check-content.mjs` gánh hai luật mà `astro check` không thấy được:
-**nội dung hiển thị chỉ dùng ASCII**, và **URL trần trong `src/content/**` phải
-được bọc** (`{'https://...'}` để giữ dạng chữ, `[chữ](url)` để thành link).
-Luật thứ hai là điều kiện để giữ `gfm` bật: gfm tự biến URL trần thành thẻ `<a>`,
-và trên site affiliate đó là rò traffic ra ngoài mà không có gì báo.
+**Viết script rồi phải kiểm ngược:** chạy nó trên bản build TRƯỚC khi sửa để chắc
+nó bắt được lỗi, VÀ thử một thay đổi HỢP LỆ để chắc nó không báo sai.
 
-Luật ASCII quét cả `.ts`, không chỉ `.astro`/`.mdx`/`.yaml`: `config/site.ts` giữ
-tiêu đề và mô tả mặc định, tức là chuỗi RENDER RA TRANG. Bỏ sót nó nên một em
-dash từng sống sót ở đó và ship ra 8 trang trong khi mọi chỗ khác đã đổi.
+### Không dùng ESLint / stylelint / husky
+
+Đã đo, không phải đoán:
+
+- **ESLint** + `eslint-plugin-astro` + `jsx-a11y` tìm được 3 chỗ trên 40
+  component, 2 chỗ là thật (`alt="Author image"`, một `<h2>` rỗng). Chi phí:
+  **+185 package** vào repo đang có 337. Đã sửa hai lỗi bằng tay rồi đưa đúng hai
+  luật ấy vào `check-html.mjs` — 12 dòng, 0 dependency.
+- **stylelint**: đã quét 2543 khai báo CSS, 0 rule có property trùng. Mà mọi rule
+  CSS đều đã được kiểm bằng render + so `dist/`, nên property gõ sai sẽ hiện
+  thành lệch pixel.
+- **husky**: bắt lỗi sớm hơn `npm run build` chừng 30 giây, đổi lấy một dependency
+  và một hook chạy mỗi lần commit — hook chậm thì người ta gõ `--no-verify` và nó
+  thành trang trí. Khi nào có CI thì gọi `npm ci && npm run build`.
+
+---
 
 ## Kiến trúc
 
-Astro 7, static site, **không dùng UI framework**. Mọi tương tác (popup thoát
-trang, accordion, carousel, drawer mobile, cuộn lên đầu) viết bằng `<script>`
-vanilla trong chính component. Đây là lựa chọn có chủ đích: site sống bằng
-traffic tìm kiếm, và zero JS framework giúp Core Web Vitals.
+Astro 7, static, **không dùng UI framework**. Mọi tương tác (popup thoát trang,
+accordion, carousel, drawer mobile, tooltip, cuộn lên đầu) viết bằng `<script>`
+vanilla trong chính component. Lựa chọn có chủ đích: site sống bằng traffic tìm
+kiếm, và zero JS framework giúp Core Web Vitals.
 
 ### Nội dung tách khỏi code
 
 Toàn bộ nội dung biên tập nằm trong `src/content/` dưới dạng content collection
 có schema Zod. Không có mảng dữ liệu nào nằm trong `.ts` hay hardcode trong
-component. Thêm brand hay bài viết là thêm file nội dung, không sửa code.
+component.
+
+Hệ quả cho component: **trang lấy dữ liệu, component nhận props.** Năm component
+từng tự gọi `getEntry(..., "homepage")` — mỗi cái chỉ chạy được cho đúng một
+trang, nên không thể có ngách thứ hai.
 
 ### Ý tưởng trung tâm: brands vs placements
 
@@ -76,18 +100,17 @@ component. Thêm brand hay bài viết là thêm file nội dung, không sửa c
 - **`content/brands/`** — _đối tác LÀ AI_: tên, logo, alt, link affiliate.
   Bất biến, khai một lần.
 - **`content/placements/`** — _đối tác XUẤT HIỆN THẾ NÀO ở từng trang_: thứ tự,
-  điểm số, số sao, coupon.
+  điểm, số sao, coupon.
 
 Tách như vậy vì mỗi trang toplist (trang chủ và từng ngách) cùng `/reviews/` xếp
 hạng **khác nhau** cho cùng một tập brand. Gộp làm một thì hoặc phải nhân đôi dữ
 liệu, hoặc mất khả năng cho mỗi trang xếp một kiểu — mà đó chính là lý do tồn tại
 của các ngách.
 
-Hệ quả thực tế: đổi link affiliate là sửa **một dòng** trong `brands/`, và mọi
-nơi hiển thị nó đều đổi theo.
+Hệ quả: đổi link affiliate là sửa **một dòng** trong `brands/`, mọi nơi đổi theo.
 
-`src/lib/rankings.ts` nối hai thứ đó lại. `src/lib/posts.ts` làm việc tương tự
-cho bài viết.
+`src/lib/rankings.ts` nối hai thứ đó lại. `src/lib/posts.ts` làm tương tự cho bài
+viết.
 
 ### Trang toplist: một file = một trang
 
@@ -95,10 +118,10 @@ cho bài viết.
 `home`; mọi ngách khác lấy id làm slug ở gốc site. Thân MDX là bài viết dài dưới
 bảng xếp hạng; frontmatter giữ tiêu đề, hero, FAQ, mini-review.
 
-Bốn collection cũ (`featuredArticles`, `faq`, `miniReviews`, và chữ nghĩa hero
-vốn viết cứng trong component) đều chỉ có ĐÚNG MỘT entry tên `homepage` — tức là
-đã sẵn hình dạng "khoá theo trang", chỉ là mới có một trang. Gộp lại nên thêm một
-ngách là thêm **một** file nội dung, không phải bốn.
+Bốn collection cũ (`featuredArticles`, `faq`, `miniReviews`, và chữ nghĩa hero vốn
+viết cứng trong component) đều chỉ có ĐÚNG MỘT entry tên `homepage` — tức đã sẵn
+hình dạng "khoá theo trang", chỉ là mới có một trang. Gộp lại nên thêm một ngách
+là thêm **một** file nội dung, không phải bốn.
 
 Bảng xếp hạng thì KHÔNG gộp vào đó: nó dài 120 dòng cho 9 brand x 12 trường, và
 nhịp sửa khác hẳn phần còn lại (điểm/coupon/thứ tự đổi hàng tuần, bài viết hàng
@@ -109,13 +132,18 @@ dòng code**. Đã chạy thật — tạo hai file nội dung, build ra `/puppy
 cùng bộ khối, cùng thứ tự, 10 card, chỉ khác nội dung và thứ hạng. Đổi cấu trúc
 gì sau này cũng phải giữ được tính chất đó.
 
+### Quan hệ giữa collection
+
+Dùng `reference()`, không dùng chuỗi tra bảng. Gõ sai tên brand, tác giả hay bài
+viết là **lỗi build**, không phải `undefined` âm thầm lúc chạy.
+
 ### `components/` chia theo phạm vi trang phục vụ
 
 Luật, không có chỗ nào cần phán đoán:
 
-> Component nằm ở thư mục của loại trang duy nhất dùng nó. Dùng ở nhiều loại
-> trang thì lên tầng chung gần nhất — `article/` nếu là review + blog, `layout/`
-> nếu gần như mọi trang.
+> Component nằm ở thư mục của loại trang duy nhất dùng nó. Dùng ở nhiều loại trang
+> thì lên tầng chung gần nhất — `article/` nếu là review + blog, `layout/` nếu gần
+> như mọi trang.
 
 | Thư mục      | Phục vụ                         |
 | ------------ | ------------------------------- |
@@ -128,25 +156,18 @@ Luật, không có chỗ nào cần phán đoán:
 
 Trục này chọn vì **đơn vị lớn lên của repo là loại trang**: thêm brand hay thêm
 bài chỉ là thêm file nội dung, còn component mới chỉ sinh ra khi có loại trang
-mới — và khi đó sinh ra cả cụm. Thêm loại trang = tạo một thư mục, bỏ = xoá một
+mới — và khi đó sinh ra cả cụm. Thêm loại trang = tạo một thư mục; bỏ = xoá một
 thư mục.
 
-Đo được: lan truyền import từ mỗi page cho thấy **28/38 component chỉ xuất hiện ở
-đúng một loại trang**, 6 cái ở gần như mọi trang, 4 cái ở đúng hai (review +
-blog). Không cái nào ở giữa — nên luật trên gần như không có ca biên.
+Đo được khi chọn trục: lan truyền import từ mỗi page cho thấy **28/38 component
+chỉ xuất hiện ở đúng một loại trang**, 6 cái ở gần như mọi trang, 4 cái ở đúng hai
+(review + blog). Không cái nào ở giữa — nên luật trên gần như không có ca biên.
 
 Trục CŨ (`sections/` `sidebar/` `ui/` `brand/`) cắt theo bốn thứ khác nhau cùng
 lúc, và vị trí là thuộc tính của CÁCH DÙNG chứ không phải của component: dời một
 khối từ sidebar vào thân bài là nó sai thư mục dù bản thân nó không đổi gì.
 
-### Quan hệ giữa collection
-
-Dùng `reference()` chứ không dùng chuỗi tra bảng. Gõ sai tên brand, tác giả hay
-bài viết là **lỗi build**, không phải `undefined` âm thầm lúc chạy.
-
 ### Routing
-
-Route sinh từ tên file trong collection:
 
 | Route                          | Sinh từ                  |
 | ------------------------------ | ------------------------ |
@@ -156,71 +177,81 @@ Route sinh từ tên file trong collection:
 | `pages/[page].astro`           | `content/pages/*.mdx`    |
 
 `[...toplist].astro` là route **rest**, sinh cả `/` lẫn mọi ngách ở gốc site.
-Entry `home` cho ra param `undefined` → URL `/`, nên trang chủ và mọi ngách dùng
+Entry `home` cho ra param `undefined` -> URL `/`, nên trang chủ và mọi ngách dùng
 CHUNG một khuôn, không có `index.astro` riêng. Route rest xếp hạng thấp hơn route
-động có tên nên nó KHÔNG nuốt `[page].astro` — đã kiểm bằng build. Ràng buộc: id
-trong `toplists/` không được trùng id trong `pages/`, và `home` là id dành riêng.
+động có tên nên nó KHÔNG nuốt `[page].astro` — đã kiểm bằng build.
 
-`[page].astro` sinh 4 trang nội dung phẳng ở gốc site (`/about/`,
-`/terms-of-use/`, `/privacy-policy/`, `/advertiser-disclosure/`). Nó KHÔNG nuốt
-route khác: build tĩnh chỉ phát đúng path mà `getStaticPaths` trả về, và
-`[page]` chỉ khớp một segment. Ràng buộc kèm theo: id entry trong `content/pages`
-không được trùng `contact`, `reviews`, `knowledge`.
+Ràng buộc id: `home` dành riêng cho trang chủ; id trong `toplists/` không được
+trùng id trong `pages/`, và không được là `contact`, `reviews`, `knowledge`.
 
 Slug **là** id của entry (tên file) — không khai `slug` trong frontmatter. Hai
 nguồn sự thật cho URL từng gây ra một URL sai chính tả trong dự án này.
 
 Mọi URL nội bộ dựng qua **`src/lib/links.ts`**. Đừng gõ tay đường dẫn trong
-component — đổi cấu trúc URL sẽ phải sửa một chỗ thay vì tám chỗ.
+component.
 
 ### `layouts/` chỉ chứa thứ bọc trang khác
 
-Phép thử: một file thuộc về `layouts/` khi nó có **`<slot />`**. Không có slot
-thì nó không bọc ai — nó _là_ thân của một trang, và chỗ của nó là `pages/`.
+Phép thử: một file thuộc về `layouts/` khi nó có **`<slot />`**. Không có slot thì
+nó không bọc ai — nó _là_ thân của một trang, và chỗ của nó là `pages/`.
 
 Đúng hai file, xếp hai tầng, ranh giới là **tài liệu** so với **khung nhìn thấy được**:
 
-|         | `BaseLayout`                                            | `InnerPageLayout`                                                                                  |
-| ------- | ------------------------------------------------------- | -------------------------------------------------------------------------------------------------- |
-| Phát ra | `<html>` · `<head>` · Seo · `global.css`                | Header · HeroInner · Breadcrumbs · Footer · ToTop                                                  |
-| Props   | metadata: `title` `description` `image` `type` `schema` | banner + breadcrumb: `heroTitle` `heroMobileTitle` `heroAlt` `heroMobileAlt` `isTitleTop` `crumbs` |
+|         | `BaseLayout`                                                      | `InnerPageLayout`                                             |
+| ------- | ----------------------------------------------------------------- | ------------------------------------------------------------- |
+| Phát ra | `<html>` · `<head>` · Seo · skip link · `global.css`              | Header · HeroInner · Breadcrumbs · Footer · ToTop             |
+| Props   | metadata: `title` `description` `image` `type` `noindex` `schema` | `heroTitle` `heroMobileTitle` `heroAlt` `isTitleTop` `crumbs` |
 
-Hai bộ props không giao nhau: `InnerPageLayout` chuyển thẳng 5 props metadata
-xuống dưới mà không đọc cái nào. Cần cả hai tầng vì trang chủ dùng riêng
-`BaseLayout` — nó không có breadcrumb, banner là `HeroToplist` với cây DOM khác
-hẳn, `<main>` bọc luôn banner, và chỉ nó có `ExitPopup`. Gộp một tầng thì trang
-chủ phải tắt từng thứ bằng prop `showBreadcrumbs={false}` — prop trình bày trá
-hình, đúng thứ quy ước cấm.
+`InnerPageLayout` chuyển thẳng 6 props metadata xuống dưới. Ngoại lệ DUY NHẤT là
+`schema`: layout đã nhận `crumbs` để vẽ breadcrumb nhìn thấy được, nên nó **tự
+dựng `BreadcrumbList`** từ đúng dữ liệu ấy rồi ghép vào `schema` của trang. Để
+từng trang tự truyền thì vừa lặp vừa dễ quên — `/contact/`, `/reviews/` và
+`/knowledge/` từng hiện breadcrumb mà không phát JSON-LD nào.
+
+Cần cả hai tầng vì trang chủ dùng riêng `BaseLayout`: nó không có breadcrumb,
+banner là `HeroToplist` với cây DOM khác hẳn, `<main>` bọc luôn banner, và chỉ nó
+có `ExitPopup`. Gộp một tầng thì trang chủ phải tắt từng thứ bằng
+`showBreadcrumbs={false}` — prop trình bày trá hình, đúng thứ quy ước cấm.
 
 `InnerPageLayout` **không phát `<main>`**: trang review và bài blog đặt `<main>`
-bên trong lưới ba cột, bọc sẵn sẽ thành `<main>` lồng `<main>`.
+bên trong lưới ba cột, bọc sẵn sẽ thành `<main>` lồng `<main>`. Mỗi page tự viết
+`<main id="main-content">` — id đó là đích của skip link, `check-html` canh.
 
-Lưới ba cột đó là `components/layout/ArticleGrid.astro` — component, không phải
-layout, vì nó là một khối bố cục chứ không phải vỏ trang (cùng lý do
-`ContentGrid` của trang chủ nằm ở `components/`). Nó có ba slot **có tên**
-(`nav` / `main` / `sidebar`) nên thứ tự cột do nó quyết; và nó cố ý **không**
-khai `grid-template-areas`, vì trước đây cả hai trang đều khai mà không con nào
-nhận `grid-area` — thứ xếp cột thật luôn là auto-placement theo thứ tự DOM.
+Lưới ba cột đó là `components/article/ArticleGrid.astro` — component, không phải
+layout, vì nó là một khối bố cục chứ không phải vỏ trang (cùng lý do `ContentGrid`
+của trang chủ nằm ở `components/`). Nó có ba slot **có tên**
+(`nav` / `main` / `sidebar`) nên thứ tự cột do nó quyết; và cố ý **không** khai
+`grid-template-areas`, vì trước đây cả hai trang đều khai mà không con nào nhận
+`grid-area` — thứ xếp cột thật luôn là auto-placement theo thứ tự DOM.
 
 ### Style
 
-| File                | Vai trò                                                     |
-| ------------------- | ----------------------------------------------------------- |
-| `styles/tokens.css` | Token đặt theo VAI TRÒ (`--color-text-body`, `--font-*`)    |
-| `styles/global.css` | `@font-face`, reset, import ba file kia                     |
-| `styles/prose.css`  | Style cho thân bài do MDX render — BỐN khối, cố ý không gộp |
-| `styles/hero.css`   | Khung banner dùng chung của `HeroToplist` và `HeroInner`    |
+| File                | Vai trò                                                  |
+| ------------------- | -------------------------------------------------------- |
+| `styles/tokens.css` | 18 token đặt theo VAI TRÒ                                |
+| `styles/global.css` | `@font-face`, reset, `@import` tokens + prose            |
+| `styles/prose.css`  | Style thân bài do MDX render — BỐN khối, cố ý không gộp  |
+| `styles/hero.css`   | Khung banner dùng chung của `HeroToplist` và `HeroInner` |
 
 Ngoài ra mỗi component tự giữ style trong `<style>` scoped của nó.
 
-`hero.css` là file global vì hai component hero render cùng bộ class khung, mà
-scoped style không xuyên qua ranh giới component — chép vào cả hai file là tạo
-lại đúng thứ trùng lặp vừa gỡ. Rule ở đó là class trần (0,1,0) nên luôn thua rule
-scoped (0,2,0) của từng nhánh: khung là nền, nhánh đè lên.
+`hero.css` **không** được `global.css` import — hai component hero tự
+`import "@/styles/hero.css"`. Nó là file global vì hai component render cùng bộ
+class khung, mà scoped style không xuyên qua ranh giới component; chép vào cả hai
+file là tạo lại đúng thứ trùng lặp vừa gỡ. Rule ở đó là class trần (0,1,0) nên
+luôn thua rule scoped (0,2,0) của từng nhánh: khung là nền, nhánh đè lên.
 
-`tokens.css` ghi sẵn quy tắc để một giá trị được thành token: **dùng ≥3 chỗ VÀ
-mọi chỗ cùng một vai trò**. Vì vậy có ba token cùng `#ffffff` (`--color-bg`,
+Bốn khối của `prose.css`: `.post__body` (bài blog) · `.paragraph__content` (bài
+review) · `.page__body` (4 trang phẳng) · `.featured-article` (khối bài ở trang
+toplist). Đầu file ghi rõ vì sao **không gộp được** — đọc trước khi định dọn.
+
+`tokens.css` ghi sẵn quy tắc để một giá trị thành token: **dùng >=3 chỗ VÀ mọi chỗ
+cùng một vai trò**. Vì vậy có ba token cùng `#ffffff` (`--color-bg`,
 `--color-surface`, `--color-text-on-primary`) — cố ý, đừng "dọn" thành một.
+`--width-content` (1060px) là bề rộng cột nội dung của cả site; trước đây viết
+cứng ở 17 chỗ trên 16 file với ba biến thể không ai bảo đảm còn khớp.
+
+---
 
 ## Quy ước đặt tên
 
@@ -248,96 +279,68 @@ Không dùng tên chung chung như `utils.ts` / `helpers.ts` — đặt theo vi�
 
 **CSS**
 
-- BEM: `block__element--modifier`, kebab-case
-- Custom property đặt theo **vai trò**, không theo giá trị —
-  `--color-primary`, không phải `--color-orange`
+- BEM `block__element--modifier`, kebab-case. Block khớp tên component.
+- Custom property đặt theo **vai trò**, không theo giá trị — `--color-primary`,
+  không phải `--color-orange`
 
 **Nội dung**
 
-- Trường frontmatter: `camelCase`, khớp schema Zod
+- Trường frontmatter `camelCase`, khớp schema Zod
 - Quan hệ giữa collection dùng `reference()`
+
+---
 
 ## Quy ước commit
 
-Viết bằng **tiếng Việt**, ngắn gọn. Dạng: `type(scope): mô tả` — `scope` không bắt buộc.
+Viết bằng **tiếng Việt**, ngắn gọn. Dạng `type(scope): mô tả` — `scope` không bắt buộc.
 
-**Type** dùng đúng chuẩn conventional commits:
+`feat` · `fix` · `refactor` · `style` · `perf` · `docs` · `test` · `build` ·
+`chore` (đúng bộ conventional commits, không chế thêm).
 
-| Type       | Dùng khi                                      |
-| ---------- | --------------------------------------------- |
-| `feat`     | Thêm tính năng                                |
-| `fix`      | Sửa lỗi                                       |
-| `refactor` | Đổi cấu trúc, không đổi hành vi               |
-| `style`    | Chỉ đụng định dạng/giao diện, không đổi logic |
-| `perf`     | Cải thiện hiệu năng                           |
-| `docs`     | Tài liệu                                      |
-| `test`     | Kiểm thử                                      |
-| `build`    | Dependency, cấu hình build                    |
-| `chore`    | Việc lặt vặt còn lại                          |
-
-**Scope** thêm khi phạm vi rõ ràng, bỏ khi thay đổi trải rộng nhiều phần:
+Thêm `scope` khi phạm vi rõ ràng, bỏ khi thay đổi trải rộng nhiều phần.
 
 ```
 feat(toplist): thêm huy hiệu giảm giá cho card hạng 1
 fix(header): drawer mobile không đóng khi bấm overlay
 refactor: gom logic dựng URL về lib/links.ts
-docs: cập nhật công thức thêm brand
 ```
 
 Không thêm dòng `Co-Authored-By`.
 
+---
+
 ## Những điều dễ vấp
 
-Không phải điều cấm — chỉ là những chỗ hành xử khác trực giác. Biết trước thì
-đỡ mất thời gian truy nguyên.
+Không phải điều cấm — chỉ là những chỗ hành xử khác trực giác. Biết trước thì đỡ
+mất thời gian truy nguyên.
 
 ### `rem` co theo breakpoint
 
 `global.css` đặt `html { font-size: 14px }` và đổi thành `16px` từ `1025px`.
 **Mọi giá trị `rem` trong site đều đi qua đây** — một component trông đúng ở
-desktop có thể lệch ở mobile chỉ vì điều này. Đổi hai con số đó là đổi tỉ lệ
-toàn site.
+desktop có thể lệch ở mobile chỉ vì điều này. Đổi hai con số đó là đổi tỉ lệ toàn
+site.
 
 ### `body { line-height: 1.7em }` dùng `em`, không phải unitless
 
 `em` được tính **một lần** trên `body` rồi kế thừa xuống dưới dạng px cố định.
 Unitless (`1.7`) sẽ tính lại trên từng element theo font-size riêng của nó. Hai
-cách cho kết quả khác nhau ở mọi element có font-size khác body — đổi thì nhớ
-kiểm lại toàn site.
+cách cho kết quả khác nhau ở mọi element có font-size khác body.
 
 ### Scoped style không xuyên qua ranh giới component
 
 Astro chỉ áp scoped style cho element nằm trong template của **chính** component
-đó. Tách một phần markup ra component con thì mọi rule của cha nhắm tới phần đó
-sẽ ngừng khớp. Muốn tách component lớn (`PartnerCard`, `MiniReview`,
-`ReviewSidebar` đều >600 dòng) thì phải chuyển style theo, hoặc dùng `:global()`.
+đó. Tách một phần markup ra component con thì mọi rule của cha nhắm tới phần đó sẽ
+ngừng khớp. Muốn tách component lớn (`PartnerCard` 862 dòng, `MiniReview` 571) thì
+phải chuyển style theo, hoặc dùng `:global()`.
 
-Cùng lý do: nội dung đưa vào qua `<slot />` hoặc do MDX render nằm **ngoài**
-phạm vi scoped. Đó là vì sao style thân bài sống ở `styles/prose.css` (file
-global) chứ không nằm trong `<style>` của `pages/knowledge/[slug].astro` hay
-`Paragraph.astro` — hai file đó chỉ giữ style cho khung bao ngoài.
-
-### `tsconfig` bật `noUncheckedIndexedAccess`
-
-`brands[0]` có kiểu `ToplistRow | undefined`, không phải `ToplistRow`. Nghe phiền
-nhưng nó bắt đúng một lớp lỗi mà repo này quan tâm: file xếp hạng rỗng thì trước
-đây `brands[0]` là `undefined`, hai section render ra rác, mà build vẫn xanh.
-
-Cách xử lý: destructure rồi `throw` ngay, đừng `!` cho qua —
-
-```ts
-const [topBrand] = brands;
-if (!topBrand) throw new Error(`Bang xep hang "${rankingId}" rong`);
-```
-
-KHÔNG bật `astro/tsconfigs/strictest`: nó kéo theo `exactOptionalPropertyTypes`,
-mà truyền `foo={cóThểUndefined}` xuống prop `foo?:` là cách viết bình thường của
-Astro — bật lên là phải rải `{...(x ? { foo: x } : {})}` khắp nơi, đổi code cho
-vừa lòng type-checker chứ không sửa lỗi nào.
+Cùng lý do: nội dung đưa vào qua `<slot />` hoặc do MDX render nằm **ngoài** phạm
+vi scoped. Đó là vì sao style thân bài sống ở `styles/prose.css` chứ không nằm
+trong `<style>` của component render nó.
 
 ### `set:html` sinh HTML KHÔNG mang `data-astro-cid`
 
-Hệ quả: rule scoped nhắm vào thẻ bên trong chuỗi `set:html` sẽ **không khớp gì cả**.
+Hệ quả: rule scoped nhắm vào thẻ bên trong chuỗi `set:html` **không khớp gì cả**.
 
 `heroTitle` của trang toplist chứa một `<span>` (từ chỉ hiện từ 768px). Viết
 `.hero__title span { display: none }` thì Astro biên dịch thành
@@ -345,8 +348,7 @@ Hệ quả: rule scoped nhắm vào thẻ bên trong chuỗi `set:html` sẽ **k
 tính ấy, rule chết, từ này hiện luôn ở mobile và tiêu đề cao 57px thay vì 28.5px.
 
 Cách đúng: neo `:global()` vào phần tử cha do template sinh ra —
-`.hero__title :global(span)`. Cid nằm ở cha nên style vẫn không rò ra ngoài
-component.
+`.hero__title :global(span)`. Cid nằm ở cha nên style vẫn không rò ra ngoài.
 
 Đây là lỗi **chỉ nhìn thấy khi đo**: HTML đúng, `astro check` sạch, diff body
 không thấy gì.
@@ -356,22 +358,21 @@ không thấy gì.
 Truyền entry xuống component thì được; render sẵn ở trang rồi truyền `Content`
 xuống thì **mất style**.
 
-Astro gom style của component mà MDX import (vd `InlineCta` trong bài trang chủ)
-bằng phân tích tĩnh nơi đặt `<Content />`. Truyền component factory qua props thì
-nó mất dấu: bản thử làm trang chủ mất nguyên khối `<style>` 2175 ký tự, CTA hiện
-trần không style. HTML vẫn đúng nên chỉ lộ khi so **CSS** của `dist/`, không lộ
-khi so body.
+Astro gom style của component mà MDX import (vd `InlineCta`) bằng phân tích tĩnh
+nơi đặt `<Content />`. Truyền component factory qua props thì nó mất dấu: bản thử
+làm trang chủ mất nguyên khối `<style>` 2175 ký tự, CTA hiện trần không style.
+HTML vẫn đúng nên chỉ lộ khi so **CSS** của `dist/`.
 
 ### Hero: `<picture>` chứ không phải hai `<img>` ẩn/hiện
 
-Ảnh `display: none` **vẫn được trình duyệt tải**. Hai `<Image>` desktop/mobile
-ẩn nhau bằng CSS nghĩa là mọi trang tải cả hai, và cả hai đều `loading="eager"`
-nên chúng tranh băng thông trên đường tới LCP. Đo được: `/about/` từ 95.2 KB
-xuống 63.6 KB, trang chủ giảm 31.5 KB, toàn site 21 trang giảm 14%.
+Ảnh `display: none` **vẫn được trình duyệt tải**. Hai `<Image>` desktop/mobile ẩn
+nhau bằng CSS nghĩa là mọi trang tải cả hai, và cả hai đều `loading="eager"` nên
+chúng tranh băng thông trên đường tới LCP. Đo được: `/about/` từ 95.2 KB xuống
+63.6 KB, trang chủ giảm 31.5 KB, toàn site 21 trang giảm 14%.
 
-Astro **không có** component làm art direction — `<Picture>` chỉ đổi ĐỊNH DẠNG
-của cùng một ảnh. Dựng tay bằng `getImage()` rồi ghép `<picture>` +
-`<source media>`; vẫn được srcset tối ưu.
+Astro **không có** component làm art direction — `<Picture>` chỉ đổi ĐỊNH DẠNG của
+cùng một ảnh. Dựng tay bằng `getImage()` rồi ghép `<picture>` + `<source media>`;
+vẫn được srcset tối ưu.
 
 Ba điều phải nhớ khi sửa hero:
 
@@ -379,139 +380,133 @@ Ba điều phải nhớ khi sửa hero:
    `display: contents`. `.hero__banner` là grid, nên `display: contents` đưa
    `<img>` lên làm grid item và sinh thêm một hàng — đo được `grid-template-rows`
    thành `54.72px 117.28px`, đẩy tiêu đề xuống 54.7px và làm mất tác dụng của
-   `--top` ở trang /about/.
+   `--top` ở trang `/about/`.
 2. **Chỉ còn MỘT `alt`.** Bản gốc có chuỗi alt riêng cho mobile ở vài trang; nay
-   dùng chuỗi desktop cho cả hai vì `<picture>` chỉ có một `<img>`, và chuỗi
-   mobile không mô tả gì thêm về ẢNH. Prop `mobileAlt` cùng trường
-   `heroMobileAlt` trong schema đã bỏ.
+   dùng chuỗi desktop cho cả hai vì `<picture>` chỉ có một `<img>`.
 3. **`object-position` phải đổi theo cùng mốc** mà `<source media>` dùng. Trang
-   chủ căn ảnh mobile giữa dọc, ảnh desktop mép trên — trước đây là hai class,
-   nay là một rule cộng một media query.
+   chủ căn ảnh mobile giữa dọc, ảnh desktop mép trên.
 
-### `og:image`: ảnh mặc định ở `public/`, không phải `src/assets/`
+### HTML: một `<h1>`, heading đúng cấp
 
-`public/og-image.jpg` (1200x630) là ảnh chia sẻ cho mọi trang không tự truyền
-`image`. Đường dẫn khai ở `SITE.ogImage` trong `config/site.ts`.
-
-**Vì sao `public/` chứ không `src/assets/`:** Astro băm tên file trong
-`src/assets/`, nên mỗi lần đổi ảnh là URL đổi theo — mà Facebook/Twitter/Zalo
-**cache URL này**. Link đã chia sẻ sẽ mất ảnh. `public/` giữ nguyên đường dẫn.
-Đây đúng là trường hợp mà quy ước workspace dành riêng cho `public/`.
-
-`og:image:width`/`height` CHỈ khai khi dùng ảnh mặc định. Bài blog truyền ảnh
-card riêng, kích thước ảnh đó thì `Seo.astro` không biết — khai sai còn tệ hơn
-không khai.
-
-**Ảnh hiện tại là ảnh TẠM**, dựng từ banner hero đặt trên nền `#eaf4fb` (tỉ lệ
-hero là 7.31:1 nên phải letterbox mới ra 1.91:1). Thay bằng ảnh thiết kế riêng:
-ghi đè `public/og-image.jpg`, **không cần sửa code**.
-
-### Skip link: đích do PAGE đặt
-
-`BaseLayout` phát `<a href="#main-content">` cho mọi trang, nhưng `<main>` do
-từng page tự viết (layout cố ý không phát `<main>`), nên id `main-content` phải
-đặt tay ở mỗi page. `check-html.mjs` có luật canh: có skip link mà không có
-`<main id="main-content">` là lỗi build.
-
-### `prose.css` có bốn khối, cố ý không gộp
-
-`.post__body` (bài viết), `.paragraph__content` (bài review), `.page__body`
-(trang nội dung phẳng) và `.featured-article` (khối bài ở trang chủ) trông na ná nhau
-nhưng khác ở chỗ quan trọng.
-
-`.post__body` có `h2/h3:first-of-type { margin-top: 0 }`, `.paragraph__content`
-không có — vì **một trang review chứa nhiều khối `<Paragraph>`**, nên
-`:first-of-type` sẽ khớp một lần mỗi khối thay vì một lần mỗi trang.
-
-`.page__body` dùng `> h2:first-child`, KHÔNG phải `:first-of-type`. Khác biệt
-này là bắt buộc: khối đầu của trang privacy là `<p>` (câu mở đầu vốn bị bản gốc
-đánh dấu `<h4>` nhầm), nên `h2:first-of-type` sẽ khớp một tiêu đề nằm GIỮA bài và
-xoá margin ở đó. Cũng không được rút gọn thành `> :first-child`: rule đó sẽ ăn cả
-`<p>` đầu của terms/disclosure và kéo hai trang lên 16px.
-
-Muốn gộp thì phải xử lý cả hai điểm trên trước.
-
-### HTML: một `<h1>`, heading không nhảy cấp
-
-Đã soi toàn bộ `dist/` theo 10 tiêu chí và đưa về 0 vấn đề. Hai cạm bẫy đã dính,
-đừng lặp lại:
+Hai bài học đắt, `check-html` giờ canh cả hai.
 
 **Đừng dựng hai cây markup cho hai kích thước màn.** `HeroInner` từng có hai cây
 banner với hai mốc ẩn lệch nhau 15px (bản gốc: JS đọc `clientWidth`, CSS đọc
-`innerWidth`), nên ở 768-782px KHÔNG cây nào hiện — dải trắng 170px, không tiêu
-đề nào, mà 768px chính là bề rộng iPad dọc. Hai cây cũng là hai `<h1>` mỗi
-trang. Cách đúng: một cây, đổi ảnh và đổi nhánh chữ theo CÙNG một mốc.
+`innerWidth`), nên ở 768-782px KHÔNG cây nào hiện — dải trắng 170px, không tiêu đề
+nào, mà 768px chính là bề rộng iPad dọc. Hai cây cũng là hai `<h1>` mỗi trang.
 
-**Đừng chọn cấp heading theo cỡ chữ.** `PartnerCard` từng để `<h3>` cho khẩu
-hiệu quảng cáo — trang chủ có 18 chuỗi kiểu "Get 30% off Your First Order" ngay
-dưới `<h1>`, còn tên brand thì không heading nào. Cỡ chữ là việc của CSS; cấp
-heading là dàn ý tài liệu. Card không bắt buộc phải có heading.
+**Đừng chọn cấp heading theo cỡ chữ.** `PartnerCard` từng để `<h3>` cho khẩu hiệu
+quảng cáo — trang chủ có 18 chuỗi kiểu "Get 30% off Your First Order" ngay dưới
+`<h1>`, còn tên brand thì không heading nào. Cỡ chữ là việc của CSS; cấp heading là
+dàn ý tài liệu. Card không bắt buộc phải có heading.
 
-Mọi class heading trong repo đã khai `font-size`/`font-weight`/`margin` tường
-minh, nên đổi cấp thẻ là **0 pixel**. Thêm heading mới thì khai đủ ba thứ đó,
-đừng dựa vào mặc định UA.
+Mọi class heading trong repo đã khai `font-size`/`font-weight`/`margin` tường minh,
+nên đổi cấp thẻ là **0 pixel**. Thêm heading mới thì khai đủ ba thứ đó.
 
 ### `rel` của link ra ngoài khai một chỗ
 
 `AFFILIATE_REL` và `EXTERNAL_REL` ở `lib/links.ts`. Mọi link kiếm tiền dùng
-`AFFILIATE_REL` (`nofollow sponsored noopener`) — `sponsored` là token Google
-chỉ định cho link trả tiền, thiếu nó là khai sai bản chất link. Trước đây chín
+`AFFILIATE_REL` (`nofollow sponsored noopener`) — `sponsored` là token Google chỉ
+định cho link trả tiền, thiếu nó là khai sai bản chất link. Trước đây chín
 component tự gõ chuỗi `rel` và tất cả đều thiếu token đó.
 
-Điều hướng luôn là `<a href>`. `ArticleLink` từng là `<div>` + `addEventListener`
+Điều hướng luôn là `<a href>`. `ArticleLink` từng là `<div>` gắn
+`addEventListener` rồi gọi `window.open`, chép từ bản gốc — không bấm được bằng
+bàn phím, và trình đọc màn hình không biết đó là link.
 
-- `window.open` chép từ bản gốc: không bấm được bằng bàn phím, trình đọc màn
-  hình không biết là link.
+### `og:image` mặc định ở `public/`, không phải `src/assets/`
+
+`public/og-image.jpg` (1200x630) là ảnh chia sẻ cho mọi trang không tự truyền
+`image`. Đường dẫn khai ở `SITE.ogImage` trong `config/site.ts`.
+
+Astro **băm tên file** trong `src/assets/`, nên mỗi lần đổi ảnh là URL đổi theo —
+mà Facebook/Twitter/Zalo **cache URL này**. Link đã chia sẻ sẽ mất ảnh. `public/`
+giữ nguyên đường dẫn.
+
+`og:image:width`/`height` CHỈ khai khi dùng ảnh mặc định: bài blog truyền ảnh card
+riêng mà `Seo.astro` không biết kích thước — khai sai còn tệ hơn không khai.
+
+Ảnh hiện tại là ảnh **tạm**. Thay bằng cách ghi đè file, không cần sửa code.
+
+### `tsconfig` bật `noUncheckedIndexedAccess`
+
+`brands[0]` có kiểu `ToplistRow | undefined`. Nghe phiền nhưng nó bắt đúng một lớp
+lỗi repo này quan tâm: file xếp hạng rỗng thì `brands[0]` là `undefined`, hai
+section render ra rác mà build vẫn xanh.
+
+Cách xử lý: destructure rồi `throw` ngay, đừng `!` cho qua —
+
+```ts
+const [topBrand] = brands;
+if (!topBrand) throw new Error(`Bang xep hang "${rankingId}" rong`);
+```
+
+KHÔNG bật `astro/tsconfigs/strictest`: nó kéo theo `exactOptionalPropertyTypes`, mà
+truyền `foo={cóThểUndefined}` xuống prop `foo?:` là cách viết bình thường của
+Astro — bật lên là phải rải `{...(x ? { foo: x } : {})}` khắp nơi, đổi code cho vừa
+lòng type-checker chứ không sửa lỗi nào.
+
+### `astro.config.mjs`: 5 khoá, 3 import
+
+Nguyên tắc: **ưu tiên mặc định của Astro.** Chỉ khai một khoá khi giá trị muốn dùng
+khác mặc định — khai lại đúng mặc định là rác.
+
+`smartypants: false` truyền cho `mdx()` là **bắt buộc**, không phải trang trí:
+`@astrojs/mdx` có mặc định RIÊNG là BẬT, nên bỏ khoá này thì build đổi nháy thẳng
+thành nháy cong. Đã đo: sinh 234 ký tự cong trong `dist/` mà nguồn vẫn ASCII, nên
+nhìn source không thấy gì.
+
+Khai ở `mdx()` chứ **không** qua `markdown.processor: satteri(...)`: cách kia phải
+import `@astrojs/markdown-satteri`, mà gói đó không có trong `package.json` — nó
+chỉ tồn tại vì `astro` phụ thuộc nó. Import gói mình không khai là chạy nhờ.
 
 ### Tên file asset nằm trong URL
 
 Astro phát ảnh thành `/_astro/<basename>.<hash>.<ext>` — **basename là tên file
-gốc**. Dời thư mục không ảnh hưởng URL, nhưng đổi tên file thì có. Nếu site đã
-chạy thật, đổi tên ảnh sẽ làm hỏng link ảnh đã được index hoặc cache.
+gốc**. Dời thư mục không ảnh hưởng URL, nhưng đổi tên file thì có.
 
 ### `image()` trong schema phát cả file gốc
 
 Ảnh khai bằng `image()` luôn được phát bản gốc bên cạnh bản `.webp` mà `<Image>`
 sinh ra, vì `ImageMetadata.src` phải trỏ tới file có thật. Nếu markup chỉ dùng
-`<Image>`, bản gốc nằm trong `dist/` mà không trang nào tham chiếu (~150KB hiện
-tại). Không ảnh hưởng người dùng, chỉ là dung lượng deploy.
+`<Image>`, bản gốc nằm trong `dist/` mà không trang nào tham chiếu (~136 KB / 8
+file hiện tại). Không ảnh hưởng người dùng, chỉ là dung lượng deploy.
 
 ### Prettier format `.astro`, KHÔNG format `src/content/**`
 
-Hàng rào cũ chặn cả `.astro` vì `prettier-plugin-astro` reflow template, mà
-khoảng trắng giữa các inline element **render thành dấu cách**. Lý do đó gắn với
-ba thứ nay đã bị xoá: `"Visit Site "` dấu cách cuối, `alt="Ollie  logo"` hai dấu
-cách, `<p>&nbsp;</p>` làm spacer. Đã chạy thử và đối chiếu `dist/`: format toàn
-bộ 26 file `.astro` cho ra body và CSS giống hệt.
-
-`src/content/**` vẫn không format: Markdown nhạy cảm với khoảng trắng — thụt lề
-quyết định danh sách lồng, dòng trống quyết định loose/tight (và nhịp dọc giữa
-các mục theo đó mà đổi).
+`src/content/**` không format vì Markdown nhạy cảm với khoảng trắng — thụt lề quyết
+định danh sách lồng, dòng trống quyết định loose/tight (và nhịp dọc giữa các mục
+theo đó mà đổi).
 
 Vài chỗ trong template cố ý viết sát nhau, không có khoảng trắng (vd
 `</svg><span>` trong `HeroToplist`) — chúng đều có comment cảnh báo tại chỗ.
 
+---
+
 ## Nội dung đến từ nguồn ngoài
 
-Nội dung ban đầu được nhập từ một site có sẵn. Phần lớn dấu vết đã được dọn, ghi
-lại đây để biết chúng từng tồn tại và vì sao không còn:
+Nội dung ban đầu nhập từ một site có sẵn. Phần lớn dấu vết đã dọn, ghi lại đây để
+biết chúng từng tồn tại và vì sao không còn:
 
-| Dấu vết                                                           | Đã xử lý                                                  |
-| ----------------------------------------------------------------- | --------------------------------------------------------- |
-| Dấu cách đôi/cuối trong `alt` và tên brand                        | bỏ — dữ liệu giữ TÊN, template và CSS giữ KHOẢNG CÁCH     |
-| `<p>&nbsp;</p>` và dòng `&nbsp;` làm spacer                       | bỏ — thay bằng `margin` trong `prose.css`                 |
-| Trang `terms-of-use` không có heading, danh sách dựng bằng `<br>` | `<h2>` + `<ul>`/`<ol>` thật, CSS giữ nguyên hình          |
-| 54 `style={{...}}` vẽ viền trên từng `<td>`                       | gom về `prose.css`                                        |
-| Nháy cong, em dash, ellipsis, ký tự chấm tròn                     | ASCII; `scripts/check-content.mjs` giữ cho không trôi lại |
+| Dấu vết                                                           | Đã xử lý                                                   |
+| ----------------------------------------------------------------- | ---------------------------------------------------------- |
+| Dấu cách đôi/cuối trong `alt` và tên brand                        | bỏ — dữ liệu giữ TÊN, template và CSS giữ KHOẢNG CÁCH      |
+| `<p>&nbsp;</p>` và dòng `&nbsp;` làm spacer                       | bỏ — thay bằng `margin` trong `prose.css`                  |
+| `<h2></h2>` rỗng làm khoảng cách sau ảnh                          | bỏ — đo được 0 pixel, chúng chỉ là mục vô danh trong dàn ý |
+| Trang `terms-of-use` không có heading, danh sách dựng bằng `<br>` | `<h2>` + `<ul>`/`<ol>` thật, CSS giữ nguyên hình           |
+| 54 `style={{...}}` vẽ viền trên từng `<td>`                       | gom về `prose.css`                                         |
+| Nháy cong, em dash, ellipsis, ký tự chấm tròn                     | ASCII; `check-content.mjs` giữ cho không trôi lại          |
 
-Còn lại, cố ý giữ:
+Còn lại, **cố ý giữ**:
 
 - Một brand có tới **năm biến thể tên** (`name`, `logoAlt`, `logoAltShort`,
   `sidebarName`, `articleLinkName`) vì nguồn dùng chuỗi khác nhau ở từng vị trí.
   Đây là dữ liệu thật, không phải trùng lặp.
-- Bài review dùng `#` (h1) cho mục kết bài, nên nó xuất hiện trong mục lục.
 - `--font-ui` khai `"Work Sans"` mà không nạp font đó — tái tạo có chủ ý lỗi của
   bản gốc.
+- Trang chủ và `/reviews/` xếp hạng khác nhau cho cùng một brand.
+
+---
 
 ## Khi thay đổi ảnh hưởng giao diện
 
@@ -519,19 +514,29 @@ Còn lại, cố ý giữ:
 đổi tên mà quên phần destructure vẫn qua `astro check` sạch trong khi cả trang
 render sai biến thể.
 
-Với thay đổi đụng vào CSS, layout hay tên prop, nên dựng site trước/sau rồi so
-`dist/` — chú ý bỏ qua `data-astro-cid-*` và hash trong `/_astro/`, vì hai thứ
-đó đổi mỗi khi file component đổi đường dẫn.
+Với thay đổi đụng vào CSS, layout hay tên prop: dựng site trước/sau rồi so `dist/`
+— bỏ qua `data-astro-cid-*` và hash trong `/_astro/`, vì hai thứ đó đổi mỗi khi
+file component đổi đường dẫn.
 
-**So body thôi là chưa đủ.** Đã có lần trang chủ mất nguyên khối `<style>` 2175
-ký tự mà HTML vẫn đúng từng ký tự — chỉ lộ khi so tập khai báo CSS. Và có lần
-một rule scoped chết vì `set:html` không mang `data-astro-cid`, làm tiêu đề cao
-57px thay vì 28.5px mà cả `astro check` lẫn diff body đều không thấy. Với thay
-đổi liên quan tới style, phải **đo bằng trình duyệt** ở 375 / 768 / 1400px.
+**So body thôi là chưa đủ.** Đã có lần trang chủ mất nguyên khối `<style>` 2175 ký
+tự mà HTML vẫn đúng từng ký tự — chỉ lộ khi so tập khai báo CSS. Và có lần một rule
+scoped chết vì `set:html`, làm tiêu đề cao 57px thay vì 28.5px mà cả `astro check`
+lẫn diff body đều không thấy. Với thay đổi liên quan tới style, phải **đo bằng
+trình duyệt** ở 375 / 768 / 1400px.
 
-Đổi tên class hàng loạt thì đừng dựng regex từ chuỗi trong heredoc: `\.` dễ bị
-nuốt thành `.` (khớp mọi ký tự) và sửa nhầm cả code. Dùng regex viết thẳng, và
-chứng minh bằng cách bỏ hết tên class khỏi `dist/` rồi so phần còn lại.
+**Chờ layout ổn định trước khi đo.** Ảnh lazy dưới màn làm chiều cao tài liệu lệch
+~20px nếu đo quá sớm — đã tưởng là hồi quy thật một lần.
+
+Đổi tên class hàng loạt thì đừng dựng regex từ chuỗi trong heredoc: `\.` dễ bị nuốt
+thành `.` (khớp mọi ký tự) và sửa nhầm cả code. Dùng regex viết thẳng, và chứng
+minh bằng cách bỏ hết tên class khỏi `dist/` rồi so phần còn lại.
+
+**Tương tác phải thử tay hoặc bằng Playwright** — không script nào canh chúng:
+drawer mobile, menu con Reviews, accordion FAQ, drawer Summary ở MiniReview,
+carousel sidebar review, popup thoát trang, tooltip đối tác, vòng điểm chạy số,
+modal liên hệ, nút lên đầu trang.
+
+---
 
 ## Tài liệu
 
