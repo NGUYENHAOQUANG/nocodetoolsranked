@@ -25,6 +25,9 @@ const startIndex = Math.max(
   partners.findIndex((p) => p.key === partner),
 );
 const current = partners[startIndex];
+/* File thứ tự sidebar rỗng thì đây là `undefined` và cả ô carousel render ra
+   rác — cho nó thành lỗi build, đúng như mọi chỗ khác trong repo. */
+if (!current) throw new Error('placement "review-sidebar" rong: khong co doi tac nao');
 /* Dữ liệu cho JS client: chỉ cần src ảnh (đã bundle) + text + link */
 const slides = partners.map((p) => ({
   logoSrc: p.logo.src,
@@ -263,6 +266,7 @@ const CIRCLE_ARROW_RIGHT =
 
     const render = () => {
       const p = slides[index];
+      if (!p) return;
       logo.src = p.logoSrc;
       logo.alt = p.logoAlt;
       promo.textContent = p.promo;

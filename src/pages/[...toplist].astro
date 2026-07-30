@@ -39,9 +39,14 @@ export async function getStaticPaths() {
 const { entry } = Astro.props;
 const data = entry.data;
 
-const brands = await getToplistBrands(
-  typeof data.ranking === "string" ? data.ranking : data.ranking.id,
-);
+const rankingId = typeof data.ranking === "string" ? data.ranking : data.ranking.id;
+const brands = await getToplistBrands(rankingId);
+
+/* Hai section dưới hiển thị brand hạng 1. File xếp hạng rỗng thì trước đây
+   `brands[0]` là `undefined` và hai section render ra rác mà build vẫn xanh —
+   cho nó thành lỗi build, đúng như mọi chỗ khác trong repo. */
+const [topBrand] = brands;
+if (!topBrand) throw new Error(`Bang xep hang "${rankingId}" rong: can it nhat mot brand`);
 
 /* Banner khuyến mãi: logo và link affiliate lấy từ `brands`, không khai lại —
    đổi link đối tác vẫn chỉ là sửa một dòng trong content/brands/. */
@@ -76,9 +81,9 @@ const schema = entry.id === "home" ? [organizationSchema(), websiteSchema()] : [
       mobileAlt={data.heroMobileAlt}
     />
     <PartnerList brands={brands} promo={promo} />
-    <BestOverall brand={brands[0]} />
+    <BestOverall brand={topBrand} />
     <MiniReview
-      brand={brands[0]}
+      brand={topBrand}
       categories={data.miniReview.categories}
       pros={data.miniReview.pros}
       cons={data.miniReview.cons}

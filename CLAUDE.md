@@ -16,6 +16,19 @@ npm run build    # chạy check rồi dựng site tĩnh vào dist/
 npm run format   # prettier cho mọi thứ trừ src/content/**
 ```
 
+Ba script trong `scripts/` gánh những luật mà `astro check` không thấy được —
+nó chỉ kiểm KIỂU:
+
+| Script                | Kiểm gì                               | Chạy lúc          |
+| --------------------- | ------------------------------------- | ----------------- |
+| `check-content.mjs`   | nội dung chỉ ASCII; URL trần phải bọc | `npm run check`   |
+| `check-structure.mjs` | component nằm đúng thư mục loại trang | `npm run check`   |
+| `check-html.mjs`      | 10 luật HTML trên `dist/`             | sau `astro build` |
+
+`check-html.mjs` chạy trên `dist/` chứ không phải `src/`, vì "trang này có mấy
+`<h1>`" chỉ trả lời được trên HTML đã render. Nó nhận tham số thư mục nên soi
+được một bản build khác: `node scripts/check-html.mjs ../ban-cu/dist`.
+
 `scripts/check-content.mjs` gánh hai luật mà `astro check` không thấy được:
 **nội dung hiển thị chỉ dùng ASCII**, và **URL trần trong `src/content/**` phải
 được bọc** (`{'https://...'}` để giữ dạng chữ, `[chữ](url)` để thành link).
@@ -286,6 +299,24 @@ Cùng lý do: nội dung đưa vào qua `<slot />` hoặc do MDX render nằm **
 phạm vi scoped. Đó là vì sao style thân bài sống ở `styles/prose.css` (file
 global) chứ không nằm trong `<style>` của `pages/knowledge/[slug].astro` hay
 `Paragraph.astro` — hai file đó chỉ giữ style cho khung bao ngoài.
+
+### `tsconfig` bật `noUncheckedIndexedAccess`
+
+`brands[0]` có kiểu `ToplistRow | undefined`, không phải `ToplistRow`. Nghe phiền
+nhưng nó bắt đúng một lớp lỗi mà repo này quan tâm: file xếp hạng rỗng thì trước
+đây `brands[0]` là `undefined`, hai section render ra rác, mà build vẫn xanh.
+
+Cách xử lý: destructure rồi `throw` ngay, đừng `!` cho qua —
+
+```ts
+const [topBrand] = brands;
+if (!topBrand) throw new Error(`Bang xep hang "${rankingId}" rong`);
+```
+
+KHÔNG bật `astro/tsconfigs/strictest`: nó kéo theo `exactOptionalPropertyTypes`,
+mà truyền `foo={cóThểUndefined}` xuống prop `foo?:` là cách viết bình thường của
+Astro — bật lên là phải rải `{...(x ? { foo: x } : {})}` khắp nơi, đổi code cho
+vừa lòng type-checker chứ không sửa lỗi nào.
 
 ### `set:html` sinh HTML KHÔNG mang `data-astro-cid`
 
