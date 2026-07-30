@@ -1,27 +1,75 @@
 ---
-import "../styles/global.css";
+import "@/styles/global.css";
+import Seo from "@/components/layout/Seo.astro";
+import { SITE } from "@/config/site";
 
 interface Props {
   title?: string;
   description?: string;
+  /** Ảnh chia sẻ mạng xã hội (đường dẫn trong site) */
+  image?: string;
+  type?: "website" | "article";
+  /** Chặn lập chỉ mục — hiện chỉ trang 404 dùng */
+  noindex?: boolean;
+  /** JSON-LD — xem lib/schema-org.ts */
+  schema?: Record<string, unknown>[];
 }
 
 const {
-  title = "Top 10 Dog Food Subscriptions 2026",
-  description = "So sánh top 10 dịch vụ đăng ký thức ăn cho chó tươi, chất lượng — giao tận nhà.",
+  title = SITE.defaultTitle,
+  description = SITE.defaultDescription,
+  image,
+  type = "website",
+  noindex = false,
+  schema = [],
 } = Astro.props;
 ---
 
 <!doctype html>
-<html lang="en">
+<html lang={SITE.lang}>
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <title>{title}</title>
     <meta name="description" content={description} />
+    <Seo
+      title={title}
+      description={description}
+      image={image}
+      type={type}
+      noindex={noindex}
+      schema={schema}
+    />
   </head>
   <body>
+    {
+      /* Skip link — WCAG 2.4.1 mức A. Không có nó, người dùng bàn phím phải tab
+        qua toàn bộ menu header trên MỌI trang mới tới nội dung.
+
+        Đích là `#main-content`; mỗi page tự đặt id đó lên `<main>` của mình, vì
+        `InnerPageLayout` cố ý không phát `<main>` (trang review và bài blog đặt
+        `<main>` bên trong lưới ba cột). `check-html.mjs` canh cho khỏi quên. */
+    }
+    <a class="skip-link" href="#main-content">Skip to content</a>
     <slot />
   </body>
 </html>
+
+<style>
+  /* Đẩy ra ngoài màn chứ KHÔNG `display: none`: thẻ ẩn kiểu đó không nhận được
+     tiêu điểm, tức là mất đúng công dụng của skip link. */
+  .skip-link {
+    position: absolute;
+    left: -9999px;
+    top: 0;
+    z-index: 2147483001;
+    padding: 10px 16px;
+    background: var(--color-surface);
+    color: var(--color-text);
+    font-weight: 700;
+  }
+  .skip-link:focus {
+    left: 0;
+  }
+</style>

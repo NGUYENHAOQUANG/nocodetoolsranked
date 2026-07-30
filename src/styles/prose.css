@@ -1,0 +1,339 @@
+/* ==========================================================================
+   Style thân bài do MDX render.
+
+   ⚠️ BỐN KHỐI DƯỚI ĐÂY CỐ Ý KHÔNG GỘP. Đừng "dọn" chúng thành một.
+
+   Chúng trông na ná nhau nhưng khác ở chỗ chí mạng:
+
+   1. `.post__body` có `h2:first-of-type` / `h3:first-of-type { margin-top: 0 }`.
+      `.paragraph__content` KHÔNG có — và một trang review chứa BỐN khối
+      <Paragraph>, nên nếu gộp rule thì `:first-of-type` sẽ khớp 4 lần mỗi trang
+      thay vì 1, âm thầm xoá 0.83em margin bốn lần.
+
+   2. `.paragraph__content` sở hữu riêng `h1`, `ol` và toàn bộ style bảng giá —
+      `.post__body` không có.
+
+   3. Vài giá trị trùng nhau chỉ là TRÙNG HỢP: `h3 { margin: 1em }` và
+      `margin: 1.25rem` cùng ra 20px vì font-size của h3 đúng bằng 1.25rem. Gộp
+      lại thì mất mối liên hệ đó và lần sửa font-size sau sẽ lệch.
+
+   Dùng chung FILE, không dùng chung RULE. Xem CLAUDE.md §8.6.
+
+   Tên class giữ nguyên `.post__body` / `.paragraph__content` (không đổi thành
+   .prose--post/.prose--review) để HTML không đổi một ký tự nào.
+
+   Khối 3 (`.page__body`) dùng `h2:first-child` chứ KHÔNG phải `:first-of-type`
+   như khối 1 — xem chú thích tại chỗ, dùng nhầm là xoá margin giữa bài.
+
+   Khối 4 (`.featured-article`, khối bài viết ở trang chủ) nằm ở CUỐI file này chứ không
+   ở `<style>` của FeaturedArticle.astro: nội dung do MDX render nằm ngoài phạm
+   vi scoped, nên để trong component thì phải bọc `:global()` từng rule — mà bọc
+   rồi thì chúng đã là global, chỉ khác là nằm lạc chỗ.
+   ========================================================================== */
+
+/* ==========================================================================
+   1. Thân bài viết — pages/knowledge/[slug].astro  (/knowledge/<slug>/)
+   ========================================================================== */
+
+.post__body {
+  color: var(--color-text-body);
+  font-size: 1rem;
+  line-height: 1.7rem;
+}
+.post__body p {
+  /* 1em (không phải 16px cứng) để co theo root 14px ở mobile như bản gốc */
+  margin: 1em 0;
+}
+.post__body h3 {
+  /* Bản gốc: h3 margin 1.25rem trên+dưới (co ở mobile); RIÊNG h3 đầu tiên mt 0 */
+  margin: 1.25rem 0;
+  color: var(--color-text-body);
+  font-size: 1.25rem;
+  font-weight: 700;
+  line-height: 2.2rem;
+}
+.post__body h3:first-of-type {
+  margin-top: 0;
+}
+/* Một số bài (vd "why-fresh-food") dùng h2 cho mục thay vì h3: 25px, đậm,
+   margin 0.83em (mặc định h2); mục h2 ĐẦU TIÊN bỏ margin trên */
+.post__body h2 {
+  margin: 0.83em 0;
+  color: var(--color-text-body);
+  font-size: 1.5625rem;
+  font-weight: 700;
+  line-height: 2.2rem;
+}
+.post__body h2:first-of-type {
+  margin-top: 0;
+}
+/* Ảnh trong bài giữ đúng kích thước gốc (300×300), căn trái */
+.post__body img {
+  max-width: 100%;
+  height: auto;
+}
+/* Bản gốc chừa thêm khoảng trắng quanh ảnh bằng một ĐOẠN VĂN RỖNG (`&nbsp;`)
+   ở trên và dưới — rác trình soạn thảo, và screen reader vẫn duyệt qua nó.
+   Thay bằng margin: 1em (của đoạn kề) + 1.7rem (chiều cao dòng rỗng) + 1em
+   = 3.7rem, tức đúng khoảng cách cũ ở mọi cỡ root. */
+.post__body p:has(img) {
+  margin: 3.7rem 0;
+}
+/* Danh sách gạch đầu dòng (vd bài "gut health"): bản gốc dùng bullet rỗng
+   (circle), thụt 40px, ul không margin, mỗi mục cách nhau 15px */
+.post__body ul {
+  margin: 0;
+  padding-left: 40px;
+  list-style-type: circle;
+}
+.post__body li {
+  margin: 15px 0;
+  line-height: 1.5;
+}
+
+/* ==========================================================================
+   2. Thân bài review — Paragraph.astro  (/reviews/<brand>/)
+   Một trang review có NHIỀU khối .paragraph__content — đó là lý do không có
+   rule :first-of-type ở đây.
+   ========================================================================== */
+
+.paragraph__content {
+  max-width: min(95dvw, var(--width-content));
+  margin-left: auto;
+  margin-right: auto;
+  line-height: 1.7rem;
+}
+
+/* global.css reset margin h1–h6 + p về 0 → khai lại đúng mặc định UA của từng
+   cấp (h1 .67em, h2 .83em, h3 1em, p 1em) vì bản gốc không reset. */
+.paragraph__content h1 {
+  margin: 0.67em 0;
+  font-size: 2rem;
+}
+.paragraph__content h2 {
+  margin: 0.83em 0;
+  font-size: 1.5625rem;
+}
+.paragraph__content h3 {
+  margin: 1em 0;
+  font-size: 1.25rem;
+}
+.paragraph__content h2,
+.paragraph__content h3 {
+  color: var(--color-text-body);
+  opacity: 1;
+  line-height: 2.2rem;
+}
+.paragraph__content p {
+  margin: 1em 0;
+}
+.paragraph__content ul {
+  margin: 0;
+  padding-left: 40px;
+  list-style: circle;
+}
+.paragraph__content ul li {
+  margin: 15px 0;
+  line-height: 1.5rem;
+}
+/* Danh sách CÓ SỐ (ol) khác ul: số thập phân, li không có margin và line-height
+   kế thừa 1.7rem (không phải 1.5rem như ul li). Margin khối 1em (mặc định ol) →
+   16px desktop / 14px mobile; ĐỪNG hardcode 16px kẻo mobile dư 4px. */
+.paragraph__content ol {
+  margin: 1em 0;
+  padding-left: 40px;
+  list-style: decimal;
+}
+
+/* Ô bọc cho bảng rộng hơn viewport. `.paragraph` cũng cuộn ngang được nhưng ẩn
+   thanh cuộn (`scrollbar-width: none`); ở đây cần thanh cuộn HIỆN như bản gốc. */
+.prose-scroll {
+  width: 100%;
+  overflow-x: auto;
+}
+
+/* Bảng giá.
+
+   Bản gốc dựng từ CMS nên viền nằm ở `style` inline của TỪNG Ô — 54 chỗ lặp lại
+   cùng một khai báo trên ba file nội dung. Đó là trình bày nằm trong dữ liệu.
+   Gom về đây, giữ nguyên hình: lưới 1px, hàng CUỐI không có viền dưới, và ô đầu
+   mỗi hàng có thêm viền trái (chồng lên viền của bảng — bản gốc như vậy vì
+   `border-collapse: separate` nên hai viền không gộp). */
+.paragraph__content table {
+  --table-border: 1px solid #d3d3d3;
+
+  border: var(--table-border);
+}
+.paragraph__content td {
+  border-right: var(--table-border);
+}
+.paragraph__content td:last-child {
+  border-right: 0;
+}
+.paragraph__content td:first-child {
+  border-left: var(--table-border);
+}
+.paragraph__content tr:not(:last-child) td {
+  border-bottom: var(--table-border);
+}
+
+.paragraph__content table {
+  width: max-content;
+  min-width: 100%;
+  overflow: hidden;
+  background-color: var(--color-surface);
+  border-collapse: separate;
+  border-spacing: 0;
+}
+.paragraph__content table * {
+  overflow: hidden;
+}
+.paragraph__content td {
+  padding: 7px;
+  line-height: 1.5;
+}
+.paragraph__content tbody tr {
+  background: transparent;
+  transition: background 0.2s;
+}
+.paragraph__content tbody tr:nth-child(2n) {
+  background: rgba(245, 245, 245, 0.1);
+}
+.paragraph__content tbody tr:hover {
+  background: rgba(245, 245, 245, 0.02);
+}
+
+@media (min-width: 1025px) and (min-height: 420px) {
+  .paragraph__content table {
+    width: 100%;
+  }
+}
+
+/* ==========================================================================
+   3. Trang nội dung phẳng — [page].astro  (/about/, /terms-of-use/,
+      /privacy-policy/, /advertiser-disclosure/)
+   ========================================================================== */
+
+/* Bản gốc dựng bốn trang này bằng HAI template CMS, khác nhau ở hai chỗ:
+   - terms + disclosure: `display: flow-root`, margin đáy 30px
+   - privacy + about:    không BFC, margin đáy 46px, `h4:first-of-type{mt:0}`
+
+   Hai cách cho ra CÙNG một khoảng cách 46px từ chữ cuối tới footer:
+   có BFC thì 16px margin của <p> cuối nằm TRONG khối rồi cộng 30 = 46;
+   không BFC thì margin đó collapse ra ngoài, max(16, 46) = 46.
+   Vì vậy gộp được: flow-root cho cả bốn + margin đáy 30px. */
+.page__body {
+  display: flow-root;
+  width: 95%;
+  max-width: var(--width-content);
+  /* Giữ footer không trôi lên giữa màn ở trang ngắn (advertiser-disclosure chỉ
+     có một đoạn). Ba trang kia dài hơn 70dvh nên rule này là no-op với chúng. */
+  min-height: 70dvh;
+  margin: 0 auto;
+  color: var(--color-text-body);
+  font-size: 1rem;
+  line-height: 1.7rem;
+}
+
+.page__body p {
+  margin: 1em 0;
+}
+
+.page__body h2 {
+  margin: 1.33em 0;
+  font-size: 0.9375rem;
+  font-weight: 700;
+  line-height: 2.1rem;
+}
+
+/* PHẢI là `:first-child`, KHÔNG được dùng `:first-of-type`: sau khi chuẩn hoá,
+   khối đầu của privacy là <p> (câu mở đầu vốn bị đánh dấu <h4> nhầm), nên
+   `h2:first-of-type` sẽ khớp tiêu đề nằm GIỮA bài và xoá margin ở đó.
+   Cũng không được bỏ `h2` khỏi selector: `> :first-child` sẽ ăn cả <p> đầu của
+   terms/disclosure và kéo hai trang đó lên 16px. */
+.page__body > h2:first-child {
+  margin-top: 0;
+}
+
+.page__body ul {
+  margin: 1em 0;
+  padding-left: 40px;
+  list-style: circle;
+}
+
+.page__body ol {
+  margin: 1em 0;
+  padding-left: 40px;
+  list-style: decimal;
+}
+
+/* terms-of-use: bản gốc để tiêu đề mục cùng cỡ và độ đậm với thân bài, chỉ phân
+   biệt bằng CHỮ IN HOA. Phải đứng SAU rule `.page__body h2` ở trên — cùng
+   specificity (0,2,1), thắng nhờ thứ tự. */
+.page__body--plain-headings h2 {
+  margin: 1em 0;
+  font-size: 1rem;
+  font-weight: 400;
+  line-height: 1.7rem;
+}
+
+@media (min-width: 1025px) {
+  .page__body {
+    margin: 2px auto 30px;
+  }
+}
+
+/* ==========================================================================
+   4. Khối bài viết ở trang chủ — FeaturedArticle.astro
+
+   Trước đây bộ rule này nằm trong `<style>` của component, mỗi rule bọc
+   `:global()` vì nội dung do MDX sinh không mang scope. Bọc global rồi thì nó
+   đã là global — chỉ khác là nằm lạc chỗ, tách khỏi ba khối prose anh em.
+   ========================================================================== */
+
+.featured-article {
+  width: 100%;
+  /* Dưới 1025px khối này nằm thẳng trong section (không còn lưới) nên mới lộ
+     giới hạn 95dvw của bản gốc — ở desktop nó bị cột lưới 680px che mất */
+  max-width: min(95dvw, var(--width-content));
+  margin-inline: auto;
+  /* Bản gốc tạo BFC bằng `overflow-x: scroll` (để bảng rộng cuộn ngang được).
+     Tác dụng phụ mới là thứ quyết định layout: nó giữ margin 16px của đoạn
+     cuối nằm TRONG khối — bỏ đi thì khối hụt 16px. Trang này không có bảng
+     nên dùng flow-root cho đúng ý đồ. */
+  display: flow-root;
+  line-height: 1.7rem;
+  font-weight: 400;
+  color: var(--color-text-body);
+}
+
+/* global.css reset margin h2/h3/p về 0 → khai lại đúng mặc định UA */
+.featured-article h2,
+.featured-article__title {
+  margin: 0.83em 0;
+  font-size: 1.5625rem;
+  line-height: 2.2rem;
+  color: var(--color-text-body);
+}
+
+/* Tiêu đề khối do component render, luôn là phần tử ĐẦU — dùng `.featured-article__title`
+   chứ không dùng `h2:first-of-type` như khối 1: các `<h2>` còn lại nằm giữa bài
+   và phải giữ nguyên margin trên. */
+.featured-article__title {
+  margin-top: 0;
+}
+
+/* Tiểu mục trong bài. Bản gốc gõ `**chữ**` (ra <p><strong>) làm tiêu đề — nay
+   là <h3> thật, và CSS giữ đúng hình cũ: cùng cỡ chữ thân bài, đậm 700, cùng
+   nhịp margin của một đoạn văn. */
+.featured-article h3 {
+  margin: 1em 0;
+  font-size: 1rem;
+  font-weight: 700;
+  line-height: 1.7rem;
+  color: var(--color-text-body);
+}
+
+.featured-article p {
+  margin: 1em 0;
+}

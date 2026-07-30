@@ -1,12 +1,14 @@
 ---
-slug: "freshpet-review"
 title: "Freshpet Review"
+# Tiêu đề hero bản MOBILE — desktop luôn ghi "Reviews"
 heroTitle: "Freshpet Review"
+# Dòng khuyến mãi ở thanh trên cùng bài
 promo: ""
-href: "#"
-author:
-  name: "Aditi Patel"
-  role: "Dog Food Reviews Editor"
+# reference() — gõ sai là LỖI BUILD, không phải undefined âm thầm.
+# Logo, alt, tên hiển thị, link affiliate và promo carousel đều lấy từ brand,
+# nên href/carouselPromo/articleLinkName không còn khai ở đây nữa.
+brand: "freshpet"
+author: "aditi-patel"
 pros:
   - "Uses real meat as the first ingredient in most recipes."
   - "Food stays moist, soft, and easy to chew."
@@ -17,12 +19,9 @@ cons:
   - "Requires refrigeration at all times after opening."
   - "Higher cost than standard dry dog food."
   - "Shorter shelf life once packaging is opened."
-partner: "freshpet"
-carouselPromo: "Formulated by veterinary nutritionists"
-articleLinkName: "Freshpet"
 ---
 
-import Paragraph from "../../components/Paragraph.astro";
+import Paragraph from "@/components/article/Paragraph.astro";
 
 {/* Bản gốc chia bài thành 4 khối .paragraph_paragraph (mỗi khối margin 10px 0 30px).
     Bản gốc rải nhiều <p></p> rỗng làm khoảng trắng, nhưng margin của chúng thu gọn
@@ -30,7 +29,7 @@ import Paragraph from "../../components/Paragraph.astro";
 
 <Paragraph>
 
-## Freshpet – At A Glance
+## Freshpet - At A Glance
 
 Freshpet is one of the most recognized fresh dog food brands in the United States. The brand focuses on refrigerated meals made with real meat and vegetables. Freshpet markets its food as healthier than dry kibble and easier than homemade meals. It is sold mainly through grocery and pet stores rather than direct shipping. Many dog owners choose Freshpet for better taste and visible ingredient quality. This review explains how Freshpet works, what it costs, and who benefits most.
 
@@ -44,7 +43,7 @@ Freshpet offers several recipe lines designed for different dog sizes and needs.
 
 **Freshpet Select**
 
-Freshpet Select is the brand’s most popular recipe line. It features chicken, beef, turkey, or lamb as primary proteins. Vegetables include carrots, peas, spinach, and brown rice. Recipes support daily feeding for adult dogs. This line suits dogs transitioning from dry kibble.
+Freshpet Select is the brand's most popular recipe line. It features chicken, beef, turkey, or lamb as primary proteins. Vegetables include carrots, peas, spinach, and brown rice. Recipes support daily feeding for adult dogs. This line suits dogs transitioning from dry kibble.
 
 **Freshpet Vital**
 
@@ -96,7 +95,7 @@ Refunds or replacements depend on store return policies. Freshpet may issue coup
 
 <Paragraph>
 
-# Before this ends…
+## Before this ends...
 
 Freshpet delivers fresh, soft dog food using real meat and vegetables. Dogs often eat it eagerly and show improved meal satisfaction. The brand avoids artificial additives common in dry foods. Retail availability makes buying simple without subscriptions.
 

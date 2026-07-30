@@ -1,0 +1,862 @@
+---
+import { AFFILIATE_REL } from "@/lib/links";
+import { Image } from "astro:assets";
+import type { ToplistRow } from "@/lib/rankings";
+import ScoreRing from "@/components/toplist/ScoreRing.astro";
+import Coupon from "@/components/toplist/Coupon.astro";
+import PartnerTooltip from "@/components/toplist/PartnerTooltip.astro";
+import sideBannerImg from "@/assets/promos/pets-table-side-banner.png";
+import { CHEVRON_RIGHT, STAR_OUTLINE, CHECK_THIN } from "@/lib/icon-paths";
+
+interface Props {
+  brand: ToplistRow;
+  /** Banner dọc nổi bên phải card, chỉ hiện từ 1525px */
+  hasSideBanner?: boolean;
+  /** Ẩn huy hiệu số thứ hạng (dùng cho khối "Best Overall" lặp lại cuối trang) */
+  shouldShowRank?: boolean;
+  /** Biến thể cho section "Best Overall": bỏ icon sao góc phải, nhãn thành dải
+      ngang full-width, và tooltip không tự mở */
+  isBestOverall?: boolean;
+}
+
+const { brand, hasSideBanner = false, shouldShowRank = true, isBestOverall = false } = Astro.props;
+const {
+  rank,
+  logo,
+  logoMobile,
+  logoAlt,
+  tagline,
+  taglineMobile,
+  isTaglineMobileBold,
+  bullets,
+  bulletsMobile,
+  coupon,
+  rating,
+  ratingLabel,
+  stars,
+  reviewsCount,
+  href,
+  isEditorsChoice = false,
+  hoverTooltip,
+} = Astro.props.brand;
+
+const mobileLogo = logoMobile ?? logo;
+// Không có bản mobile thì dưới 768px KHÔNG hiện gạch đầu dòng (chỉ The Pet's Table có)
+---
+
+<div class:list={["partner", { "partner--editors-choice": isEditorsChoice }]}>
+  {
+    hasSideBanner && (
+      <a
+        class="partner__side-banner"
+        href={href}
+        target="_blank"
+        rel={AFFILIATE_REL}
+        referrerpolicy="strict-origin"
+      >
+        {/* format png: giữ nguyên pixel gốc, tránh nén lại mất mát (ảnh vốn đã đúng 320×800) */}
+        <Image
+          src={sideBannerImg}
+          alt={`${brand.name} - Fresh Dog Food Delivery`}
+          width={320}
+          height={800}
+          format="png"
+        />
+      </a>
+    )
+  }
+
+  {
+    /* Cả thẻ bấm được như bản gốc: div `cursor: pointer` + click handler, KHÔNG dùng
+      thẻ <a> phủ toàn card — overlay như vậy sẽ nuốt hover của chữ/gạch đầu dòng/vòng điểm */
+  }
+  <div class="partner__frame" data-href={href}>
+    {shouldShowRank && <span class="partner__rank partner__rank--compact">{rank}</span>}
+    {
+      isEditorsChoice && (
+        <span class:list={["partner__tag", { "partner__tag--full": isBestOverall }]}>
+          Exclusive Offer
+        </span>
+      )
+    }
+    {
+      isEditorsChoice && !isBestOverall && (
+        <span class="partner__highlight" aria-hidden="true">
+          <svg viewBox="0 0 16 16" fill="currentColor">
+            <path d={STAR_OUTLINE} />
+          </svg>
+        </span>
+      )
+    }
+
+    <div class="partner__wrapper">
+      <div class:list={["partner__card", { "partner__card--editors-choice": isEditorsChoice }]}>
+        {shouldShowRank && <span class="partner__rank partner__rank--wide">{rank}</span>}
+
+        <div class="partner__logo">
+          <div class="partner__logo-row">
+            <div class="partner__logo-box partner__logo-box--wide">
+              <img src={logo.src} alt={logoAlt} width="215" height="115" />
+            </div>
+            <div class="partner__logo-box partner__logo-box--compact">
+              <img src={mobileLogo.src} alt={logoAlt} width="125" height="66" />
+            </div>
+          </div>
+        </div>
+
+        <div class="partner__content">
+          {
+            /* Khẩu hiệu quảng cáo, KHÔNG phải tiêu đề tài liệu: trang chủ có 18 chuỗi
+            kiểu "Get 30% off Your First Order" nằm dưới <h1>, làm dàn ý trang thành
+            danh sách quảng cáo. Card không cần heading nào - tên brand đã ở alt logo. */
+          }
+          <p
+            class:list={[
+              "partner__tagline",
+              "partner__tagline--compact",
+              { "partner__tagline--bold": isTaglineMobileBold },
+            ]}
+          >
+            {taglineMobile}
+          </p>
+          <p class="partner__tagline partner__tagline--wide">{tagline}</p>
+
+          {
+            coupon && (
+              <div class="partner__coupon partner__coupon--wide">
+                <Coupon text={coupon} />
+              </div>
+            )
+          }
+
+          {
+            bulletsMobile && (
+              <ul class="partner__bullets partner__bullets--compact">
+                {bulletsMobile.map((item) => (
+                  <li>
+                    <svg
+                      viewBox="0 0 1024 1024"
+                      width="13"
+                      height="13"
+                      fill="currentColor"
+                      aria-hidden="true"
+                    >
+                      <path d={CHECK_THIN} />
+                    </svg>
+                    <span>{item}</span>
+                  </li>
+                ))}
+              </ul>
+            )
+          }
+
+          <ul class="partner__bullets partner__bullets--wide">
+            {
+              bullets.map((item) => (
+                <li>
+                  <svg
+                    viewBox="0 0 1024 1024"
+                    width="13"
+                    height="13"
+                    fill="currentColor"
+                    aria-hidden="true"
+                  >
+                    <path d={CHECK_THIN} />
+                  </svg>
+                  <span>{item}</span>
+                </li>
+              ))
+            }
+          </ul>
+        </div>
+
+        {/* Dưới 768px coupon tách khỏi cột nội dung thành 1 ô lưới riêng chiếm cả hàng */}
+        {
+          coupon && (
+            <div class="partner__coupon partner__coupon--compact">
+              <Coupon text={coupon} />
+            </div>
+          )
+        }
+
+        <ScoreRing rating={rating} label={ratingLabel} stars={stars} reviews={reviewsCount} />
+
+        <div class="partner__separator"></div>
+
+        <div class="partner__actions">
+          <div class="partner__cta">
+            <div class="partner__button-container">
+              <a
+                class="partner__button"
+                href={href}
+                title="Visit Site"
+                target="_blank"
+                rel={AFFILIATE_REL}
+                referrerpolicy="strict-origin"
+              >
+                <div class="partner__button-inner">
+                  <span class="partner__button-text">Visit Site</span>
+                  {
+                    hoverTooltip && (
+                      <PartnerTooltip
+                        highlight={hoverTooltip.highlight}
+                        text={hoverTooltip.text}
+                        shouldStayOpen={isEditorsChoice && !isBestOverall}
+                      />
+                    )
+                  }
+                  <svg
+                    class="partner__button-arrow"
+                    viewBox="0 0 320 512"
+                    fill="currentColor"
+                    aria-hidden="true"
+                  >
+                    <path d={CHEVRON_RIGHT}></path>
+                  </svg>
+                </div>
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  // Bản gốc không có thẻ <a> phủ card: cả khung là div `cursor: pointer` gắn onClick.
+  // Làm y hệt để hover của tagline / gạch đầu dòng / vòng điểm không bị overlay chặn.
+  document.querySelectorAll<HTMLElement>(".partner__frame[data-href]").forEach((frame) => {
+    const href = frame.dataset.href!;
+
+    frame.addEventListener("click", (event) => {
+      const target = event.target as HTMLElement;
+      // Bấm trúng link thật bên trong (nút "Visit Site") thì để nó tự xử lý
+      if (target.closest("a")) return;
+      // Bỏ qua khi người dùng đang bôi đen chữ
+      if (!window.getSelection()?.isCollapsed) return;
+
+      window.open(href, "_blank", "noopener");
+    });
+  });
+</script>
+
+<style>
+  /* ==========================================================================
+     Base = mobile (<481px)
+     ========================================================================== */
+  .partner {
+    position: relative;
+    margin: 15px 0;
+    background-color: var(--color-surface);
+    z-index: 1;
+  }
+
+  .partner__frame {
+    width: 100%;
+    height: 100%;
+    padding: 20px 0;
+    position: relative;
+    box-shadow: 0 0 7px rgba(0, 0, 0, 0.25);
+    cursor: pointer;
+  }
+  /* Card "Exclusive Offer" luôn đứng đầu danh sách nên sát mép trên hơn */
+  .partner--editors-choice {
+    margin-top: 5px;
+  }
+  .partner--editors-choice .partner__frame {
+    border: 2px solid var(--color-accent);
+  }
+  /* ----- Huy hiệu số thứ hạng ----- */
+  .partner__rank {
+    display: flex;
+    position: absolute;
+    top: 0;
+    width: 25px;
+    height: 27px;
+    align-items: center;
+    justify-content: center;
+    background-color: var(--color-primary);
+    color: var(--color-text-on-primary);
+    border-bottom-right-radius: 7px;
+  }
+  /* Bản tròn viền đen chỉ dùng ở desktop (nằm trong lưới card) */
+  .partner__rank--wide {
+    display: none;
+  }
+
+  /* ----- Nhãn "Exclusive Offer" ----- */
+  .partner__tag {
+    position: absolute;
+    left: 30px;
+    top: 0;
+    height: 27px;
+    min-width: 100px;
+    max-width: 80%;
+    padding: 0 5px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: var(--color-accent);
+    color: var(--color-text-on-primary);
+    font-size: 0.9rem;
+    font-weight: 400;
+    white-space: nowrap;
+    border-bottom-right-radius: 7px;
+  }
+
+  /* Biến thể "Best Overall": nhãn thành dải ngang kín chiều rộng card.
+     Viết 2 class để thắng các rule .partner__tag trong media query (cùng 0,1,0). */
+  .partner__tag.partner__tag--full {
+    left: 0;
+    width: 100%;
+    max-width: 100%;
+    border-radius: 0;
+  }
+  /* Từ 615px dải này nằm trong luồng → đẩy nội dung card xuống 27.2px */
+  @media (min-width: 615px) {
+    .partner__tag.partner__tag--full {
+      position: static;
+    }
+  }
+
+  /* ----- Icon ngôi sao góc phải ----- */
+  .partner__highlight {
+    position: absolute;
+    top: 0;
+    right: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 27px;
+    height: 27px;
+    padding: 3px;
+    background-color: var(--color-accent);
+    color: var(--color-text-on-primary);
+    font-size: 1.3rem;
+    border-bottom-left-radius: 7px;
+    cursor: pointer;
+  }
+  .partner__highlight svg {
+    width: 100%;
+    height: 100%;
+  }
+
+  /* ----- Banner dọc bên phải ----- */
+  .partner__side-banner {
+    display: none;
+  }
+
+  /* ----- Lưới card ----- */
+  .partner__card {
+    position: relative;
+    display: grid;
+    /* Hàng "disclosure" luôn rỗng (cao 0) nhưng phải giữ: nó tạo thêm 1 row-gap 3px
+       vào tổng chiều cao card, bỏ đi là hụt đúng 3px so với bản gốc */
+    grid-template-areas:
+      "logo content"
+      "coupon coupon"
+      "sep sep"
+      "grade button"
+      "disclosure disclosure";
+    grid-template-columns: 50% 50%;
+    row-gap: 3px;
+    margin-top: 10px;
+    border-radius: 4px;
+  }
+
+  .partner__separator {
+    grid-area: sep;
+    width: 100%;
+    margin: 5px 0;
+    border-bottom: 2px solid #e9eaed;
+  }
+
+  /* Coupon: dưới 768px là ô lưới riêng chiếm cả hàng; từ 768px nằm trong cột nội dung */
+  .partner__coupon--compact {
+    grid-area: coupon;
+    width: 90%;
+    margin: 0 auto;
+  }
+  .partner__coupon--wide {
+    display: none;
+    /* Cần khai báo: từ 768px cột nội dung là flex + align-items:flex-start nên
+       div này sẽ co vừa chữ nếu không ép 100% (bản gốc không có div bọc) */
+    width: 100%;
+  }
+
+  /* ----- Logo ----- */
+  .partner__logo {
+    grid-area: logo;
+    position: relative;
+    width: 73.5%;
+    height: 100%;
+    margin: 0 auto auto;
+    align-self: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+  }
+  .partner__logo-row {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  .partner__logo-box {
+    height: 95%;
+    min-width: 100px;
+    max-width: 200px;
+    display: flex;
+  }
+  .partner__logo-box img {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+    margin: 0 auto;
+  }
+  .partner__logo-box--compact img {
+    width: 100%;
+    height: auto;
+    min-height: 66px;
+  }
+  .partner__logo-box--wide {
+    display: none;
+  }
+
+  /* ----- Nội dung ----- */
+  .partner__content {
+    grid-area: content;
+    justify-self: center;
+    align-self: center;
+    margin-right: 3px;
+    font-size: 1.05rem;
+    font-weight: 500;
+    color: var(--color-text-body);
+  }
+
+  .partner__tagline {
+    margin: 0;
+    /* Bản gốc giữ nguyên khoảng trắng đầu dòng trong chuỗi tiêu đề */
+    white-space: pre-line;
+    font-size: 1rem;
+    font-weight: 400;
+    line-height: 1.5em;
+    letter-spacing: 0;
+    color: var(--color-text-body);
+    cursor: pointer;
+    --hover-color: var(--color-primary);
+  }
+  .partner__tagline--wide {
+    display: none;
+    /* Bản desktop luôn đậm; bản mobile chỉ đậm khi brand có cờ isTaglineMobileBold */
+    font-weight: 600;
+  }
+  .partner__tagline--bold {
+    font-weight: 600;
+  }
+
+  /* ----- Danh sách gạch đầu dòng ----- */
+  .partner__bullets {
+    margin: 4px 0;
+    padding: 0;
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+  }
+  .partner__bullets li {
+    display: flex;
+    align-items: flex-start;
+    gap: 1px;
+    margin: 5px 0;
+    font-size: 0.9375rem;
+    font-weight: 400;
+    line-height: 1.5em;
+    cursor: pointer;
+    --hover-color: var(--color-primary);
+  }
+  .partner__bullets svg {
+    flex-shrink: 0;
+    margin: 3px 5px auto 0;
+  }
+  .partner__bullets--wide {
+    display: none;
+  }
+
+  /* ----- Nút CTA ----- */
+  .partner__actions {
+    grid-area: button;
+    height: 100%;
+    max-width: 155px;
+    width: 100%;
+    margin: auto;
+    display: flex;
+    flex-flow: column;
+    justify-content: center;
+    gap: 3px;
+    white-space: nowrap;
+    letter-spacing: 0.02em;
+  }
+  .partner__cta {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 3px;
+    margin: 0;
+  }
+  .partner__button-container {
+    position: relative;
+    min-width: 50%;
+    min-height: 45px;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  .partner__button {
+    --hover-bg-color: var(--color-secondary);
+
+    position: relative;
+    width: 100%;
+    max-width: 100%;
+    height: 100%;
+    padding: 8px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-shrink: 0;
+    border-radius: 3px;
+    background-color: var(--color-primary);
+    color: var(--color-text-on-primary);
+    font-size: 1.4rem;
+    font-weight: 700;
+    line-height: 1rem;
+    letter-spacing: 0.02em;
+    transition: 0.2s linear;
+    cursor: pointer;
+  }
+  .partner__button * {
+    transition: 0.2s linear;
+  }
+  .partner__button-inner {
+    position: relative;
+    top: -1px;
+    max-width: 100%;
+  }
+  .partner__button-text {
+    font-family: var(--font-brand);
+    font-size: 1.12rem;
+    /* Lato chỉ nạp 400/700/900 (global.css). Khai 600 thì trình duyệt vẫn chọn
+       700 — ghi 700 cho đúng thứ đang render. */
+    font-weight: 700;
+    color: var(--color-text-on-primary);
+  }
+
+  /* Icon mũi tên: ẩn sẵn trong nút, chỉ hiện dần khi hover (từ 768px, xem media
+     query bên dưới) — bản gốc dùng icon FontAwesome chevron-right */
+  .partner__button-arrow {
+    position: absolute;
+    top: calc(50% + 2px);
+    right: 10px;
+    width: 1rem;
+    height: 1rem;
+    opacity: 0;
+    transform: translateY(-50%);
+    transition: all 0.2s ease-in-out;
+  }
+
+  /* ==========================================================================
+     ≥481px
+     ========================================================================== */
+  @media (min-width: 481px) {
+    .partner__card {
+      grid-template-columns: 1fr 1fr;
+      column-gap: 2px;
+      min-height: 140px;
+    }
+    .partner__logo {
+      padding-bottom: 8px;
+    }
+    .partner__logo-box img {
+      padding-bottom: 8px;
+    }
+    .partner__actions {
+      margin: 0;
+      justify-self: center;
+      align-self: center;
+      max-width: 167px;
+    }
+  }
+
+  /* ==========================================================================
+     ≥615px — hiệu ứng hover (bản gốc chỉ bật từ mốc này)
+     ========================================================================== */
+  @media (min-width: 615px) {
+    /* Đổi màu khi hover CHỈ ở bản desktop: bản gốc bọc riêng class tiện ích
+       `color-hover` quanh tagline/bullets desktop, bản mobile không có (chỉ đổi
+       con trỏ chuột) — nếu áp cho cả 2 biến thể sẽ sai ở khoảng 615–767px, lúc
+       bản mobile đang hiển thị mà lại đổi màu. */
+    .partner__tagline--wide:hover,
+    .partner__bullets--wide li:hover {
+      color: var(--hover-color);
+    }
+    .partner__button:hover {
+      background-color: var(--hover-bg-color);
+    }
+  }
+
+  /* Coupon rời ô lưới về cột nội dung. Mốc 630 chứ không phải 615: JS bản gốc so
+     `clientWidth` (đã trừ thanh cuộn 15px) với 615, còn media query CSS lại tính theo
+     innerWidth → 615 + 15 = 630 mới khớp hành vi gốc. */
+  @media (min-width: 630px) {
+    .partner__coupon--compact {
+      display: none;
+    }
+    .partner__coupon--wide {
+      display: block;
+    }
+  }
+
+  /* ==========================================================================
+     ≥768px — chuyển sang lưới ngang: logo | nội dung | (điểm / nút)
+     ========================================================================== */
+  @media (min-width: 768px) {
+    .partner {
+      display: flex;
+      justify-content: center;
+    }
+    .partner__frame {
+      padding: 0;
+      max-width: fit-content;
+    }
+    .partner__wrapper {
+      display: flex;
+      justify-content: center;
+      width: 100%;
+      max-width: var(--width-content);
+    }
+
+    .partner__card {
+      grid-template-areas:
+        "logo content grade"
+        "logo content button";
+      grid-template-rows: none;
+      grid-template-columns: 200px 2.1fr 1fr;
+      row-gap: 0;
+      column-gap: 15px;
+      width: 1170px;
+      padding: 0 10px;
+      margin: 28px 0 10px;
+    }
+    .partner__separator {
+      display: none;
+    }
+
+    .partner__tag {
+      width: unset;
+      height: max-content;
+      padding: 0 7px;
+      z-index: 1;
+    }
+
+    .partner__logo {
+      position: relative;
+      bottom: 10px;
+      width: 100%;
+      height: 100%;
+      margin-left: 25px;
+      padding-bottom: 0;
+      display: flex;
+      flex-flow: column;
+      justify-content: center;
+    }
+    .partner__logo-box {
+      height: 100%;
+      align-items: center;
+      justify-content: center;
+    }
+    .partner__logo-box img {
+      padding-bottom: 0;
+    }
+    .partner__logo-box--wide {
+      display: flex;
+    }
+    .partner__logo-box--compact {
+      display: none;
+    }
+    /* Chừa chỗ cho nhãn "Exclusive Offer" phía trên */
+    .partner__card--editors-choice .partner__logo-row {
+      height: calc(100% - 20px);
+    }
+    .partner__card--editors-choice .partner__logo-box {
+      margin-top: 5px;
+    }
+
+    .partner__content {
+      display: flex;
+      flex-flow: column;
+      justify-content: center;
+      justify-self: flex-start;
+      align-items: flex-start;
+      margin-left: 40px;
+      word-break: break-word;
+    }
+    .partner__bullets--wide {
+      display: flex;
+    }
+    .partner__bullets--compact {
+      display: none;
+    }
+    .partner__tagline--wide {
+      display: block;
+    }
+    .partner__tagline--compact {
+      display: none;
+    }
+
+    .partner__actions {
+      position: relative;
+      top: 0;
+      height: 100%;
+      max-height: none;
+      flex-flow: column;
+      justify-content: center;
+    }
+    .partner__cta {
+      margin: auto;
+    }
+    .partner__button-container {
+      width: 100%;
+      min-width: 157px;
+      min-height: unset;
+      margin: auto;
+      letter-spacing: 1.25px;
+    }
+    .partner__button {
+      position: relative;
+      min-height: 47px;
+      padding: 0;
+      margin: auto;
+      font-size: 1.2rem;
+      font-weight: 600;
+    }
+    .partner__button-inner {
+      position: unset;
+      width: fit-content;
+    }
+    .partner__button:hover .partner__button-arrow {
+      opacity: 1;
+    }
+  }
+
+  /* ==========================================================================
+     Desktop ≥1025px — điểm và nút tách thành 2 cột riêng
+     ========================================================================== */
+  @media (min-width: 1025px) {
+    .partner {
+      margin: 10px auto;
+    }
+    /* Card đầu vẫn giữ 5px như base (bản gốc thắng nhờ selector 2 class) */
+    .partner--editors-choice {
+      margin-top: 5px;
+    }
+    .partner__frame {
+      width: auto;
+    }
+
+    .partner__card {
+      grid-template-areas: "logo content grade button";
+      grid-template-columns: 200px 2.1fr 1fr 1fr;
+      max-width: 95vw;
+      padding: 25px 0 0;
+      margin: 0 0 5px;
+    }
+    .partner__card--editors-choice {
+      margin-bottom: 10px;
+    }
+
+    /* Huy hiệu số: đổi thành vòng tròn trắng nằm đè lên mép trái card */
+    .partner__rank--compact {
+      display: none;
+    }
+    .partner__rank--wide {
+      display: flex;
+      left: 0;
+      top: 35px;
+      width: 35px;
+      height: 35px;
+      padding: 0;
+      background: var(--color-surface);
+      color: var(--color-text);
+      border: 1px solid #000;
+      border-radius: 100%;
+      transform: translateX(-55%);
+      font-size: 1.375rem;
+      font-weight: 400;
+    }
+
+    .partner__tag {
+      left: 25px;
+      border-radius: 0;
+      border-bottom-right-radius: 7px;
+    }
+
+    .partner__logo {
+      grid-column: 1 / 2;
+      bottom: 10px;
+      justify-content: center;
+    }
+
+    .partner__content {
+      grid-column: 2 / 3;
+    }
+
+    /* margin giữ nguyên 4px 0 như bản gốc — rule `margin: 3px 0` bên đó bị
+       selector 2 class của .details-list trong content-container ghi đè */
+    .partner__bullets {
+      font-size: 0.9075rem;
+    }
+    .partner__bullets svg {
+      margin-top: 5px;
+    }
+
+    .partner__actions {
+      grid-column: 4;
+      position: relative;
+      min-height: 160px;
+    }
+    .partner__button {
+      overflow: visible;
+    }
+  }
+
+  /* ==========================================================================
+     ≥1525px — banner dọc nổi bên phải card
+     ========================================================================== */
+  @media (min-width: 1525px) {
+    .partner__side-banner {
+      display: block;
+      position: absolute;
+      right: -2.6%;
+      max-width: 220px;
+      max-height: fit-content;
+      transform: translateX(100%);
+      z-index: 1;
+    }
+    .partner__side-banner:hover {
+      opacity: 0.9;
+    }
+    /* Bản gốc giới hạn ảnh này ở 160px (nhỏ hơn max-width 220px của khung) */
+    .partner__side-banner img {
+      width: 160px;
+      height: auto;
+      max-width: 160px;
+      max-height: 100%;
+      object-fit: contain;
+    }
+  }
+</style>

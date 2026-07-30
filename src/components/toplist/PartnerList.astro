@@ -1,0 +1,76 @@
+---
+/**
+ * Bảng xếp hạng của một trang toplist: danh sách PartnerCard, có một banner
+ * khuyến mãi chèn xen giữa.
+ *
+ * Không tự đi lấy dữ liệu — trang truyền vào. Trước đây nó gọi thẳng
+ * `getHomepageBrands()` và giữ luôn dữ liệu banner trong frontmatter, nên
+ * component này chỉ chạy được cho đúng một trang.
+ */
+import type { ImageMetadata } from "astro";
+import type { ToplistRow } from "@/lib/rankings";
+import PartnerCard from "@/components/toplist/PartnerCard.astro";
+import PromoBanner from "@/components/toplist/PromoBanner.astro";
+
+export interface ToplistPromo {
+  logo: ImageMetadata;
+  logoAlt: string;
+  title: string;
+  buttonText: string;
+  href: string;
+  /** Banner chèn ngay SAU card hạng này */
+  afterRank: number;
+}
+
+interface Props {
+  brands: ToplistRow[];
+  /** Không có thì danh sách chạy liền, không chèn banner */
+  promo?: ToplistPromo;
+}
+
+const { brands, promo } = Astro.props;
+---
+
+<section class="partner-list">
+  <div class="partner-list__items">
+    {
+      brands.map((brand, i) => (
+        <>
+          <PartnerCard brand={brand} hasSideBanner={i === 0} />
+          {promo && brand.rank === promo.afterRank && (
+            <PromoBanner
+              logo={promo.logo}
+              logoAlt={promo.logoAlt}
+              title={promo.title}
+              buttonText={promo.buttonText}
+              href={promo.href}
+            />
+          )}
+        </>
+      ))
+    }
+  </div>
+</section>
+
+<style>
+  .partner-list {
+    position: relative;
+    z-index: 20;
+    min-height: 30dvh;
+  }
+
+  /* Bản gốc có rule chung cho mọi section trong trang: từ 1025px thêm 30px đáy,
+     tạo khoảng cách tới section "Best Overall" phía dưới. (margin-top 2px không có
+     tác dụng vì bị margin 5px của card đầu nuốt khi collapse.) */
+  @media (min-width: 1025px) {
+    .partner-list {
+      margin: 2px auto 30px;
+    }
+  }
+
+  .partner-list__items {
+    width: 100%;
+    max-width: min(var(--width-content), 95dvw);
+    margin-inline: auto;
+  }
+</style>

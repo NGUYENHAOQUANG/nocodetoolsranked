@@ -1,0 +1,239 @@
+---
+/**
+ * Banner đầu trang toplist: tiêu đề + phụ đề + "Last Updated" + tooltip
+ * "Advertising Disclosure". Dùng cho trang chủ và mọi ngách — chữ nghĩa đến từ
+ * entry `toplists`, component không giữ chuỗi nào của riêng một trang.
+ *
+ * Tách khỏi banner trang trong (`HeroInner`) vì hai thứ chỉ dùng chung đúng một
+ * dòng markup (`<section class="hero">`) và một bộ ảnh nền. Trước đây gộp làm
+ * một, nên 8 trang trong phải tải ~90 dòng CSS chết cộng một script luôn trả
+ * `null`, còn interface props thì có ba trường vô nghĩa với trang chủ.
+ *
+ * Khung dùng chung nằm ở `@/styles/hero.css`.
+ */
+import { getImage } from "astro:assets";
+import { getEntry, render } from "astro:content";
+import heroImgDesktop from "@/assets/hero/hero.jpg";
+import heroImgMobile from "@/assets/hero/hero-mobile.jpg";
+import "@/styles/hero.css";
+
+interface Props {
+  /** HTML thô: `<span>` bọc từ chỉ hiện từ 768px. Một trang một <h1> nên không
+      tách được thành hai tiêu đề ẩn/hiện. */
+  title: string;
+  /** Hai phụ đề cho hai mốc màn hình — bản gốc dùng hai câu KHÁC nhau */
+  subtitle: string;
+  subtitleCompact: string;
+  alt: string;
+}
+
+const { title, subtitle, subtitleCompact, alt } = Astro.props;
+
+/* MỘT ảnh được tải, không phải hai — cùng lý do như `HeroInner`: ảnh
+   `display: none` vẫn nằm trong luồng tải, mà cả hai đều `loading="eager"` nên
+   chúng tranh băng thông với nhau trên đường tới LCP. Xem ghi chú ở HeroInner. */
+const wide = await getImage({
+  src: heroImgDesktop,
+  widths: [768, 1024, 1440, 1920, 2560],
+  format: "webp",
+});
+const compact = await getImage({
+  src: heroImgMobile,
+  widths: [375, 480, 640, 768],
+  format: "webp",
+});
+
+/* Đoạn "Advertising Disclosure" dùng CHUNG với trang /advertiser-disclosure/ —
+   trước đây hai nơi chép rời nhau và đã trôi lệch tới mức bản ở trang kia nói về
+   bảo hiểm thú cưng. Ánh xạ `p` sang `span` vì tooltip là inline: <p> nằm trong
+   <span> là HTML sai, trình duyệt sẽ tự sửa và phá layout. */
+const disclosure = await getEntry("pages", "advertiser-disclosure");
+if (!disclosure) throw new Error("Thiếu src/content/pages/advertiser-disclosure.mdx");
+const { Content: DisclosureText } = await render(disclosure);
+
+// Trang gốc tự hiển thị ngày = hôm nay; lấy ngày lúc build cho khớp hành vi đó.
+const lastUpdated = new Intl.DateTimeFormat("en-US", {
+  month: "long",
+  day: "numeric",
+  year: "numeric",
+}).format(new Date());
+---
+
+<section class="hero">
+  <div class="hero__banner">
+    <picture>
+      <source media="(min-width: 768px)" srcset={wide.srcSet.attribute} sizes="100vw" />
+      <img
+        class="hero__bg"
+        src={compact.src}
+        srcset={compact.srcSet.attribute}
+        sizes="100vw"
+        alt={alt}
+        width="650"
+        height="325"
+        loading="eager"
+      />
+    </picture>
+    <div class="hero__content">
+      <div class="hero__text">
+        <h1 class="hero__title" set:html={title} />
+        <p class="hero__subtitle hero__subtitle--wide">{subtitle}</p>
+        <p class="hero__subtitle hero__subtitle--compact" set:html={subtitleCompact} />
+      </div>
+
+      {
+        /* KHÔNG để khoảng trắng giữa </svg> và <span>: đây là dòng inline, khoảng trắng sẽ thành dấu cách thừa */
+      }
+      <p class="hero__updated">
+        <svg viewBox="0 0 512 512" width="1em" height="1em" fill="currentColor" aria-hidden="true"
+          ><path
+            d="M504 256c0 136.967-111.033 248-248 248S8 392.967 8 256 119.033 8 256 8s248 111.033 248 248zM227.314 387.314l184-184c6.248-6.248 6.248-16.379 0-22.627l-22.627-22.627c-6.248-6.249-16.379-6.249-22.628 0L216 308.118l-70.059-70.059c-6.248-6.248-16.379-6.248-22.628 0l-22.627 22.627c-6.248 6.248-6.248 16.379 0 22.627l104 104c6.249 6.249 16.379 6.249 22.628.001z"
+          ></path></svg
+        ><span class="hero__updated-text">Last Updated: <span>{lastUpdated}</span></span>
+      </p>
+    </div>
+
+    <div class="hero__disclosure">
+      <span class="hero__disclosure-label">Advertising Disclosure</span>
+      <span class="hero__disclosure-tooltip" role="tooltip">
+        <DisclosureText components={{ p: "span" }} />
+      </span>
+    </div>
+  </div>
+</section>
+
+<style>
+  /* `<picture>` phải RA KHỎI luồng như `<img>` trước đây — `.hero__banner` là
+     grid, để nó làm grid item là sinh thêm một hàng. Xem ghi chú ở HeroInner. */
+  picture {
+    position: absolute;
+    inset: 0;
+  }
+
+  /* Ảnh mobile căn GIỮA theo chiều dọc, ảnh desktop căn MÉP TRÊN — đúng bản gốc.
+     Giờ chỉ còn một `<img>` nên `object-position` phải đổi theo đúng mốc mà
+     `<source media>` dùng, không còn hai class riêng nữa. */
+  .hero__bg {
+    object-position: right center;
+  }
+
+  /* Từ trong <span> của `heroTitle` chỉ hiện từ mốc rộng trở lên. Thẻ trần chứ
+     không phải class: nội dung không nên mang tên class trình bày.
+
+     `:global(span)` là BẮT BUỘC, không phải tuỳ chọn. `heroTitle` render bằng
+     set:html nên <span> đó là HTML thô, KHÔNG mang `data-astro-cid` — viết
+     `.hero__title span` thì Astro biên dịch thành `.hero__title span[data-astro-cid]`
+     và không khớp gì cả, từ này hiện luôn ở mobile (tiêu đề cao 57px thay vì
+     28.5px). Neo `:global()` vào `.hero__title` thì cid nằm ở phần tử cha vốn
+     do template sinh ra, nên vẫn không rò ra ngoài component. */
+  .hero__title :global(span) {
+    display: none;
+  }
+
+  .hero__subtitle {
+    margin: 5px 0;
+    /* Chừa lề phải để chữ không đè lên ảnh con chó — bản gốc áp ở MỌI kích thước */
+    padding-right: min(30%, 200px);
+    font-size: 1.125rem;
+    font-weight: 400;
+    line-height: 1.5rem;
+    color: var(--color-text);
+  }
+  .hero__subtitle--wide {
+    display: none;
+  }
+
+  /* Dòng inline như gốc: icon nằm trên baseline của chữ (không phải flex căn giữa),
+     nhờ vậy icon cao đúng vị trí. line-height kế thừa 1.7em từ body. */
+  .hero__updated {
+    margin-top: auto;
+    display: block;
+    width: fit-content;
+    font-size: 1rem;
+    color: var(--color-text);
+  }
+  .hero__updated svg {
+    position: relative;
+    top: 1px;
+  }
+  .hero__updated-text {
+    margin-left: 5px;
+  }
+
+  /* Advertising Disclosure: chỉ desktop (≥1025px) */
+  .hero__disclosure {
+    display: none;
+    position: absolute;
+    left: 80%;
+    bottom: 10px;
+    z-index: 11;
+    font-size: 1rem;
+    line-height: 1.7;
+    color: var(--color-text-body);
+    cursor: pointer;
+  }
+  /* Khi mở phải vượt lên trên toplist (z-index 20) — nếu không, side banner của
+     card #1 sẽ đè lên tooltip. Bản gốc cũng nâng lên 1000 lúc mở (bằng JS). */
+  .hero__disclosure.is-open {
+    z-index: 1000;
+  }
+  .hero__disclosure-tooltip {
+    position: absolute;
+    top: 100%;
+    right: -16px;
+    width: 320px;
+    padding: 10px;
+    background: var(--color-surface);
+    color: var(--color-text);
+    font-size: 0.8125rem;
+    line-height: 1.2rem;
+    border-radius: 5px;
+    box-shadow: 0 0 7px 0 #4a4a4a;
+    max-height: 90dvh;
+    overflow: auto;
+    z-index: 30;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.12s ease;
+  }
+  .hero__disclosure.is-open .hero__disclosure-tooltip {
+    opacity: 1;
+    visibility: visible;
+  }
+
+  /* ===== Từ 768px: đổi sang ảnh + nội dung bản desktop (KHÔNG phải 615px) ===== */
+  @media (min-width: 768px) {
+    .hero__bg {
+      object-position: right top;
+    }
+    .hero__title :global(span) {
+      display: inline;
+    }
+    .hero__subtitle--wide {
+      display: block;
+    }
+    .hero__subtitle--compact {
+      display: none;
+    }
+  }
+
+  @media (min-width: 1025px) {
+    .hero__subtitle {
+      line-height: 1.6rem;
+    }
+    .hero__disclosure {
+      display: block;
+    }
+  }
+</style>
+
+<script>
+  // Giống trang gốc: hover hiện tooltip, click vào nhãn thì đảo trạng thái (ẩn/hiện)
+  const el = document.querySelector<HTMLElement>(".hero__disclosure");
+  const label = el?.querySelector<HTMLElement>(".hero__disclosure-label");
+  if (el && label) {
+    el.addEventListener("mouseenter", () => el.classList.add("is-open"));
+    el.addEventListener("mouseleave", () => el.classList.remove("is-open"));
+    label.addEventListener("click", () => el.classList.toggle("is-open"));
+  }
+</script>

@@ -1,0 +1,27 @@
+---
+/**
+ * Sidebar bài blog = danh sách brand + 2 thẻ "must reads". Không có carousel
+ * khuyến mãi như sidebar trang review.
+ *
+ * Thẻ "must reads" đổi theo từng bài: bài nào TỰ là must-read thì trỏ bài khác
+ * để không tự trỏ về chính nó. Nguồn là frontmatter `relatedPosts` — dùng
+ * `reference()` nên gõ sai tên bài là lỗi build chứ không phải `undefined` âm
+ * thầm. (Trước đây danh sách này còn hardcode ở một map thứ sáu trong file này.)
+ */
+import SidebarPartners from "@/components/article/SidebarPartners.astro";
+import SidebarArticles from "@/components/article/SidebarArticles.astro";
+import { getRelatedPosts } from "@/lib/posts";
+
+interface Props {
+  /** id bài đang xem — 2 thẻ gợi ý lấy từ `relatedPosts` của chính bài đó */
+  postId: string;
+}
+
+const { postId } = Astro.props;
+const articles = await getRelatedPosts(postId);
+---
+
+<div class="post-sidebar">
+  <SidebarPartners />
+  <SidebarArticles articles={articles} />
+</div>

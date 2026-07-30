@@ -1,0 +1,113 @@
+---
+import { getCollection, getEntry, render } from "astro:content";
+import InnerPageLayout from "@/layouts/InnerPageLayout.astro";
+import ArticleGrid from "@/components/article/ArticleGrid.astro";
+import InnerNavigator from "@/components/article/InnerNavigator.astro";
+import ReviewIntro from "@/components/article/ReviewIntro.astro";
+import ProsCons from "@/components/article/ProsCons.astro";
+import ArticleLink from "@/components/article/ArticleLink.astro";
+import ReviewSidebar from "@/components/article/ReviewSidebar.astro";
+import { REVIEWS_INDEX, reviewUrl } from "@/lib/links";
+import { articleSchema } from "@/lib/schema-org";
+
+/** Mỗi file MDX trong src/content/reviews → một trang /reviews/<brand>/
+    Tham số lấy từ `entry.id` (tên file), KHÔNG phải trường `slug` khai tay:
+    hai nguồn sự thật cho URL là nguyên nhân của lỗi thiếu "s" trong
+    /sunday-for-dogs-review/ (file vốn là sundays-for-dogs.mdx). */
+export async function getStaticPaths() {
+  const entries = await getCollection("reviews");
+  return entries.map((entry) => ({
+    params: { slug: entry.id },
+    props: { entry },
+  }));
+}
+
+const { entry } = Astro.props;
+const { Content, headings } = await render(entry);
+const { title, heroTitle, promo, pros, cons } = entry.data;
+
+/* Mọi thứ thuộc về đối tác — logo, alt, tên ở link cuối bài, link affiliate —
+   lấy từ collection `brands` qua reference(), không khai lại trong frontmatter. */
+const brand = (await getEntry(entry.data.brand))!.data;
+const author = (await getEntry(entry.data.author))!.data;
+const partnerKey = typeof entry.data.brand === "string" ? entry.data.brand : entry.data.brand.id;
+
+/* Bản gốc: "Home" KHÔNG có href (không phải link), mốc giữa mới là link, và
+   mốc cuối lại ghi "Reviews" chứ không phải tên bài. Giữ nguyên cả ba. */
+const crumbs = [{ text: "Home" }, { text: "Reviews", href: REVIEWS_INDEX }, { text: "Reviews" }];
+
+/* KHÔNG phát Review/AggregateRating: Google cấm self-serving review markup cho
+   sản phẩm bên thứ ba. Điểm số vẫn hiện cho người đọc, chỉ không khai schema. */
+const schema = [
+  articleSchema({
+    title,
+    description: promo,
+    url: reviewUrl(entry.id),
+    image: brand.logo.src,
+    authorName: author.name,
+  }),
+];
+---
+
+<InnerPageLayout
+  title={title}
+  description={promo}
+  type="article"
+  schema={schema}
+  heroTitle="Reviews"
+  heroMobileTitle={heroTitle}
+  crumbs={crumbs}
+>
+  <ArticleGrid>
+    {/* TOC lấy thẳng từ heading của bài — không khai tay, khỏi lệch khi sửa bài */}
+    <InnerNavigator slot="nav" headings={headings} />
+    <main id="main-content" slot="main" class="review__main">
+      <ReviewIntro
+        logo={brand.logo}
+        logoAlt={brand.logoAltShort!}
+        promo={promo}
+        href={brand.affiliateUrl}
+        author={author}
+      />
+      {/* Bản gốc gom Pros/Cons + toàn bộ bài + link cuối vào CHUNG một section */}
+      <section class="review__content">
+        <div class="review__body">
+          <ProsCons pros={pros} cons={cons} />
+          <Content />
+          {/* Tên đối tác ở link cuối bài (không có dấu nháy) */}
+          <ArticleLink name={brand.articleLinkName!} href={brand.affiliateUrl} />
+        </div>
+      </section>
+    </main>
+    <ReviewSidebar slot="sidebar" partner={partnerKey} />
+  </ArticleGrid>
+</InnerPageLayout>
+
+<style>
+  /* Cột nội dung: dưới 1025px bản gốc đóng khung nó bằng một viền mảnh (bài
+     blog thì không) — nên viền này thuộc về trang, không thuộc về ArticleGrid. */
+  .review__main {
+    width: 100%;
+    margin: 0 auto 10px;
+    border: 1px solid #ecebeb;
+  }
+
+  /* Section bọc Pros/Cons + bài + link cuối. Rule chung cho mọi <section> của
+     bản gốc: padding 0 10px, margin 0 (đổi thành 2px auto 30px từ 1025px). */
+  .review__content {
+    position: relative;
+    margin: 0;
+    padding-inline: 10px;
+  }
+
+  @media (min-width: 1025px) and (min-height: 420px) {
+    .review__main {
+      margin-right: 0;
+      padding-right: 20px;
+      border: none;
+    }
+    .review__content {
+      margin: 2px auto 30px;
+    }
+  }
+</style>

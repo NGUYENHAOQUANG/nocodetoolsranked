@@ -1,0 +1,26 @@
+---
+/**
+ * Sidebar trang review = carousel khuyến mãi + danh sách brand + thẻ bài viết.
+ *
+ * Ba khối đều là component riêng: hai khối dưới dùng chung với sidebar bài blog,
+ * carousel thì chỉ trang này có. File này chỉ còn việc ghép chúng lại.
+ */
+import PromoCarousel from "@/components/article/PromoCarousel.astro";
+import SidebarPartners from "@/components/article/SidebarPartners.astro";
+import SidebarArticles from "@/components/article/SidebarArticles.astro";
+import { getReviewSidebarArticles } from "@/lib/posts";
+
+interface Props {
+  /** Key đối tác của trang hiện tại — carousel bắt đầu ở đối tác này */
+  partner: string;
+}
+
+const { partner } = Astro.props;
+const sidebarArticles = await getReviewSidebarArticles();
+---
+
+<div class="review-sidebar">
+  <PromoCarousel partner={partner} />
+  <SidebarPartners />
+  <SidebarArticles articles={sidebarArticles} />
+</div>

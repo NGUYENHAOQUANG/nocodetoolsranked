@@ -1,0 +1,96 @@
+---
+/* Mỗi file MDX trong src/content/posts → một trang /knowledge/<slug>/
+   Thay cho 6 thư mục pages/<slug>/index.astro viết tay của bản cũ: thêm bài
+   giờ là thêm ĐÚNG MỘT file .mdx, không đụng code.
+
+   Thân bài trước đây nằm ở `layouts/PostLayout.astro` và file này chỉ 18 dòng
+   chuyển tiếp `entry` sang đó. Nhưng PostLayout không có `<slot/>` — nó không
+   bọc ai, nó LÀ thân trang của đúng route này. Gộp về đây để `layouts/` chỉ
+   còn thứ bọc trang khác, và để trang blog tổ chức giống trang review. */
+import { getCollection, getEntry, render } from "astro:content";
+import InnerPageLayout from "@/layouts/InnerPageLayout.astro";
+import ArticleGrid from "@/components/article/ArticleGrid.astro";
+import InnerNavigator from "@/components/article/InnerNavigator.astro";
+import PostIntro from "@/components/article/PostIntro.astro";
+import PostSidebar from "@/components/article/PostSidebar.astro";
+import { KNOWLEDGE_INDEX, postUrl } from "@/lib/links";
+import { articleSchema } from "@/lib/schema-org";
+
+export async function getStaticPaths() {
+  const entries = await getCollection("posts");
+  return entries.map((entry) => ({ params: { slug: entry.id }, props: { entry } }));
+}
+
+const { entry } = Astro.props;
+const { Content, headings } = await render(entry);
+const { title, date, readTime, heroMobileTitle } = entry.data;
+
+/* Tác giả (tên/vai trò/ảnh) lấy từ collection `authors` qua reference().
+   Map AVATARS hardcode trước đây đã bỏ — gõ sai tên tác giả giờ là lỗi build
+   chứ không phải avatar `undefined` âm thầm. */
+const author = (await getEntry(entry.data.author))!.data;
+
+const crumbs = [{ text: "Home" }, { text: "Knowledge", href: KNOWLEDGE_INDEX }, { text: title }];
+
+const schema = [
+  articleSchema({
+    title,
+    description: entry.data.excerpt,
+    url: postUrl(entry.id),
+    image: entry.data.images.card.src,
+    authorName: author.name,
+  }),
+];
+---
+
+{
+  /* Bài viết: banner hiện chính tiêu đề bài (cả desktop lẫn mobile).
+
+    Mốc breadcrumb giữa: bản gốc ghi "-" — chuyên mục RỖNG, di chứng của việc
+    bài viết nằm ở gốc site không thuộc đâu cả. Giờ bài nằm dưới /knowledge/ nên
+    mốc đó có tên thật. Đây là 1 trong 3 khác biệt được phép (CLAUDE.md §4). */
+}
+<InnerPageLayout
+  title={title}
+  description={entry.data.excerpt}
+  image={entry.data.images.card.src}
+  type="article"
+  schema={schema}
+  heroTitle={title}
+  heroMobileTitle={heroMobileTitle ?? title}
+  crumbs={crumbs}
+>
+  <ArticleGrid>
+    {/* TOC "Navigate" lấy từ h3 trong thân bài */}
+    <InnerNavigator slot="nav" headings={headings} />
+    <main id="main-content" slot="main" class="post__main">
+      <PostIntro
+        title={title}
+        date={date}
+        readTime={readTime}
+        author={author}
+        avatar={author.avatar}
+      />
+      <div class="post__body">
+        <Content />
+      </div>
+    </main>
+    <PostSidebar slot="sidebar" postId={entry.id} />
+  </ArticleGrid>
+</InnerPageLayout>
+
+<style>
+  .post__main {
+    width: 100%;
+    margin: 0 auto;
+  }
+
+  @media (min-width: 1025px) and (min-height: 420px) {
+    .post__main {
+      /* Bản gốc KHÔNG chừa margin đáy ở cột nội dung (khoảng cách tới footer chỉ
+         do margin 25px của lưới) — bỏ 10px đáy kế thừa từ base */
+      margin: 0;
+      padding-right: 20px;
+    }
+  }
+</style>

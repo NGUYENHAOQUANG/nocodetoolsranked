@@ -1,0 +1,30 @@
+---
+/* Một khối nội dung của bài review. Bài được chia thành nhiều khối, mỗi khối
+   margin 10px 0 30px và tự là BFC nhờ `overflow-x: scroll` (để bảng rộng cuộn
+   ngang được).
+
+   Nội dung đưa vào qua <slot /> nên nằm NGOÀI phạm vi scoped CSS. Vì vậy style
+   cho các thẻ bên trong (h1–h3, p, ul/ol, table) đặt ở `styles/prose.css` dưới
+   khối `.paragraph__content`, không đặt trong <style> của file này. */
+---
+
+<div class="paragraph">
+  <div class="paragraph__content">
+    <slot />
+  </div>
+</div>
+
+<style>
+  .paragraph {
+    max-width: min(95dvw, var(--width-content));
+    margin: 10px auto 30px;
+    color: var(--color-text-body);
+    font-weight: 400;
+    /* Tạo BFC + cho bảng rộng cuộn ngang; thanh cuộn ẩn đi */
+    overflow-x: scroll;
+    scrollbar-width: none;
+  }
+  .paragraph::-webkit-scrollbar {
+    display: none;
+  }
+</style>

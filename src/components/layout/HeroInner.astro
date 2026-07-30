@@ -1,0 +1,145 @@
+---
+/**
+ * Banner đầu trang cho MỌI trang trong: chỉ có tiêu đề, không phụ đề, không
+ * "Last Updated", không tooltip disclosure.
+ *
+ * Tách khỏi `HeroToplist` vì hai thứ chỉ dùng chung `<section class="hero">` và bộ
+ * ảnh nền. `title` và `alt` để BẮT BUỘC: bản gộp trước đây mặc định `title = ""`
+ * nên quên truyền là ra banner rỗng mà `astro check` vẫn xanh.
+ *
+ * Khung dùng chung nằm ở `@/styles/hero.css`.
+ */
+import { getImage } from "astro:assets";
+import heroImgDesktop from "@/assets/hero/hero.jpg";
+import heroImgMobile from "@/assets/hero/hero-mobile.jpg";
+import "@/styles/hero.css";
+
+interface Props {
+  /** Tiêu đề bản desktop */
+  title: string;
+  /** Tiêu đề bản mobile (<768px). Bản gốc để chuỗi KHÁC hẳn desktop ở vài trang. */
+  mobileTitle?: string;
+  /** Căn tiêu đề LÊN ĐẦU banner thay vì giữa (các trang nội dung phẳng) */
+  isTitleTop?: boolean;
+  alt: string;
+}
+
+const { title, mobileTitle = title, isTitleTop = false, alt } = Astro.props;
+
+/* MỘT ảnh được tải, không phải hai.
+   Hai `<Image>` ẩn/hiện bằng CSS thì trình duyệt vẫn tải CẢ HAI: ảnh
+   `display: none` vẫn nằm trong luồng tải. Đo trên /about/: hai ảnh hero chiếm
+   41.2 KB trong 95.8 KB của trang, tức gần một nửa — và một nửa số đó không bao
+   giờ hiện, lại còn `loading="eager"` nên tranh băng thông với ảnh thật.
+
+   `<picture>` + `<source media>` để trình duyệt chọn TRƯỚC khi tải. Astro không
+   có component nào làm art direction (`<Picture>` chỉ đổi ĐỊNH DẠNG của cùng
+   một ảnh), nên dựng tay bằng `getImage()` — vẫn được srcset tối ưu. */
+const wide = await getImage({
+  src: heroImgDesktop,
+  widths: [768, 1024, 1440, 1920, 2560],
+  format: "webp",
+});
+const compact = await getImage({
+  src: heroImgMobile,
+  widths: [375, 480, 640, 768],
+  format: "webp",
+});
+
+const innerContentClass = [
+  "hero__content",
+  "hero__content--inner",
+  isTitleTop && "hero__content--top",
+]
+  .filter(Boolean)
+  .join(" ");
+---
+
+<section class="hero">
+  {
+    /* MỘT banner, MỘT `<h1>` — cùng hình dạng với `HeroToplist`.
+
+      Bản gốc dựng hai cây banner riêng, JS chọn cây theo `clientWidth` (mốc
+      768) còn CSS ẩn theo `innerWidth` — lệch đúng 15px thanh cuộn, nên ở
+      768-782px KHÔNG cây nào hiện: dải trắng 170px, không tiêu đề nào. 768px
+      là bề rộng iPad dọc, nên đó là lỗi thật chứ không phải thiết kế.
+
+      Hai cây còn kéo theo HAI thẻ `<h1>` trên mỗi trang trong — 20/21 trang,
+      trái chính luật repo tự ghi. Gộp lại xử lý cả hai: ảnh và chữ đổi theo
+      CÙNG một mốc, và chỉ còn một `<h1>` chứa hai nhánh chữ. */
+  }
+  <div class="hero__banner">
+    {
+      /* `alt` dùng bản DESKTOP cho cả hai nhánh: `<picture>` chỉ có một `<img>`
+        nên chỉ có một alt. Chuỗi desktop là chuỗi mô tả trang, còn chuỗi mobile
+        của bản gốc chỉ khác ở vài trang và không mô tả gì thêm về ẢNH. */
+    }
+    <picture>
+      <source media="(min-width: 768px)" srcset={wide.srcSet.attribute} sizes="100vw" />
+      <img
+        class="hero__bg"
+        src={compact.src}
+        srcset={compact.srcSet.attribute}
+        sizes="100vw"
+        alt={alt}
+        width="650"
+        height="325"
+        loading="eager"
+      />
+    </picture>
+    <div class={innerContentClass}>
+      <div class="hero__text">
+        {
+          /* set:html để tiêu đề mobile chèn <br> cứng như bản gốc (vd
+            "Top Dog Food Delivery" xuống dòng rồi "Reviews") — không tự wrap.
+            Nhánh nào bị `display: none` thì trình đọc màn hình cũng bỏ qua,
+            nên một `<h1>` vẫn cho ra đúng một tiêu đề được đọc. */
+        }
+        <h1 class="hero__title">
+          <span class="hero__title-part hero__title-part--compact" set:html={mobileTitle} />
+          <span class="hero__title-part hero__title-part--wide" set:html={title} />
+        </h1>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  /* Bản gốc chỉ đổi justify-content: trang chủ đẩy "Last Updated" xuống đáy
+     (space-between), trang trong căn giữa tiêu đề. Padding đối xứng nên tâm
+     tiêu đề rơi đúng giữa banner. */
+  .hero__content--inner {
+    justify-content: center;
+  }
+  /* /about/: tiêu đề căn LÊN ĐẦU (bản gốc dùng space-between/flex-start,
+     một con nên nằm sát trên) — đè lên căn-giữa của --inner */
+  .hero__content--top {
+    justify-content: flex-start;
+  }
+
+  /* `<picture>` phải RA KHỎI luồng, đúng như `<img>` trước đây.
+
+     `display: contents` KHÔNG dùng được: `.hero__banner` là grid, nên nó đưa
+     `<img>` lên làm grid item và sinh thêm một hàng — đo được `grid-template-rows`
+     thành `54.72px 117.28px`, đẩy tiêu đề xuống 54.7px và làm mất tác dụng của
+     `--top` ở trang /about/. Cho `<picture>` absolute thì grid lại chỉ còn đúng
+     một item trong luồng như cũ. */
+  picture {
+    position: absolute;
+    inset: 0;
+  }
+
+  /* Chữ đổi theo CÙNG mốc 768px mà `<source media>` dùng cho ảnh. */
+  .hero__title-part--wide {
+    display: none;
+  }
+
+  @media (min-width: 768px) {
+    .hero__title-part--compact {
+      display: none;
+    }
+    .hero__title-part--wide {
+      display: inline;
+    }
+  }
+</style>

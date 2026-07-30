@@ -1,0 +1,16 @@
+---
+import InnerPageLayout from "@/layouts/InnerPageLayout.astro";
+import ContactCards from "@/components/contact/ContactCards.astro";
+
+const TITLE = "Contact Us";
+---
+
+<InnerPageLayout
+  title={`Top 10 Dog Food Subscriptions - ${TITLE}`}
+  heroTitle={TITLE}
+  crumbs={[{ text: "Home" }, { text: TITLE }]}
+>
+  <main id="main-content">
+    <ContactCards />
+  </main>
+</InnerPageLayout>

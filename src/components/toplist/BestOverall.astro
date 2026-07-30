@@ -1,0 +1,44 @@
+---
+import type { ToplistRow } from "@/lib/rankings";
+import PartnerCard from "@/components/toplist/PartnerCard.astro";
+
+interface Props {
+  /** Card hạng 1 của trang, lặp lại ở cuối trang đúng như bản gốc */
+  brand: ToplistRow;
+}
+
+const { brand } = Astro.props;
+---
+
+<section class="best-overall">
+  <div class="best-overall__inner">
+    <h2 class="best-overall__title">Best Overall Dog Food Delivery</h2>
+    <PartnerCard brand={brand} shouldShowRank={false} isBestOverall />
+  </div>
+</section>
+
+<style>
+  .best-overall {
+    width: 100%;
+    margin: 0 auto 30px;
+    padding-bottom: 17px;
+    border-top: 1px solid #cbcbcb;
+    border-bottom: 1px solid #cbcbcb;
+  }
+
+  .best-overall__inner {
+    width: 100%;
+    max-width: min(var(--width-content), 95dvw);
+    margin-inline: auto;
+  }
+
+  .best-overall__title {
+    width: 100%;
+    margin: 20px 0 0;
+    padding: 5px;
+    font-size: 1.4rem;
+    font-weight: 700;
+    text-align: start;
+    color: var(--color-text-body);
+  }
+</style>

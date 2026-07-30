@@ -1,0 +1,421 @@
+---
+import logo from "@/assets/site/logo.svg";
+import { getReviewNavLinks } from "@/lib/rankings";
+import { mainNav } from "@/config/navigation";
+
+/* Menu con "Reviews" — đúng thứ tự bản gốc (trùng thứ tự sidebar): 6 mục,
+   KHÔNG có Golden Child. Trước đây là 6 dòng gõ tay ở đây, tức nguồn thứ hai
+   cho cả tên brand lẫn đường dẫn. */
+const reviewLinks = await getReviewNavLinks();
+
+/* Mục trang hiện tại được đánh dấu `navbar_active` (cam + đậm 600) như bản gốc */
+const currentPath = Astro.url.pathname.replace(/\/+$/, "");
+const isActive = (href: string) => href.replace(/\/+$/, "") === currentPath;
+---
+
+<header class="site-header">
+  <div class="site-header__inner">
+    <a class="site-header__logo" href="/" aria-label="top10dogfood.com">
+      <img
+        src={logo.src}
+        width={logo.width}
+        height={logo.height}
+        alt="top10dogfood.com - Fresh Dog Food Delivery"
+      />
+    </a>
+
+    <nav class="site-nav" aria-label="Main">
+      <ul class="site-nav__list">
+        <li class="site-nav__item site-nav__item--has-menu">
+          <a
+            class:list={["site-nav__link", { "is-active": isActive(mainNav.reviews.href) }]}
+            href={mainNav.reviews.href}>{mainNav.reviews.label}</a
+          >
+          <ul class="site-nav__submenu">
+            {
+              reviewLinks.map((item) => (
+                <li>
+                  <a href={item.href} class:list={{ "is-active": isActive(item.href) }}>
+                    {item.label}
+                  </a>
+                </li>
+              ))
+            }
+          </ul>
+        </li>
+        <li class="site-nav__item">
+          <a
+            class:list={["site-nav__link", { "is-active": isActive(mainNav.knowledge.href) }]}
+            href={mainNav.knowledge.href}>{mainNav.knowledge.label}</a
+          >
+        </li>
+      </ul>
+    </nav>
+
+    <button
+      class="site-header__burger"
+      type="button"
+      aria-label="Open menu"
+      aria-controls="mobile-drawer"
+      aria-expanded="false"
+    >
+      <svg
+        viewBox="0 0 24 24"
+        width="30"
+        height="30"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        aria-hidden="true"
+      >
+        <path d="M4 6h16M4 12h16m-7 6h7"></path>
+      </svg>
+    </button>
+  </div>
+</header>
+
+{/* Menu di động (drawer trượt từ phải) */}
+<div class="mobile-drawer" id="mobile-drawer">
+  <div class="mobile-drawer__overlay" data-drawer-close></div>
+  <aside class="mobile-drawer__panel" aria-label="Mobile menu">
+    <div class="mobile-drawer__top">
+      <button class="mobile-drawer__close" type="button" aria-label="Close menu" data-drawer-close>
+        <svg viewBox="0 0 24 24" width="25" height="25" fill="currentColor" aria-hidden="true">
+          <path
+            d="M6.2253 4.81108C5.83477 4.42056 5.20161 4.42056 4.81108 4.81108C4.42056 5.20161 4.42056 5.83477 4.81108 6.2253L10.5858 12L4.81114 17.7747C4.42062 18.1652 4.42062 18.7984 4.81114 19.1889C5.20167 19.5794 5.83483 19.5794 6.22535 19.1889L12 13.4142L17.7747 19.1889C18.1652 19.5794 18.7984 19.5794 19.1889 19.1889C19.5794 18.7984 19.5794 18.1652 19.1889 17.7747L13.4142 12L19.189 6.2253C19.5795 5.83477 19.5795 5.20161 19.189 4.81108C18.7985 4.42056 18.1653 4.42056 17.7748 4.81108L12 10.5858L6.2253 4.81108Z"
+          ></path>
+        </svg>
+      </button>
+    </div>
+
+    <ul class="mobile-drawer__list">
+      <li class="mobile-drawer__group">
+        <button
+          class="mobile-drawer__item mobile-drawer__toggle"
+          type="button"
+          aria-expanded="false"
+        >
+          <span>{mainNav.reviews.label}</span>
+          <svg
+            class="mobile-drawer__chevron"
+            viewBox="0 0 448 512"
+            width="17"
+            height="17"
+            fill="currentColor"
+            aria-hidden="true"
+          >
+            <path
+              d="M207.029 381.476L12.686 187.132c-9.373-9.373-9.373-24.569 0-33.941l22.667-22.667c9.357-9.357 24.522-9.375 33.901-.04L224 284.505l154.745-154.021c9.379-9.335 24.544-9.317 33.901.04l22.667 22.667c9.373 9.373 9.373 24.569 0 33.941L240.971 381.476c-9.373 9.372-24.569 9.372-33.942 0z"
+            ></path>
+          </svg>
+        </button>
+        <div class="mobile-drawer__submenu">
+          <ul class="mobile-drawer__sublist">
+            {
+              reviewLinks.map((item) => (
+                <li>
+                  <a class="mobile-drawer__item mobile-drawer__item--inner" href={item.href}>
+                    {item.label}
+                  </a>
+                </li>
+              ))
+            }
+          </ul>
+        </div>
+      </li>
+      <li class="mobile-drawer__group">
+        <a class="mobile-drawer__item" href={mainNav.knowledge.href}>{mainNav.knowledge.label}</a>
+      </li>
+    </ul>
+  </aside>
+</div>
+
+<style>
+  /* Để static (KHÔNG z-index): bóng đổ phải nằm dưới để hero phủ lên như bản gốc.
+     z-index nâng nav lên trên nội dung được đặt ở .site-header__inner. */
+  .site-header {
+    background: var(--color-surface);
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.08);
+  }
+
+  /* Chiều cao do nội dung quyết định như gốc: padding-top 7 + hộp logo
+     (41.8px ở mobile / 42.2px ở desktop) — đừng ép min-height */
+  .site-header__inner {
+    position: relative;
+    z-index: 26;
+    padding: 7px 15px 0 5px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  /* ----- Logo ----- */
+  /* Để block (không flex) cho ảnh giữ dạng inline: hộp logo cao bằng ảnh 35px
+     + phần dưới baseline, đúng cơ chế bản gốc dựng chiều cao header */
+  .site-header__logo {
+    display: block;
+    min-width: 144px;
+  }
+  .site-header__logo img {
+    max-height: 35px;
+    width: auto;
+    object-fit: contain;
+  }
+
+  /* ----- Hamburger (mobile) ----- */
+  /* Căn giữa theo CẢ header (không phải theo vùng nội dung dưới padding-top) — như gốc */
+  .site-header__burger {
+    position: absolute;
+    right: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+    background: none;
+    border: 0;
+    color: var(--color-text-body);
+  }
+
+  /* ----- Desktop nav (ẩn dưới 1025px) ----- */
+  .site-nav {
+    display: none;
+  }
+  .site-nav__list {
+    display: flex;
+    align-items: center;
+  }
+  .site-nav__item {
+    position: relative;
+    margin: 0 10px;
+  }
+  /* line-height kế thừa 1.7em từ body (đã tính sẵn ra px) — khai báo lại dạng
+     không đơn vị sẽ lệch 1/64px do khác thời điểm làm tròn. */
+  .site-nav__link {
+    display: block;
+    text-align: center;
+    transition: color 0.15s ease;
+  }
+  /* Có trong bản gốc: tách chữ cái đầu thành run riêng, làm đổi shaping subpixel
+     của phần chữ còn lại. Bỏ đi thì "Reviews" render lệch vài pixel so với gốc. */
+  .site-nav__link::first-letter {
+    text-transform: capitalize;
+  }
+  .site-nav__item:hover > .site-nav__link {
+    color: var(--color-primary);
+  }
+  /* Mục ứng với trang hiện tại: cam + đậm 600 (navbar_active bản gốc) */
+  .site-nav__link.is-active {
+    color: var(--color-primary);
+    font-weight: 600;
+  }
+
+  /* Reviews dropdown (desktop) */
+  .site-nav__submenu {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    transform: translateX(-57%);
+    min-width: 175px;
+    background: var(--color-surface);
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.2s linear;
+    z-index: 3;
+  }
+  .site-nav__item--has-menu:hover .site-nav__submenu {
+    max-height: 410px;
+    box-shadow: -3px 2px 5px 2px rgba(194, 194, 194, 0.4117647059);
+  }
+  .site-nav__submenu a {
+    display: block;
+    width: 175px;
+    padding: 10px 2px 10px 7px;
+    text-align: left;
+    color: #676767;
+    font-weight: 400;
+    font-size: 0.9rem;
+  }
+  .site-nav__submenu a:hover {
+    color: var(--color-primary);
+    background: var(--color-surface-muted);
+  }
+  /* Mục trang hiện tại (navbar_active ở bản gốc): cam + đậm 600 */
+  .site-nav__submenu a.is-active {
+    color: var(--color-primary);
+    font-weight: 600;
+  }
+
+  /* ===== Mobile drawer ===== */
+  .mobile-drawer {
+    position: fixed;
+    inset: 0;
+    z-index: 100;
+    visibility: hidden;
+  }
+  .mobile-drawer.is-open {
+    visibility: visible;
+  }
+  .mobile-drawer__overlay {
+    position: absolute;
+    inset: 0;
+    background: var(--color-overlay);
+    opacity: 0;
+    transition: opacity 0.25s ease;
+  }
+  /* Bản gốc: nền rgba(0,0,0,.5) NHƯNG opacity element chỉ 0.5 → độ tối thực = .5×.5
+     = 0.25 (nhạt). Mình để opacity mở = 0.5 cho khớp (không phải 1). */
+  .mobile-drawer.is-open .mobile-drawer__overlay {
+    opacity: 0.5;
+  }
+  .mobile-drawer__panel {
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 255px;
+    height: 100%;
+    background: var(--color-surface);
+    /* will-change:transform ép panel nằm trên layer riêng (composited) NGAY TỪ
+       lúc vẽ → chữ dùng khử răng cưa GRAYSCALE như bản gốc, không lên màu kiểu
+       subpixel (viền chữ ánh xanh/cam). translate3d(0) đơn thuần bị Chromium ép
+       về ma trận 2D nên không đủ. */
+    will-change: transform;
+    transform: translateX(100%);
+    transition: transform 0.25s ease;
+    overflow-y: auto;
+  }
+  .mobile-drawer.is-open .mobile-drawer__panel {
+    transform: translateX(0);
+  }
+
+  .mobile-drawer__top {
+    display: flex;
+    justify-content: flex-end;
+    margin: 5px;
+  }
+  .mobile-drawer__close {
+    display: inline-flex;
+    padding: 0;
+    background: none;
+    border: 0;
+    color: var(--color-text-body);
+  }
+
+  .mobile-drawer__list {
+    list-style: none;
+    margin: 10px 0 0;
+    padding: 0 5px 0 0; /* chừa 5px bên phải như gốc (divider dừng trước mép) */
+  }
+  .mobile-drawer__item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    box-sizing: border-box;
+    height: 42px;
+    /* Reset đủ 4 chiều: `.mobile-drawer__toggle` là <button> nên có padding mặc
+       định của UA (1px 6px). Nếu chỉ đặt padding-left, padding-right 6px còn lại
+       sẽ đẩy chevron (space-between) lệch trái 6px so với bản gốc. */
+    padding: 0 0 0 15px;
+    background: none;
+    border: 0;
+    border-bottom: 1px solid #808080;
+    font-size: 18px;
+    font-weight: 400;
+    color: var(--color-text-body);
+    text-align: left;
+    text-decoration: none;
+    cursor: pointer;
+  }
+  .mobile-drawer__chevron {
+    flex-shrink: 0;
+    color: var(--color-text-body);
+    transition: transform 0.2s ease;
+  }
+  .mobile-drawer__toggle[aria-expanded="true"] .mobile-drawer__chevron {
+    transform: rotate(180deg);
+  }
+
+  /* Submenu (Reviews) — cả khối thụt 10%, item con nhạt hơn (weight 300, màu đen) */
+  .mobile-drawer__submenu {
+    max-height: 0;
+    overflow: hidden;
+    margin-left: 10%;
+    transition: max-height 0.4s ease-out;
+  }
+  .mobile-drawer__sublist {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+  .mobile-drawer__item--inner {
+    width: calc(100% - 10px);
+    margin-left: 10px;
+    font-weight: 300;
+    color: var(--color-text);
+  }
+
+  /* ===== Desktop (≥ 1025px) ===== */
+  @media (min-width: 1025px) {
+    /* Chiều cao do nội dung quyết định như gốc: 7 (padding) + 10 + 27.2 (ul) + 10 = 54.2px */
+    .site-header__inner {
+      max-width: min(var(--width-content), 100dvw);
+      margin-inline: auto;
+      padding: 7px 0 0;
+    }
+    .site-header__burger {
+      display: none;
+    }
+    .site-nav {
+      display: block;
+      margin: 10px 0;
+    }
+    .mobile-drawer {
+      display: none;
+    }
+  }
+</style>
+
+<script>
+  const drawer = document.getElementById("mobile-drawer");
+  const burger = document.querySelector<HTMLButtonElement>(".site-header__burger");
+
+  if (drawer && burger) {
+    // Khoá cuộn ở <html> (nơi giữ thanh cuộn) chứ không phải <body> — vì html đặt
+    // height:max-content nên body overflow:hidden không gỡ được thanh cuộn. Gỡ ở
+    // html mới làm mất thanh cuộn để panel (fixed, right:0) chạm đúng mép phải như
+    // bản gốc, không còn hở 15px.
+    const open = () => {
+      drawer.classList.add("is-open");
+      burger.setAttribute("aria-expanded", "true");
+      document.documentElement.style.overflow = "hidden";
+    };
+    const close = () => {
+      drawer.classList.remove("is-open");
+      burger.setAttribute("aria-expanded", "false");
+      document.documentElement.style.overflow = "";
+    };
+
+    burger.addEventListener("click", open);
+    drawer
+      .querySelectorAll("[data-drawer-close]")
+      .forEach((el) => el.addEventListener("click", close));
+    document.addEventListener("keydown", (e) => {
+      if (e.key === "Escape" && drawer.classList.contains("is-open")) close();
+    });
+
+    // Reviews mở rộng trong drawer
+    const toggle = drawer.querySelector<HTMLButtonElement>(".mobile-drawer__toggle");
+    const submenu = drawer.querySelector<HTMLElement>(".mobile-drawer__submenu");
+    if (toggle && submenu) {
+      toggle.addEventListener("click", () => {
+        const expanded = toggle.getAttribute("aria-expanded") === "true";
+        toggle.setAttribute("aria-expanded", String(!expanded));
+        submenu.style.maxHeight = expanded ? "0" : submenu.scrollHeight + "px";
+      });
+    }
+  }
+</script>

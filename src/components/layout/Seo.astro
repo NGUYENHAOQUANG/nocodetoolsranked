@@ -1,0 +1,73 @@
+---
+/**
+ * Thẻ SEO cho <head>: canonical, Open Graph, Twitter Card, JSON-LD.
+ *
+ * Tự viết thay vì dùng `astro-seo`: gói đó chỉ tiết kiệm ~40 dòng nhưng thêm
+ * một dependency và một lớp trừu tượng (CLAUDE.md §8.1).
+ *
+ * CHỈ phát thẻ vào <head> — không được đụng gì tới <body>, vì gate của GĐ6 là
+ * "body diff rỗng, head diff thuần cộng thêm".
+ */
+import { SITE } from "@/config/site";
+
+interface Props {
+  title: string;
+  description: string;
+  /** Ảnh đại diện khi chia sẻ (đường dẫn tuyệt đối trong site, vd /_astro/x.webp) */
+  image?: string;
+  /** "website" cho trang thường, "article" cho bài viết/review */
+  type?: "website" | "article";
+  /**
+   * Chặn công cụ tìm kiếm lập chỉ mục trang này. Dùng cho 404: trang lỗi lọt vào
+   * chỉ mục là thứ Google khuyến cáo tránh, và canonical của nó vốn cũng vô nghĩa.
+   */
+  noindex?: boolean;
+  /** JSON-LD đã dựng sẵn — xem lib/schema-org.ts */
+  schema?: Record<string, unknown>[];
+}
+
+const { title, description, image, type = "website", noindex = false, schema = [] } = Astro.props;
+
+/* Canonical dựng từ `site` trong astro.config + đường dẫn hiện tại.
+   `Astro.site` đọc thẳng khoá `site` nên không có bản sao domain nào để lệch.
+   Astro.url.pathname đã kèm "/" cuối do trailingSlash: "always". */
+const canonical = new URL(Astro.url.pathname, Astro.site).href;
+
+/* Ảnh chia sẻ. Trang tự truyền `image` thì dùng cái đó (bài blog dùng ảnh card);
+   còn lại rơi về ảnh mặc định của site — trước đây 15/21 trang không có
+   `og:image` nào, kể cả trang chủ, nên chia sẻ ra mạng xã hội hiện thẻ trống.
+
+   Chỉ khai `og:image:width/height` khi dùng ảnh MẶC ĐỊNH: kích thước ảnh riêng
+   của từng trang thì đây không biết, mà khai sai còn tệ hơn không khai. */
+const usingDefault = image === undefined;
+const ogImage = new URL(image ?? SITE.ogImage.path, Astro.site).href;
+---
+
+{noindex && <meta name="robots" content="noindex" />}
+{/* Trang noindex không khai canonical: nó không phải bản chính của gì cả. */}
+{!noindex && <link rel="canonical" href={canonical} />}
+
+{/* Open Graph */}
+<meta property="og:type" content={type} />
+<meta property="og:site_name" content={SITE.name} />
+<meta property="og:title" content={title} />
+<meta property="og:description" content={description} />
+<meta property="og:url" content={canonical} />
+<meta property="og:locale" content={SITE.locale} />
+<meta property="og:image" content={ogImage} />
+{
+  usingDefault && (
+    <>
+      <meta property="og:image:width" content={String(SITE.ogImage.width)} />
+      <meta property="og:image:height" content={String(SITE.ogImage.height)} />
+    </>
+  )
+}
+
+{/* Twitter */}
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content={title} />
+<meta name="twitter:description" content={description} />
+<meta name="twitter:image" content={ogImage} />
+
+{schema.map((node) => <script type="application/ld+json" set:html={JSON.stringify(node)} />)}

@@ -1,0 +1,160 @@
+---
+import logoWhite from "@/assets/site/logo-white.svg";
+import { footerLinks } from "@/config/navigation";
+
+// Trang gốc hiển thị năm hiện tại; lấy lúc build cho khớp hành vi đó (như Hero)
+const year = new Date().getFullYear();
+---
+
+<footer class="site-footer">
+  <div class="site-footer__brand">
+    {
+      /* Trang trí: tên site đã có ở dòng bản quyền ngay dưới và ở link logo trên
+        header, nên logo này không mang thêm thông tin -> alt rỗng. */
+    }
+    <img
+      class="site-footer__logo"
+      src={logoWhite.src}
+      alt=""
+      width={logoWhite.width}
+      height={logoWhite.height}
+    />
+  </div>
+
+  <div class="site-footer__nav">
+    <ul class="site-footer__links">
+      {
+        footerLinks.map((link) => (
+          <li>
+            <a href={link.href}>{link.label}</a>
+          </li>
+        ))
+      }
+    </ul>
+  </div>
+
+  <div class="site-footer__copyright">
+    Copyright © {year} top10dogfood.com. All Rights Reserved.
+  </div>
+</footer>
+
+<style>
+  /* ==========================================================================
+     Base = mobile (<481px): xếp dọc, danh sách link có gạch chân
+     ========================================================================== */
+  .site-footer {
+    width: 100%;
+    /* Đáy 100px chừa chỗ cho nút cuộn-lên-đầu nổi */
+    padding: 20px 20px 100px;
+    display: flex;
+    flex-flow: column wrap;
+    justify-content: space-between;
+    /* Bản gốc khai #1b1a35 trong CSS nhưng ghi đè bằng inline style ở cấu hình
+       trang — màu thật sự hiển thị là #1c1b42 */
+    background-color: #1c1b42;
+  }
+
+  .site-footer__logo {
+    width: auto;
+    height: 55px;
+    max-width: min(100%, 220px);
+    align-self: flex-start;
+  }
+
+  .site-footer__nav {
+    display: flex;
+    flex-direction: column;
+    flex-wrap: wrap;
+    padding-bottom: 10px;
+    border-bottom: 1px solid #ddd;
+  }
+  .site-footer__links {
+    width: fit-content;
+  }
+  .site-footer__links li {
+    padding-top: 4px;
+    font-size: 1.125rem;
+    color: var(--color-text-on-primary);
+    opacity: 0.7;
+  }
+  .site-footer__links a {
+    /* Bản gốc bọc chữ trong 1 <div> để link chiếm hết bề ngang ô */
+    display: block;
+    color: var(--color-text-on-primary);
+  }
+
+  .site-footer__copyright {
+    width: 80%;
+    margin: 20px 0;
+    font-size: 1.125rem;
+    text-align: start;
+    color: var(--color-text-on-primary);
+  }
+
+  /* ==========================================================================
+     ≥481px (và cao ≥420px) — logo và danh sách nằm ngang
+     ========================================================================== */
+  @media (min-width: 481px) and (min-height: 420px) {
+    .site-footer {
+      flex-direction: row;
+      justify-content: flex-start;
+    }
+    .site-footer__brand {
+      display: flex;
+      flex-direction: column;
+      max-width: 35%;
+      margin-right: 10px;
+      text-align: start;
+    }
+  }
+
+  /* ==========================================================================
+     ≥768px (và cao ≥420px) — link dàn 5 cột, bỏ gạch chân, copyright canh giữa
+     ========================================================================== */
+  @media (min-width: 768px) and (min-height: 420px) {
+    .site-footer__nav {
+      display: grid;
+      gap: 10px;
+      margin-left: 25px;
+      padding-bottom: 10px;
+      border-bottom: unset;
+    }
+    .site-footer__links {
+      width: 100%;
+      margin: auto 0;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: flex-start;
+    }
+    .site-footer__links li {
+      width: 20%;
+      min-width: fit-content;
+      margin: 10px 18px 0;
+      white-space: nowrap;
+    }
+    .site-footer__copyright {
+      margin: 20px auto;
+      text-align: center;
+    }
+  }
+
+  /* ==========================================================================
+     ≥1025px (và cao ≥420px)
+     ========================================================================== */
+  @media (min-width: 1025px) and (min-height: 420px) {
+    .site-footer {
+      align-items: flex-start;
+      justify-content: center;
+    }
+    .site-footer__logo {
+      position: relative;
+      max-width: 220px;
+      max-height: 100%;
+      object-fit: contain;
+    }
+    .site-footer__nav {
+      width: 65%;
+    }
+  }
+</style>

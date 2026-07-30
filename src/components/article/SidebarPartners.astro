@@ -1,0 +1,290 @@
+---
+/**
+ * Khối danh sách đối tác ở sidebar, dùng chung cho trang review và trang blog.
+ *
+ * Trước đây khối này được chép nguyên văn vào cả `ReviewSidebar` lẫn
+ * `PostSidebar`: markup lệch đúng một dòng, CSS thì giống hệt từng ký tự (kể cả
+ * các mốc media query lạ 783/1039 và điều kiện `min-height: 420px`). Sửa một
+ * bên mà quên bên kia là hai sidebar lệch nhau âm thầm.
+ *
+ * Tự lấy dữ liệu thay vì nhận qua prop: cả hai nơi gọi đều dùng đúng một hàm
+ * không tham số, truyền prop chỉ là nhân bản lời gọi.
+ */
+import { getSidebarPartners } from "@/lib/rankings";
+import { HOME } from "@/lib/links";
+import { CHEVRON_RIGHT } from "@/lib/icon-paths";
+
+const partners = await getSidebarPartners();
+---
+
+<div class="sidebar-partners">
+  <div class="sidebar-partners__content">
+    {
+      partners.map((p) => (
+        <div class="sidebar-partners__node" data-href={p.href}>
+          <div class="sidebar-partners__icon-wrap">
+            <img
+              class="sidebar-partners__icon"
+              src={p.logo.src}
+              alt={p.logoAlt}
+              width="215"
+              height="115"
+            />
+          </div>
+          <div class="sidebar-partners__text">
+            {/* <p> chứ không phải heading: đây là nhãn của một mục trong danh
+                sách link, không phải tiêu đề của một phần tài liệu. Bản blog
+                trước đây dùng <h4> nên sinh ra heading giả trong dàn ý trang. */}
+            <p class="sidebar-partners__name">{p.name}</p>
+            <a class="sidebar-partners__link" href={p.href}>
+              <div>Read review</div>
+            </a>
+          </div>
+        </div>
+      ))
+    }
+  </div>
+  <div class="sidebar-partners__compare">
+    <a href={HOME}>
+      Compare All
+      <svg viewBox="0 0 320 512" width="1em" height="1em" aria-hidden="true">
+        <path d={CHEVRON_RIGHT}></path>
+      </svg>
+    </a>
+  </div>
+</div>
+
+<style>
+  /* ===== Mặc định là bản MOBILE (<481px), các mốc min-width bên dưới chồng lên
+     đúng như bản gốc ===== */
+  .sidebar-partners {
+    width: 100%;
+    max-width: 600px;
+    height: max-content;
+    margin: auto auto 20px;
+    padding: 10px;
+    display: flex;
+    flex-flow: column;
+    align-items: center;
+    /* Không có trong CSS module, bản gốc đặt bằng style inline */
+    background-color: var(--color-surface-muted);
+    box-shadow: 0 0 8px var(--color-shadow);
+  }
+  .sidebar-partners * {
+    transition: 0.2s linear;
+  }
+  .sidebar-partners__content {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+  }
+  .sidebar-partners__node {
+    width: 100%;
+    height: max-content;
+    padding: 10px 0;
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+    justify-content: center;
+    gap: 10px;
+    border-bottom: 1px solid var(--color-divider);
+    cursor: pointer;
+  }
+  .sidebar-partners__icon-wrap {
+    flex: 1 1 0%;
+    height: 100%;
+    margin: auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .sidebar-partners__icon {
+    max-width: 100px;
+    max-height: 70px;
+    margin: auto;
+    object-fit: contain;
+  }
+  .sidebar-partners__text {
+    flex: 1 1 0%;
+    margin: auto;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: space-evenly;
+  }
+  .sidebar-partners__name {
+    margin: 0;
+    color: var(--color-text-body);
+    font-size: 1.125rem;
+    font-weight: 500;
+  }
+  .sidebar-partners__link {
+    --hover-color: var(--color-primary);
+
+    font-size: 0.9375rem;
+    font-weight: 500;
+    white-space: nowrap;
+  }
+  .sidebar-partners__link div {
+    font-weight: 400;
+  }
+
+  .sidebar-partners__compare {
+    --hover-bg-color: var(--color-secondary);
+
+    position: relative;
+    width: max-content;
+    min-width: 180px;
+    height: max-content;
+    min-height: 55px;
+    margin: 10px auto;
+    padding: 12px 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 3px;
+    background-color: var(--color-primary);
+    color: var(--color-text-on-primary);
+    font-size: 1.125rem;
+    font-weight: 500;
+  }
+  .sidebar-partners__compare a {
+    background-color: inherit;
+    color: inherit;
+    font-weight: 600;
+    transition: none;
+  }
+  /* Mũi tên trượt ra khi hover nút CTA */
+  .sidebar-partners__compare svg {
+    position: absolute;
+    top: calc(50% + 2px);
+    right: 10px;
+    opacity: 0;
+    font-size: 1rem;
+    fill: currentColor;
+    transform: translateY(-50%);
+    transition: 0.2s ease-in-out;
+  }
+
+  /* ===== ≥481px: chuyển thành lưới 3 cột tự xuống hàng ===== */
+  @media (min-width: 481px) and (min-height: 420px) {
+    .sidebar-partners {
+      box-shadow: 0 0 10px var(--color-shadow);
+    }
+    .sidebar-partners__content {
+      width: 100%;
+      height: 100%;
+      flex-flow: wrap;
+      justify-content: space-between;
+      /* Mốc 1025 KHÔNG bỏ gap này đi — thiếu 5 gap thì khung hụt đúng 50px */
+      gap: 10px;
+    }
+    .sidebar-partners__node {
+      width: 30%;
+      height: auto;
+      padding: 10px 0;
+      flex-direction: column;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      border: none;
+    }
+    .sidebar-partners__icon {
+      display: flex;
+      align-items: flex-start;
+      justify-content: flex-start;
+    }
+    .sidebar-partners__compare {
+      min-width: 40%;
+    }
+  }
+
+  /* Bản gốc chỉ render 3 brand khi `clientWidth` trong khoảng 768–1024 (JS đo
+     clientWidth, đã trừ thanh cuộn 15px) → mốc CSS tương ứng là 783–1039. */
+  @media (min-width: 783px) and (max-width: 1039px) and (min-height: 420px) {
+    .sidebar-partners__node:nth-child(n + 4) {
+      display: none;
+    }
+  }
+
+  @media (min-width: 1025px) and (min-height: 420px) {
+    .sidebar-partners {
+      max-width: 250px;
+      margin-right: 0;
+      margin-bottom: 20px;
+    }
+    .sidebar-partners__content {
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+    .sidebar-partners__node {
+      width: 100%;
+      height: max-content;
+      padding: 10px 0;
+      flex-direction: row;
+      align-items: flex-start;
+      gap: 10px;
+    }
+    .sidebar-partners__node:not(:last-of-type) {
+      border-bottom: 1px solid var(--color-divider);
+    }
+    /* Bắt buộc: thiếu 2 dòng này ảnh ăn theo thuộc tính width/height rồi bị
+       max-height kẹp ở 70px → node cao 91px thay vì để phần chữ quyết định */
+    .sidebar-partners__icon {
+      width: 100%;
+      height: 100%;
+      margin: auto;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .sidebar-partners__text {
+      line-height: 1.5rem;
+    }
+    .sidebar-partners__name {
+      font-size: 1rem;
+      font-weight: 600;
+      line-height: 1.25rem;
+    }
+    .sidebar-partners__link div {
+      font-weight: unset;
+    }
+    .sidebar-partners__compare {
+      min-width: max(50%, 147px);
+      min-height: unset;
+      padding: 5px;
+    }
+    .sidebar-partners__compare a {
+      font-weight: unset;
+    }
+    .sidebar-partners__compare:hover svg {
+      opacity: 1;
+      right: 2%;
+    }
+  }
+
+  /* ===== ≥615px — hiệu ứng hover (bản gốc chỉ bật từ mốc này) ===== */
+  @media (min-width: 615px) {
+    .sidebar-partners__link div:hover {
+      color: var(--hover-color);
+    }
+    .sidebar-partners__compare:hover {
+      background-color: var(--hover-bg-color);
+    }
+  }
+</style>
+
+<script>
+  /* Bản gốc để cả hàng brand click được (div + onClick, không phải thẻ <a> vì bên
+     trong đã có link "Read review") */
+  document.querySelectorAll<HTMLElement>(".sidebar-partners__node").forEach((node) => {
+    node.addEventListener("click", (event) => {
+      if ((event.target as HTMLElement).closest("a")) return;
+      const href = node.dataset.href;
+      if (href) window.location.href = href;
+    });
+  });
+</script>

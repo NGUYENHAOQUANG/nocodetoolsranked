@@ -1,0 +1,78 @@
+---
+// Nút nổi "lên đầu trang" — bản gốc chỉ gắn vào DOM khi scrollY > 100
+---
+
+<button class="to-top" type="button" aria-label="Back to top">
+  <svg viewBox="0 0 512 512" width="35" height="35" fill="currentColor" aria-hidden="true">
+    <path
+      d="M8 256C8 119 119 8 256 8s248 111 248 248-111 248-248 248S8 393 8 256zm292 116V256h70.9c10.7 0 16.1-13 8.5-20.5L264.5 121.2c-4.7-4.7-12.2-4.7-16.9 0l-115 114.3c-7.6 7.6-2.2 20.5 8.5 20.5H212v116c0 6.6 5.4 12 12 12h64c6.6 0 12-5.4 12-12z"
+    ></path>
+  </svg>
+</button>
+
+<style>
+  .to-top {
+    display: none;
+    position: fixed;
+    bottom: 45px;
+    right: 30px;
+    padding: 0;
+    background: none;
+    border: 0;
+    border-radius: 50%;
+    /* font-size + line-height kế thừa quyết định chiều cao hộp: icon 35px nằm
+       trên baseline, cộng phần lồi dưới baseline của strut → 38.8px */
+    font-size: 1.5rem;
+    color: #d7d5d5;
+    z-index: 50;
+    animation: to-top-fade-in 1s;
+  }
+  /* Bản gốc gắn/gỡ hẳn khỏi DOM; ở đây đổi display nên hoạt ảnh cũng chạy lại mỗi lần hiện */
+  .to-top.is-visible {
+    display: block;
+  }
+
+  /* Vòng tròn trắng lấp nền phía sau icon */
+  .to-top::before {
+    content: "";
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    padding: 12px;
+    transform: translate(-50%, -50%);
+    background-color: var(--color-surface);
+    border-radius: 100%;
+    z-index: -1;
+  }
+
+  @keyframes to-top-fade-in {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+</style>
+
+<script>
+  const button = document.querySelector<HTMLButtonElement>(".to-top");
+
+  if (button) {
+    // Vì `html { overflow-x: hidden }` nên html mới là khung cuộn — `window.scrollY`
+    // luôn báo 0, phải đọc từ documentElement.
+    const scrollTop = () => document.documentElement.scrollTop || document.body.scrollTop;
+
+    const sync = () => {
+      button.classList.toggle("is-visible", scrollTop() > 100);
+    };
+
+    sync();
+    window.addEventListener("scroll", sync, { passive: true });
+
+    // Bản gốc chờ 100ms rồi mới cuộn; `scroll-behavior: smooth` lo phần hoạt ảnh
+    button.addEventListener("click", () => {
+      setTimeout(() => window.scrollTo(0, 0), 100);
+    });
+  }
+</script>

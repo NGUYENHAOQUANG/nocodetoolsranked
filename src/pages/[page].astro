@@ -1,0 +1,43 @@
+---
+/**
+ * Bốn trang nội dung phẳng: /about/, /terms-of-use/, /privacy-policy/,
+ * /advertiser-disclosure/. Thêm một trang là thêm ĐÚNG MỘT file .mdx.
+ *
+ * KHÔNG nuốt route khác: build tĩnh chỉ phát đúng những path `getStaticPaths`
+ * trả về, và `[page]` chỉ khớp MỘT segment nên /reviews/<brand>/ và
+ * /knowledge/<slug>/ không thể rơi vào đây.
+ *
+ * ⚠️ id của entry không được trùng "contact", "reviews", "knowledge" — đó là các
+ * route tĩnh đã có.
+ */
+import { getCollection, render } from "astro:content";
+import InnerPageLayout from "@/layouts/InnerPageLayout.astro";
+
+export async function getStaticPaths() {
+  const entries = await getCollection("pages");
+  return entries.map((entry) => ({ params: { page: entry.id }, props: { entry } }));
+}
+
+const { entry } = Astro.props;
+const { title, heroTitle, heroMobileTitle = heroTitle, description, headingStyle } = entry.data;
+const { Content } = await render(entry);
+
+const crumbs = [{ text: "Home" }, { text: heroTitle }];
+---
+
+<InnerPageLayout
+  isTitleTop
+  title={title}
+  description={description}
+  heroTitle={heroTitle}
+  heroMobileTitle={heroMobileTitle}
+  crumbs={crumbs}
+>
+  <main id="main-content">
+    <article
+      class:list={["page__body", { "page__body--plain-headings": headingStyle === "plain" }]}
+    >
+      <Content />
+    </article>
+  </main>
+</InnerPageLayout>

@@ -1,0 +1,145 @@
+---
+interface Props {
+  pros: string[];
+  cons: string[];
+}
+
+const { pros, cons } = Astro.props;
+
+/* Icon "thumb up" viền (viewBox 24) — lấy thẳng từ DOM gốc. Bản gốc KHÔNG có icon
+   thumb-down riêng: nó xoay 180° chính icon này để làm Cons. */
+const THUMB_UP =
+  "M20 8h-5.612l1.123-3.367c.202-.608.1-1.282-.275-1.802S14.253 2 13.612 2H12c-.297 0-.578.132-.769.36L6.531 8H4c-1.103 0-2 .897-2 2v9c0 1.103.897 2 2 2h13.307a2.01 2.01 0 0 0 1.873-1.298l2.757-7.351A1 1 0 0 0 22 12v-2c0-1.103-.897-2-2-2zM4 10h2v9H4v-9zm16 1.819L17.307 19H8V9.362L12.468 4h1.146l-1.562 4.683A.998.998 0 0 0 13 10h7v1.819z";
+/* Đầu dòng: bản gốc đặt tên class là "check-mark" nhưng path thật chỉ là 1 CHẤM tròn */
+const DOT = "M8 9.5a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3";
+
+const lists = [
+  { title: "Pros", items: pros, modifier: "pros" },
+  { title: "Cons", items: cons, modifier: "cons" },
+] as const;
+---
+
+<div class="pros-cons">
+  {
+    lists.map((list) => (
+      <div class="pros-cons__col">
+        <div class="pros-cons__title">
+          <h2 class:list={["pros-cons__label", `pros-cons__label--${list.modifier}`]}>
+            {list.title}
+          </h2>
+          <svg
+            class:list={["pros-cons__icon", `pros-cons__icon--${list.modifier}`]}
+            viewBox="0 0 24 24"
+            width="20"
+            height="20"
+            aria-hidden="true"
+          >
+            <path d={THUMB_UP} />
+          </svg>
+        </div>
+        <ul>
+          {list.items.map((item) => (
+            <li>
+              <svg
+                class="pros-cons__dot"
+                viewBox="0 0 16 16"
+                width="1em"
+                height="1em"
+                aria-hidden="true"
+              >
+                <path d={DOT} />
+              </svg>
+              {item}
+            </li>
+          ))}
+        </ul>
+      </div>
+    ))
+  }
+</div>
+
+<style>
+  .pros-cons {
+    /* Margin do bản gốc đặt ở cha (.review__content > div > div); gom về đây cho gọn */
+    margin: 10px 0 30px;
+    /* Màu chữ mặc định của trang gốc là #2d2d2d, không phải #000 kế thừa từ body */
+    color: var(--color-text-body);
+    font-size: 0.9375rem;
+  }
+  .pros-cons ul {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+  .pros-cons li {
+    width: 100%;
+    margin: 5px 0;
+    display: flex;
+    align-items: center;
+  }
+  .pros-cons__dot {
+    flex-shrink: 0;
+    align-self: flex-start;
+    margin-top: 2px;
+    margin-right: 0;
+    /* 1.4rem → svg width/height 1em = 22.4px */
+    font-size: 1.4rem;
+    fill: currentColor;
+  }
+  .pros-cons__title {
+    display: flex;
+    align-items: center;
+    gap: 3px;
+    font-weight: 500;
+  }
+  /* Thẻ heading mặc định UA là bold → phải khai `inherit`, không thể chỉ kế thừa
+     từ .pros-cons__title. Margin 1.33em là mặc định UA của <h4> mà bản gốc dùng:
+     nó KHÔNG reset nên dưới 768px margin đó vẫn còn (mốc 768 mới bỏ) —
+     global.css của ta reset về 0 nên phải khai lại, thiếu là mỗi cột hụt ~37px.
+     Giữ nguyên con số đó sau khi đổi thẻ sang <h2> cho khỏi nhảy cấp. */
+  .pros-cons__label {
+    margin: 1.33em 0;
+    font-size: inherit;
+    font-weight: inherit;
+  }
+  .pros-cons__label--pros {
+    color: #21a78b;
+  }
+  .pros-cons__label--cons {
+    color: #bc2e4c;
+  }
+  .pros-cons__icon {
+    fill: currentColor;
+  }
+  .pros-cons__icon--pros {
+    color: #21a78b;
+  }
+  .pros-cons__icon--cons {
+    color: #bc2e4c;
+    transform: rotate(180deg);
+  }
+
+  @media (min-width: 768px) and (min-height: 420px) {
+    .pros-cons {
+      width: 100%;
+      display: flex;
+      justify-content: space-between;
+    }
+    .pros-cons__col {
+      width: 48%;
+      padding: 10px;
+    }
+    /* Bản gốc để class `list-title-section` trên CẢ ô bọc lẫn <h4> nên margin: 0
+       ở mốc này xoá luôn margin mặc định của <h4> */
+    .pros-cons__title,
+    .pros-cons__label {
+      margin: 0;
+      gap: 5px;
+    }
+    .pros-cons ul {
+      position: relative;
+      left: -10px;
+      margin-top: 20px;
+    }
+  }
+</style>

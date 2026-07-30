@@ -1,0 +1,171 @@
+---
+/**
+ * Danh sách hạng mục chấm điểm của khối "mini review" trang chủ.
+ *
+ * Tách ra vì `MiniReview` render nó HAI LẦN — một lần trong cây mobile, một lần
+ * trong cây desktop — với markup giống hệt từng ký tự. Hai cây đó khác nhau thật
+ * (mobile có drawer "Summary", desktop có Pros/Cons) nên không gộp được, nhưng
+ * riêng khối này thì trùng lặp thuần tuý.
+ *
+ * GIỮ tên class `mini-review__categor*` của block cha, không đặt block mới:
+ * component con render một *element* của block cha thì giữ tên element của cha.
+ * Đổi tên sẽ phải viết lại toàn bộ selector để đổi lấy con số 0.
+ *
+ * Các biến `--score-*` khai trên `.mini-review` vẫn giải đúng ở đây: custom
+ * property kế thừa theo cây DOM, không theo phạm vi scope của Astro.
+ */
+import type { ImageMetadata } from "astro";
+
+interface Category {
+  title: string;
+  icon: ImageMetadata;
+  score: number;
+  description: string;
+}
+
+interface Props {
+  categories: Category[];
+}
+
+const { categories } = Astro.props;
+
+const formatScore = (score: number) => (score === 10 ? "10" : score.toFixed(1));
+
+/** Ngưỡng màu ô điểm của bản gốc */
+const scoreLevel = (score: number) => (score >= 9 ? "high" : score >= 7 ? "medium" : "low");
+---
+
+<div class="mini-review__categories">
+  {
+    categories.map((cat) => (
+      <div class="mini-review__category">
+        <div class="mini-review__category-header">
+          <div class="mini-review__category-title">
+            <img
+              class="mini-review__category-icon"
+              src={cat.icon.src}
+              alt=""
+              width="20"
+              height="20"
+            />
+            <span class="mini-review__category-name">{cat.title}</span>
+          </div>
+          <span
+            class:list={[
+              "mini-review__category-score",
+              `mini-review__category-score--${scoreLevel(cat.score)}`,
+            ]}
+          >
+            {formatScore(cat.score)}
+          </span>
+        </div>
+        <p class="mini-review__category-desc">{cat.description}</p>
+      </div>
+    ))
+  }
+</div>
+
+<style>
+  .mini-review__categories {
+    display: flex;
+    flex-direction: column;
+    gap: 0.3rem;
+    padding: 1rem;
+  }
+  .mini-review__category {
+    margin-bottom: 0.75rem;
+    padding: 1rem;
+    background: var(--color-surface);
+    border-radius: 8px;
+    box-shadow: 0 1px 3px var(--color-shadow);
+  }
+  .mini-review__category-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 0.5rem;
+    font-size: 1.1rem;
+  }
+  .mini-review__category-title {
+    display: flex;
+    align-items: center;
+    gap: 0.7rem;
+  }
+  .mini-review__category-icon {
+    width: 20px;
+    height: 20px;
+    flex-shrink: 0;
+    object-fit: contain;
+  }
+  .mini-review__category-name {
+    font-weight: 600;
+  }
+  .mini-review__category-score {
+    width: 35px;
+    padding: 0.25rem 0.5rem;
+    border-radius: 8px;
+    font-size: 1rem;
+    font-weight: 700;
+    text-align: center;
+  }
+  .mini-review__category-score--high {
+    color: var(--score-high-color);
+    background-color: var(--score-high-background);
+  }
+  .mini-review__category-score--medium {
+    color: var(--score-medium-color);
+    background-color: var(--score-medium-background);
+  }
+  .mini-review__category-score--low {
+    color: var(--score-low-color);
+    background-color: var(--score-low-background);
+  }
+  .mini-review__category-desc {
+    margin: 0.5rem 0 0.5rem 28px;
+    font-size: 1rem;
+    line-height: 1.6;
+  }
+
+  @media (min-width: 481px) and (min-height: 420px) {
+    .mini-review__categories {
+      padding: 1.2rem;
+    }
+  }
+
+  /* ===== ≥768px: bản desktop — thẻ mỏng hơn, chữ nhỏ hơn ===== */
+  @media (min-width: 768px) and (min-height: 420px) {
+    .mini-review__categories {
+      gap: 0.75rem;
+      padding: 0;
+    }
+    .mini-review__category {
+      margin-bottom: 0;
+      padding: 0.75rem;
+      background: hsla(0, 0%, 100%, 0.5);
+      border: 1px solid rgba(0, 0, 0, 0.05);
+      box-shadow: none;
+    }
+    .mini-review__category-header {
+      font-size: 1rem;
+    }
+    .mini-review__category-title {
+      gap: 0.5rem;
+    }
+    .mini-review__category-score {
+      width: 27px;
+      height: 27px;
+      padding: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 4px;
+      font-size: 0.8rem;
+    }
+    .mini-review__category-desc {
+      margin: 0 0 0 2rem;
+      font-size: 0.9rem;
+      line-height: 1.4;
+      color: var(--color-text-muted);
+    }
+  }
+</style>

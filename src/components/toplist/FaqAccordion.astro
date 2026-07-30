@@ -1,0 +1,164 @@
+---
+interface Props {
+  /** `answer` là chuỗi HTML (bản gốc có <strong>) — render bằng set:html */
+  items: { question: string; answer: string }[];
+}
+
+const { items: faqItems } = Astro.props;
+
+/** Bản gốc mở sẵn câu đầu tiên */
+const DEFAULT_OPEN = 0;
+---
+
+<div class="faq">
+  {
+    faqItems.map((item, i) => (
+      <div class="faq__item">
+        <button
+          class="faq__question"
+          type="button"
+          aria-expanded={i === DEFAULT_OPEN ? "true" : "false"}
+          aria-controls={`faq-answer-${i}`}
+        >
+          <span class="faq__question-text">{item.question}</span>
+          <svg class="faq__icon" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+            <path d="M7.41 8.59 12 13.17l4.59-4.58L18 10l-6 6-6-6 1.41-1.41z" />
+          </svg>
+        </button>
+        <div class="faq__answer" id={`faq-answer-${i}`} set:html={item.answer} />
+      </div>
+    ))
+  }
+</div>
+
+<style>
+  .faq {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    /* Khối cuối trong cột nội dung — bản gốc chừa 20px trước khi hết lưới */
+    margin-bottom: 20px;
+    color: var(--color-text-body);
+  }
+
+  .faq__item {
+    margin-bottom: 12px;
+    overflow: hidden;
+    background-color: #f9f9f9;
+    box-shadow: 0 0 5px #f9f9f9;
+    border-radius: 8px;
+    transition: box-shadow 0.2s ease;
+  }
+  .faq__item:hover {
+    box-shadow: 0 0 1px 2px rgba(0, 0, 0, 0.08);
+  }
+
+  .faq__question {
+    /* Bản gốc không reset <button> nên nút giữ font mặc định trình duyệt
+       (Arial, line-height normal); font-size/weight bên dưới ghi đè lại */
+    font: revert;
+    width: 100%;
+    padding: 20px 24px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: none;
+    border: none;
+    text-align: left;
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--color-text-body);
+    transition: background-color 0.2s ease;
+  }
+  .faq__question-text {
+    flex: 1 1 0%;
+    margin-right: 16px;
+  }
+
+  .faq__icon {
+    width: 1.5rem;
+    height: 1.5rem;
+    flex-shrink: 0;
+    color: var(--color-text-on-primary);
+    background-color: #d7d5d5;
+    border-radius: 100%;
+    opacity: 0.7;
+    transition: transform 0.3s ease;
+  }
+  .faq__question[aria-expanded="true"] .faq__icon {
+    transform: rotate(180deg);
+  }
+
+  .faq__answer {
+    max-height: 0;
+    overflow: hidden;
+    padding: 0 24px;
+    line-height: 1.6;
+    color: rgba(0, 0, 0, 0.7);
+    transition:
+      max-height 0.4s ease,
+      padding 0.4s ease;
+  }
+  .faq__answer.is-open {
+    padding-bottom: 20px;
+  }
+
+  /* Nội dung câu trả lời chèn bằng set:html nên nằm ngoài phạm vi scoped CSS */
+  .faq__answer :global(p) {
+    margin: 0 0 12px;
+  }
+  .faq__answer :global(p:last-child) {
+    margin-bottom: 0;
+  }
+  .faq__answer :global(ul),
+  .faq__answer :global(ol) {
+    margin: 0 0 12px;
+    padding-left: 20px;
+    list-style: revert;
+  }
+  .faq__answer :global(li) {
+    margin-bottom: 8px;
+    text-align: left;
+  }
+  .faq__answer :global(li:last-child) {
+    margin-bottom: 0;
+  }
+  .faq__answer :global(a) {
+    color: var(--color-primary);
+    text-decoration: underline;
+  }
+  .faq__answer :global(a:hover) {
+    text-decoration: none;
+  }
+</style>
+
+<script>
+  document.querySelectorAll<HTMLElement>(".faq__item").forEach((item) => {
+    const button = item.querySelector<HTMLButtonElement>(".faq__question");
+    const answer = item.querySelector<HTMLElement>(".faq__answer");
+    if (!button || !answer) return;
+
+    // Bản gốc đo chiều cao TRƯỚC khi thêm padding đáy 20px rồi mới gán max-height,
+    // nên phần padding đó bị cắt mất — panel mở cao đúng bằng nội dung. Giữ nguyên
+    // thứ tự này để ra đúng số của bản gốc (câu 1: 77px chứ không phải 97px).
+    const open = () => {
+      const height = answer.scrollHeight;
+      answer.classList.add("is-open");
+      answer.style.maxHeight = `${height}px`;
+      button.setAttribute("aria-expanded", "true");
+    };
+
+    const close = () => {
+      answer.classList.remove("is-open");
+      answer.style.maxHeight = "";
+      button.setAttribute("aria-expanded", "false");
+    };
+
+    if (button.getAttribute("aria-expanded") === "true") open();
+
+    button.addEventListener("click", () => {
+      if (answer.classList.contains("is-open")) close();
+      else open();
+    });
+  });
+</script>

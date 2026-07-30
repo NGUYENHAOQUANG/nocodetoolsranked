@@ -1,0 +1,69 @@
+---
+export interface Crumb {
+  text: string;
+  /** Có href → mốc là link (chữ thường, màu #000). Không có → mốc "active" (đậm). */
+  href?: string;
+}
+
+interface Props {
+  items: Crumb[];
+}
+
+import { CHEVRON_RIGHT } from "@/lib/icon-paths";
+
+const { items } = Astro.props;
+---
+
+<nav class="breadcrumbs" aria-label="Breadcrumb">
+  {
+    items.map((item, i) => (
+      <>
+        {i > 0 && (
+          <svg viewBox="0 0 320 512" width="12" height="12" fill="currentColor" aria-hidden="true">
+            <path d={CHEVRON_RIGHT} />
+          </svg>
+        )}
+        {item.href ? (
+          <a class="breadcrumbs__crumb" href={item.href}>
+            {item.text}
+          </a>
+        ) : (
+          <div class="breadcrumbs__crumb breadcrumbs__crumb--active">{item.text}</div>
+        )}
+      </>
+    ))
+  }
+</nav>
+
+<style>
+  /* Bản gốc ẩn hẳn breadcrumbs dưới 1025px (hoặc màn hình cao <420px) */
+  .breadcrumbs {
+    display: none;
+    align-items: center;
+    gap: 6px;
+    width: 100%;
+    max-width: var(--width-content);
+    margin: 15px auto auto;
+    color: var(--color-text-body);
+  }
+
+  /* Mốc cuối (và "Home") không bấm được, chỉ in đậm */
+  .breadcrumbs__crumb--active {
+    font-weight: 600;
+    cursor: default;
+  }
+  /* Mốc là link: chữ thường và đen hơn phần còn lại */
+  a.breadcrumbs__crumb {
+    color: var(--color-text);
+    font-weight: 400;
+  }
+  a.breadcrumbs__crumb:hover {
+    text-decoration: underline;
+  }
+
+  @media (min-width: 1025px) and (min-height: 420px) {
+    .breadcrumbs {
+      display: flex;
+    }
+  }
+</style>

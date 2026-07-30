@@ -1,0 +1,271 @@
+---
+import { starList } from "@/lib/stars";
+
+interface Props {
+  rating: string;
+  label: string;
+  stars: number;
+  reviews: string;
+}
+
+const { rating, label, stars, reviews } = Astro.props;
+
+// Cung tròn r=47.5 trong viewBox 100×100 → chu vi 2πr. Điểm 9.9/10 ⇒ vẽ 99% cung.
+const RADIUS = 47.5;
+const CIRCUMFERENCE = 2 * Math.PI * RADIUS;
+const ARC = `M 50,50 m 0,-${RADIUS} a ${RADIUS},${RADIUS} 0 1 1 0,${RADIUS * 2} a ${RADIUS},${RADIUS} 0 1 1 0,-${RADIUS * 2}`;
+const dashOffset = CIRCUMFERENCE * (1 - Number(rating) / 10);
+
+const starPaths = starList(stars);
+---
+
+<div class="score-ring">
+  <div class="score-ring__ring">
+    <svg class="score-ring__svg" viewBox="0 0 100 100" aria-hidden="true">
+      <path
+        class="score-ring__trail"
+        d={ARC}
+        stroke-width="5"
+        fill-opacity="0"
+        style={`stroke-dasharray: ${CIRCUMFERENCE}px, ${CIRCUMFERENCE}px;`}></path>
+      <path
+        class="score-ring__arc"
+        d={ARC}
+        stroke-width="5"
+        fill-opacity="0"
+        style={`stroke-dasharray: ${CIRCUMFERENCE}px, ${CIRCUMFERENCE}px; stroke-dashoffset: ${dashOffset}px;`}
+      ></path>
+    </svg>
+
+    {/* Lớp phủ đè lên vòng tròn; cao tự động — cũng là mốc định vị cho sao và số lượt đánh giá */}
+    <div class="score-ring__overlay">
+      <div class="score-ring__content">
+        <div class="score-ring__value">{rating}</div>
+        <label class="score-ring__label">{label}</label>
+        <div class="score-ring__stars" aria-hidden="true">
+          {
+            starPaths.map(({ kind, d }) => (
+              <svg
+                class:list={["score-ring__star", `score-ring__star--${kind}`]}
+                viewBox="0 0 16 16"
+                width="1rem"
+                height="1rem"
+                fill="currentColor"
+              >
+                <path d={d} />
+              </svg>
+            ))
+          }
+        </div>
+      </div>
+
+      <span class="score-ring__reviews">Reviews ({reviews})</span>
+    </div>
+  </div>
+</div>
+
+<style>
+  /* ===== Base = mobile ===== */
+  .score-ring {
+    grid-area: grade;
+    position: relative;
+    display: flex;
+    flex-flow: column;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    font-size: 10vw;
+    font-weight: 700;
+    color: var(--color-text-body);
+    justify-self: center;
+    text-align: center;
+    cursor: pointer;
+  }
+
+  .score-ring__ring {
+    position: relative;
+    width: 100%;
+  }
+
+  /* Dưới 768px không có vòng tròn: svg ẩn hẳn, chỉ còn điểm + nhãn + sao xếp dòng thường */
+  .score-ring__svg {
+    display: none;
+    width: 100%;
+    height: auto;
+  }
+  /* Vòng tròn chỉ vẽ từ 1025px; khoảng 768–1024 svg chiếm chỗ nhưng không vẽ nét */
+  .score-ring__trail,
+  .score-ring__arc {
+    display: none;
+    stroke-linecap: round;
+  }
+  .score-ring__trail {
+    stroke: rgba(220, 220, 220, 0.521);
+  }
+  .score-ring__arc {
+    stroke: #c5e5f7;
+  }
+
+  /* Dưới 768px nằm trong luồng (không đè lên gì); từ 768px mới phủ lên vòng tròn */
+  .score-ring__overlay {
+    position: static;
+    width: 100%;
+    display: flex;
+    flex-flow: column;
+    align-items: center;
+  }
+
+  .score-ring__content {
+    display: flex;
+    flex-flow: column;
+    align-items: center;
+    width: 100%;
+    font-size: 42px;
+  }
+
+  .score-ring__value {
+    line-height: 2.2rem;
+    margin-bottom: 5px;
+    color: var(--color-text-body);
+  }
+
+  /* Dưới 768px nhãn màu đen; từ 768px đổi sang #2d2d2d (bản gốc dùng 2 khối riêng
+     cho mobile/desktop, khối mobile có inline color: black) */
+  .score-ring__label {
+    font-size: 0.9375rem;
+    font-weight: 400;
+    color: var(--color-text);
+    white-space: nowrap;
+    cursor: pointer;
+  }
+
+  .score-ring__stars {
+    position: relative;
+    bottom: 0;
+    display: flex;
+    flex-wrap: nowrap;
+    font-size: 30%;
+    color: #ffcd42;
+  }
+  .score-ring__star--empty {
+    color: #e0e0e0;
+  }
+
+  /* Ánh sáng lướt qua hàng sao khi hover (bản gốc: pseudo-element gradient chạy
+     từ trái sang phải, 1 lần, giữ nguyên ở cuối) */
+  .score-ring__stars:hover::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 1;
+    width: 100%;
+    height: 100%;
+    transform: translateX(100%);
+    background: linear-gradient(
+      90deg,
+      rgba(255, 255, 255, 0) 0px,
+      rgba(255, 255, 255, 0.8) 50%,
+      rgba(128, 186, 232, 0) 99%,
+      rgba(125, 185, 232, 0)
+    );
+    animation: score-stars-shine 1s ease 0s 1 normal forwards;
+  }
+  @keyframes score-ring-stars-shine {
+    0% {
+      transform: translateX(-100%);
+    }
+    100% {
+      transform: translateX(100%);
+    }
+  }
+
+  /* Số lượt đánh giá: chỉ hiện ở desktop */
+  .score-ring__reviews {
+    display: none;
+  }
+
+  /* ===== ≥481px ===== */
+  @media (min-width: 481px) {
+    .score-ring {
+      width: 50%;
+      font-size: 1.7rem;
+      top: 0;
+    }
+  }
+
+  /* ===== ≥768px: vòng tròn chiếm chỗ, nội dung phủ lên trên (bám mép trên) ===== */
+  @media (min-width: 768px) {
+    .score-ring__svg {
+      display: block;
+    }
+    .score-ring__overlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+    }
+    .score-ring__label {
+      color: var(--color-text-body);
+    }
+    .score-ring__stars {
+      font-size: 50%;
+    }
+    .score-ring__stars svg {
+      font-size: 0.9375rem;
+    }
+    /* Bản gốc bật hiệu ứng phóng to điểm số khi hover từ đúng mốc này (768px),
+       không phải 1025px */
+    .score-ring:hover .score-ring__value {
+      scale: 1.1;
+    }
+  }
+
+  /* ===== Desktop ≥1025px: hiện vòng tròn, đảo thứ tự điểm/nhãn ===== */
+  @media (min-width: 1025px) {
+    .score-ring {
+      width: 120px;
+      max-width: unset;
+      position: relative;
+      top: -20px;
+      grid-column: 3 / 4;
+    }
+    .score-ring__ring {
+      width: 95px;
+      height: 95px;
+      transition: transform 0.2s linear;
+    }
+    .score-ring__trail,
+    .score-ring__arc {
+      display: initial;
+    }
+    .score-ring__content {
+      flex-flow: column-reverse;
+      padding: 10px;
+      margin: 0 0 5px;
+      font-size: 1.7rem;
+      transition: transform 0.2s linear;
+    }
+    .score-ring__value {
+      margin-top: -7px;
+      font-weight: 600;
+    }
+    .score-ring__label {
+      font-weight: 500;
+      font-size: 0.78rem;
+      margin-top: 10px;
+    }
+    .score-ring__stars {
+      position: absolute;
+      bottom: -20px;
+    }
+    .score-ring__reviews {
+      display: block;
+      position: absolute;
+      bottom: -50%;
+      font-size: 0.75rem;
+      white-space: nowrap;
+      color: var(--color-text-body);
+      font-weight: 400;
+    }
+  }
+</style>

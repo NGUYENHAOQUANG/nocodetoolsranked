@@ -1,0 +1,88 @@
+---
+/**
+ * Khung cho MỌI trang trong: header, banner, breadcrumb, footer, nút lên đầu.
+ *
+ * Trước đây 9 file tự import và tự đặt đúng năm thứ này theo đúng thứ tự — thêm
+ * một trang là chép lại cả khối. `BaseLayout` chỉ lo `<html>`/`<head>` nên
+ * không gánh được phần đó.
+ *
+ * KHÔNG phát `<main>`: trang review và trang blog đặt `<main>` BÊN TRONG lưới ba
+ * cột (`main.review-layout__main`), nên nếu layout bọc sẵn thì sẽ thành `<main>`
+ * lồng `<main>`. Mỗi nơi gọi tự viết `<main>` của mình.
+ *
+ * Trang chủ KHÔNG dùng layout này: nó không có breadcrumb, banner là `HeroToplist`
+ * với cây DOM khác hẳn, và `<main>` bọc luôn cả banner.
+ */
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import Header from "@/components/layout/Header.astro";
+import HeroInner from "@/components/layout/HeroInner.astro";
+import Breadcrumbs from "@/components/layout/Breadcrumbs.astro";
+import type { Crumb } from "@/components/layout/Breadcrumbs.astro";
+import { breadcrumbSchema } from "@/lib/schema-org";
+import Footer from "@/components/layout/Footer.astro";
+import ToTop from "@/components/layout/ToTop.astro";
+
+interface Props {
+  /** Thẻ <title> */
+  title: string;
+  description?: string;
+  image?: string;
+  type?: "website" | "article";
+  noindex?: boolean;
+  /** JSON-LD RIÊNG của trang. BreadcrumbList thì layout tự dựng từ `crumbs`. */
+  schema?: Record<string, unknown>[];
+
+  /** Tiêu đề banner bản desktop */
+  heroTitle: string;
+  /** Bản mobile, nếu bản gốc dùng chuỗi khác. Render bằng set:html nên chèn được <br>. */
+  heroMobileTitle?: string;
+  /** Mặc định `"{heroTitle} | Fresh Dog Food Delivery"` — đúng với mọi trang hiện có */
+  heroAlt?: string;
+  /** Căn tiêu đề lên đầu banner — các trang nội dung phẳng và trang 404 */
+  isTitleTop?: boolean;
+
+  crumbs: Crumb[];
+}
+
+const {
+  title,
+  description,
+  image,
+  type,
+  noindex,
+  schema = [],
+  heroTitle,
+  heroMobileTitle = heroTitle,
+  heroAlt = `${heroTitle} | Fresh Dog Food Delivery`,
+  isTitleTop = false,
+  crumbs,
+} = Astro.props;
+
+/* BreadcrumbList dựng TẠI ĐÂY chứ không để từng trang tự truyền.
+
+   Layout đã nhận `crumbs` để render breadcrumb nhìn thấy được, nên nó có sẵn
+   đúng dữ liệu ấy. Để từng trang tự dựng thì vừa lặp vừa dễ quên: /contact/,
+   /reviews/ và /knowledge/ đều hiện breadcrumb mà không phát JSON-LD nào. */
+const allSchema = [breadcrumbSchema(crumbs), ...schema];
+---
+
+<BaseLayout
+  title={title}
+  description={description}
+  image={image}
+  type={type}
+  noindex={noindex}
+  schema={allSchema}
+>
+  <Header />
+  <HeroInner
+    isTitleTop={isTitleTop}
+    title={heroTitle}
+    mobileTitle={heroMobileTitle}
+    alt={heroAlt}
+  />
+  <Breadcrumbs items={crumbs} />
+  <slot />
+  <Footer />
+  <ToTop />
+</BaseLayout>

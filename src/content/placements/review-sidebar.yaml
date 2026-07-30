@@ -1,0 +1,9 @@
+# Thứ tự partner ở sidebar trang review — dùng cho CẢ carousel lẫn danh sách.
+# Logo/alt/tên/link/promo đều lấy từ collection `brands`, ở đây chỉ còn THỨ TỰ.
+entries:
+  - brand: "the-pets-table"
+  - brand: "ollie"
+  - brand: "spot-tango"
+  - brand: "we-feed-raw"
+  - brand: "freshpet"
+  - brand: "sundays-for-dogs"
