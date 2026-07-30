@@ -317,7 +317,7 @@ khi so body.
 ### `prose.css` có bốn khối, cố ý không gộp
 
 `.post__body` (bài viết), `.paragraph__content` (bài review), `.page__body`
-(trang nội dung phẳng) và `.article` (khối bài ở trang chủ) trông na ná nhau
+(trang nội dung phẳng) và `.featured-article` (khối bài ở trang chủ) trông na ná nhau
 nhưng khác ở chỗ quan trọng.
 
 `.post__body` có `h2/h3:first-of-type { margin-top: 0 }`, `.paragraph__content`
@@ -331,6 +331,38 @@ xoá margin ở đó. Cũng không được rút gọn thành `> :first-child`: 
 `<p>` đầu của terms/disclosure và kéo hai trang lên 16px.
 
 Muốn gộp thì phải xử lý cả hai điểm trên trước.
+
+### HTML: một `<h1>`, heading không nhảy cấp
+
+Đã soi toàn bộ `dist/` theo 10 tiêu chí và đưa về 0 vấn đề. Hai cạm bẫy đã dính,
+đừng lặp lại:
+
+**Đừng dựng hai cây markup cho hai kích thước màn.** `HeroInner` từng có hai cây
+banner với hai mốc ẩn lệch nhau 15px (bản gốc: JS đọc `clientWidth`, CSS đọc
+`innerWidth`), nên ở 768-782px KHÔNG cây nào hiện — dải trắng 170px, không tiêu
+đề nào, mà 768px chính là bề rộng iPad dọc. Hai cây cũng là hai `<h1>` mỗi
+trang. Cách đúng: một cây, đổi ảnh và đổi nhánh chữ theo CÙNG một mốc.
+
+**Đừng chọn cấp heading theo cỡ chữ.** `PartnerCard` từng để `<h3>` cho khẩu
+hiệu quảng cáo — trang chủ có 18 chuỗi kiểu "Get 30% off Your First Order" ngay
+dưới `<h1>`, còn tên brand thì không heading nào. Cỡ chữ là việc của CSS; cấp
+heading là dàn ý tài liệu. Card không bắt buộc phải có heading.
+
+Mọi class heading trong repo đã khai `font-size`/`font-weight`/`margin` tường
+minh, nên đổi cấp thẻ là **0 pixel**. Thêm heading mới thì khai đủ ba thứ đó,
+đừng dựa vào mặc định UA.
+
+### `rel` của link ra ngoài khai một chỗ
+
+`AFFILIATE_REL` và `EXTERNAL_REL` ở `lib/links.ts`. Mọi link kiếm tiền dùng
+`AFFILIATE_REL` (`nofollow sponsored noopener`) — `sponsored` là token Google
+chỉ định cho link trả tiền, thiếu nó là khai sai bản chất link. Trước đây chín
+component tự gõ chuỗi `rel` và tất cả đều thiếu token đó.
+
+Điều hướng luôn là `<a href>`. `ArticleLink` từng là `<div>` + `addEventListener`
+
+- `window.open` chép từ bản gốc: không bấm được bằng bàn phím, trình đọc màn
+  hình không biết là link.
 
 ### Tên file asset nằm trong URL
 
@@ -391,6 +423,16 @@ render sai biến thể.
 Với thay đổi đụng vào CSS, layout hay tên prop, nên dựng site trước/sau rồi so
 `dist/` — chú ý bỏ qua `data-astro-cid-*` và hash trong `/_astro/`, vì hai thứ
 đó đổi mỗi khi file component đổi đường dẫn.
+
+**So body thôi là chưa đủ.** Đã có lần trang chủ mất nguyên khối `<style>` 2175
+ký tự mà HTML vẫn đúng từng ký tự — chỉ lộ khi so tập khai báo CSS. Và có lần
+một rule scoped chết vì `set:html` không mang `data-astro-cid`, làm tiêu đề cao
+57px thay vì 28.5px mà cả `astro check` lẫn diff body đều không thấy. Với thay
+đổi liên quan tới style, phải **đo bằng trình duyệt** ở 375 / 768 / 1400px.
+
+Đổi tên class hàng loạt thì đừng dựng regex từ chuỗi trong heredoc: `\.` dễ bị
+nuốt thành `.` (khớp mọi ký tự) và sửa nhầm cả code. Dùng regex viết thẳng, và
+chứng minh bằng cách bỏ hết tên class khỏi `dist/` rồi so phần còn lại.
 
 ## Tài liệu
 
