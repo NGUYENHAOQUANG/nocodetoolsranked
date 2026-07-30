@@ -388,12 +388,23 @@ Ba điều phải nhớ khi sửa hero:
    chủ căn ảnh mobile giữa dọc, ảnh desktop mép trên — trước đây là hai class,
    nay là một rule cộng một media query.
 
-### `og:image` đang là ảnh tạm
+### `og:image`: ảnh mặc định ở `public/`, không phải `src/assets/`
 
-`Seo.astro` lấy `assets/hero/hero.jpg` làm ảnh chia sẻ mặc định để không trang
-nào trống. **Nên thay** bằng một ảnh thương hiệu 1200x630 đặt ở
-`public/og-image.jpg` — `public/` giữ nguyên đường dẫn, không bị băm tên, nên
-link chia sẻ đã cache ngoài mạng xã hội không chết khi ảnh đổi.
+`public/og-image.jpg` (1200x630) là ảnh chia sẻ cho mọi trang không tự truyền
+`image`. Đường dẫn khai ở `SITE.ogImage` trong `config/site.ts`.
+
+**Vì sao `public/` chứ không `src/assets/`:** Astro băm tên file trong
+`src/assets/`, nên mỗi lần đổi ảnh là URL đổi theo — mà Facebook/Twitter/Zalo
+**cache URL này**. Link đã chia sẻ sẽ mất ảnh. `public/` giữ nguyên đường dẫn.
+Đây đúng là trường hợp mà quy ước workspace dành riêng cho `public/`.
+
+`og:image:width`/`height` CHỈ khai khi dùng ảnh mặc định. Bài blog truyền ảnh
+card riêng, kích thước ảnh đó thì `Seo.astro` không biết — khai sai còn tệ hơn
+không khai.
+
+**Ảnh hiện tại là ảnh TẠM**, dựng từ banner hero đặt trên nền `#eaf4fb` (tỉ lệ
+hero là 7.31:1 nên phải letterbox mới ra 1.91:1). Thay bằng ảnh thiết kế riêng:
+ghi đè `public/og-image.jpg`, **không cần sửa code**.
 
 ### Skip link: đích do PAGE đặt
 

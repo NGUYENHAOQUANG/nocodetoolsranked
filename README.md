@@ -92,6 +92,17 @@ CHUNG khuôn với mọi ngách, không có `index.astro` riêng.
 > `content/pages/` (`about`, `terms-of-use`, `privacy-policy`,
 > `advertiser-disclosure`) và không được là `contact`, `reviews`, `knowledge`.
 
+### Đổi ảnh chia sẻ mạng xã hội
+
+Ghi đè **`public/og-image.jpg`** bằng ảnh mới, giữ nguyên tên và kích thước
+**1200x630**. Không cần sửa code.
+
+Ảnh đang có là ảnh TẠM (dựng từ banner hero, letterbox trên nền `#eaf4fb`).
+
+> Phải để ở `public/` chứ không phải `src/assets/`: Astro băm tên file trong
+> `src/assets/` nên đổi ảnh là đổi URL, mà mạng xã hội cache URL đó — link đã
+> chia sẻ sẽ mất ảnh.
+
 ### Sửa FAQ, đánh giá chi tiết, thẻ liên hệ
 
 FAQ và mini-review nằm trong frontmatter của chính trang toplist
@@ -134,8 +145,11 @@ src/
 ├─ pages/         route — xem bản đồ URL dưới
 ├─ lib/           links (nguồn duy nhất dựng URL), rankings, posts,
 │                 schema-org, stars
-├─ config/site.ts tên site, mô tả mặc định
+├─ config/site.ts tên site, mô tả + ảnh chia sẻ mặc định
 ├─ styles/        tokens.css · global.css · prose.css · hero.css
+│
+├─ ../public/     thứ cần GIỮ NGUYÊN đường dẫn (Astro không băm tên):
+│                 favicon.svg · robots.txt · og-image.jpg · fonts/
 └─ ../scripts/    check-content.mjs · check-html.mjs
 ```
 

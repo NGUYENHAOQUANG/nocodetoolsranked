@@ -9,7 +9,6 @@
  * "body diff rỗng, head diff thuần cộng thêm".
  */
 import { SITE } from "@/config/site";
-import defaultOgImage from "@/assets/hero/hero.jpg";
 
 interface Props {
   title: string;
@@ -34,13 +33,14 @@ const { title, description, image, type = "website", noindex = false, schema = [
    Astro.url.pathname đã kèm "/" cuối do trailingSlash: "always". */
 const canonical = new URL(Astro.url.pathname, Astro.site).href;
 
-/* Ảnh chia sẻ mặc định cho MỌI trang. Trước đây chỉ 6 bài blog có `og:image`,
-   nên chia sẻ trang chủ hay trang review lên mạng xã hội ra thẻ không ảnh —
-   mất mát thật với site sống bằng lượt chia sẻ.
+/* Ảnh chia sẻ. Trang tự truyền `image` thì dùng cái đó (bài blog dùng ảnh card);
+   còn lại rơi về ảnh mặc định của site — trước đây 15/21 trang không có
+   `og:image` nào, kể cả trang chủ, nên chia sẻ ra mạng xã hội hiện thẻ trống.
 
-   Đang tạm dùng ảnh hero. Nên thay bằng một ảnh thương hiệu 1200x630 đặt ở
-   `public/og-image.jpg` (public/ giữ nguyên đường dẫn, không bị băm tên). */
-const ogImage = new URL(image ?? defaultOgImage.src, Astro.site).href;
+   Chỉ khai `og:image:width/height` khi dùng ảnh MẶC ĐỊNH: kích thước ảnh riêng
+   của từng trang thì đây không biết, mà khai sai còn tệ hơn không khai. */
+const usingDefault = image === undefined;
+const ogImage = new URL(image ?? SITE.ogImage.path, Astro.site).href;
 ---
 
 {noindex && <meta name="robots" content="noindex" />}
@@ -55,6 +55,14 @@ const ogImage = new URL(image ?? defaultOgImage.src, Astro.site).href;
 <meta property="og:url" content={canonical} />
 <meta property="og:locale" content={SITE.locale} />
 <meta property="og:image" content={ogImage} />
+{
+  usingDefault && (
+    <>
+      <meta property="og:image:width" content={String(SITE.ogImage.width)} />
+      <meta property="og:image:height" content={String(SITE.ogImage.height)} />
+    </>
+  )
+}
 
 {/* Twitter */}
 <meta name="twitter:card" content="summary_large_image" />
