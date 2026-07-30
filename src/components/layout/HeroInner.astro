@@ -9,7 +9,7 @@
  *
  * Khung dùng chung nằm ở `@/styles/hero.css`.
  */
-import { Image } from "astro:assets";
+import { getImage } from "astro:assets";
 import heroImgDesktop from "@/assets/hero/hero.jpg";
 import heroImgMobile from "@/assets/hero/hero-mobile.jpg";
 import "@/styles/hero.css";
@@ -22,12 +22,29 @@ interface Props {
   /** Căn tiêu đề LÊN ĐẦU banner thay vì giữa (các trang nội dung phẳng) */
   isTitleTop?: boolean;
   alt: string;
-  /** Mặc định BẰNG `alt`, không suy từ `mobileTitle`: bản gốc dùng chung một
-      chuỗi alt cho cả hai banner kể cả khi tiêu đề mobile khác. */
-  mobileAlt?: string;
 }
 
-const { title, mobileTitle = title, isTitleTop = false, alt, mobileAlt = alt } = Astro.props;
+const { title, mobileTitle = title, isTitleTop = false, alt } = Astro.props;
+
+/* MỘT ảnh được tải, không phải hai.
+   Hai `<Image>` ẩn/hiện bằng CSS thì trình duyệt vẫn tải CẢ HAI: ảnh
+   `display: none` vẫn nằm trong luồng tải. Đo trên /about/: hai ảnh hero chiếm
+   41.2 KB trong 95.8 KB của trang, tức gần một nửa — và một nửa số đó không bao
+   giờ hiện, lại còn `loading="eager"` nên tranh băng thông với ảnh thật.
+
+   `<picture>` + `<source media>` để trình duyệt chọn TRƯỚC khi tải. Astro không
+   có component nào làm art direction (`<Picture>` chỉ đổi ĐỊNH DẠNG của cùng
+   một ảnh), nên dựng tay bằng `getImage()` — vẫn được srcset tối ưu. */
+const wide = await getImage({
+  src: heroImgDesktop,
+  widths: [768, 1024, 1440, 1920, 2560],
+  format: "webp",
+});
+const compact = await getImage({
+  src: heroImgMobile,
+  widths: [375, 480, 640, 768],
+  format: "webp",
+});
 
 const innerContentClass = [
   "hero__content",
@@ -52,20 +69,24 @@ const innerContentClass = [
       CÙNG một mốc, và chỉ còn một `<h1>` chứa hai nhánh chữ. */
   }
   <div class="hero__banner">
-    <Image
-      class="hero__bg hero__bg--wide"
-      src={heroImgDesktop}
-      alt={alt}
-      sizes="100vw"
-      loading="eager"
-    />
-    <Image
-      class="hero__bg hero__bg--compact"
-      src={heroImgMobile}
-      alt={mobileAlt}
-      sizes="100vw"
-      loading="eager"
-    />
+    {
+      /* `alt` dùng bản DESKTOP cho cả hai nhánh: `<picture>` chỉ có một `<img>`
+        nên chỉ có một alt. Chuỗi desktop là chuỗi mô tả trang, còn chuỗi mobile
+        của bản gốc chỉ khác ở vài trang và không mô tả gì thêm về ẢNH. */
+    }
+    <picture>
+      <source media="(min-width: 768px)" srcset={wide.srcSet.attribute} sizes="100vw" />
+      <img
+        class="hero__bg"
+        src={compact.src}
+        srcset={compact.srcSet.attribute}
+        sizes="100vw"
+        alt={alt}
+        width="650"
+        height="325"
+        loading="eager"
+      />
+    </picture>
     <div class={innerContentClass}>
       <div class="hero__text">
         {
@@ -96,18 +117,24 @@ const innerContentClass = [
     justify-content: flex-start;
   }
 
-  /* Ảnh và chữ đổi theo CÙNG một mốc 768px — đúng mốc `HeroToplist` đang dùng.
-     Bản gốc để hai mốc lệch nhau 15px, xem ghi chú ở markup. */
-  .hero__bg--wide,
+  /* `<picture>` phải RA KHỎI luồng, đúng như `<img>` trước đây.
+
+     `display: contents` KHÔNG dùng được: `.hero__banner` là grid, nên nó đưa
+     `<img>` lên làm grid item và sinh thêm một hàng — đo được `grid-template-rows`
+     thành `54.72px 117.28px`, đẩy tiêu đề xuống 54.7px và làm mất tác dụng của
+     `--top` ở trang /about/. Cho `<picture>` absolute thì grid lại chỉ còn đúng
+     một item trong luồng như cũ. */
+  picture {
+    position: absolute;
+    inset: 0;
+  }
+
+  /* Chữ đổi theo CÙNG mốc 768px mà `<source media>` dùng cho ảnh. */
   .hero__title-part--wide {
     display: none;
   }
 
   @media (min-width: 768px) {
-    .hero__bg--wide {
-      display: block;
-    }
-    .hero__bg--compact,
     .hero__title-part--compact {
       display: none;
     }

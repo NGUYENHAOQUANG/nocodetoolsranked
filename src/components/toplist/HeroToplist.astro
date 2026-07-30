@@ -11,7 +11,7 @@
  *
  * Khung dùng chung nằm ở `@/styles/hero.css`.
  */
-import { Image } from "astro:assets";
+import { getImage } from "astro:assets";
 import { getEntry, render } from "astro:content";
 import heroImgDesktop from "@/assets/hero/hero.jpg";
 import heroImgMobile from "@/assets/hero/hero-mobile.jpg";
@@ -25,10 +25,23 @@ interface Props {
   subtitle: string;
   subtitleCompact: string;
   alt: string;
-  mobileAlt?: string;
 }
 
-const { title, subtitle, subtitleCompact, alt, mobileAlt = alt } = Astro.props;
+const { title, subtitle, subtitleCompact, alt } = Astro.props;
+
+/* MỘT ảnh được tải, không phải hai — cùng lý do như `HeroInner`: ảnh
+   `display: none` vẫn nằm trong luồng tải, mà cả hai đều `loading="eager"` nên
+   chúng tranh băng thông với nhau trên đường tới LCP. Xem ghi chú ở HeroInner. */
+const wide = await getImage({
+  src: heroImgDesktop,
+  widths: [768, 1024, 1440, 1920, 2560],
+  format: "webp",
+});
+const compact = await getImage({
+  src: heroImgMobile,
+  widths: [375, 480, 640, 768],
+  format: "webp",
+});
 
 /* Đoạn "Advertising Disclosure" dùng CHUNG với trang /advertiser-disclosure/ —
    trước đây hai nơi chép rời nhau và đã trôi lệch tới mức bản ở trang kia nói về
@@ -48,20 +61,19 @@ const lastUpdated = new Intl.DateTimeFormat("en-US", {
 
 <section class="hero">
   <div class="hero__banner">
-    <Image
-      class="hero__bg hero__bg--desktop"
-      src={heroImgDesktop}
-      alt={alt}
-      sizes="100vw"
-      loading="eager"
-    />
-    <Image
-      class="hero__bg hero__bg--mobile"
-      src={heroImgMobile}
-      alt={mobileAlt}
-      sizes="100vw"
-      loading="eager"
-    />
+    <picture>
+      <source media="(min-width: 768px)" srcset={wide.srcSet.attribute} sizes="100vw" />
+      <img
+        class="hero__bg"
+        src={compact.src}
+        srcset={compact.srcSet.attribute}
+        sizes="100vw"
+        alt={alt}
+        width="650"
+        height="325"
+        loading="eager"
+      />
+    </picture>
     <div class="hero__content">
       <div class="hero__text">
         <h1 class="hero__title" set:html={title} />
@@ -91,11 +103,17 @@ const lastUpdated = new Intl.DateTimeFormat("en-US", {
 </section>
 
 <style>
-  .hero__bg--desktop {
-    display: none;
+  /* `<picture>` phải RA KHỎI luồng như `<img>` trước đây — `.hero__banner` là
+     grid, để nó làm grid item là sinh thêm một hàng. Xem ghi chú ở HeroInner. */
+  picture {
+    position: absolute;
+    inset: 0;
   }
-  /* Ảnh mobile căn giữa theo chiều dọc (ảnh desktop thì căn mép trên) — đúng bản gốc */
-  .hero__bg--mobile {
+
+  /* Ảnh mobile căn GIỮA theo chiều dọc, ảnh desktop căn MÉP TRÊN — đúng bản gốc.
+     Giờ chỉ còn một `<img>` nên `object-position` phải đổi theo đúng mốc mà
+     `<source media>` dùng, không còn hai class riêng nữa. */
+  .hero__bg {
     object-position: right center;
   }
 
@@ -185,11 +203,8 @@ const lastUpdated = new Intl.DateTimeFormat("en-US", {
 
   /* ===== Từ 768px: đổi sang ảnh + nội dung bản desktop (KHÔNG phải 615px) ===== */
   @media (min-width: 768px) {
-    .hero__bg--desktop {
-      display: block;
-    }
-    .hero__bg--mobile {
-      display: none;
+    .hero__bg {
+      object-position: right top;
     }
     .hero__title :global(span) {
       display: inline;

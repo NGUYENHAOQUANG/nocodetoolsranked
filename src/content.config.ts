@@ -200,7 +200,6 @@ const toplists = defineCollection({
           từ 615px, không tách được thành hai <h1> vì mỗi trang chỉ một <h1>. */
       heroTitle: z.string(),
       heroAlt: z.string(),
-      heroMobileAlt: z.string().optional(),
       /** Hai phụ đề cho hai mốc màn hình — bản gốc dùng hai câu KHÁC nhau */
       heroSubtitle: z.string(),
       heroSubtitleCompact: z.string(),

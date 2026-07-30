@@ -49,10 +49,6 @@ const schema = [
 ];
 ---
 
-{
-  /* Bản gốc: desktop ghi "Reviews", mobile lại ghi tên bài — nên đây là trang
-    DUY NHẤT phải truyền `heroMobileAlt` tường minh. */
-}
 <InnerPageLayout
   title={title}
   description={promo}
@@ -60,7 +56,6 @@ const schema = [
   schema={schema}
   heroTitle="Reviews"
   heroMobileTitle={heroTitle}
-  heroMobileAlt={`${heroTitle} | Fresh Dog Food Delivery`}
   crumbs={crumbs}
 >
   <ArticleGrid>

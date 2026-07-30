@@ -38,13 +38,6 @@ interface Props {
   heroMobileTitle?: string;
   /** Mặc định `"{heroTitle} | Fresh Dog Food Delivery"` — đúng với mọi trang hiện có */
   heroAlt?: string;
-  /**
-   * Mặc định BẰNG `heroAlt`, KHÔNG suy từ `heroMobileTitle`: bản gốc dùng chung
-   * một chuỗi alt cho cả hai banner kể cả khi tiêu đề mobile khác (vd /knowledge/
-   * ghi "Knowledge Center" nhưng alt vẫn là "Knowledge | ..."). Suy máy còn có
-   * nguy cơ nhét cả thẻ <br> vào thuộc tính alt.
-   */
-  heroMobileAlt?: string;
   /** Căn tiêu đề lên đầu banner — các trang nội dung phẳng và trang 404 */
   isTitleTop?: boolean;
 
@@ -61,7 +54,6 @@ const {
   heroTitle,
   heroMobileTitle = heroTitle,
   heroAlt = `${heroTitle} | Fresh Dog Food Delivery`,
-  heroMobileAlt = heroAlt,
   isTitleTop = false,
   crumbs,
 } = Astro.props;
@@ -88,7 +80,6 @@ const allSchema = [breadcrumbSchema(crumbs), ...schema];
     title={heroTitle}
     mobileTitle={heroMobileTitle}
     alt={heroAlt}
-    mobileAlt={heroMobileAlt}
   />
   <Breadcrumbs items={crumbs} />
   <slot />

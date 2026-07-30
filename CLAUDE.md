@@ -22,7 +22,7 @@ nó chỉ kiểm KIỂU:
 | Script              | Kiểm gì                               | Chạy lúc          |
 | ------------------- | ------------------------------------- | ----------------- |
 | `check-content.mjs` | nội dung chỉ ASCII; URL trần phải bọc | `npm run check`   |
-| `check-html.mjs`    | 12 luật HTML trên `dist/`             | sau `astro build` |
+| `check-html.mjs`    | 13 luật HTML trên `dist/`             | sau `astro build` |
 
 `check-html.mjs` chạy trên `dist/` chứ không phải `src/`, vì "trang này có mấy
 `<h1>`" chỉ trả lời được trên HTML đã render. Nó nhận tham số thư mục nên soi
@@ -361,6 +361,46 @@ bằng phân tích tĩnh nơi đặt `<Content />`. Truyền component factory q
 nó mất dấu: bản thử làm trang chủ mất nguyên khối `<style>` 2175 ký tự, CTA hiện
 trần không style. HTML vẫn đúng nên chỉ lộ khi so **CSS** của `dist/`, không lộ
 khi so body.
+
+### Hero: `<picture>` chứ không phải hai `<img>` ẩn/hiện
+
+Ảnh `display: none` **vẫn được trình duyệt tải**. Hai `<Image>` desktop/mobile
+ẩn nhau bằng CSS nghĩa là mọi trang tải cả hai, và cả hai đều `loading="eager"`
+nên chúng tranh băng thông trên đường tới LCP. Đo được: `/about/` từ 95.2 KB
+xuống 63.6 KB, trang chủ giảm 31.5 KB, toàn site 21 trang giảm 14%.
+
+Astro **không có** component làm art direction — `<Picture>` chỉ đổi ĐỊNH DẠNG
+của cùng một ảnh. Dựng tay bằng `getImage()` rồi ghép `<picture>` +
+`<source media>`; vẫn được srcset tối ưu.
+
+Ba điều phải nhớ khi sửa hero:
+
+1. **`<picture>` phải `position: absolute; inset: 0`**, KHÔNG dùng
+   `display: contents`. `.hero__banner` là grid, nên `display: contents` đưa
+   `<img>` lên làm grid item và sinh thêm một hàng — đo được `grid-template-rows`
+   thành `54.72px 117.28px`, đẩy tiêu đề xuống 54.7px và làm mất tác dụng của
+   `--top` ở trang /about/.
+2. **Chỉ còn MỘT `alt`.** Bản gốc có chuỗi alt riêng cho mobile ở vài trang; nay
+   dùng chuỗi desktop cho cả hai vì `<picture>` chỉ có một `<img>`, và chuỗi
+   mobile không mô tả gì thêm về ẢNH. Prop `mobileAlt` cùng trường
+   `heroMobileAlt` trong schema đã bỏ.
+3. **`object-position` phải đổi theo cùng mốc** mà `<source media>` dùng. Trang
+   chủ căn ảnh mobile giữa dọc, ảnh desktop mép trên — trước đây là hai class,
+   nay là một rule cộng một media query.
+
+### `og:image` đang là ảnh tạm
+
+`Seo.astro` lấy `assets/hero/hero.jpg` làm ảnh chia sẻ mặc định để không trang
+nào trống. **Nên thay** bằng một ảnh thương hiệu 1200x630 đặt ở
+`public/og-image.jpg` — `public/` giữ nguyên đường dẫn, không bị băm tên, nên
+link chia sẻ đã cache ngoài mạng xã hội không chết khi ảnh đổi.
+
+### Skip link: đích do PAGE đặt
+
+`BaseLayout` phát `<a href="#main-content">` cho mọi trang, nhưng `<main>` do
+từng page tự viết (layout cố ý không phát `<main>`), nên id `main-content` phải
+đặt tay ở mỗi page. `check-html.mjs` có luật canh: có skip link mà không có
+`<main id="main-content">` là lỗi build.
 
 ### `prose.css` có bốn khối, cố ý không gộp
 

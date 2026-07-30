@@ -17,7 +17,7 @@ npm run dev        # http://localhost:4321
 | Lệnh              | Việc                                                                      |
 | ----------------- | ------------------------------------------------------------------------- |
 | `npm run dev`     | Máy chủ phát triển                                                        |
-| `npm run build`   | Chạy `check`, dựng site vào `dist/`, rồi `check-html.mjs` (12 luật HTML)  |
+| `npm run build`   | Chạy `check`, dựng site vào `dist/`, rồi `check-html.mjs` (13 luật HTML)  |
 | `npm run preview` | Xem thử bản đã dựng                                                       |
 | `npm run check`   | `astro check` (kiểu) + `check-content.mjs` (ASCII, URL trần) — luôn 0 lỗi |
 | `npm run format`  | Format mọi thứ trừ `src/content/**` (nội dung chỉnh tay) — xem CLAUDE.md  |
