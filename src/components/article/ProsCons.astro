@@ -24,9 +24,9 @@ const lists = [
     lists.map((list) => (
       <div class="pros-cons__col">
         <div class="pros-cons__title">
-          <h4 class:list={["pros-cons__label", `pros-cons__label--${list.modifier}`]}>
+          <h2 class:list={["pros-cons__label", `pros-cons__label--${list.modifier}`]}>
             {list.title}
-          </h4>
+          </h2>
           <svg
             class:list={["pros-cons__icon", `pros-cons__icon--${list.modifier}`]}
             viewBox="0 0 24 24"
@@ -92,10 +92,11 @@ const lists = [
     gap: 3px;
     font-weight: 500;
   }
-  /* <h4> mặc định UA là bold → phải khai lại, không thể chỉ kế thừa từ .pros-cons__title.
-     Margin 1.33em cũng là mặc định UA của <h4>: bản gốc KHÔNG reset nên dưới 768px
-     nó vẫn còn (mốc 768 mới bỏ) — global.css của ta reset về 0 nên phải khai lại,
-     thiếu là mỗi cột hụt ~37px. */
+  /* Thẻ heading mặc định UA là bold → phải khai `inherit`, không thể chỉ kế thừa
+     từ .pros-cons__title. Margin 1.33em là mặc định UA của <h4> mà bản gốc dùng:
+     nó KHÔNG reset nên dưới 768px margin đó vẫn còn (mốc 768 mới bỏ) —
+     global.css của ta reset về 0 nên phải khai lại, thiếu là mỗi cột hụt ~37px.
+     Giữ nguyên con số đó sau khi đổi thẻ sang <h2> cho khỏi nhảy cấp. */
   .pros-cons__label {
     margin: 1.33em 0;
     font-size: inherit;

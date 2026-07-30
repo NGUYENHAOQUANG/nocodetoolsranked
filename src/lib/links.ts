@@ -35,3 +35,24 @@ export const STATIC_PAGES = {
   terms: "/terms-of-use/",
   disclosure: "/advertiser-disclosure/",
 } as const;
+
+/* ---------------------------------------------------------------------------
+   `rel` cho link RA NGOÀI — khai một chỗ, mọi component dùng lại.
+
+   Trước đây chín component tự gõ chuỗi `rel` và tất cả đều thiếu `sponsored`.
+   Gõ tay ở chín chỗ thì chỉ cần một chỗ sai là rò, mà không có gì báo.
+   --------------------------------------------------------------------------- */
+
+/**
+ * Link affiliate — mọi link kiếm tiền phải dùng cái này.
+ *
+ * - `sponsored`: token Google chỉ định cho link trả tiền / affiliate. Thiếu nó
+ *   là khai sai bản chất link, và Google có thể coi là mua bán liên kết.
+ * - `nofollow`: không truyền PageRank.
+ * - `noopener`: chặn trang đích chạm `window.opener`. Trình duyệt hiện đại tự
+ *   ngầm định khi có target="_blank", giữ lại cho bản cũ.
+ */
+export const AFFILIATE_REL = "nofollow sponsored noopener";
+
+/** Link ra ngoài KHÔNG phải affiliate (vd chính sách của Google ở form liên hệ) */
+export const EXTERNAL_REL = "noopener";

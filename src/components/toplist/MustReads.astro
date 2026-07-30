@@ -6,11 +6,11 @@ const mustReads = await getMustReads();
 ---
 
 <aside class="must-reads">
-  <h3 class="must-reads__title">Must Reads</h3>
+  <h2 class="must-reads__title">Must Reads</h2>
   {
     mustReads.map((item) => (
       <a class="must-reads__item" href={item.href}>
-        <h4 class="must-reads__item-title">{item.title}</h4>
+        <h3 class="must-reads__item-title">{item.title}</h3>
         <div class="must-reads__excerpt">
           <p>{item.excerpt}</p>
         </div>

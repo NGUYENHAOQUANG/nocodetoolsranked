@@ -1,4 +1,5 @@
 ---
+import { AFFILIATE_REL } from "@/lib/links";
 import type { ImageMetadata } from "astro";
 import type { ToplistRow } from "@/lib/rankings";
 import { STAR_OUTLINE } from "@/lib/icon-paths";
@@ -68,7 +69,7 @@ const reviewsMobile = `(${brand.reviewsCount}) Reviews`;
           href={brand.href}
           title="Visit Site"
           target="_blank"
-          rel="noopener nofollow"
+          rel={AFFILIATE_REL}
           referrerpolicy="strict-origin"
         >
           Visit Site
@@ -134,7 +135,7 @@ const reviewsMobile = `(${brand.reviewsCount}) Reviews`;
     <div class="mini-review__column mini-review__column--aside">
       <div class="mini-review__proscons">
         <div class="mini-review__proscons-group">
-          <h5 class="mini-review__proscons-title">
+          <h3 class="mini-review__proscons-title">
             <svg
               class="mini-review__proscons-icon"
               viewBox="0 0 512 512"
@@ -144,7 +145,7 @@ const reviewsMobile = `(${brand.reviewsCount}) Reviews`;
               <path d={CHECK}></path>
             </svg>
             Pros
-          </h5>
+          </h3>
           <ul class="mini-review__proscons-list">
             {
               pros.map((item) => (
@@ -165,7 +166,7 @@ const reviewsMobile = `(${brand.reviewsCount}) Reviews`;
         </div>
 
         <div class="mini-review__proscons-group">
-          <h5 class="mini-review__proscons-title">
+          <h3 class="mini-review__proscons-title">
             {/* Bản gốc để icon "Cons" cố định 16px, còn icon "Pros" là 1em (20.8px) */}
             <svg
               class="mini-review__proscons-icon mini-review__proscons-icon--sm"
@@ -176,7 +177,7 @@ const reviewsMobile = `(${brand.reviewsCount}) Reviews`;
               <path d={CROSS}></path>
             </svg>
             Cons
-          </h5>
+          </h3>
           <ul class="mini-review__proscons-list">
             {
               cons.map((item) => (
@@ -203,7 +204,7 @@ const reviewsMobile = `(${brand.reviewsCount}) Reviews`;
           href={brand.href}
           title="Visit Site"
           target="_blank"
-          rel="noopener nofollow"
+          rel={AFFILIATE_REL}
           referrerpolicy="strict-origin"
         >
           Visit Site

@@ -40,28 +40,44 @@ const innerContentClass = [
 
 <section class="hero">
   {
-    /* Bản gốc dựng banner mobile/desktop thành HAI cây riêng: JS chọn cây theo
-      `clientWidth` (mốc 768), còn CSS lại ẩn theo `innerWidth` — lệch nhau đúng
-      15px thanh cuộn nên ở 768–782px KHÔNG cây nào hiện, chừa 170px trắng.
-      Tái hiện y hệt bằng 2 mốc ẩn lệch nhau ở cuối file. */
+    /* MỘT banner, MỘT `<h1>` — cùng hình dạng với `HeroToplist`.
+
+      Bản gốc dựng hai cây banner riêng, JS chọn cây theo `clientWidth` (mốc
+      768) còn CSS ẩn theo `innerWidth` — lệch đúng 15px thanh cuộn, nên ở
+      768-782px KHÔNG cây nào hiện: dải trắng 170px, không tiêu đề nào. 768px
+      là bề rộng iPad dọc, nên đó là lỗi thật chứ không phải thiết kế.
+
+      Hai cây còn kéo theo HAI thẻ `<h1>` trên mỗi trang trong — 20/21 trang,
+      trái chính luật repo tự ghi. Gộp lại xử lý cả hai: ảnh và chữ đổi theo
+      CÙNG một mốc, và chỉ còn một `<h1>` chứa hai nhánh chữ. */
   }
-  <div class="hero__banner hero__banner--mobile-only">
-    <Image class="hero__bg" src={heroImgMobile} alt={mobileAlt} sizes="100vw" loading="eager" />
+  <div class="hero__banner">
+    <Image
+      class="hero__bg hero__bg--wide"
+      src={heroImgDesktop}
+      alt={alt}
+      sizes="100vw"
+      loading="eager"
+    />
+    <Image
+      class="hero__bg hero__bg--compact"
+      src={heroImgMobile}
+      alt={mobileAlt}
+      sizes="100vw"
+      loading="eager"
+    />
     <div class={innerContentClass}>
       <div class="hero__text">
         {
           /* set:html để tiêu đề mobile chèn <br> cứng như bản gốc (vd
-            "Top Dog Food Delivery" xuống dòng rồi "Reviews") — không tự wrap */
+            "Top Dog Food Delivery" xuống dòng rồi "Reviews") — không tự wrap.
+            Nhánh nào bị `display: none` thì trình đọc màn hình cũng bỏ qua,
+            nên một `<h1>` vẫn cho ra đúng một tiêu đề được đọc. */
         }
-        <h1 class="hero__title" set:html={mobileTitle} />
-      </div>
-    </div>
-  </div>
-  <div class="hero__banner hero__banner--desktop-only">
-    <Image class="hero__bg" src={heroImgDesktop} alt={alt} sizes="100vw" loading="eager" />
-    <div class={innerContentClass}>
-      <div class="hero__text">
-        <h1 class="hero__title" set:html={title} />
+        <h1 class="hero__title">
+          <span class="hero__title-part hero__title-part--compact" set:html={mobileTitle} />
+          <span class="hero__title-part hero__title-part--wide" set:html={title} />
+        </h1>
       </div>
     </div>
   </div>
@@ -80,16 +96,23 @@ const innerContentClass = [
     justify-content: flex-start;
   }
 
-  /* Hai mốc ẩn LỆCH NHAU 15px (đúng bằng thanh cuộn) — xem chú thích ở markup.
-     Kết quả: <768 hiện bản mobile, ≥783 hiện bản desktop, 768–782 trắng. */
+  /* Ảnh và chữ đổi theo CÙNG một mốc 768px — đúng mốc `HeroToplist` đang dùng.
+     Bản gốc để hai mốc lệch nhau 15px, xem ghi chú ở markup. */
+  .hero__bg--wide,
+  .hero__title-part--wide {
+    display: none;
+  }
+
   @media (min-width: 768px) {
-    .hero__banner--mobile-only {
+    .hero__bg--wide {
+      display: block;
+    }
+    .hero__bg--compact,
+    .hero__title-part--compact {
       display: none;
     }
-  }
-  @media (max-width: 782px) {
-    .hero__banner--desktop-only {
-      display: none;
+    .hero__title-part--wide {
+      display: inline;
     }
   }
 </style>

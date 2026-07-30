@@ -1,6 +1,17 @@
 ---
-/* Link tên đối tác ở cuối bài. Bản gốc là <div> + onClick (không phải <a>) nên
-   tái hiện bằng script nhỏ. */
+/**
+ * Link tên đối tác ở cuối bài review.
+ *
+ * Bản gốc dựng bằng `<div>` + `onClick` rồi `window.open()`, và bản dựng lại
+ * chép y nguyên. Đó là thứ `CLAUDE.md` workspace cấm thẳng: điều hướng phải là
+ * `<a href>`. Cái `<div>` kia không bấm được bằng bàn phím, trình đọc màn hình
+ * không biết đó là link, và bỏ tab qua nó luôn.
+ *
+ * Viết bằng `<a>` thì mất luôn cả `<script>` lẫn hai `<div>` bọc: trình duyệt
+ * đã làm sẵn việc mở tab mới.
+ */
+import { AFFILIATE_REL } from "@/lib/links";
+
 interface Props {
   name: string;
   href: string;
@@ -9,48 +20,31 @@ interface Props {
 const { name, href } = Astro.props;
 ---
 
-<div class="text-link" data-href={href}>
-  <div class="text-link__inner">
-    <div class="text-link__content">{name}</div>
-  </div>
-</div>
+<a class="article-link" href={href} target="_blank" rel={AFFILIATE_REL}>{name}</a>
 
 <style>
-  .text-link {
-    width: max-content;
-    /* Margin do bản gốc đặt ở cha (.review > div > div) */
-    margin: 10px 0 30px;
-    /* Màu chữ mặc định của trang gốc là #2d2d2d, không phải #000 kế thừa từ body */
-    color: var(--color-text-body);
-    cursor: pointer;
-  }
-  .text-link__inner {
-    font-size: 1.125rem;
-    font-weight: 500;
-  }
-  .text-link__content {
+  .article-link {
     --hover-color: var(--color-primary);
 
     width: max-content;
+    /* Margin do bản gốc đặt ở cha (.review__content > div > div) */
+    margin: 10px 0 30px;
     display: flex;
     align-items: center;
     justify-content: center;
     border-radius: 3em;
+    font-size: 1.125rem;
+    /* Font thân bài là `--font-base` (bộ chữ hệ thống), không phải Lato — nên
+       weight 500 ở đây render đúng 500, khác trường hợp InlineCta. */
+    font-weight: 500;
+    /* Màu chữ mặc định của trang gốc là #2d2d2d, không phải #000 kế thừa từ body */
+    color: var(--color-text-body);
     text-decoration: underline;
   }
 
   @media (min-width: 615px) {
-    .text-link__content:hover {
+    .article-link:hover {
       color: var(--hover-color);
     }
   }
 </style>
-
-<script>
-  document.querySelectorAll<HTMLElement>(".text-link").forEach((el) => {
-    el.addEventListener("click", () => {
-      const href = el.dataset.href;
-      if (href) window.open(href, "_blank", "noopener");
-    });
-  });
-</script>

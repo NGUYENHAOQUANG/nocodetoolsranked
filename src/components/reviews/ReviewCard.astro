@@ -1,4 +1,5 @@
 ---
+import { AFFILIATE_REL } from "@/lib/links";
 import type { ReviewsPageRow } from "@/lib/rankings";
 import { starList } from "@/lib/stars";
 
@@ -90,7 +91,7 @@ const starPaths = starList(stars);
           href={href}
           title="Visit Site"
           target="_blank"
-          rel="noopener nofollow"
+          rel={AFFILIATE_REL}
           referrerpolicy="strict-origin"
         >
           <span>Visit Site</span>

@@ -1,4 +1,5 @@
 ---
+import { AFFILIATE_REL } from "@/lib/links";
 import { Image } from "astro:assets";
 import type { ToplistRow } from "@/lib/rankings";
 import ScoreRing from "@/components/toplist/ScoreRing.astro";
@@ -50,7 +51,7 @@ const mobileLogo = logoMobile ?? logo;
         class="partner__side-banner"
         href={href}
         target="_blank"
-        rel="noopener nofollow"
+        rel={AFFILIATE_REL}
         referrerpolicy="strict-origin"
       >
         {/* format png: giữ nguyên pixel gốc, tránh nén lại mất mát (ảnh vốn đã đúng 320×800) */}
@@ -104,7 +105,12 @@ const mobileLogo = logoMobile ?? logo;
         </div>
 
         <div class="partner__content">
-          <h3
+          {
+            /* Khẩu hiệu quảng cáo, KHÔNG phải tiêu đề tài liệu: trang chủ có 18 chuỗi
+            kiểu "Get 30% off Your First Order" nằm dưới <h1>, làm dàn ý trang thành
+            danh sách quảng cáo. Card không cần heading nào - tên brand đã ở alt logo. */
+          }
+          <p
             class:list={[
               "partner__tagline",
               "partner__tagline--compact",
@@ -112,8 +118,8 @@ const mobileLogo = logoMobile ?? logo;
             ]}
           >
             {taglineMobile}
-          </h3>
-          <h3 class="partner__tagline partner__tagline--wide">{tagline}</h3>
+          </p>
+          <p class="partner__tagline partner__tagline--wide">{tagline}</p>
 
           {
             coupon && (
@@ -185,7 +191,7 @@ const mobileLogo = logoMobile ?? logo;
                 href={href}
                 title="Visit Site"
                 target="_blank"
-                rel="noopener nofollow"
+                rel={AFFILIATE_REL}
                 referrerpolicy="strict-origin"
               >
                 <div class="partner__button-inner">

@@ -13,9 +13,8 @@
    component là scoped (0,2,0) nên LUÔN thắng — khung là nền, nhánh đè lên.
    ========================================================================== */
 
-/* Ô chừa chỗ cho banner: chỉ min-height 170px. Chiều cao THẬT (172px) do banner
-   bên trong quyết định — nhờ vậy lúc không banner nào hiện (768-782px, xem
-   HeroInner) vẫn còn đúng 170px trắng như bản gốc. */
+/* Ô chừa chỗ cho banner: min-height 170px, còn chiều cao THẬT (172px) do banner
+   bên trong quyết định. Hai con số lệch nhau 2px là của bản gốc; giữ nguyên. */
 .hero {
   position: relative;
   min-height: 170px;

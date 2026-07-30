@@ -6,6 +6,7 @@
  * trong chính nó. Nhận `partner` vì đó là thứ duy nhất nơi gọi biết mà nó không
  * tự suy ra được.
  */
+import { AFFILIATE_REL } from "@/lib/links";
 import { getCarouselPartners } from "@/lib/rankings";
 import { CHEVRON_RIGHT } from "@/lib/icon-paths";
 
@@ -51,7 +52,7 @@ const CIRCLE_ARROW_RIGHT =
         class="promo-carousel__link"
         href={current.href}
         target="_blank"
-        rel="noopener nofollow"
+        rel={AFFILIATE_REL}
         referrerpolicy="strict-origin"
       >
         <img

@@ -1,4 +1,5 @@
 ---
+import { AFFILIATE_REL } from "@/lib/links";
 import { getEntry } from "astro:content";
 import { CHEVRON_RIGHT } from "@/lib/icon-paths";
 
@@ -38,7 +39,7 @@ const { logo, logoAlt, affiliateUrl: href } = brand.data;
         href={href}
         title={buttonText}
         target="_blank"
-        rel="noopener nofollow"
+        rel={AFFILIATE_REL}
         referrerpolicy="strict-origin"
       >
         <span class="inline-cta__button-text">{buttonText}</span>
