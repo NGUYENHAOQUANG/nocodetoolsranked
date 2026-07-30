@@ -19,7 +19,15 @@
 import { readdirSync, readFileSync, statSync } from "node:fs";
 import { join, relative } from "node:path";
 
-/** Ký hiệu được phép ngoài ASCII — mang nghĩa pháp lý, không phải trang trí */
+/**
+ * Ký tự ngoài ASCII được phép.
+ *
+ * Hiện chỉ có ba ký hiệu mang nghĩa pháp lý. Ngoại lệ hợp lệ còn lại là TÊN
+ * RIÊNG viết đúng chính tả của nó (workspace CLAUDE.md mục 5): brand thật tên
+ * `Café X` thì viết đúng vậy, vì tên riêng là DỮ LIỆU chứ không phải lựa chọn
+ * kiểu chữ. Gặp ca đó thì thêm ký tự vào đây kèm một dòng lý do — đừng bẻ chữ
+ * cho vừa script.
+ */
 const ALLOWED = new Set(["©", "®", "™"]);
 
 const SRC = "src";
@@ -86,19 +94,30 @@ for (const file of walk(SRC)) {
   }
   if (seen.size) {
     const list = [...seen].map(([c, n]) => `${JSON.stringify(c)}x${n}`).join(" ");
-    problems.push(`${rel}: ky tu ngoai ASCII trong noi dung hien thi -> ${list}`);
+    problems.push(
+      `${rel}: ky tu ngoai ASCII trong noi dung hien thi -> ${list}\n` +
+        `      Neu la TEN RIENG viet dung chinh ta (vd "Cafe X"), them ky tu vao ALLOWED\n` +
+        `      trong scripts/check-content.mjs. Con lai thi doi ve ASCII.`,
+    );
   }
 
   // --- luật 2: URL trần (chỉ trong src/content) ---
   if (file.startsWith(CONTENT)) {
-    const lines = text.split(/\r?\n/);
-    lines.forEach((line, i) => {
+    /* Bỏ khối code trước khi quét: gfm KHÔNG tự tạo link bên trong ``` hay `…`,
+       nên URL ở đó vốn đã an toàn. Giữ số dòng bằng cách thay bằng dòng trống. */
+    const scanned = text
+      .replace(/^```[\s\S]*?^```/gm, (b) => b.replace(/[^\n]/g, ""))
+      .replace(/`[^`\n]*`/g, (b) => " ".repeat(b.length));
+
+    scanned.split(/\r?\n/).forEach((line, i) => {
       for (const m of line.matchAll(/https?:\/\/\S+/g)) {
         const before = line.slice(0, m.index);
-        const inMarkdownLink = /\]\($/.test(before);
-        const inExpression = /\{\s*['"`]$/.test(before);
-        const inYamlValue = /^\s*[\w-]+:\s*["']?$/.test(before);
-        if (!inMarkdownLink && !inExpression && !inYamlValue) {
+        /* Bốn cách khai đã an toàn — gfm không đụng tới */
+        const inMarkdownLink = /\]\($/.test(before); // [chữ](url)
+        const inExpression = /\{\s*['"`]$/.test(before); // {'url'} — giữ dạng chữ
+        const inYamlValue = /^\s*[\w-]+:\s*["']?$/.test(before); // key: url
+        const inAttribute = /\s(?:href|src|content|action)=["']?$/.test(before); // <a href="url">
+        if (!inMarkdownLink && !inExpression && !inYamlValue && !inAttribute) {
           problems.push(`${rel}:${i + 1}: URL tran chua boc -> ${m[0].slice(0, 60)}`);
         }
       }

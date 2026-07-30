@@ -16,29 +16,35 @@ npm run build    # chạy check rồi dựng site tĩnh vào dist/
 npm run format   # prettier cho mọi thứ trừ src/content/**
 ```
 
-Ba script trong `scripts/` gánh những luật mà `astro check` không thấy được —
+Hai script trong `scripts/` gánh những luật mà `astro check` không thấy được —
 nó chỉ kiểm KIỂU:
 
-| Script                | Kiểm gì                               | Chạy lúc          |
-| --------------------- | ------------------------------------- | ----------------- |
-| `check-content.mjs`   | nội dung chỉ ASCII; URL trần phải bọc | `npm run check`   |
-| `check-structure.mjs` | component nằm đúng thư mục loại trang | `npm run check`   |
-| `check-html.mjs`      | 10 luật HTML trên `dist/`             | sau `astro build` |
+| Script              | Kiểm gì                               | Chạy lúc          |
+| ------------------- | ------------------------------------- | ----------------- |
+| `check-content.mjs` | nội dung chỉ ASCII; URL trần phải bọc | `npm run check`   |
+| `check-html.mjs`    | 10 luật HTML trên `dist/`             | sau `astro build` |
 
 `check-html.mjs` chạy trên `dist/` chứ không phải `src/`, vì "trang này có mấy
 `<h1>`" chỉ trả lời được trên HTML đã render. Nó nhận tham số thư mục nên soi
 được một bản build khác: `node scripts/check-html.mjs ../ban-cu/dist`.
 
-**Phép thử để một luật đáng có script:** người viết code có tự thấy được vi phạm
-không. Ký tự vô hình thì không thấy; `<h1>` thứ hai do layout và thân MDX cộng
-lại cũng không thấy; component mồ côi sau khi gỡ một section cũng không.
+**Hai điều kiện để một luật đáng có script.** Thiếu một trong hai thì đừng viết.
 
-Luật "component nằm đúng thư mục loại trang" thì NGƯỢC LẠI — nhìn đường dẫn là
-thấy. Đã từng có `check-structure.mjs` kiểm luật đó và đã bỏ: nó cần một bảng
-`page -> loại trang` khai tay, nên thêm một loại trang mới là nó báo "không
-trang nào dùng, xoá đi" cho chính component của trang mới rồi chặn build. Bộ
-kiểm sai vào đúng lúc người ta đang làm kiến trúc thì hại hơn lợi. Luật vẫn còn
-hiệu lực, chỉ là do người giữ chứ không do máy.
+1. **Người viết code không tự thấy được vi phạm.** Ký tự vô hình thì không thấy;
+   `<h1>` thứ hai do layout cộng với thân MDX cũng không. Còn "file nằm sai thư
+   mục" thì nhìn đường dẫn là thấy — luật đó để người giữ.
+2. **Script không chặn nhầm thay đổi hợp lệ.** Nếu nó cần một bảng khai tay thì
+   sớm muộn bảng lạc hậu và nó báo sai vào đúng lúc người ta đang làm kiến trúc.
+
+Hai script đã viết rồi bỏ, vì trượt điều kiện thứ hai:
+
+- `check-structure.mjs` (component nằm đúng thư mục) — cần bảng `page -> loại
+trang`; thêm một loại trang mới là nó báo "không trang nào dùng, xoá đi" cho
+  chính component của trang mới.
+- `check-unused.mjs` (component/ảnh không ai dùng) — chặn việc tạm gỡ một
+  section để A/B test rồi dùng lại sau, vốn là thao tác bình thường.
+
+Hai luật đó vẫn còn hiệu lực, chỉ là do người giữ chứ không do máy.
 
 `scripts/check-content.mjs` gánh hai luật mà `astro check` không thấy được:
 **nội dung hiển thị chỉ dùng ASCII**, và **URL trần trong `src/content/**` phải

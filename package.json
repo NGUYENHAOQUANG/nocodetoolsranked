@@ -9,7 +9,7 @@
     "dev": "astro dev",
     "build": "npm run check && astro build && node scripts/check-html.mjs",
     "preview": "astro preview",
-    "check": "astro check && node scripts/check-content.mjs && node scripts/check-unused.mjs",
+    "check": "astro check && node scripts/check-content.mjs",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
     "astro": "astro"
