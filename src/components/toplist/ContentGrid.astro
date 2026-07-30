@@ -21,7 +21,7 @@ const { toplist, faq } = Astro.props;
 <style>
   .content-grid {
     width: 100%;
-    max-width: 1060px;
+    max-width: var(--width-content);
     margin-inline: auto;
     padding: 0 10px;
     /* Bên gốc section này là flex item của wrapper trang nên tự là BFC, giữ

@@ -9,6 +9,7 @@
  * "body diff rỗng, head diff thuần cộng thêm".
  */
 import { SITE } from "@/config/site";
+import defaultOgImage from "@/assets/hero/hero.jpg";
 
 interface Props {
   title: string;
@@ -17,20 +18,34 @@ interface Props {
   image?: string;
   /** "website" cho trang thường, "article" cho bài viết/review */
   type?: "website" | "article";
+  /**
+   * Chặn công cụ tìm kiếm lập chỉ mục trang này. Dùng cho 404: trang lỗi lọt vào
+   * chỉ mục là thứ Google khuyến cáo tránh, và canonical của nó vốn cũng vô nghĩa.
+   */
+  noindex?: boolean;
   /** JSON-LD đã dựng sẵn — xem lib/schema-org.ts */
   schema?: Record<string, unknown>[];
 }
 
-const { title, description, image, type = "website", schema = [] } = Astro.props;
+const { title, description, image, type = "website", noindex = false, schema = [] } = Astro.props;
 
 /* Canonical dựng từ `site` trong astro.config + đường dẫn hiện tại.
    `Astro.site` đọc thẳng khoá `site` nên không có bản sao domain nào để lệch.
    Astro.url.pathname đã kèm "/" cuối do trailingSlash: "always". */
 const canonical = new URL(Astro.url.pathname, Astro.site).href;
-const ogImage = image ? new URL(image, Astro.site).href : undefined;
+
+/* Ảnh chia sẻ mặc định cho MỌI trang. Trước đây chỉ 6 bài blog có `og:image`,
+   nên chia sẻ trang chủ hay trang review lên mạng xã hội ra thẻ không ảnh —
+   mất mát thật với site sống bằng lượt chia sẻ.
+
+   Đang tạm dùng ảnh hero. Nên thay bằng một ảnh thương hiệu 1200x630 đặt ở
+   `public/og-image.jpg` (public/ giữ nguyên đường dẫn, không bị băm tên). */
+const ogImage = new URL(image ?? defaultOgImage.src, Astro.site).href;
 ---
 
-<link rel="canonical" href={canonical} />
+{noindex && <meta name="robots" content="noindex" />}
+{/* Trang noindex không khai canonical: nó không phải bản chính của gì cả. */}
+{!noindex && <link rel="canonical" href={canonical} />}
 
 {/* Open Graph */}
 <meta property="og:type" content={type} />
@@ -39,12 +54,12 @@ const ogImage = image ? new URL(image, Astro.site).href : undefined;
 <meta property="og:description" content={description} />
 <meta property="og:url" content={canonical} />
 <meta property="og:locale" content={SITE.locale} />
-{ogImage && <meta property="og:image" content={ogImage} />}
+<meta property="og:image" content={ogImage} />
 
 {/* Twitter */}
-<meta name="twitter:card" content={ogImage ? "summary_large_image" : "summary"} />
+<meta name="twitter:card" content="summary_large_image" />
 <meta name="twitter:title" content={title} />
 <meta name="twitter:description" content={description} />
-{ogImage && <meta name="twitter:image" content={ogImage} />}
+<meta name="twitter:image" content={ogImage} />
 
 {schema.map((node) => <script type="application/ld+json" set:html={JSON.stringify(node)} />)}

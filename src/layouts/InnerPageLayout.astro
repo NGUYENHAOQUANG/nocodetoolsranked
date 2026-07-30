@@ -18,6 +18,7 @@ import Header from "@/components/layout/Header.astro";
 import HeroInner from "@/components/layout/HeroInner.astro";
 import Breadcrumbs from "@/components/layout/Breadcrumbs.astro";
 import type { Crumb } from "@/components/layout/Breadcrumbs.astro";
+import { breadcrumbSchema } from "@/lib/schema-org";
 import Footer from "@/components/layout/Footer.astro";
 import ToTop from "@/components/layout/ToTop.astro";
 
@@ -27,6 +28,8 @@ interface Props {
   description?: string;
   image?: string;
   type?: "website" | "article";
+  noindex?: boolean;
+  /** JSON-LD RIÊNG của trang. BreadcrumbList thì layout tự dựng từ `crumbs`. */
   schema?: Record<string, unknown>[];
 
   /** Tiêu đề banner bản desktop */
@@ -53,7 +56,8 @@ const {
   description,
   image,
   type,
-  schema,
+  noindex,
+  schema = [],
   heroTitle,
   heroMobileTitle = heroTitle,
   heroAlt = `${heroTitle} | Fresh Dog Food Delivery`,
@@ -61,9 +65,23 @@ const {
   isTitleTop = false,
   crumbs,
 } = Astro.props;
+
+/* BreadcrumbList dựng TẠI ĐÂY chứ không để từng trang tự truyền.
+
+   Layout đã nhận `crumbs` để render breadcrumb nhìn thấy được, nên nó có sẵn
+   đúng dữ liệu ấy. Để từng trang tự dựng thì vừa lặp vừa dễ quên: /contact/,
+   /reviews/ và /knowledge/ đều hiện breadcrumb mà không phát JSON-LD nào. */
+const allSchema = [breadcrumbSchema(crumbs), ...schema];
 ---
 
-<BaseLayout title={title} description={description} image={image} type={type} schema={schema}>
+<BaseLayout
+  title={title}
+  description={description}
+  image={image}
+  type={type}
+  noindex={noindex}
+  schema={allSchema}
+>
   <Header />
   <HeroInner
     isTitleTop={isTitleTop}

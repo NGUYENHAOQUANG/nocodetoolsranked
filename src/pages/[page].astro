@@ -12,7 +12,6 @@
  */
 import { getCollection, render } from "astro:content";
 import InnerPageLayout from "@/layouts/InnerPageLayout.astro";
-import { breadcrumbSchema } from "@/lib/schema-org";
 
 export async function getStaticPaths() {
   const entries = await getCollection("pages");
@@ -30,12 +29,11 @@ const crumbs = [{ text: "Home" }, { text: heroTitle }];
   isTitleTop
   title={title}
   description={description}
-  schema={[breadcrumbSchema(crumbs)]}
   heroTitle={heroTitle}
   heroMobileTitle={heroMobileTitle}
   crumbs={crumbs}
 >
-  <main>
+  <main id="main-content">
     <article
       class:list={["page__body", { "page__body--plain-headings": headingStyle === "plain" }]}
     >

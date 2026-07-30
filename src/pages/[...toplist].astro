@@ -72,7 +72,7 @@ const schema = entry.id === "home" ? [organizationSchema(), websiteSchema()] : [
 
 <BaseLayout title={data.title} description={data.description} schema={schema}>
   <Header />
-  <main>
+  <main id="main-content">
     <HeroToplist
       title={data.heroTitle}
       subtitle={data.heroSubtitle}

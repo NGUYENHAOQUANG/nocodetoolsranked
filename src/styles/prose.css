@@ -98,7 +98,7 @@
    ========================================================================== */
 
 .paragraph__content {
-  max-width: min(95dvw, 1060px);
+  max-width: min(95dvw, var(--width-content));
   margin-left: auto;
   margin-right: auto;
   line-height: 1.7rem;
@@ -225,7 +225,7 @@
 .page__body {
   display: flow-root;
   width: 95%;
-  max-width: 1060px;
+  max-width: var(--width-content);
   /* Giữ footer không trôi lên giữa màn ở trang ngắn (advertiser-disclosure chỉ
      có một đoạn). Ba trang kia dài hơn 70dvh nên rule này là no-op với chúng. */
   min-height: 70dvh;
@@ -295,7 +295,7 @@
   width: 100%;
   /* Dưới 1025px khối này nằm thẳng trong section (không còn lưới) nên mới lộ
      giới hạn 95dvw của bản gốc — ở desktop nó bị cột lưới 680px che mất */
-  max-width: min(95dvw, 1060px);
+  max-width: min(95dvw, var(--width-content));
   margin-inline: auto;
   /* Bản gốc tạo BFC bằng `overflow-x: scroll` (để bảng rộng cuộn ngang được).
      Tác dụng phụ mới là thứ quyết định layout: nó giữ margin 16px của đoạn

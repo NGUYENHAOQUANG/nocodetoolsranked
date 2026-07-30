@@ -70,6 +70,10 @@
     "Noto Color Emoji";
 
   /* ----- Bố cục ----- */
-  --container-max: 1200px;
-  --container-pad: 20px;
+  /* Bề rộng cột nội dung của cả site. Trước đây `1060px` viết cứng ở 17 chỗ trên
+     16 file — đổi bề rộng layout là 17 lần sửa, và đã có ba biến thể
+     (`1060px`, `min(1060px, 95dvw)`, `min(1060px, 100dvw)`) không ai bảo đảm
+     còn khớp nhau. Cách BỌC vẫn để từng chỗ tự quyết, vì 95dvw và 100dvw là hai
+     lựa chọn khác nhau có thật; chỉ CON SỐ là dùng chung. */
+  --width-content: 1060px;
 }

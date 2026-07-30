@@ -362,7 +362,7 @@ const isActive = (href: string) => href.replace(/\/+$/, "") === currentPath;
   @media (min-width: 1025px) {
     /* Chiều cao do nội dung quyết định như gốc: 7 (padding) + 10 + 27.2 (ul) + 10 = 54.2px */
     .site-header__inner {
-      max-width: min(1060px, 100dvw);
+      max-width: min(var(--width-content), 100dvw);
       margin-inline: auto;
       padding: 7px 0 0;
     }

@@ -41,7 +41,7 @@
   position: relative;
   z-index: 1;
   width: 100%;
-  max-width: min(1060px, 95dvw);
+  max-width: min(var(--width-content), 95dvw);
   margin: 12px auto;
   display: flex;
   flex-direction: column;

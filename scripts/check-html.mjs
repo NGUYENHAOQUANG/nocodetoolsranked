@@ -1,5 +1,5 @@
 /**
- * Kiểm HTML của bản build theo 12 luật mà `astro check` không thấy được.
+ * Kiểm HTML của bản build theo 13 luật mà `astro check` không thấy được.
  *
  * `astro check` chỉ kiểm KIỂU. Nó không biết một trang có hai `<h1>`, hay
  * heading nhảy từ h1 xuống h4, hay ô nhập không có nhãn. Những thứ đó chỉ lộ ra
@@ -115,6 +115,13 @@ for (const file of walk(DIST).filter((f) => f.endsWith(".html"))) {
     add("label", `${rel}: ${m[0].slice(0, 70)}`);
   }
 
+  /* 8b. Skip link phải có ĐÍCH. BaseLayout phát `<a href="#main-content">` cho
+     mọi trang, nhưng `<main>` do từng page tự viết nên id dễ quên — và quên thì
+     skip link nhảy vào hư không mà không có gì báo. */
+  if (/href="#main-content"/.test(body) && !/<main\b[^>]*\sid="main-content"/.test(body)) {
+    add("skip-dich", `${rel}: co skip link nhung khong co <main id="main-content">`);
+  }
+
   // 9. <p> không được chứa thẻ block
   for (const m of body.matchAll(/<p\b[^>]*>([\s\S]*?)<\/p>/g)) {
     for (const tag of BLOCK_IN_P) {
@@ -140,6 +147,7 @@ const LABEL = {
   "a-nohref": "<a> khong href",
   rel: 'target="_blank" thieu rel=noopener',
   label: "Form control thieu nhan",
+  "skip-dich": "Skip link khong co dich #main-content",
   "p-block": "<p> chua the block",
   "list-child": "<ul>/<ol> chua the khong phai <li>",
 };
@@ -161,4 +169,4 @@ if (problems.length) {
   process.exit(1);
 }
 
-console.log("check-html: HTML dat ca 12 luat.");
+console.log("check-html: HTML dat ca 13 luat.");

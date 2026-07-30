@@ -8,7 +8,7 @@ import ProsCons from "@/components/article/ProsCons.astro";
 import ArticleLink from "@/components/article/ArticleLink.astro";
 import ReviewSidebar from "@/components/article/ReviewSidebar.astro";
 import { REVIEWS_INDEX, reviewUrl } from "@/lib/links";
-import { breadcrumbSchema, articleSchema } from "@/lib/schema-org";
+import { articleSchema } from "@/lib/schema-org";
 
 /** Mỗi file MDX trong src/content/reviews → một trang /reviews/<brand>/
     Tham số lấy từ `entry.id` (tên file), KHÔNG phải trường `slug` khai tay:
@@ -39,7 +39,6 @@ const crumbs = [{ text: "Home" }, { text: "Reviews", href: REVIEWS_INDEX }, { te
 /* KHÔNG phát Review/AggregateRating: Google cấm self-serving review markup cho
    sản phẩm bên thứ ba. Điểm số vẫn hiện cho người đọc, chỉ không khai schema. */
 const schema = [
-  breadcrumbSchema(crumbs),
   articleSchema({
     title,
     description: promo,
@@ -67,7 +66,7 @@ const schema = [
   <ArticleGrid>
     {/* TOC lấy thẳng từ heading của bài — không khai tay, khỏi lệch khi sửa bài */}
     <InnerNavigator slot="nav" headings={headings} />
-    <main slot="main" class="review__main">
+    <main id="main-content" slot="main" class="review__main">
       <ReviewIntro
         logo={brand.logo}
         logoAlt={brand.logoAltShort!}

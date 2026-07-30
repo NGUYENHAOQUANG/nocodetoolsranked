@@ -100,11 +100,3 @@ button {
   color: inherit;
   cursor: pointer;
 }
-
-/* ----- Helpers ----- */
-.container {
-  width: 100%;
-  max-width: var(--container-max);
-  margin-inline: auto;
-  padding-inline: var(--container-pad);
-}

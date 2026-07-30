@@ -21,13 +21,25 @@ import logo from "@/assets/promos/popup-pets-logo.svg";
       <Image src={dog} alt="The Pets Table dog" width={786} height={1100} />
     </div>
     {/* Logo "the Pets Table — BROUGHT TO YOU BY HelloFresh" (vector) */}
+    {
+      /* width/height = kích thước GỐC (viewBox của SVG), CSS đè lại cỡ hiển thị.
+      Có hai thuộc tính này thì trình duyệt biết tỉ lệ trước khi ảnh tải xong. */
+    }
     <img
       class="exit-popup__logo"
       src={logo.src}
       alt="The Pets Table - brought to you by HelloFresh"
+      width="215"
+      height="70"
     />
     {/* Ưu đãi 60% OFF 1st BOX + 20% OFF YOUR 2nd */}
-    <img class="exit-popup__discount" src={discount.src} alt="60% off 1st box + 20% off your 2nd" />
+    <img
+      class="exit-popup__discount"
+      src={discount.src}
+      alt="60% off 1st box + 20% off your 2nd"
+      width="476"
+      height="388"
+    />
 
     <button class="exit-popup__close" type="button" data-close aria-label="Close">
       <svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true">

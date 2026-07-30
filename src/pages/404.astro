@@ -8,12 +8,13 @@ const TITLE = "Page Not Found";
 ---
 
 <InnerPageLayout
+  noindex
   isTitleTop
   title={`Top 10 Dog Food Subscriptions - ${TITLE}`}
   heroTitle={TITLE}
   crumbs={[{ text: "Home", href: HOME }, { text: TITLE }]}
 >
-  <main>
+  <main id="main-content">
     <section class="not-found">
       <p>The page you were looking for does not exist or has been moved.</p>
       <ul class="not-found__links">
@@ -26,12 +27,12 @@ const TITLE = "Page Not Found";
 </InnerPageLayout>
 
 <style>
-  /* Cùng khung với các trang nội dung phẳng khác (95% / 1060px / căn giữa).
+  /* Cùng khung với các trang nội dung phẳng khác (95% / var(--width-content) / căn giữa).
      `min-height` để footer không trôi lên giữa màn hình ở trang ngắn. */
   .not-found {
     display: flow-root;
     width: 95%;
-    max-width: 1060px;
+    max-width: var(--width-content);
     min-height: 70dvh;
     margin: 0 auto;
     color: var(--color-text-body);

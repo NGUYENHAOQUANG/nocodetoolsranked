@@ -242,7 +242,7 @@ const reviewsMobile = `(${brand.reviewsCount}) Reviews`;
 
   .mini-review__title {
     width: 100%;
-    max-width: min(95dvw, 1060px);
+    max-width: min(95dvw, var(--width-content));
     margin-inline: auto;
   }
   /* Rule trông thừa nhưng có tác dụng render: ::first-letter tách chữ cái đầu
@@ -431,7 +431,7 @@ const reviewsMobile = `(${brand.reviewsCount}) Reviews`;
       display: flex;
       min-height: 320px;
       width: 100%;
-      max-width: min(95dvw, 1060px);
+      max-width: min(95dvw, var(--width-content));
       margin-inline: auto;
       overflow: hidden;
       /* Bản gốc đặt nền này ở cả 2 cột — gộp lên thẻ vì kết quả như nhau */
