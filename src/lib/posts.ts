@@ -37,9 +37,6 @@ export interface SidebarArticle {
   href: string;
 }
 
-/** Đường dẫn trang bài viết — đi qua lib/links.ts (nguồn duy nhất) */
-export const postHref = postUrl;
-
 /** Thứ tự lưới /knowledge/ của bản gốc (3 cột × 2 hàng) */
 const KNOWLEDGE_ORDER = [
   "understanding-fresh-pet-food-is-it-a-healthier-choice",
@@ -83,7 +80,7 @@ export async function getKnowledgeCards(): Promise<KnowledgeCard[]> {
     readTime: e.data.readTime,
     title: e.data.title,
     excerpt: e.data.excerpt,
-    href: postHref(e.id),
+    href: postUrl(e.id),
   }));
 }
 
@@ -94,7 +91,7 @@ export async function getMustReads(): Promise<MustRead[]> {
     excerpt: e.data.excerptLong!,
     image: e.data.images.mustRead!,
     imageAlt: `${e.data.title} | Article Thumbnail`,
-    href: postHref(e.id),
+    href: postUrl(e.id),
   }));
 }
 
@@ -104,7 +101,7 @@ export async function getReviewSidebarArticles(): Promise<SidebarArticle[]> {
     image: e.data.images.reviewSidebar!,
     imageAlt: e.data.title,
     title: e.data.title,
-    href: postHref(e.id),
+    href: postUrl(e.id),
   }));
 }
 
@@ -121,7 +118,7 @@ export async function getRelatedPosts(postId: string): Promise<SidebarArticle[]>
         image: p.data.images.blogSidebar ?? p.data.images.mustRead ?? p.data.images.card,
         imageAlt: `${p.data.title} | Article Thumbnail`,
         title: p.data.title,
-        href: postHref(p.id),
+        href: postUrl(p.id),
       };
     }),
   );

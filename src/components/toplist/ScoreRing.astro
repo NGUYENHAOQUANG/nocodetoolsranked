@@ -19,17 +19,17 @@ const dashOffset = CIRCUMFERENCE * (1 - Number(rating) / 10);
 const starPaths = starList(stars);
 ---
 
-<div class="score">
-  <div class="score__ring">
-    <svg class="score__svg" viewBox="0 0 100 100" aria-hidden="true">
+<div class="score-ring">
+  <div class="score-ring__ring">
+    <svg class="score-ring__svg" viewBox="0 0 100 100" aria-hidden="true">
       <path
-        class="score__trail"
+        class="score-ring__trail"
         d={ARC}
         stroke-width="5"
         fill-opacity="0"
         style={`stroke-dasharray: ${CIRCUMFERENCE}px, ${CIRCUMFERENCE}px;`}></path>
       <path
-        class="score__arc"
+        class="score-ring__arc"
         d={ARC}
         stroke-width="5"
         fill-opacity="0"
@@ -38,15 +38,15 @@ const starPaths = starList(stars);
     </svg>
 
     {/* Lớp phủ đè lên vòng tròn; cao tự động — cũng là mốc định vị cho sao và số lượt đánh giá */}
-    <div class="score__overlay">
-      <div class="score__content">
-        <div class="score__value">{rating}</div>
-        <label class="score__label">{label}</label>
-        <div class="score__stars" aria-hidden="true">
+    <div class="score-ring__overlay">
+      <div class="score-ring__content">
+        <div class="score-ring__value">{rating}</div>
+        <label class="score-ring__label">{label}</label>
+        <div class="score-ring__stars" aria-hidden="true">
           {
             starPaths.map(({ kind, d }) => (
               <svg
-                class:list={["score__star", `score__star--${kind}`]}
+                class:list={["score-ring__star", `score-ring__star--${kind}`]}
                 viewBox="0 0 16 16"
                 width="1rem"
                 height="1rem"
@@ -59,14 +59,14 @@ const starPaths = starList(stars);
         </div>
       </div>
 
-      <span class="score__reviews">Reviews ({reviews})</span>
+      <span class="score-ring__reviews">Reviews ({reviews})</span>
     </div>
   </div>
 </div>
 
 <style>
   /* ===== Base = mobile ===== */
-  .score {
+  .score-ring {
     grid-area: grade;
     position: relative;
     display: flex;
@@ -82,32 +82,32 @@ const starPaths = starList(stars);
     cursor: pointer;
   }
 
-  .score__ring {
+  .score-ring__ring {
     position: relative;
     width: 100%;
   }
 
   /* Dưới 768px không có vòng tròn: svg ẩn hẳn, chỉ còn điểm + nhãn + sao xếp dòng thường */
-  .score__svg {
+  .score-ring__svg {
     display: none;
     width: 100%;
     height: auto;
   }
   /* Vòng tròn chỉ vẽ từ 1025px; khoảng 768–1024 svg chiếm chỗ nhưng không vẽ nét */
-  .score__trail,
-  .score__arc {
+  .score-ring__trail,
+  .score-ring__arc {
     display: none;
     stroke-linecap: round;
   }
-  .score__trail {
+  .score-ring__trail {
     stroke: rgba(220, 220, 220, 0.521);
   }
-  .score__arc {
+  .score-ring__arc {
     stroke: #c5e5f7;
   }
 
   /* Dưới 768px nằm trong luồng (không đè lên gì); từ 768px mới phủ lên vòng tròn */
-  .score__overlay {
+  .score-ring__overlay {
     position: static;
     width: 100%;
     display: flex;
@@ -115,7 +115,7 @@ const starPaths = starList(stars);
     align-items: center;
   }
 
-  .score__content {
+  .score-ring__content {
     display: flex;
     flex-flow: column;
     align-items: center;
@@ -123,7 +123,7 @@ const starPaths = starList(stars);
     font-size: 42px;
   }
 
-  .score__value {
+  .score-ring__value {
     line-height: 2.2rem;
     margin-bottom: 5px;
     color: var(--color-text-body);
@@ -131,7 +131,7 @@ const starPaths = starList(stars);
 
   /* Dưới 768px nhãn màu đen; từ 768px đổi sang #2d2d2d (bản gốc dùng 2 khối riêng
      cho mobile/desktop, khối mobile có inline color: black) */
-  .score__label {
+  .score-ring__label {
     font-size: 0.9375rem;
     font-weight: 400;
     color: var(--color-text);
@@ -139,7 +139,7 @@ const starPaths = starList(stars);
     cursor: pointer;
   }
 
-  .score__stars {
+  .score-ring__stars {
     position: relative;
     bottom: 0;
     display: flex;
@@ -147,13 +147,13 @@ const starPaths = starList(stars);
     font-size: 30%;
     color: #ffcd42;
   }
-  .score__star--empty {
+  .score-ring__star--empty {
     color: #e0e0e0;
   }
 
   /* Ánh sáng lướt qua hàng sao khi hover (bản gốc: pseudo-element gradient chạy
      từ trái sang phải, 1 lần, giữ nguyên ở cuối) */
-  .score__stars:hover::after {
+  .score-ring__stars:hover::after {
     content: "";
     position: absolute;
     top: 0;
@@ -171,7 +171,7 @@ const starPaths = starList(stars);
     );
     animation: score-stars-shine 1s ease 0s 1 normal forwards;
   }
-  @keyframes score-stars-shine {
+  @keyframes score-ring-stars-shine {
     0% {
       transform: translateX(-100%);
     }
@@ -181,13 +181,13 @@ const starPaths = starList(stars);
   }
 
   /* Số lượt đánh giá: chỉ hiện ở desktop */
-  .score__reviews {
+  .score-ring__reviews {
     display: none;
   }
 
   /* ===== ≥481px ===== */
   @media (min-width: 481px) {
-    .score {
+    .score-ring {
       width: 50%;
       font-size: 1.7rem;
       top: 0;
@@ -196,69 +196,69 @@ const starPaths = starList(stars);
 
   /* ===== ≥768px: vòng tròn chiếm chỗ, nội dung phủ lên trên (bám mép trên) ===== */
   @media (min-width: 768px) {
-    .score__svg {
+    .score-ring__svg {
       display: block;
     }
-    .score__overlay {
+    .score-ring__overlay {
       position: absolute;
       top: 0;
       left: 0;
     }
-    .score__label {
+    .score-ring__label {
       color: var(--color-text-body);
     }
-    .score__stars {
+    .score-ring__stars {
       font-size: 50%;
     }
-    .score__stars svg {
+    .score-ring__stars svg {
       font-size: 0.9375rem;
     }
     /* Bản gốc bật hiệu ứng phóng to điểm số khi hover từ đúng mốc này (768px),
        không phải 1025px */
-    .score:hover .score__value {
+    .score-ring:hover .score-ring__value {
       scale: 1.1;
     }
   }
 
   /* ===== Desktop ≥1025px: hiện vòng tròn, đảo thứ tự điểm/nhãn ===== */
   @media (min-width: 1025px) {
-    .score {
+    .score-ring {
       width: 120px;
       max-width: unset;
       position: relative;
       top: -20px;
       grid-column: 3 / 4;
     }
-    .score__ring {
+    .score-ring__ring {
       width: 95px;
       height: 95px;
       transition: transform 0.2s linear;
     }
-    .score__trail,
-    .score__arc {
+    .score-ring__trail,
+    .score-ring__arc {
       display: initial;
     }
-    .score__content {
+    .score-ring__content {
       flex-flow: column-reverse;
       padding: 10px;
       margin: 0 0 5px;
       font-size: 1.7rem;
       transition: transform 0.2s linear;
     }
-    .score__value {
+    .score-ring__value {
       margin-top: -7px;
       font-weight: 600;
     }
-    .score__label {
+    .score-ring__label {
       font-weight: 500;
       font-size: 0.78rem;
       margin-top: 10px;
     }
-    .score__stars {
+    .score-ring__stars {
       position: absolute;
       bottom: -20px;
     }
-    .score__reviews {
+    .score-ring__reviews {
       display: block;
       position: absolute;
       bottom: -50%;

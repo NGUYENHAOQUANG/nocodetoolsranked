@@ -25,7 +25,7 @@
    Khối 3 (`.page__body`) dùng `h2:first-child` chứ KHÔNG phải `:first-of-type`
    như khối 1 — xem chú thích tại chỗ, dùng nhầm là xoá margin giữa bài.
 
-   Khối 4 (`.article`, khối bài viết ở trang chủ) nằm ở CUỐI file này chứ không
+   Khối 4 (`.featured-article`, khối bài viết ở trang chủ) nằm ở CUỐI file này chứ không
    ở `<style>` của FeaturedArticle.astro: nội dung do MDX render nằm ngoài phạm
    vi scoped, nên để trong component thì phải bọc `:global()` từng rule — mà bọc
    rồi thì chúng đã là global, chỉ khác là nằm lạc chỗ.
@@ -291,7 +291,7 @@
    đã là global — chỉ khác là nằm lạc chỗ, tách khỏi ba khối prose anh em.
    ========================================================================== */
 
-.article {
+.featured-article {
   width: 100%;
   /* Dưới 1025px khối này nằm thẳng trong section (không còn lưới) nên mới lộ
      giới hạn 95dvw của bản gốc — ở desktop nó bị cột lưới 680px che mất */
@@ -308,25 +308,25 @@
 }
 
 /* global.css reset margin h2/h3/p về 0 → khai lại đúng mặc định UA */
-.article h2,
-.article__title {
+.featured-article h2,
+.featured-article__title {
   margin: 0.83em 0;
   font-size: 1.5625rem;
   line-height: 2.2rem;
   color: var(--color-text-body);
 }
 
-/* Tiêu đề khối do component render, luôn là phần tử ĐẦU — dùng `.article__title`
+/* Tiêu đề khối do component render, luôn là phần tử ĐẦU — dùng `.featured-article__title`
    chứ không dùng `h2:first-of-type` như khối 1: các `<h2>` còn lại nằm giữa bài
    và phải giữ nguyên margin trên. */
-.article__title {
+.featured-article__title {
   margin-top: 0;
 }
 
 /* Tiểu mục trong bài. Bản gốc gõ `**chữ**` (ra <p><strong>) làm tiêu đề — nay
    là <h3> thật, và CSS giữ đúng hình cũ: cùng cỡ chữ thân bài, đậm 700, cùng
    nhịp margin của một đoạn văn. */
-.article h3 {
+.featured-article h3 {
   margin: 1em 0;
   font-size: 1rem;
   font-weight: 700;
@@ -334,6 +334,6 @@
   color: var(--color-text-body);
 }
 
-.article p {
+.featured-article p {
   margin: 1em 0;
 }

@@ -29,11 +29,11 @@ const { entry } = Astro.props;
 const { Content } = await render(entry);
 ---
 
-<div class="article">
+<div class="featured-article">
   {
     /* Tiêu đề lấy từ frontmatter, thân bài KHÔNG lặp lại — trước đây cùng một
       chuỗi nằm ở cả hai chỗ và trường `title` thì không nơi nào dùng tới. */
   }
-  <h2 class="article__title">{entry.data.articleTitle}</h2>
+  <h2 class="featured-article__title">{entry.data.articleTitle}</h2>
   <Content />
 </div>

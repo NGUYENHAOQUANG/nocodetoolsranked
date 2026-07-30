@@ -18,35 +18,35 @@ const dashOffset = CIRCUMFERENCE * (1 - Number(rating) / 10);
 const starPaths = starList(stars);
 ---
 
-<div class="review">
-  <div class="review__logo">
-    <img class="review__logo-img" src={logo.src} alt={logoAlt} width="215" height="115" />
+<div class="review-card">
+  <div class="review-card__logo">
+    <img class="review-card__logo-img" src={logo.src} alt={logoAlt} width="215" height="115" />
   </div>
 
-  <div class="review__body">
-    <div class="review__text">
+  <div class="review-card__body">
+    <div class="review-card__text">
       {
         /* Bản gốc bọc nội dung trong <p> (margin mặc định 1em) rồi để "Read More"
           là link INLINE ngay sau — nhờ vậy khối cao 249.63 chứ không phải 217.63 */
       }
       <p>{text}</p>
-      <a class="review__more" href={readMoreHref}>Read More</a>
+      <a class="review-card__more" href={readMoreHref}>Read More</a>
     </div>
   </div>
 
-  <div class="review__grade">
+  <div class="review-card__grade">
     {/* Vòng điểm và sao nằm CHUNG một ô: 130 (vòng) + 10 (margin) + 16 (sao) = 156 */}
-    <div class="review__ring">
-      <div class="review__ring-inner">
-        <svg class="review__ring-svg" viewBox="0 0 100 100" aria-hidden="true">
+    <div class="review-card__ring">
+      <div class="review-card__ring-inner">
+        <svg class="review-card__ring-svg" viewBox="0 0 100 100" aria-hidden="true">
           <path
-            class="review__ring-trail"
+            class="review-card__ring-trail"
             d={ARC}
             stroke-width="5"
             fill-opacity="0"
             style={`stroke-dasharray: ${CIRCUMFERENCE}px, ${CIRCUMFERENCE}px;`}></path>
           <path
-            class="review__ring-arc"
+            class="review-card__ring-arc"
             d={ARC}
             stroke-width="5"
             fill-opacity="0"
@@ -55,19 +55,19 @@ const starPaths = starList(stars);
         </svg>
 
         {/* Lớp phủ PHẢI absolute — để relative nó ăn vào chiều cao ô và vòng hụt mất */}
-        <div class="review__ring-overlay">
-          <div class="review__grade-content">
+        <div class="review-card__ring-overlay">
+          <div class="review-card__grade-content">
             <label>{ratingLabel}</label>{rating}
           </div>
         </div>
       </div>
 
-      <div class="review__stars" aria-hidden="true">
-        <div class="review__stars-row">
+      <div class="review-card__stars" aria-hidden="true">
+        <div class="review-card__stars-row">
           {
             starPaths.map((star) => (
               <svg
-                class:list={["review__star", `review__star--${star.kind}`]}
+                class:list={["review-card__star", `review-card__star--${star.kind}`]}
                 viewBox="0 0 16 16"
                 fill="currentColor"
               >
@@ -79,15 +79,15 @@ const starPaths = starList(stars);
       </div>
     </div>
 
-    <div class="review__cta">
+    <div class="review-card__cta">
       {
         /* Cần lớp trong này: nút dùng height:100% nên phải quy chiếu vào một ô cao
           `auto` (min-height 45) — nếu bám thẳng ô ngoài cao 45px thì ở mobile nút
           cao 45 thay vì 40 và không được căn giữa. */
       }
-      <div class="review__cta-inner">
+      <div class="review-card__cta-inner">
         <a
-          class="review__button"
+          class="review-card__button"
           href={href}
           title="Visit Site"
           target="_blank"
@@ -105,7 +105,7 @@ const starPaths = starList(stars);
   /* ==========================================================================
      Base = dưới 1025px: xếp dọc — logo / nội dung / điểm
      ========================================================================== */
-  .review {
+  .review-card {
     width: 95%;
     max-width: 1163px;
     margin: 10px 0;
@@ -123,10 +123,10 @@ const starPaths = starList(stars);
 
   /* Ô logo để trống hoàn toàn: bản gốc có sẵn CSS cho nó (rộng 90%, viền phải)
      nhưng thẻ div lại KHÔNG mang class đó → rule chết, div là block thường. */
-  .review__logo {
+  .review-card__logo {
     grid-area: icon;
   }
-  .review__logo-img {
+  .review-card__logo-img {
     position: relative;
     width: 85%;
     min-width: 150px;
@@ -141,29 +141,29 @@ const starPaths = starList(stars);
     object-fit: contain;
   }
 
-  .review__body {
+  .review-card__body {
     grid-area: content;
     height: fit-content;
     display: flex;
     flex-flow: column;
     align-items: center;
   }
-  .review__text {
+  .review-card__text {
     height: fit-content;
   }
   /* global.css reset margin <p> về 0, bản gốc dùng margin mặc định 1em */
-  .review__text p {
+  .review-card__text p {
     margin: 1em 0;
   }
 
   /* Link inline (không phải block) — nằm ngay sau đoạn văn trên dòng riêng */
-  .review__more {
+  .review-card__more {
     text-decoration: underline;
     font-weight: 500;
     color: inherit;
   }
 
-  .review__grade {
+  .review-card__grade {
     grid-area: grade;
     display: flex;
     flex-flow: column;
@@ -171,15 +171,15 @@ const starPaths = starList(stars);
     justify-content: center;
   }
 
-  .review__ring {
+  .review-card__ring {
     display: block;
     margin-right: 5px;
   }
   /* Cao đúng bằng vòng tròn (130px) — làm mốc cho lớp phủ absolute */
-  .review__ring-inner {
+  .review-card__ring-inner {
     position: relative;
   }
-  .review__ring-svg {
+  .review-card__ring-svg {
     width: 100%;
     max-width: 130px;
     display: flex;
@@ -187,17 +187,17 @@ const starPaths = starList(stars);
   }
   /* `round` bắt buộc: hai đầu cung bo tròn phình thêm 2.5px mỗi bên, che kín khe
      hở 2.98px của điểm 9.9 — thiếu nó vòng bị hở một khấc ở đỉnh */
-  .review__ring-trail,
-  .review__ring-arc {
+  .review-card__ring-trail,
+  .review-card__ring-arc {
     stroke-linecap: round;
   }
-  .review__ring-trail {
+  .review-card__ring-trail {
     stroke: #ededed;
   }
-  .review__ring-arc {
+  .review-card__ring-arc {
     stroke: #c5e5f7;
   }
-  .review__ring-overlay {
+  .review-card__ring-overlay {
     position: absolute;
     inset: 0;
     display: flex;
@@ -205,52 +205,52 @@ const starPaths = starList(stars);
     justify-content: center;
     align-items: center;
   }
-  .review__grade-content {
+  .review-card__grade-content {
     display: flex;
     flex-flow: column;
     align-items: center;
     font-size: 1.4rem;
     font-weight: 400;
   }
-  .review__grade-content label {
+  .review-card__grade-content label {
     font-size: 1.125rem;
     font-weight: 600;
   }
 
-  .review__stars {
+  .review-card__stars {
     width: fit-content;
     height: auto;
     margin: 10px auto 0;
   }
-  .review__stars-row {
+  .review-card__stars-row {
     position: relative;
     inset: 0;
     margin: 0 auto;
     display: flex;
     justify-content: space-evenly;
   }
-  .review__star {
+  .review-card__star {
     width: 1rem;
     height: 1rem;
   }
-  .review__star--full,
-  .review__star--half {
+  .review-card__star--full,
+  .review-card__star--half {
     color: #ffcd42;
   }
-  .review__star--empty {
+  .review-card__star--empty {
     color: #e0e0e0;
   }
 
   /* KHÔNG dùng flex ở đây: bản gốc để ô này là block cao 45px, nút con cao 47px
      bám mép trên và tràn 2px xuống. Căn giữa bằng flex sẽ đẩy nút lên 1px. */
-  .review__cta {
+  .review-card__cta {
     position: relative;
     min-width: min(180px, 100%);
     width: fit-content;
     height: 45px;
     margin-top: 20px;
   }
-  .review__cta-inner {
+  .review-card__cta-inner {
     position: relative;
     width: 100%;
     min-height: 45px;
@@ -258,12 +258,12 @@ const starPaths = starList(stars);
     align-items: center;
     justify-content: center;
   }
-  .review__button {
+  .review-card__button {
     --hover-bg-color: var(--color-secondary);
 
     width: 100%;
     /* KHÔNG ép height:100%. Bản gốc để nút cao theo NỘI DUNG: dưới 768px nút cao
-       40px (8+8 padding + 5+5 margin span + 14 line) rồi được ô .review__cta-inner
+       40px (8+8 padding + 5+5 margin span + 14 line) rồi được ô .review-card__cta-inner
        (min-height 45) căn giữa; từ 768px min-height:47 (media query dưới) → 47px. */
     padding: 8px;
     display: flex;
@@ -281,7 +281,7 @@ const starPaths = starList(stars);
     letter-spacing: 0.02em;
     transition: all 0.2s linear;
   }
-  .review__button span {
+  .review-card__button span {
     margin: 5px;
     /* 1.12rem chứ không phải 1.2rem: bản gốc có rule CSS 1.2rem nhưng lại đặt
        inline style 1.12rem ngay trên thẻ span → inline thắng */
@@ -292,7 +292,7 @@ const starPaths = starList(stars);
      ≥615px — hover (bản gốc chỉ bật từ mốc này)
      ========================================================================== */
   @media (min-width: 615px) {
-    .review__button:hover {
+    .review-card__button:hover {
       background-color: var(--hover-bg-color);
     }
   }
@@ -301,13 +301,13 @@ const starPaths = starList(stars);
      ≥768px (và cao ≥420px) — hover cho link "Read More"
      ========================================================================== */
   @media (min-width: 768px) and (min-height: 420px) {
-    .review__more {
+    .review-card__more {
       transition: opacity 0.2s ease-in-out;
     }
-    .review__more:hover {
+    .review-card__more:hover {
       color: var(--color-primary);
     }
-    .review__button {
+    .review-card__button {
       min-height: 47px;
       font-size: 1.2rem;
       font-weight: 600;
@@ -318,14 +318,14 @@ const starPaths = starList(stars);
      ≥1025px (và cao ≥420px) — 3 cột: logo | nội dung | điểm
      ========================================================================== */
   @media (min-width: 1025px) and (min-height: 420px) {
-    .review {
+    .review-card {
       grid-template: "icon content grade" 100% / 1fr 2fr 1fr;
       align-items: center;
       min-height: 310px;
       width: 100%;
       margin: 10px auto;
     }
-    .review__grade {
+    .review-card__grade {
       justify-content: flex-start;
     }
   }

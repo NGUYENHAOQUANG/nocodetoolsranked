@@ -5,12 +5,12 @@ const reviews = await getReviewsPageEntries();
 import ReviewCard from "@/components/reviews/ReviewCard.astro";
 ---
 
-<div class="reviews">
+<div class="reviews-list">
   {reviews.map((review) => <ReviewCard review={review} />)}
 </div>
 
 <style>
-  .reviews {
+  .reviews-list {
     margin: 10px 0;
     display: flex;
     flex-flow: column;
@@ -18,7 +18,7 @@ import ReviewCard from "@/components/reviews/ReviewCard.astro";
   }
 
   @media (min-width: 1025px) and (min-height: 420px) {
-    .reviews {
+    .reviews-list {
       /* Bản gốc đổi sang inline-block ở desktop — card tự giãn hết bề ngang */
       display: inline-block;
       width: 97%;
