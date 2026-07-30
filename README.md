@@ -14,13 +14,13 @@ npm install
 npm run dev        # http://localhost:4321
 ```
 
-| Lệnh              | Việc                                                                                                                  |
-| ----------------- | --------------------------------------------------------------------------------------------------------------------- |
-| `npm run dev`     | Máy chủ phát triển                                                                                                    |
-| `npm run build`   | Chạy `check` rồi dựng site tĩnh vào `dist/`                                                                           |
-| `npm run preview` | Xem thử bản đã dựng                                                                                                   |
-| `npm run check`   | `astro check` (kiểu) + `check-content.mjs` (ASCII, URL trần) + `check-structure.mjs` (thư mục component) — luôn 0 lỗi |
-| `npm run format`  | Format mọi thứ trừ `src/content/**` (nội dung chỉnh tay) — xem CLAUDE.md                                              |
+| Lệnh              | Việc                                                                                                               |
+| ----------------- | ------------------------------------------------------------------------------------------------------------------ |
+| `npm run dev`     | Máy chủ phát triển                                                                                                 |
+| `npm run build`   | Chạy `check` rồi dựng site tĩnh vào `dist/`                                                                        |
+| `npm run preview` | Xem thử bản đã dựng                                                                                                |
+| `npm run check`   | `astro check` (kiểu) + `check-content.mjs` (ASCII, URL trần) + `check-unused.mjs` (thứ không ai dùng) — luôn 0 lỗi |
+| `npm run format`  | Format mọi thứ trừ `src/content/**` (nội dung chỉnh tay) — xem CLAUDE.md                                           |
 
 Cần Node ≥ 22.12.
 
@@ -136,7 +136,7 @@ src/
 │                 schema-org, stars
 ├─ config/site.ts tên site, mô tả mặc định
 ├─ styles/        tokens.css · global.css · prose.css · hero.css
-└─ ../scripts/    check-content.mjs · check-structure.mjs · check-html.mjs
+└─ ../scripts/    check-content.mjs · check-unused.mjs · check-html.mjs
 ```
 
 Component: **thư mục là loại trang phục vụ nó**. Chỉ một trang dùng thì nằm ở
