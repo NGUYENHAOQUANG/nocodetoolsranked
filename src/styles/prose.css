@@ -6,11 +6,11 @@
    Chúng trông na ná nhau nhưng khác ở chỗ chí mạng:
 
    1. `.post__body` có `h2:first-of-type` / `h3:first-of-type { margin-top: 0 }`.
-      `.paragraph__content` KHÔNG có — và một trang review chứa BỐN khối
-      <Paragraph>, nên nếu gộp rule thì `:first-of-type` sẽ khớp 4 lần mỗi trang
+      `.review-section__body` KHÔNG có — và một trang review chứa BỐN khối
+      <ReviewSection>, nên nếu gộp rule thì `:first-of-type` sẽ khớp 4 lần mỗi trang
       thay vì 1, âm thầm xoá 0.83em margin bốn lần.
 
-   2. `.paragraph__content` sở hữu riêng `h1`, `ol` và toàn bộ style bảng giá —
+   2. `.review-section__body` sở hữu riêng `h1`, `ol` và toàn bộ style bảng giá —
       `.post__body` không có.
 
    3. Vài giá trị trùng nhau chỉ là TRÙNG HỢP: `h3 { margin: 1em }` và
@@ -19,7 +19,7 @@
 
    Dùng chung FILE, không dùng chung RULE. Xem CLAUDE.md §8.6.
 
-   Tên class giữ nguyên `.post__body` / `.paragraph__content` (không đổi thành
+   Tên class giữ nguyên `.post__body` / `.review-section__body` (không đổi thành
    .prose--post/.prose--review) để HTML không đổi một ký tự nào.
 
    Khối 3 (`.page__body`) dùng `h2:first-child` chứ KHÔNG phải `:first-of-type`
@@ -92,12 +92,12 @@
 }
 
 /* ==========================================================================
-   2. Thân bài review — Paragraph.astro  (/reviews/<brand>/)
-   Một trang review có NHIỀU khối .paragraph__content — đó là lý do không có
+   2. Thân bài review — ReviewSection.astro  (/reviews/<brand>/)
+   Một trang review có NHIỀU khối .review-section__body — đó là lý do không có
    rule :first-of-type ở đây.
    ========================================================================== */
 
-.paragraph__content {
+.review-section__body {
   max-width: min(95dvw, var(--width-content));
   margin-left: auto;
   margin-right: auto;
@@ -106,46 +106,46 @@
 
 /* global.css reset margin h1–h6 + p về 0 → khai lại đúng mặc định UA của từng
    cấp (h1 .67em, h2 .83em, h3 1em, p 1em) vì bản gốc không reset. */
-.paragraph__content h1 {
+.review-section__body h1 {
   margin: 0.67em 0;
   font-size: 2rem;
 }
-.paragraph__content h2 {
+.review-section__body h2 {
   margin: 0.83em 0;
   font-size: 1.5625rem;
 }
-.paragraph__content h3 {
+.review-section__body h3 {
   margin: 1em 0;
   font-size: 1.25rem;
 }
-.paragraph__content h2,
-.paragraph__content h3 {
+.review-section__body h2,
+.review-section__body h3 {
   color: var(--color-text-body);
   opacity: 1;
   line-height: 2.2rem;
 }
-.paragraph__content p {
+.review-section__body p {
   margin: 1em 0;
 }
-.paragraph__content ul {
+.review-section__body ul {
   margin: 0;
   padding-left: 40px;
   list-style: circle;
 }
-.paragraph__content ul li {
+.review-section__body ul li {
   margin: 15px 0;
   line-height: 1.5rem;
 }
 /* Danh sách CÓ SỐ (ol) khác ul: số thập phân, li không có margin và line-height
    kế thừa 1.7rem (không phải 1.5rem như ul li). Margin khối 1em (mặc định ol) →
    16px desktop / 14px mobile; ĐỪNG hardcode 16px kẻo mobile dư 4px. */
-.paragraph__content ol {
+.review-section__body ol {
   margin: 1em 0;
   padding-left: 40px;
   list-style: decimal;
 }
 
-/* Ô bọc cho bảng rộng hơn viewport. `.paragraph` cũng cuộn ngang được nhưng ẩn
+/* Ô bọc cho bảng rộng hơn viewport. `.review-section` cũng cuộn ngang được nhưng ẩn
    thanh cuộn (`scrollbar-width: none`); ở đây cần thanh cuộn HIỆN như bản gốc. */
 .prose-scroll {
   width: 100%;
@@ -159,25 +159,25 @@
    Gom về đây, giữ nguyên hình: lưới 1px, hàng CUỐI không có viền dưới, và ô đầu
    mỗi hàng có thêm viền trái (chồng lên viền của bảng — bản gốc như vậy vì
    `border-collapse: separate` nên hai viền không gộp). */
-.paragraph__content table {
+.review-section__body table {
   --table-border: 1px solid #d3d3d3;
 
   border: var(--table-border);
 }
-.paragraph__content td {
+.review-section__body td {
   border-right: var(--table-border);
 }
-.paragraph__content td:last-child {
+.review-section__body td:last-child {
   border-right: 0;
 }
-.paragraph__content td:first-child {
+.review-section__body td:first-child {
   border-left: var(--table-border);
 }
-.paragraph__content tr:not(:last-child) td {
+.review-section__body tr:not(:last-child) td {
   border-bottom: var(--table-border);
 }
 
-.paragraph__content table {
+.review-section__body table {
   width: max-content;
   min-width: 100%;
   overflow: hidden;
@@ -185,26 +185,26 @@
   border-collapse: separate;
   border-spacing: 0;
 }
-.paragraph__content table * {
+.review-section__body table * {
   overflow: hidden;
 }
-.paragraph__content td {
+.review-section__body td {
   padding: 7px;
   line-height: 1.5;
 }
-.paragraph__content tbody tr {
+.review-section__body tbody tr {
   background: transparent;
   transition: background 0.2s;
 }
-.paragraph__content tbody tr:nth-child(2n) {
+.review-section__body tbody tr:nth-child(2n) {
   background: rgba(245, 245, 245, 0.1);
 }
-.paragraph__content tbody tr:hover {
+.review-section__body tbody tr:hover {
   background: rgba(245, 245, 245, 0.02);
 }
 
 @media (min-width: 1025px) and (min-height: 420px) {
-  .paragraph__content table {
+  .review-section__body table {
     width: 100%;
   }
 }

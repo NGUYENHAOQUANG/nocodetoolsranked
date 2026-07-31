@@ -1,4 +1,4 @@
-import { defineCollection, reference } from "astro:content";
+import { defineCollection, reference, type SchemaContext } from "astro:content";
 import { glob } from "astro/loaders";
 import { z, type ZodType } from "astro/zod";
 
@@ -96,13 +96,13 @@ const toplistPlacements = defineCollection({
   schema: z.object({ entries: z.array(homepageRow) }),
 });
 
-const reviewsPagePlacement = defineCollection({
+const reviewsPagePlacements = defineCollection({
   loader: glob({ pattern: "reviews-page.yaml", base: "./src/content/placements" }),
   schema: z.object({ entries: z.array(reviewsPageRow) }),
 });
 
 /** Sidebar trang review: chỉ còn THỨ TỰ, mọi thứ khác lấy từ `brands` */
-const sidebarPlacement = defineCollection({
+const sidebarPlacements = defineCollection({
   loader: glob({ pattern: "sidebar.yaml", base: "./src/content/placements" }),
   schema: z.object({ entries: z.array(z.object({ brand: reference("brands") })) }),
 });
@@ -195,7 +195,13 @@ const pages = defineCollection({
  * "Best Overall ..."). Ở đây là thứ giống hệt ở mọi trang, nên component tự `getEntry`
  * thay vì nhận props — xâu qua props chỉ tạo prop drilling cho thứ không bao giờ khác.
  */
-const blocks = <T extends ZodType>(file: string, schema: T) =>
+/**
+ * Một KHỐI nội dung của site: đúng MỘT entry, id là tên file.
+ *
+ * Nhận cả `schema` trực tiếp lẫn dạng hàm `({ image }) => …` — dạng hàm cần cho khối
+ * nào có ảnh (`contact.yaml`), vì `image()` chỉ tồn tại trong ngữ cảnh schema.
+ */
+const blocks = <T extends ZodType>(file: string, schema: T | ((ctx: SchemaContext) => T)) =>
   defineCollection({
     loader: glob({ pattern: file, base: "./src/content/blocks" }),
     schema,
@@ -341,37 +347,35 @@ const posts = defineCollection({
 
 /** Thẻ liên hệ trang /contact/. Tách riêng khỏi mini-reviews: gộp chung một
     collection thì mọi trường phải optional và mất sạch tác dụng validate. */
-const contact = defineCollection({
-  loader: glob({ pattern: "**/*.yaml", base: "./src/content/contact" }),
-  schema: ({ image }) =>
-    z.object({
-      cards: z.array(
-        z.object({
-          image: image(),
-          title: z.string(),
-          subtitle: z.string(),
-          button: z.string(),
-        }),
-      ),
-      /** Nhãn hộp thoại. Một chuỗi cho cả `<label>` lẫn `placeholder`. */
-      modal: z.object({
-        fallbackTitle: z.string(),
-        fields: z.object({
-          name: z.string(),
-          company: z.string(),
-          email: z.string(),
-          message: z.string(),
-        }),
-        closeLabel: z.string(),
+const contact = blocks("contact.yaml", ({ image }) =>
+  z.object({
+    cards: z.array(
+      z.object({
+        image: image(),
+        title: z.string(),
+        subtitle: z.string(),
+        button: z.string(),
       }),
+    ),
+    /** Nhãn hộp thoại. Một chuỗi cho cả `<label>` lẫn `placeholder`. */
+    modal: z.object({
+      fallbackTitle: z.string(),
+      fields: z.object({
+        name: z.string(),
+        company: z.string(),
+        email: z.string(),
+        message: z.string(),
+      }),
+      closeLabel: z.string(),
     }),
-});
+  }),
+);
 
 export const collections = {
   brands,
   toplistPlacements,
-  reviewsPagePlacement,
-  sidebarPlacement,
+  reviewsPagePlacements,
+  sidebarPlacements,
   authors,
   reviews,
   labels,

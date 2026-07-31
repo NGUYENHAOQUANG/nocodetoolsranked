@@ -114,7 +114,7 @@ Frontmatter bắt buộc: `title`, `date` (dạng ISO `2026-01-06`), `readTime`,
 ### Sửa FAQ, đánh giá chi tiết, thẻ liên hệ
 
 FAQ và mini-review nằm ngay trong frontmatter của trang toplist
-(`src/content/toplists/<slug>.mdx`). Nội dung trang liên hệ ở `src/content/contact/`.
+(`src/content/toplists/<slug>.mdx`). Nội dung trang liên hệ ở `src/content/blocks/contact.yaml`.
 
 ### Đổi ảnh chia sẻ mạng xã hội
 
@@ -159,8 +159,8 @@ src/
 │  ├─ posts/         6  bài blog (.mdx)
 │  ├─ pages/         4  trang phẳng: about, terms, privacy, disclosure
 │  ├─ authors/       3
-│  ├─ contact/       1  nội dung + nhãn hộp thoại của /contact/
-│  └─ blocks/        3  chữ dùng CHUNG mọi trang + 2 danh sách bài tuyển chọn
+│  └─ blocks/        4  MỘT FILE = MỘT KHỐI nội dung, mỗi file đúng MỘT entry
+│                       labels · not-found · curated-posts · contact
 │
 ├─ assets/        file nhị phân Astro băm và phát ra
 │                 brands · authors · hero · posts · promos · contact · icons · site · fonts

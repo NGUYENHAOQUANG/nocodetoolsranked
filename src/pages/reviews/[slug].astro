@@ -2,7 +2,7 @@
 import { getCollection, getEntry, render } from "astro:content";
 import InnerPageLayout from "@/layouts/InnerPageLayout.astro";
 import ArticleGrid from "@/components/article/ArticleGrid.astro";
-import InnerNavigator from "@/components/article/InnerNavigator.astro";
+import ArticleToc from "@/components/article/ArticleToc.astro";
 import ReviewIntro from "@/components/article/ReviewIntro.astro";
 import ProsCons from "@/components/article/ProsCons.astro";
 import ArticleLink from "@/components/article/ArticleLink.astro";
@@ -60,7 +60,7 @@ const schema = [
 >
   <ArticleGrid>
     {/* TOC lấy thẳng từ heading của bài — không khai tay, khỏi lệch khi sửa bài */}
-    <InnerNavigator slot="nav" headings={headings} />
+    <ArticleToc slot="nav" headings={headings} />
     <main id="main-content" slot="main" class="review__main">
       <ReviewIntro
         logo={brand.logo}

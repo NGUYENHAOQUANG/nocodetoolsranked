@@ -135,6 +135,21 @@ không sắp xếp được và JSON-LD không phát `datePublished` nào. Hiể
 `lib/article-date.ts`, `timeZone: "UTC"` là bắt buộc — thiếu nó thì ngày lùi một
 hôm ở mọi múi giờ âm.
 
+### `posts` là dữ liệu, `/knowledge/` là URL — hai tầng, cố ý không ép về một tên
+
+Chỗ duy nhất trong repo mà tên collection không khớp URL. Đã cân nhắc và **giữ**:
+
+| Dùng tên `knowledge`                                             | Dùng tên `posts`                                                         |
+| ---------------------------------------------------------------- | ------------------------------------------------------------------------ |
+| URL `/knowledge/` · `pages/knowledge/` · `components/knowledge/` | `content/posts/` · `assets/posts/` · `lib/posts.ts` · collection `posts` |
+
+`posts` là _bài viết_ — khái niệm dữ liệu. `/knowledge/` là _tên khu vực trên site_ — quyết
+định biên tập. Đổi khu vực thành `/blog/` thì chỉ đụng `pages/`, không phải đổi tên collection,
+thư mục nội dung, thư mục ảnh và một module `lib/`.
+
+`bestaibuilders` không có ca này vì bên đó URL và khái niệm trùng tên (`/articles/` ↔
+`articles`). Khác biệt giữa hai repo ở đây là **đúng**, không phải chưa đồng bộ.
+
 ### Ý tưởng trung tâm: brands vs placements
 
 Đây là chỗ dễ hiểu nhầm nhất nếu chỉ nhìn thư mục.
@@ -331,6 +346,16 @@ Không dùng tên chung chung như `utils.ts` / `helpers.ts` — đặt theo vi�
 - Tên nói **cái đó là gì**, không nói nó nằm ở đâu
 - Tên file asset **không lặp lại tên thư mục**: `hero/desktop.jpg`, không phải
   `hero/hero.jpg`; `contact/help.png`, không phải `contact/contact-help.png`
+- **Biến thể của một asset đặt theo DIỆN MẠO, không theo vị trí dùng.**
+  `honest-kitchen-horizontal.svg` (bản nằm ngang) chứ không phải `-mobile.svg` — tên cũ
+  chỉ đúng chừng nào bố cục không đổi. Ảnh promo đặt theo **brand sở hữu nó**
+  (`promos/the-pets-table-dog.png`), không theo chỗ nó hiện (`popup-pets-dog.png`).
+
+  Dấu hiệu tên đặt theo vị trí đã hỏng: `assets/posts/must-reads-fresh-food.jpg` đang
+  vừa là ảnh `mustRead` của bài này vừa là `reviewSidebar` của bài kia — tên chỉ đúng
+  một nửa. **Thư mục `assets/posts/` còn nguyên vấn đề đó** (5 tiền tố vị trí khác nhau:
+  `blog-` `knowledge-` `must-reads-` `article-` `blog-mustread-`); chủ dự án đã chốt để
+  sau vì ảnh hiện tại là ảnh tạm. Khi thay ảnh thật thì đặt `<slug-bài>-<vị-trí>.jpg`.
 
 **CSS**
 

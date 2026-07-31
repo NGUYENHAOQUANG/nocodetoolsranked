@@ -135,7 +135,7 @@ export async function getToplistBrands(placementId: string): Promise<ToplistRow[
 /** Danh sách trang /reviews/ — 6 brand, thứ tự và điểm KHÁC trang chủ (có chủ ý) */
 export async function getReviewsPageEntries(): Promise<ReviewsPageRow[]> {
   const rows = await withBrands(
-    await rowsOf(await getEntry("reviewsPagePlacement", "reviews-page"), "reviews-page"),
+    await rowsOf(await getEntry("reviewsPagePlacements", "reviews-page"), "reviews-page"),
     "reviews-page",
   );
   return rows.map(({ row, key, brand }) => ({
@@ -152,7 +152,7 @@ export async function getReviewsPageEntries(): Promise<ReviewsPageRow[]> {
 
 /** Ba hàm dưới dùng chung một file thứ tự, gom lời gọi về đây cho khỏi lặp */
 const sidebarRows = async () =>
-  withBrands(await rowsOf(await getEntry("sidebarPlacement", "sidebar"), "sidebar"), "sidebar");
+  withBrands(await rowsOf(await getEntry("sidebarPlacements", "sidebar"), "sidebar"), "sidebar");
 
 /** Danh sách partner ở sidebar (logo + tên + link tới bài review) */
 export async function getSidebarPartners(): Promise<SidebarPartner[]> {
