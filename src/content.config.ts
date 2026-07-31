@@ -137,7 +137,14 @@ const reviews = defineCollection({
     title: z.string(),
     /** Tiêu đề hero bản MOBILE. Desktop luôn ghi "Reviews" — hai chuỗi khác hẳn nhau. */
     heroTitle: z.string(),
-    /** Dòng khuyến mãi ở thanh trên cùng bài */
+    /**
+     * Meta description của trang. BẮT BUỘC — bản trước dùng luôn `promo` làm mô tả, mà
+     * `promo` là chữ trên thanh khuyến mãi: hai brand để trống nên hai trang KHÔNG có
+     * description nào, ba brand cùng ghi "Free delivery on all orders" nên ba trang
+     * trùng nhau. Bắt buộc ở đây để không trang review nào ship mà thiếu.
+     */
+    description: z.string(),
+    /** Dòng khuyến mãi ở thanh trên cùng bài. CHỈ để hiển thị, không dùng cho SEO. */
     promo: z.string(),
     /** Đối tác của bài. Gõ sai = lỗi build. */
     brand: reference("brands"),
@@ -164,8 +171,12 @@ const pages = defineCollection({
     heroTitle: z.string(),
     /** Chỉ khai khi bản mobile khác desktop. Render bằng set:html nên chèn được <br>. */
     heroMobileTitle: z.string().optional(),
-    /** Bỏ trống thì dùng SITE.defaultDescription */
-    description: z.string().optional(),
+    /**
+     * Meta description. BẮT BUỘC — để `optional` thì cả bốn trang cùng rơi về
+     * `SITE.defaultDescription`, tức bốn trang ship chung một mô tả. Mô tả mặc định
+     * chỉ nên phục vụ trang chưa có mô hình nội dung, không phải trang đã có.
+     */
+    description: z.string(),
     /**
      * Tiêu đề mục trông thế nào.
      *
