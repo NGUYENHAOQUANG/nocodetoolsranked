@@ -346,6 +346,23 @@ Không dùng tên chung chung như `utils.ts` / `helpers.ts` — đặt theo vi�
 - Tên nói **cái đó là gì**, không nói nó nằm ở đâu
 - Tên file asset **không lặp lại tên thư mục**: `hero/desktop.jpg`, không phải
   `hero/hero.jpg`; `contact/help.png`, không phải `contact/contact-help.png`
+- **Thư mục con của `assets/` chia theo ẢNH ĐÓ LÀ GÌ**, không theo ai trỏ tới nó:
+
+  | Thư mục                                  | Loại tài sản                                 |
+  | ---------------------------------------- | -------------------------------------------- |
+  | `brands/` `authors/` `posts/` `contact/` | thuộc về một entry — gần như bất biến        |
+  | `promos/`                                | **creative quảng cáo** — đổi theo chiến dịch |
+  | `icons/` `hero/` `site/` `fonts/`        | khung giao diện                              |
+
+  `promos/` tách riêng **dù ảnh trong đó thuộc về một brand** — chủ đích: logo là danh tính,
+  banner là chiến dịch, nhịp sửa khác hẳn. Trộn vào `brands/` thì sau vài mùa nó ngập banner
+  theo mùa.
+
+  **Trục thứ hai, ĐỘC LẬP với thư mục: ai quyết định dùng ảnh nào.** Ảnh thay đổi theo entry
+  thì phải khai trong `content/`, dù nằm ở thư mục nào. `icons/` được `content/toplists/`
+  trỏ tới 4 lần và component trỏ 2 lần — vẫn đúng, vì thư mục nói ảnh là gì chứ không hứa
+  phục vụ riêng một phía.
+
 - **Biến thể của một asset đặt theo DIỆN MẠO, không theo vị trí dùng.**
   `honest-kitchen-horizontal.svg` (bản nằm ngang) chứ không phải `-mobile.svg` — tên cũ
   chỉ đúng chừng nào bố cục không đổi. Ảnh promo đặt theo **brand sở hữu nó**
