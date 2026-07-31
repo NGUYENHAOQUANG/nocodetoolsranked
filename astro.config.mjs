@@ -1,5 +1,5 @@
 // @ts-check
-import { defineConfig } from "astro/config";
+import { defineConfig, fontProviders } from "astro/config";
 
 import mdx from "@astrojs/mdx";
 import sitemap from "@astrojs/sitemap";
@@ -49,6 +49,54 @@ export default defineConfig({
    * không ảnh hưởng gì.
    */
   integrations: [mdx({ smartypants: false }), sitemap()],
+
+  /**
+   * Font qua `astro:fonts` thay vì tự khai `@font-face`.
+   *
+   * Lý do chính là `optimizedFallbacks` (mặc định BẬT): Astro dùng capsize sinh
+   * `size-adjust` / `ascent-override` cho font dự phòng, nên lúc `font-display:
+   * swap` đổi font thì chữ KHÔNG nhảy — và nó không tốn byte mạng nào vì dùng
+   * font có sẵn trong máy, khác với `preload` vốn giành băng thông với ảnh LCP.
+   *
+   * Hai provider, mỗi cái có lý do ĐO ĐƯỢC:
+   *
+   * - Lato -> `local()`. File trong repo đã GỠ HINTING (thiếu bảng `cvt `,
+   *   `fpgm`, `prep`) nên nhỏ hơn bản Google Fonts 40%: 13.7 KB so với 23.0 KB,
+   *   mà đường nét vẽ Y HỆT (đã so 24 chữ mẫu: 0 chữ khác), cùng 215 ký tự,
+   *   cùng version 1.104. Dùng `google()` ở đây là nặng thêm 27 KB để lấy lại
+   *   hinting — thứ DirectWrite và macOS gần như không dùng tới.
+   *
+   * - Poppins -> `google()`. Đã so SHA-256: hai file cũ TRÙNG TỪNG BYTE với bản
+   *   Google Fonts phục vụ, nên tải về giống hệt mà bỏ được file khỏi repo.
+   *   Astro tải lúc BUILD rồi tự host — trình duyệt không gọi ra Google.
+   *
+   * `fallbacks` khai lại đúng stack hệ thống của `--font-base` để chuỗi font
+   * cuối cùng không đổi so với trước.
+   */
+  fonts: [
+    {
+      provider: fontProviders.local(),
+      name: "Lato",
+      cssVariable: "--font-brand",
+      fallbacks: ["Segoe UI", "Helvetica Neue", "Arial", "Noto Sans", "sans-serif"],
+      options: {
+        variants: [
+          { weight: 400, style: "normal", src: ["./src/assets/fonts/lato-400.woff2"] },
+          { weight: 700, style: "normal", src: ["./src/assets/fonts/lato-700.woff2"] },
+          { weight: 900, style: "normal", src: ["./src/assets/fonts/lato-900.woff2"] },
+        ],
+      },
+    },
+    {
+      provider: fontProviders.google(),
+      name: "Poppins",
+      cssVariable: "--font-popup",
+      weights: [400, 500],
+      styles: ["normal"],
+      subsets: ["latin"],
+      fallbacks: ["sans-serif"],
+    },
+  ],
 
   /** <Image> tự sinh srcset + sizes để điện thoại không phải tải ảnh cỡ desktop. */
   image: { layout: "constrained" },

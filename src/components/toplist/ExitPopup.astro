@@ -1,9 +1,16 @@
 ---
-import { Image } from "astro:assets";
+import { Font, Image } from "astro:assets";
 import dog from "@/assets/promos/popup-pets-dog.png";
 import discount from "@/assets/promos/popup-pets-discount.png";
 import logo from "@/assets/promos/popup-pets-logo.svg";
 ---
+
+{
+  /* Poppins CHỈ dùng trong component này (1/21 trang), nên khai `<Font>` tại chỗ thay vì
+    trong BaseLayout — 20 trang còn lại không phải mang theo @font-face thừa. Đây cũng là
+    cách bản cũ làm, chỉ khác là hồi đó viết @font-face tay ngay trong <style>. */
+}
+<Font cssVariable="--font-popup" />
 
 {
   /* Popup exit-intent "The Pet's Table" — hiện khi chuột rời mép trên cửa sổ
@@ -54,21 +61,7 @@ import logo from "@/assets/promos/popup-pets-logo.svg";
 </div>
 
 <style>
-  @font-face {
-    font-family: "Poppins";
-    font-style: normal;
-    font-weight: 400;
-    font-display: swap;
-    src: url("/fonts/poppins-400.woff2") format("woff2");
-  }
-  @font-face {
-    font-family: "Poppins";
-    font-style: normal;
-    font-weight: 500;
-    font-display: swap;
-    src: url("/fonts/poppins-500.woff2") format("woff2");
-  }
-
+    
   .exit-popup {
     position: fixed;
     inset: 0;
@@ -161,7 +154,7 @@ import logo from "@/assets/promos/popup-pets-logo.svg";
     background: #86c345;
     border-radius: 4px;
     color: var(--color-text-on-primary);
-    font-family: "Poppins", sans-serif;
+    font-family: var(--font-popup);
     font-size: 25px;
     font-weight: 500;
     line-height: 1;
@@ -176,7 +169,7 @@ import logo from "@/assets/promos/popup-pets-logo.svg";
     background: none;
     border: none;
     color: #333;
-    font-family: "Poppins", sans-serif;
+    font-family: var(--font-popup);
     font-size: 12px;
     font-weight: 400;
     text-align: center;

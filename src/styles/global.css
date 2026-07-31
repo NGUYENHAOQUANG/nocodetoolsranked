@@ -7,29 +7,6 @@
    Tham chiếu màu/font từ trang gốc top10dogfood.com
    ========================================================================== */
 
-/* ----- Fonts (self-hosted Lato) ----- */
-@font-face {
-  font-family: "Lato";
-  font-style: normal;
-  font-weight: 400;
-  font-display: swap;
-  src: url("/fonts/lato-400.woff2") format("woff2");
-}
-@font-face {
-  font-family: "Lato";
-  font-style: normal;
-  font-weight: 700;
-  font-display: swap;
-  src: url("/fonts/lato-700.woff2") format("woff2");
-}
-@font-face {
-  font-family: "Lato";
-  font-style: normal;
-  font-weight: 900;
-  font-display: swap;
-  src: url("/fonts/lato-900.woff2") format("woff2");
-}
-
 /* ----- Reset ----- */
 *,
 *::before,

@@ -156,8 +156,8 @@ src/
 │  ├─ authors/       3
 │  └─ contact-cards/ 1
 │
-├─ assets/        ảnh qua astro:assets — Astro BĂM tên file
-│                 brands · authors · hero · posts · promos · contact · icons · site
+├─ assets/        file nhị phân Astro băm và phát ra
+│                 brands · authors · hero · posts · promos · contact · icons · site · fonts
 │
 ├─ components/    thư mục = LOẠI TRANG mà component phục vụ
 │  ├─ layout/     6  mọi trang: Header, Footer, Breadcrumbs, HeroInner, Seo, ToTop
@@ -174,7 +174,7 @@ src/
 └─ styles/        tokens · global · prose · hero
 
 public/           thứ cần GIỮ NGUYÊN đường dẫn (Astro KHÔNG băm tên)
-                  favicon.svg · robots.txt · og-image.jpg · fonts/
+                  favicon.svg · robots.txt · og-image.jpg
 scripts/          check-content.mjs · check-html.mjs
 ```
 

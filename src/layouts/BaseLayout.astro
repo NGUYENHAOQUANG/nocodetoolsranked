@@ -1,6 +1,7 @@
 ---
 import "@/styles/global.css";
 import Seo from "@/components/layout/Seo.astro";
+import { Font } from "astro:assets";
 import { SITE } from "@/config/site";
 
 interface Props {
@@ -41,6 +42,19 @@ const {
       noindex={noindex}
       schema={schema}
     />
+    {
+      /* `astro:fonts` phát @font-face kèm fallback ĐÃ KHỚP METRIC, nên lúc
+        `font-display: swap` đổi font thì chữ không nhảy.
+
+        CỐ Ý không bật `preload`: `<Font preload>` preload MỌI biến thể, mà preload
+        font sẽ giành băng thông với ảnh LCP. Fallback khớp metric đã lo phần chữ
+        nhảy mà không tốn một byte mạng nào.
+
+        Poppins KHÔNG khai ở đây — nó chỉ dùng trong `ExitPopup` (1/21 trang), nên
+        `<Font cssVariable="--font-popup" />` đặt trong chính component đó để 20
+        trang còn lại không phải mang theo khai báo thừa. */
+    }
+    <Font cssVariable="--font-brand" />
   </head>
   <body>
     {

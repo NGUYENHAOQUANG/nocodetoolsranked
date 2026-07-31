@@ -414,6 +414,35 @@ component tự gõ chuỗi `rel` và tất cả đều thiếu token đó.
 `addEventListener` rồi gọi `window.open`, chép từ bản gốc — không bấm được bằng
 bàn phím, và trình đọc màn hình không biết đó là link.
 
+### Font qua `astro:fonts`, KHÔNG tự khai `@font-face`
+
+Lý do chính là **`optimizedFallbacks`** (mặc định bật): Astro dùng capsize sinh
+`size-adjust` / `ascent-override` cho font dự phòng, nên lúc `font-display: swap` đổi font
+thì chữ **không nhảy** — và nó không tốn byte mạng nào vì dùng font có sẵn trong máy, khác
+với `preload` vốn giành băng thông với ảnh LCP.
+
+Hai provider, mỗi cái có lý do **đo được**:
+
+| Font    | Provider   | Vì sao                                                                                                                                                                                              |
+| ------- | ---------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Lato    | `local()`  | File trong repo đã **gỡ hinting** (thiếu `cvt `, `fpgm`, `prep`) nên nhỏ hơn bản Google 40%: 13.7 so với 23.0 KB, mà đường nét vẽ Y HỆT (so 24 chữ mẫu: 0 khác), cùng 215 ký tự, cùng version 1.104 |
+| Poppins | `google()` | Đã so SHA-256: hai file cũ **trùng từng byte** với bản Google Fonts, nên tải về giống hệt mà bỏ được file khỏi repo                                                                                 |
+
+`google()` tải lúc **BUILD** rồi tự host ở `dist/_astro/fonts/` — trình duyệt người đọc
+không gọi ra Google. Khác hẳn nhúng `<link href="fonts.googleapis.com">`.
+
+**`<Font>` đặt ở đâu là quan trọng.** Lato ở `BaseLayout` (mọi trang dùng). Poppins đặt
+**trong chính `ExitPopup.astro`** vì nó chỉ dùng ở 1/21 trang — để ở `BaseLayout` là 20
+trang còn lại phải mang theo `@font-face` thừa. Bản cũ cũng làm vậy, chỉ khác là viết
+`@font-face` tay ngay trong `<style>` của component. Đã kiểm bản build: trang chủ 5 face,
+trang khác 3.
+
+**CỐ Ý không bật `preload`** — `<Font preload>` preload MỌI biến thể của family.
+
+`cssVariable` đặt đúng tên token repo dùng (`--font-brand`), nên component không phải sửa.
+**Đừng khai lại `--font-brand` trong `tokens.css`** — khai lại là đè mất tên font dự phòng
+và fallback hết tác dụng.
+
 ### `og:image` mặc định ở `public/`, không phải `src/assets/`
 
 `public/og-image.jpg` (1200x630) là ảnh chia sẻ cho mọi trang không tự truyền
