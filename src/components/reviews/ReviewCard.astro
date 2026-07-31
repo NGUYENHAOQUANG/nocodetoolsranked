@@ -1,4 +1,5 @@
 ---
+import { getEntry } from "astro:content";
 import { AFFILIATE_REL } from "@/lib/links";
 import type { ReviewsPageRow } from "@/lib/rankings";
 import { starList } from "@/lib/stars";
@@ -16,6 +17,9 @@ const ARC = `M 50,50 m 0,-${RADIUS} a ${RADIUS},${RADIUS} 0 1 1 0,${RADIUS * 2} 
 const dashOffset = CIRCUMFERENCE * (1 - Number(rating) / 10);
 
 const starPaths = starList(stars);
+
+/* Nhãn dùng chung toàn site, không đổi theo trang -> tự lấy thay vì truyền props. */
+const labels = (await getEntry("labels", "labels"))!.data;
 ---
 
 <div class="review-card">
@@ -30,7 +34,7 @@ const starPaths = starList(stars);
           là link INLINE ngay sau — nhờ vậy khối cao 249.63 chứ không phải 217.63 */
       }
       <p>{text}</p>
-      <a class="review-card__more" href={readMoreHref}>Read More</a>
+      <a class="review-card__more" href={readMoreHref}>{labels.cta.readMore}</a>
     </div>
   </div>
 
@@ -94,7 +98,7 @@ const starPaths = starList(stars);
           rel={AFFILIATE_REL}
           referrerpolicy="strict-origin"
         >
-          <span>Visit Site</span>
+          <span>{labels.cta.visitSite}</span>
         </a>
       </div>
     </div>

@@ -1,4 +1,5 @@
 ---
+import { getEntry } from "astro:content";
 /**
  * Khối thẻ bài viết ở sidebar, dùng chung cho trang review và trang blog.
  *
@@ -15,6 +16,9 @@ interface Props {
 }
 
 const { articles } = Astro.props;
+
+/* Nhãn dùng chung toàn site, không đổi theo trang -> tự lấy thay vì truyền props. */
+const labels = (await getEntry("labels", "labels"))!.data;
 ---
 
 <div class="sidebar-articles">
@@ -36,7 +40,7 @@ const { articles } = Astro.props;
               <p class="sidebar-articles__title">{a.title}</p>
             </a>
             <a class="sidebar-articles__link" href={a.href}>
-              Read more
+              {labels.cta.readMoreLower}
             </a>
           </div>
         </div>

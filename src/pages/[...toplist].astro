@@ -80,8 +80,8 @@ const schema = entry.id === "home" ? [organizationSchema(), websiteSchema()] : [
       alt={data.heroAlt}
     />
     <PartnerList brands={brands} promo={promo} />
-    <BestOverall brand={topBrand} />
-    <MiniReview
+    <BestOverall title={data.bestOverallTitle} brand={topBrand} />
+    <MiniReview title={data.miniReviewTitle}
       brand={topBrand}
       categories={data.miniReview.categories}
       pros={data.miniReview.pros}

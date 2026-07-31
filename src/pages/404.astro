@@ -1,10 +1,13 @@
 ---
 /* Trang 404. @astrojs/sitemap tự loại "404" và "500" khỏi sitemap nên không cần
    khai `filter` trong astro.config. */
+import { getEntry } from "astro:content";
 import InnerPageLayout from "@/layouts/InnerPageLayout.astro";
 import { HOME, REVIEWS_INDEX, KNOWLEDGE_INDEX } from "@/lib/links";
 
 const TITLE = "Page Not Found";
+
+const notFound = (await getEntry("notFound", "not-found"))!.data;
 ---
 
 <InnerPageLayout
@@ -16,11 +19,11 @@ const TITLE = "Page Not Found";
 >
   <main id="main-content">
     <section class="not-found">
-      <p>The page you were looking for does not exist or has been moved.</p>
+      <p>{notFound.body}</p>
       <ul class="not-found__links">
-        <li><a href={HOME}>Go to the homepage</a></li>
-        <li><a href={REVIEWS_INDEX}>Browse dog food reviews</a></li>
-        <li><a href={KNOWLEDGE_INDEX}>Read the knowledge center</a></li>
+        <li><a href={HOME}>{notFound.links.home}</a></li>
+        <li><a href={REVIEWS_INDEX}>{notFound.links.reviews}</a></li>
+        <li><a href={KNOWLEDGE_INDEX}>{notFound.links.knowledge}</a></li>
       </ul>
     </section>
   </main>

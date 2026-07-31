@@ -1,12 +1,16 @@
 ---
+import { getEntry } from "astro:content";
 import { Image } from "astro:assets";
 import { getMustReads } from "@/lib/posts";
 
 const mustReads = await getMustReads();
+
+/* Nhãn dùng chung toàn site, không đổi theo trang -> tự lấy thay vì truyền props. */
+const labels = (await getEntry("labels", "labels"))!.data;
 ---
 
 <aside class="must-reads">
-  <h2 class="must-reads__title">Must Reads</h2>
+  <h2 class="must-reads__title">{labels.heading.mustReads}</h2>
   {
     mustReads.map((item) => (
       <a class="must-reads__item" href={item.href}>
@@ -18,7 +22,7 @@ const mustReads = await getMustReads();
           <Image src={item.image} alt={item.imageAlt} width={320} height={219} />
         </div>
         <div class="must-reads__link">
-          <span>Read More</span>
+          <span>{labels.cta.readMore}</span>
           <svg viewBox="0 0 16 16" width="12" height="12" fill="currentColor" aria-hidden="true">
             <path
               fill-rule="evenodd"

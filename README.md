@@ -80,8 +80,8 @@ Muốn brand đó có trang review riêng thì thêm:
 1. `src/content/toplists/<slug>.mdx` -> URL thành `/<slug>/`
 
    Frontmatter bắt buộc: `title`, `description`, `heroTitle`, `heroAlt`,
-   `heroSubtitle`, `heroSubtitleCompact`, `ranking`, `articleTitle`, `faq`,
-   `miniReview`. `promo` là tuỳ chọn.
+   `heroSubtitle`, `heroSubtitleCompact`, `ranking`, `bestOverallTitle`,
+   `miniReviewTitle`, `articleTitle`, `faq`, `miniReview`. `promo` là tuỳ chọn.
 
    Thân MDX chính là bài viết dài nằm dưới bảng xếp hạng.
 
@@ -109,7 +109,7 @@ Frontmatter bắt buộc: `title`, `date`, `readTime`, `author`, `excerpt`,
 ### Sửa FAQ, đánh giá chi tiết, thẻ liên hệ
 
 FAQ và mini-review nằm ngay trong frontmatter của trang toplist
-(`src/content/toplists/<slug>.mdx`). Thẻ liên hệ ở `src/content/contact-cards/`.
+(`src/content/toplists/<slug>.mdx`). Nội dung trang liên hệ ở `src/content/contact/`.
 
 ### Đổi ảnh chia sẻ mạng xã hội
 
@@ -154,7 +154,8 @@ src/
 │  ├─ posts/         6  bài blog (.mdx)
 │  ├─ pages/         4  trang phẳng: about, terms, privacy, disclosure
 │  ├─ authors/       3
-│  └─ contact-cards/ 1
+│  ├─ contact/       1  nội dung + nhãn hộp thoại của /contact/
+│  └─ blocks/        2  chữ dùng CHUNG mọi trang (nhãn CTA, trang 404)
 │
 ├─ assets/        file nhị phân Astro băm và phát ra
 │                 brands · authors · hero · posts · promos · contact · icons · site · fonts

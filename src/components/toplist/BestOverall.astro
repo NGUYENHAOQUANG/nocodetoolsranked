@@ -3,16 +3,18 @@ import type { ToplistRow } from "@/lib/rankings";
 import PartnerCard from "@/components/toplist/PartnerCard.astro";
 
 interface Props {
+  /** Tiêu đề mục — RIÊNG từng ngách nên phải truyền vào, không tự lấy. */
+  title: string;
   /** Card hạng 1 của trang, lặp lại ở cuối trang đúng như bản gốc */
   brand: ToplistRow;
 }
 
-const { brand } = Astro.props;
+const { title, brand } = Astro.props;
 ---
 
 <section class="best-overall">
   <div class="best-overall__inner">
-    <h2 class="best-overall__title">Best Overall Dog Food Delivery</h2>
+    <h2 class="best-overall__title">{title}</h2>
     <PartnerCard brand={brand} shouldShowRank={false} isBestOverall />
   </div>
 </section>

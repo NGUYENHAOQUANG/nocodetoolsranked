@@ -1,0 +1,26 @@
+cards:
+  - image: "../../assets/contact/partner.png"
+    title: "Partner with Us"
+    subtitle: "Share more so we can explore ways to work together"
+    button: "Get in touch"
+  - image: "../../assets/contact/feedback.png"
+    title: "Send Feedback"
+    subtitle: "Have some ideas about what we can do better?"
+    button: "Share thoughts"
+  - image: "../../assets/contact/help.png"
+    title: "Help & Support"
+    subtitle: "Questions? We're here to help"
+    button: "Get help"
+
+# Nhan cua hop thoai. Moi o dung CHUNG mot chuoi cho <label> va placeholder -
+# truoc day viet hai lan, sua mot cho quen cho kia la nhan lech placeholder.
+modal:
+  # <h2> co chu mac dinh vi aria-labelledby tro vao no; JS ghi de bang tieu de
+  # cua the duoc bam ngay luc mo.
+  fallbackTitle: "Contact us"
+  fields:
+    name: "Your name"
+    company: "Company"
+    email: "Email Address"
+    message: "Message"
+  closeLabel: "Close"

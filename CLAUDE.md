@@ -89,9 +89,27 @@ Toàn bộ nội dung biên tập nằm trong `src/content/` dưới dạng cont
 có schema Zod. Không có mảng dữ liệu nào nằm trong `.ts` hay hardcode trong
 component.
 
-Hệ quả cho component: **trang lấy dữ liệu, component nhận props.** Năm component
-từng tự gọi `getEntry(..., "homepage")` — mỗi cái chỉ chạy được cho đúng một
-trang, nên không thể có ngách thứ hai.
+Hệ quả cho component — ranh giới nằm ở **chữ đó có đổi theo trang không**:
+
+> Nội dung **đổi theo trang** -> truyền qua **props**. Nhãn **không đổi ở đâu cả**
+> -> component **tự `getEntry`**.
+
+`hero`, `faq`, `miniReview` và hai tiêu đề mục lớn (`bestOverallTitle`,
+`miniReviewTitle`) đổi theo từng ngách nên phải là props: ngách cá sẽ là "Best
+Overall Cat Food Delivery". Ngược lại `blocks/labels.yaml` (chữ nút CTA, skip
+link, nhãn huy hiệu) giống hệt ở mọi trang, nên component tự lấy — xâu qua props
+chỉ tạo prop drilling cho thứ không bao giờ khác.
+
+Năm component từng tự gọi `getEntry(..., "homepage")`. Cái sai ở đó **không phải**
+tự lấy, mà là tự lấy một entry **khoá theo trang**: mỗi component chỉ chạy được
+cho đúng một trang, nên không thể có ngách thứ hai. Tự lấy một entry toàn site thì
+không dính lỗi đó.
+
+**Không hardcode chữ biên tập trong component.** Chữ trên nút CTA là thứ người vận
+hành A/B test nhiều nhất trên site affiliate; để trong component nghĩa là đổi phải
+sửa code. Ngoại lệ duy nhất hiện có: đoạn pháp lý reCAPTCHA trong `ContactCards` —
+nó không phải một chuỗi mà là một câu đan bằng ba link, và cả ba href đều là
+chuyện của code. Lý do ghi ngay tại chỗ.
 
 ### Ý tưởng trung tâm: brands vs placements
 
@@ -212,6 +230,17 @@ Cần cả hai tầng vì trang chủ dùng riêng `BaseLayout`: nó không có 
 banner là `HeroToplist` với cây DOM khác hẳn, `<main>` bọc luôn banner, và chỉ nó
 có `ExitPopup`. Gộp một tầng thì trang chủ phải tắt từng thứ bằng
 `showBreadcrumbs={false}` — prop trình bày trá hình, đúng thứ quy ước cấm.
+
+**Ngưỡng cho prop bật/tắt khung.** Một prop tắt MỘT mảnh khung là chấp nhận được — cái giá
+của việc không dùng nó là trang đó tự dựng lại cả Header/`<main>`/Footer, tức quay về đúng
+chỗ lặp mà layout sinh ra để gỡ. Nhưng **từ BA mảnh khác nhau trở lên thì trang đó không
+thuộc layout này nữa**: cho nó dùng thẳng `BaseLayout`.
+
+Đây là ngưỡng, không phải nguyên tắc sạch — thêm một prop bao giờ cũng dễ hơn nhận ra layout
+đã hết vừa, nên nó là chỗ dễ trôi nhất khi thêm loại trang mới.
+
+Trang chủ lệch tới BỐN mảnh (`HeroToplist` thay `HeroInner`, không breadcrumb, `<main>` bọc
+luôn banner, có `ExitPopup`) nên nó ở phía trên ngưỡng — dùng thẳng `BaseLayout` là đúng.
 
 `InnerPageLayout` **không phát `<main>`**: trang review và bài blog đặt `<main>`
 bên trong lưới ba cột, bọc sẵn sẽ thành `<main>` lồng `<main>`. Mỗi page tự viết

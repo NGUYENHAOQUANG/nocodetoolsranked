@@ -1,6 +1,6 @@
 import { defineCollection, reference } from "astro:content";
 import { glob } from "astro/loaders";
-import { z } from "astro/zod";
+import { z, type ZodType } from "astro/zod";
 
 /* ===========================================================================
    Nguyên tắc: TÁCH "đối tượng là ai" khỏi "nó xuất hiện thế nào ở trang nào".
@@ -188,6 +188,48 @@ const pages = defineCollection({
  * (logo + nút + link affiliate) chứ không phải văn bản — tầng 3 của thang
  * Markdown → HTML → component ở CLAUDE.md workspace mục 4.
  */
+/**
+ * Nhãn và chữ nghĩa dùng CHUNG mọi trang. Mỗi file đúng MỘT entry.
+ *
+ * Khác `toplists/`: ở đó là chữ RIÊNG của từng ngách (tiêu đề banner, tiêu đề mục
+ * "Best Overall ..."). Ở đây là thứ giống hệt ở mọi trang, nên component tự `getEntry`
+ * thay vì nhận props — xâu qua props chỉ tạo prop drilling cho thứ không bao giờ khác.
+ */
+const blocks = <T extends ZodType>(file: string, schema: T) =>
+  defineCollection({
+    loader: glob({ pattern: file, base: "./src/content/blocks" }),
+    schema,
+  });
+
+const labels = blocks(
+  "labels.yaml",
+  z.object({
+    cta: z.object({
+      visitSite: z.string(),
+      viewRates: z.string(),
+      readMore: z.string(),
+      readMoreLower: z.string(),
+      readReview: z.string(),
+      compareAll: z.string(),
+    }),
+    heading: z.object({ mustReads: z.string() }),
+    badge: z.object({
+      exclusiveOffer: z.string(),
+      lastUpdated: z.string(),
+      advertisingDisclosure: z.string(),
+    }),
+    skipLink: z.string(),
+  }),
+);
+
+const notFound = blocks(
+  "not-found.yaml",
+  z.object({
+    body: z.string(),
+    links: z.object({ home: z.string(), reviews: z.string(), knowledge: z.string() }),
+  }),
+);
+
 const toplists = defineCollection({
   loader: glob({ pattern: "**/*.mdx", base: "./src/content/toplists" }),
   schema: ({ image }) =>
@@ -216,6 +258,10 @@ const toplists = defineCollection({
           buttonText: z.string(),
         })
         .optional(),
+
+      /** Tiêu đề hai mục lớn. RIÊNG từng ngách — ngách cá sẽ là "Best Overall Cat Food". */
+      bestOverallTitle: z.string(),
+      miniReviewTitle: z.string(),
 
       /** Tiêu đề khối bài viết. Thân bài KHÔNG lặp lại nó. */
       articleTitle: z.string(),
@@ -285,8 +331,8 @@ const posts = defineCollection({
 
 /** Thẻ liên hệ trang /contact/. Tách riêng khỏi mini-reviews: gộp chung một
     collection thì mọi trường phải optional và mất sạch tác dụng validate. */
-const contactCards = defineCollection({
-  loader: glob({ pattern: "**/*.yaml", base: "./src/content/contact-cards" }),
+const contact = defineCollection({
+  loader: glob({ pattern: "**/*.yaml", base: "./src/content/contact" }),
   schema: ({ image }) =>
     z.object({
       cards: z.array(
@@ -297,6 +343,17 @@ const contactCards = defineCollection({
           button: z.string(),
         }),
       ),
+      /** Nhãn hộp thoại. Một chuỗi cho cả `<label>` lẫn `placeholder`. */
+      modal: z.object({
+        fallbackTitle: z.string(),
+        fields: z.object({
+          name: z.string(),
+          company: z.string(),
+          email: z.string(),
+          message: z.string(),
+        }),
+        closeLabel: z.string(),
+      }),
     }),
 });
 
@@ -307,8 +364,10 @@ export const collections = {
   sidebarPlacement,
   authors,
   reviews,
+  labels,
+  notFound,
   toplists,
   pages,
   posts,
-  contactCards,
+  contact,
 };

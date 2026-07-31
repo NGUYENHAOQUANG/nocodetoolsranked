@@ -1,0 +1,26 @@
+# Nhãn dùng lại ở nhiều nơi trên site. Giống hệt ở mọi trang nên component tự lấy,
+# không truyền qua props — khác chữ nghĩa RIÊNG từng ngách vốn nằm trong `toplists/`.
+#
+# Chữ trên nút CTA là thứ người vận hành A/B test nhiều nhất trên site affiliate:
+# `visitSite` từng nằm rải ở 4 component, `readMore` ở 3.
+cta:
+  visitSite: "Visit Site"
+  viewRates: "View Rates"
+  readMore: "Read More"
+  readMoreLower: "Read more"
+  readReview: "Read review"
+  compareAll: "Compare All"
+
+# Tiêu đề mục dùng chung mọi trang (khác tiêu đề RIÊNG ngách, xem `toplists/`).
+heading:
+  mustReads: "Must Reads"
+
+# Nhãn nhỏ trên thẻ và banner.
+badge:
+  exclusiveOffer: "Exclusive Offer"
+  lastUpdated: "Last Updated:"
+  advertisingDisclosure: "Advertising Disclosure"
+
+# Skip link (WCAG 2.4.1). Không phải lựa chọn biên tập nhưng vẫn là chữ người dùng ĐỌC
+# được khi Tab vào trang.
+skipLink: "Skip to content"

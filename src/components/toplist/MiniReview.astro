@@ -1,4 +1,5 @@
 ---
+import { getEntry } from "astro:content";
 import { AFFILIATE_REL } from "@/lib/links";
 import type { ImageMetadata } from "astro";
 import type { ToplistRow } from "@/lib/rankings";
@@ -6,6 +7,8 @@ import { STAR_OUTLINE } from "@/lib/icon-paths";
 import MiniReviewCategories from "@/components/toplist/MiniReviewCategories.astro";
 
 interface Props {
+  /** Tiêu đề mục — RIÊNG từng ngách nên phải truyền vào, không tự lấy. */
+  title: string;
   /** Bản gốc chỉ đánh giá chi tiết brand hạng 1 (The Pet's Table) */
   brand: ToplistRow;
   categories: { title: string; icon: ImageMetadata; score: number; description: string }[];
@@ -15,7 +18,7 @@ interface Props {
   summary: string;
 }
 
-const { brand, categories, pros, cons, summary } = Astro.props;
+const { title, brand, categories, pros, cons, summary } = Astro.props;
 
 const CHECK = "M186.301 339.893L96 249.461l-32 30.507L186.301 402 448 140.506 416 110z";
 const CROSS =
@@ -24,10 +27,13 @@ const CROSS =
 /* Bản gốc đặt dấu ngoặc khác nhau ở 2 bản (rộng bằng nhau nên rất dễ bỏ sót) */
 const reviewsDesktop = `(${brand.reviewsCount} Reviews)`;
 const reviewsMobile = `(${brand.reviewsCount}) Reviews`;
+
+/* Nhãn dùng chung toàn site, không đổi theo trang -> tự lấy thay vì truyền props. */
+const labels = (await getEntry("labels", "labels"))!.data;
 ---
 
 <section class="mini-review">
-  <h2 class="mini-review__title">Best Dog Food Brands Reviewed</h2>
+  <h2 class="mini-review__title">{title}</h2>
 
   {
     /* Bản gốc dựng 2 cây DOM riêng rồi đổi bằng `display` chứ không chỉ sắp xếp lại:
@@ -67,12 +73,12 @@ const reviewsMobile = `(${brand.reviewsCount}) Reviews`;
         <a
           class="mini-review__button"
           href={brand.href}
-          title="Visit Site"
+          title={labels.cta.visitSite}
           target="_blank"
           rel={AFFILIATE_REL}
           referrerpolicy="strict-origin"
         >
-          Visit Site
+          {labels.cta.visitSite}
         </a>
       </div>
     </div>
@@ -202,12 +208,12 @@ const reviewsMobile = `(${brand.reviewsCount}) Reviews`;
         <a
           class="mini-review__button"
           href={brand.href}
-          title="Visit Site"
+          title={labels.cta.visitSite}
           target="_blank"
           rel={AFFILIATE_REL}
           referrerpolicy="strict-origin"
         >
-          Visit Site
+          {labels.cta.visitSite}
         </a>
       </div>
     </div>

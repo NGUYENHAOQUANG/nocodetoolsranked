@@ -1,4 +1,5 @@
 ---
+import { getEntry } from "astro:content";
 /**
  * Khối danh sách đối tác ở sidebar, dùng chung cho trang review và trang blog.
  *
@@ -15,6 +16,9 @@ import { HOME } from "@/lib/links";
 import { CHEVRON_RIGHT } from "@/lib/icon-paths";
 
 const partners = await getSidebarPartners();
+
+/* Nhãn dùng chung toàn site, không đổi theo trang -> tự lấy thay vì truyền props. */
+const labels = (await getEntry("labels", "labels"))!.data;
 ---
 
 <div class="sidebar-partners">
@@ -37,7 +41,7 @@ const partners = await getSidebarPartners();
                 trước đây dùng <h4> nên sinh ra heading giả trong dàn ý trang. */}
             <p class="sidebar-partners__name">{p.name}</p>
             <a class="sidebar-partners__link" href={p.href}>
-              <div>Read review</div>
+              <div>{labels.cta.readReview}</div>
             </a>
           </div>
         </div>
@@ -46,7 +50,7 @@ const partners = await getSidebarPartners();
   </div>
   <div class="sidebar-partners__compare">
     <a href={HOME}>
-      Compare All
+      {labels.cta.compareAll}
       <svg viewBox="0 0 320 512" width="1em" height="1em" aria-hidden="true">
         <path d={CHEVRON_RIGHT}></path>
       </svg>

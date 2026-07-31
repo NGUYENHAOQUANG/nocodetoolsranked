@@ -1,4 +1,5 @@
 ---
+import { getEntry } from "astro:content";
 import { AFFILIATE_REL } from "@/lib/links";
 import { Image } from "astro:assets";
 import type { ToplistRow } from "@/lib/rankings";
@@ -42,6 +43,9 @@ const {
 
 const mobileLogo = logoMobile ?? logo;
 // Không có bản mobile thì dưới 768px KHÔNG hiện gạch đầu dòng (chỉ The Pet's Table có)
+
+/* Nhãn dùng chung toàn site, không đổi theo trang -> tự lấy thay vì truyền props. */
+const labels = (await getEntry("labels", "labels"))!.data;
 ---
 
 <div class:list={["partner", { "partner--editors-choice": isEditorsChoice }]}>
@@ -75,7 +79,7 @@ const mobileLogo = logoMobile ?? logo;
     {
       isEditorsChoice && (
         <span class:list={["partner__tag", { "partner__tag--full": isBestOverall }]}>
-          Exclusive Offer
+          {labels.badge.exclusiveOffer}
         </span>
       )
     }
@@ -195,7 +199,7 @@ const mobileLogo = logoMobile ?? logo;
                 referrerpolicy="strict-origin"
               >
                 <div class="partner__button-inner">
-                  <span class="partner__button-text">Visit Site</span>
+                  <span class="partner__button-text">{labels.cta.visitSite}</span>
                   {
                     hoverTooltip && (
                       <PartnerTooltip
