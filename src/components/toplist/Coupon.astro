@@ -26,10 +26,16 @@ const { text } = Astro.props;
     --back-of-coupon-color: var(--color-secondary);
 
     position: relative;
-    perspective: 1000px;
     width: 100%;
     margin-top: 5px;
   }
+
+  /* KHÔNG khai `perspective` ở đây. Bản trước có `perspective: 1000px`, nhưng cả TÁM
+     `transform` trong file này đều là 2D (`translateY`, `rotate`, `scale`) — mà
+     `perspective` chỉ tác động lên transform 3D. Nó không đổi một pixel nào, đổi lại
+     tạo ngữ cảnh 3D khiến trình duyệt đẩy khối này lên LỚP COMPOSITE RIÊNG. Trên màn
+     DPR cao, lớp đó bị raster rồi ghép ở toạ độ lẻ (đo được x = 30,078px × 3 = 90,234
+     pixel thiết bị) nên chữ MỜ. */
 
   /* Lớp nền cam thò ra sau tấm coupon */
   .coupon__bg {
@@ -60,7 +66,12 @@ const { text } = Astro.props;
     overflow: visible;
     transition: all 0.3s ease;
   }
-  @media (prefers-reduced-motion: no-preference) {
+  /* `will-change` CHỈ ở thiết bị có hover thật. Nó tồn tại để chuẩn bị cho hiệu ứng
+     `:hover` bên dưới, mà điện thoại không hover bao giờ — ở đó nó chỉ còn tác dụng
+     phụ: ép lên lớp composite vĩnh viễn, làm chữ mờ trên màn DPR cao. Khác
+     `will-change` ở `Header.astro`: cái kia CÓ lý do riêng (ép khử răng cưa grayscale
+     cho khớp bản gốc), nên giữ. */
+  @media (hover: hover) and (prefers-reduced-motion: no-preference) {
     .coupon__ticket {
       will-change: transform;
     }

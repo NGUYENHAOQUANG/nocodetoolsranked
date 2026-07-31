@@ -443,6 +443,31 @@ Không thêm dòng `Co-Authored-By`.
 Không phải điều cấm — chỉ là những chỗ hành xử khác trực giác. Biết trước thì đỡ
 mất thời gian truy nguyên.
 
+### `will-change` và `perspective` làm chữ MỜ trên mobile
+
+Chủ dự án báo khối coupon nhìn mờ trên điện thoại. Nguyên nhân là hai khai báo CSS
+đều chỉ phục vụ hiệu ứng `:hover` — mà điện thoại không hover bao giờ:
+
+| Khai báo                 | Hậu quả                                          |
+| ------------------------ | ------------------------------------------------ |
+| `will-change: transform` | Ép element lên **lớp composite riêng vĩnh viễn** |
+| `perspective: 1000px`    | Tạo ngữ cảnh 3D — cũng ép lên lớp riêng          |
+
+Lớp composite bị raster một lần rồi ghép lại. Trên màn DPR cao mà toạ độ lẻ (đo được
+`x = 30,078px × 3 = 90,234` pixel thiết bị) thì texture bị lấy mẫu lại và chữ mờ.
+
+`perspective` ở đó còn **không làm gì cả**: cả tám `transform` trong `Coupon.astro`
+đều là 2D (`translateY` `rotate` `scale`), mà `perspective` chỉ tác động lên transform
+3D. Đã bỏ hẳn. `will-change` thì bọc vào `@media (hover: hover)`.
+
+**Không phải mọi `will-change` đều sai.** Cái ở `Header.astro` giữ nguyên không điều
+kiện, vì nó có lý do riêng đã ghi tại chỗ: ép khử răng cưa GRAYSCALE cho khớp bản gốc,
+thay vì subpixel làm viền chữ ánh màu. Trước khi gỡ, đọc comment xem nó ở đó để làm gì.
+
+**Ảnh chụp bằng Playwright KHÔNG bắt được lỗi này.** Đã so ảnh trước/sau ở cả desktop
+lẫn mobile DPR 3: hash giống hệt từng byte. Playwright render qua đường khác nên không
+tái hiện artefact của GPU compositing — muốn xác nhận phải mở trên máy thật.
+
 ### `rem` co theo breakpoint
 
 `global.css` đặt `html { font-size: 14px }` và đổi thành `16px` từ `1025px`.
