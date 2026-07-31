@@ -562,14 +562,28 @@ Cấu hình **giống hệt `bestaibuilders`** — cùng `.prettierrc.json`, cù
 `.prettierignore`. Chỉ đúng một khoá lệch mặc định:
 
 ```json
-{ "printWidth": 100, "plugins": ["prettier-plugin-astro"] }
+{
+  "$schema": "https://json.schemastore.org/prettierrc",
+  "printWidth": 100,
+  "plugins": ["prettier-plugin-astro"]
+}
 ```
 
+`plugins` là thứ DUY NHẤT Astro bắt buộc — prettier không tự đọc được `.astro`.
+`printWidth: 100` trùng đúng con số repo `withastro/astro` dùng. `$schema` cho
+editor gợi ý tên khoá và báo gõ sai ngay lúc gõ; prettier tự lược nó.
+
 **Nháy đôi** cho code, tức mặc định của prettier, nên không khai `singleQuote`.
-Cũng không khai `overrides` gán parser `astro` — đã đo, output giống hệt từng byte
-có hay không có nó, vì `prettier-plugin-astro` tự nhận đuôi file. Và không khai
-`public/` trong ignore: prettier không nhận `.svg` / `.txt` / `.jpg` nên dòng đó
-không làm gì.
+Không khai `public/` trong ignore: prettier không nhận `.svg` / `.txt` / `.jpg`
+nên dòng đó không làm gì.
+
+**Không khai `overrides` cho `*.astro` — cố ý.** [Tài liệu
+Astro](https://docs.astro.build/en/editor-setup/) khuyên khối đó và viết thẳng
+_"you must manually specify the parser"_; repo `withastro/astro` cũng có. Vẫn
+không cần: `prettier-plugin-astro@0.14.1` khai
+`languages: [{ name: "astro", ext: [".astro"] }]` nên prettier tự suy parser, và
+đã chạy thử cả hai chiều — output **giống hệt từng byte**. Câu "you must" là di
+sản từ thời plugin chưa khai `languages`. Đừng thêm lại chỉ vì thấy tài liệu có.
 
 `src/content/**` không format vì Markdown nhạy cảm với khoảng trắng — thụt lề quyết
 định danh sách lồng, dòng trống quyết định loose/tight (và nhịp dọc giữa các mục
