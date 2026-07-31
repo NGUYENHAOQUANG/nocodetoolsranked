@@ -169,6 +169,20 @@ Hệ quả: đổi link affiliate là sửa **một dòng** trong `brands/`, m�
 `src/lib/rankings.ts` nối hai thứ đó lại. `src/lib/posts.ts` làm tương tự cho bài
 viết.
 
+**Ảnh riêng của brand phải đến TỪ brand, kể cả khi nó nằm ở thư mục khác.**
+`PartnerCard` từng `import` cứng banner dọc của The Pets Table, còn nơi gọi thì
+quyết định bằng thứ hạng: `hasSideBanner={i === 0}`. Nghĩa là kéo Ollie lên hạng 1
+thì card Ollie hiện **banner của The Pets Table**, kèm alt "Ollie" — build vẫn
+xanh, không gì báo.
+
+Nay `sideBanner` là một trường của `brands/<id>.yaml`; component chỉ giữ **vị trí
+slot** (card hạng 1, từ 1525px), còn **ảnh nào** thì brand quyết. Brand không có
+creative riêng thì slot đó bỏ trống. Đã thử cả hai chiều: gỡ `sideBanner` của brand
+hạng 1 -> banner biến mất; gắn cho brand hạng 2 -> vẫn không hiện.
+
+Ảnh vẫn ở `assets/promos/`, không dời sang `assets/brands/` — thư mục chia theo
+**ảnh đó là gì**, còn ai-quyết-định-dùng-ảnh-nào là trục khác. Xem mục quy ước tên.
+
 ### Trang toplist: một file = một trang
 
 `content/toplists/<id>.mdx` là MỘT trang toplist hoàn chỉnh. Trang chủ là entry

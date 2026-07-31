@@ -34,6 +34,13 @@ const brands = defineCollection({
       sidebarName: z.string().optional(),
       /** Tên ở link cuối bài review — khác cả hai trên (vd "Freshpet" một từ) */
       articleLinkName: z.string().optional(),
+      /**
+       * Banner dọc nổi bên phải card hạng 1 (chỉ hiện từ 1525px). Chỉ brand nào có
+       * creative riêng mới khai — brand không có thì card hạng 1 đơn giản là không có
+       * banner. Ảnh nằm ở `assets/promos/` vì nó là creative chiến dịch, không phải
+       * danh tính brand; xem quy ước hai trục trong CLAUDE.md.
+       */
+      sideBanner: image().optional(),
       /** NGUỒN DUY NHẤT của link affiliate. Mọi nơi khác tham chiếu tới đây. */
       affiliateUrl: z.string(),
       /** Dòng chữ trong ô carousel sidebar */

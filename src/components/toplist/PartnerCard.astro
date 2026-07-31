@@ -6,12 +6,16 @@ import type { ToplistRow } from "@/lib/rankings";
 import ScoreRing from "@/components/toplist/ScoreRing.astro";
 import Coupon from "@/components/toplist/Coupon.astro";
 import PartnerTooltip from "@/components/toplist/PartnerTooltip.astro";
-import sideBannerImg from "@/assets/promos/the-pets-table-banner.png";
 import { CHEVRON_RIGHT, STAR_OUTLINE, CHECK_THIN } from "@/lib/icon-paths";
 
 interface Props {
   brand: ToplistRow;
-  /** Banner dọc nổi bên phải card, chỉ hiện từ 1525px */
+  /**
+   * Card này có phải SLOT được phép hiện banner dọc không (chỉ card hạng 1, và chỉ từ
+   * 1525px). Ảnh nào thì do CHÍNH BRAND quyết: `brand.sideBanner`. Bản trước import
+   * cứng ảnh của The Pets Table, nên đổi thứ hạng cho brand khác lên số 1 là card đó
+   * hiện banner của The Pets Table kèm alt tên brand mình - build vẫn xanh.
+   */
   hasSideBanner?: boolean;
   /** Ẩn huy hiệu số thứ hạng (dùng cho khối "Best Overall" lặp lại cuối trang) */
   shouldShowRank?: boolean;
@@ -25,6 +29,7 @@ const {
   rank,
   logo,
   logoMobile,
+  sideBanner,
   logoAlt,
   tagline,
   taglineMobile,
@@ -50,7 +55,7 @@ const labels = (await getEntry("labels", "labels"))!.data;
 
 <div class:list={["partner", { "partner--editors-choice": isEditorsChoice }]}>
   {
-    hasSideBanner && (
+    hasSideBanner && sideBanner && (
       <a
         class="partner__side-banner"
         href={href}
@@ -60,7 +65,7 @@ const labels = (await getEntry("labels", "labels"))!.data;
       >
         {/* format png: giữ nguyên pixel gốc, tránh nén lại mất mát (ảnh vốn đã đúng 320×800) */}
         <Image
-          src={sideBannerImg}
+          src={sideBanner}
           alt={`${brand.name} - Fresh Dog Food Delivery`}
           width={320}
           height={800}

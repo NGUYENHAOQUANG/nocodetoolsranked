@@ -17,6 +17,8 @@ export interface ToplistRow {
   name: string;
   logo: ImageMetadata;
   logoMobile?: ImageMetadata;
+  /** Creative banner dọc, chỉ brand nào có mới khai. */
+  sideBanner?: ImageMetadata;
   logoAlt: string;
   tagline: string;
   taglineMobile: string;
@@ -115,6 +117,7 @@ export async function getToplistBrands(placementId: string): Promise<ToplistRow[
     name: brand.name,
     logo: brand.logo,
     ...(brand.logoMobile ? { logoMobile: brand.logoMobile } : {}),
+    ...(brand.sideBanner ? { sideBanner: brand.sideBanner } : {}),
     logoAlt: brand.logoAlt,
     tagline: row.tagline,
     taglineMobile: row.taglineMobile,
