@@ -111,6 +111,30 @@ sửa code. Ngoại lệ duy nhất hiện có: đoạn pháp lý reCAPTCHA tron
 nó không phải một chuỗi mà là một câu đan bằng ba link, và cả ba href đều là
 chuyện của code. Lý do ghi ngay tại chỗ.
 
+### Mục lục thì tự lấy, tuyển chọn thì khai tay
+
+Ba mảng id bài viết từng nằm ngay trong `lib/posts.ts` — biên tập trong code, đúng
+thứ mục trên cấm. Nhưng gỡ chúng không phải một cách:
+
+| Danh sách | Là gì | Nay |
+| --- | --- | --- |
+| Lưới `/knowledge/` | **mục lục** — phải đủ mọi bài | `getCollection` + sắp theo `date` |
+| "Must Reads" trang chủ | **tuyển chọn** 3/6 | `blocks/curated-posts.yaml` |
+| Sidebar trang review | **tuyển chọn** 3/6 | `blocks/curated-posts.yaml` |
+
+Phép thử: **danh sách đó có phải chứa mọi entry không?** Có thì đừng khai tay —
+khai tay là bài thứ 7 lặng lẽ không xuất hiện, mà cũng không có gì báo. README từng
+hứa "thêm bài = thêm đúng một file" trong khi lưới đọc một mảng cứng 6 phần tử;
+lời hứa đó sai suốt và chỉ chưa lộ vì đủ 6/6.
+
+Không thì khai tay là đúng, và khai bằng `reference()` để gõ sai thành lỗi build.
+
+Hệ quả kèm theo: `date` phải là **ngày thật** (`z.coerce.date()`, ISO trong
+frontmatter), không phải chuỗi hiển thị. Sáu bài từng cùng ghi `"Jan 1, 2026"` nên
+không sắp xếp được và JSON-LD không phát `datePublished` nào. Hiển thị đi qua
+`lib/article-date.ts`, `timeZone: "UTC"` là bắt buộc — thiếu nó thì ngày lùi một
+hôm ở mọi múi giờ âm.
+
 ### Ý tưởng trung tâm: brands vs placements
 
 Đây là chỗ dễ hiểu nhầm nhất nếu chỉ nhìn thư mục.

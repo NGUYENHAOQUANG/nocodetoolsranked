@@ -15,6 +15,7 @@ import PostIntro from "@/components/article/PostIntro.astro";
 import PostSidebar from "@/components/article/PostSidebar.astro";
 import { KNOWLEDGE_INDEX, postUrl } from "@/lib/links";
 import { articleSchema } from "@/lib/schema-org";
+import { formatArticleDate, isoDate } from "@/lib/article-date";
 
 export async function getStaticPaths() {
   const entries = await getCollection("posts");
@@ -39,6 +40,7 @@ const schema = [
     url: postUrl(entry.id),
     image: entry.data.images.card.src,
     authorName: author.name,
+    datePublished: isoDate(date),
   }),
 ];
 ---
@@ -66,7 +68,7 @@ const schema = [
     <main id="main-content" slot="main" class="post__main">
       <PostIntro
         title={title}
-        date={date}
+        date={formatArticleDate(date)}
         readTime={readTime}
         author={author}
         avatar={author.avatar}

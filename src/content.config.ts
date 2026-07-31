@@ -103,7 +103,7 @@ const reviewsPagePlacement = defineCollection({
 
 /** Sidebar trang review: chỉ còn THỨ TỰ, mọi thứ khác lấy từ `brands` */
 const sidebarPlacement = defineCollection({
-  loader: glob({ pattern: "review-sidebar.yaml", base: "./src/content/placements" }),
+  loader: glob({ pattern: "sidebar.yaml", base: "./src/content/placements" }),
   schema: z.object({ entries: z.array(z.object({ brand: reference("brands") })) }),
 });
 
@@ -222,6 +222,14 @@ const labels = blocks(
   }),
 );
 
+const curatedPosts = blocks(
+  "curated-posts.yaml",
+  z.object({
+    mustReads: z.array(reference("posts")),
+    reviewSidebar: z.array(reference("posts")),
+  }),
+);
+
 const notFound = blocks(
   "not-found.yaml",
   z.object({
@@ -301,7 +309,9 @@ const posts = defineCollection({
       /** Tiêu đề hero bản MOBILE — bản gốc chèn <br> CỨNG để ngắt 2 dòng cân đối.
           Không đặt thì dùng `title`. HTML thô → render bằng set:html. */
       heroMobileTitle: z.string().optional(),
-      date: z.string(),
+      /** Ngày thật để sắp xếp và để JSON-LD phát `datePublished`. Hiển thị đi
+       *  qua `formatArticleDate` - xem `lib/article-date.ts`. */
+      date: z.coerce.date(),
       readTime: z.string(),
       author: reference("authors"),
       /** Trích đoạn ~115 ký tự + "..." cho lưới /knowledge/. Điểm cắt là tuỳ ý
@@ -366,6 +376,7 @@ export const collections = {
   reviews,
   labels,
   notFound,
+  curatedPosts,
   toplists,
   pages,
   posts,

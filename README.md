@@ -52,7 +52,7 @@ review, CTA giữa bài — đều lấy từ đây.
 | -------------------------------------------- | ----------------------------------- |
 | `src/content/placements/toplist/<id>.yaml`   | Bảng xếp hạng của MỘT trang toplist |
 | `src/content/placements/reviews-page.yaml`   | Danh sách `/reviews/` (6 brand)     |
-| `src/content/placements/review-sidebar.yaml` | Thứ tự partner ở sidebar bài review |
+| `src/content/placements/sidebar.yaml`        | Thứ tự partner ở sidebar (review + blog) |
 
 `toplist/` có **một file mỗi ngách**; `home.yaml` là trang chủ.
 
@@ -71,7 +71,7 @@ Sửa `rank` / `rating` / `stars` / `coupon` ngay trong file tương ứng.
 Muốn brand đó có trang review riêng thì thêm:
 
 4. `src/content/reviews/<brand>.mdx` -> URL thành `/reviews/<brand>/`
-5. Thêm brand vào `placements/reviews-page.yaml` và `placements/review-sidebar.yaml`
+5. Thêm brand vào `placements/reviews-page.yaml` và `placements/sidebar.yaml`
 
 ### Thêm một trang toplist (ngách mới)
 
@@ -97,9 +97,14 @@ CHUNG khuôn với mọi ngách — không có `index.astro` riêng.
 ### Thêm một bài viết
 
 Tạo **đúng một file** `src/content/posts/<slug>.mdx`. URL tự thành
-`/knowledge/<slug>/`, và bài tự xuất hiện ở lưới `/knowledge/`.
+`/knowledge/<slug>/`, và bài tự xuất hiện ở lưới `/knowledge/` — lưới lấy MỌI bài
+trong collection và sắp theo `date` giảm dần, không có danh sách khai tay nào.
 
-Frontmatter bắt buộc: `title`, `date`, `readTime`, `author`, `excerpt`,
+Muốn bài đó xuất hiện thêm ở "Must Reads" (trang chủ) hoặc sidebar trang review
+thì thêm slug vào `src/content/blocks/curated-posts.yaml`. Hai chỗ đó là **tuyển
+chọn** (3 trên 6 bài, thứ tự không theo ngày) nên phải khai tay.
+
+Frontmatter bắt buộc: `title`, `date` (dạng ISO `2026-01-06`), `readTime`, `author`, `excerpt`,
 `images.card`, `relatedPosts`. Ảnh để trong `src/assets/posts/`.
 
 > `images` có tới **bốn** slot vì cùng một bài dùng bốn ảnh khác nhau ở bốn vị
@@ -155,7 +160,7 @@ src/
 │  ├─ pages/         4  trang phẳng: about, terms, privacy, disclosure
 │  ├─ authors/       3
 │  ├─ contact/       1  nội dung + nhãn hộp thoại của /contact/
-│  └─ blocks/        2  chữ dùng CHUNG mọi trang (nhãn CTA, trang 404)
+│  └─ blocks/        3  chữ dùng CHUNG mọi trang + 2 danh sách bài tuyển chọn
 │
 ├─ assets/        file nhị phân Astro băm và phát ra
 │                 brands · authors · hero · posts · promos · contact · icons · site · fonts
@@ -170,7 +175,7 @@ src/
 │
 ├─ layouts/       BaseLayout (html/head/SEO) · InnerPageLayout (khung trang trong)
 ├─ pages/         route — xem bảng dưới
-├─ lib/           links · rankings · posts · schema-org · stars · icon-paths
+├─ lib/           links · rankings · posts · article-date · schema-org · stars · icon-paths
 ├─ config/        site.ts — tên site, mô tả + ảnh chia sẻ mặc định
 └─ styles/        tokens · global · prose · hero
 

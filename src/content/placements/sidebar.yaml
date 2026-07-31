@@ -1,4 +1,5 @@
-# Thứ tự partner ở sidebar trang review — dùng cho CẢ carousel lẫn danh sách.
+# Thứ tự partner ở sidebar - dùng cho CẢ carousel lẫn danh sách, và ở CẢ trang
+# review lẫn bài blog (nên tên file không có tiền tố "review-").
 # Logo/alt/tên/link/promo đều lấy từ collection `brands`, ở đây chỉ còn THỨ TỰ.
 entries:
   - brand: "the-pets-table"

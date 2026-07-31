@@ -153,8 +153,8 @@ export async function getReviewsPageEntries(): Promise<ReviewsPageRow[]> {
 /** Ba hàm dưới dùng chung một file thứ tự, gom lời gọi về đây cho khỏi lặp */
 const sidebarRows = async () =>
   withBrands(
-    await rowsOf(await getEntry("sidebarPlacement", "review-sidebar"), "review-sidebar"),
-    "review-sidebar",
+    await rowsOf(await getEntry("sidebarPlacement", "sidebar"), "sidebar"),
+    "sidebar",
   );
 
 /** Danh sách partner ở sidebar (logo + tên + link tới bài review) */

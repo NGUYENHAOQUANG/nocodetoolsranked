@@ -1,0 +1,13 @@
+# Hai danh sach bai được TUYỂN CHỌN bằng tay - khác lưới /knowledge/ vốn tự lấy
+# mọi bài và sắp theo ngày. Ở đây chỉ 3 trên 6 bài, và thứ tự KHÔNG theo ngày,
+# nên nó là quyết định biên tập thật chứ không suy ra được.
+#
+# Dùng reference("posts"): gõ sai slug là lỗi BUILD, không phải thẻ trống âm thầm.
+mustReads:
+  - "what-makes-healthy-pet-food"
+  - "why-fresh-food-is-the-best-for-dogs"
+  - "a-detailed-look-at-dog-food-alternatives"
+reviewSidebar:
+  - "a-detailed-look-at-dog-food-alternatives"
+  - "what-makes-healthy-pet-food"
+  - "why-fresh-food-is-the-best-for-dogs"

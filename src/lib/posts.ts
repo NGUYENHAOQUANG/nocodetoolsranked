@@ -8,7 +8,8 @@
  * Alt được sinh theo đúng quy ước RIÊNG của từng vị trí — bản gốc dùng 5 quy
  * ước khác nhau cho cùng một bài, và chúng phải giữ nguyên từng ký tự.
  */
-import { getCollection, getEntry } from "astro:content";
+import { getCollection, getEntries, getEntry } from "astro:content";
+import { formatArticleDate } from "./article-date";
 import type { ImageMetadata } from "astro";
 import { postUrl } from "@/lib/links";
 
@@ -37,46 +38,28 @@ export interface SidebarArticle {
   href: string;
 }
 
-/** Thứ tự lưới /knowledge/ của bản gốc (3 cột × 2 hàng) */
-const KNOWLEDGE_ORDER = [
-  "understanding-fresh-pet-food-is-it-a-healthier-choice",
-  "fresh-vs-freeze-dried-dog-food-how-do-they-compare",
-  "supporting-your-dogs-gut-health-for-a-happier-life",
-  "why-fresh-food-is-the-best-for-dogs",
-  "what-makes-healthy-pet-food",
-  "a-detailed-look-at-dog-food-alternatives",
-];
-
-/** Thứ tự sidebar "Must Reads" trang chủ */
-const MUST_READS_ORDER = [
-  "what-makes-healthy-pet-food",
-  "why-fresh-food-is-the-best-for-dogs",
-  "a-detailed-look-at-dog-food-alternatives",
-];
-
-/** Thứ tự bài ở sidebar trang review */
-const REVIEW_SIDEBAR_ORDER = [
-  "a-detailed-look-at-dog-food-alternatives",
-  "what-makes-healthy-pet-food",
-  "why-fresh-food-is-the-best-for-dogs",
-];
-
-async function ordered(ids: string[]) {
-  const all = await getCollection("posts");
-  const byId = new Map(all.map((e) => [e.id, e]));
-  return ids.map((id) => {
-    const e = byId.get(id);
-    if (!e) throw new Error(`Không có bài "${id}" trong collection blog`);
-    return e;
-  });
+/**
+ * Hai danh sách TUYỂN CHỌN (3 trên 6 bài, thứ tự không theo ngày) nằm ở
+ * `content/blocks/curated-posts.yaml`. Trước đây chúng là mảng chuỗi ngay trong
+ * file này - biên tập nằm trong code, đúng thứ CLAUDE.md của repo cấm.
+ *
+ * Lưới /knowledge/ thì KHÔNG có danh sách nào: nó là mục lục nên phải đủ mọi bài,
+ * và thứ tự do `date` quyết. Nhờ vậy thêm một bài là thêm ĐÚNG một file.
+ */
+async function curated(key: "mustReads" | "reviewSidebar") {
+  const list = (await getEntry("curatedPosts", "curated-posts"))!.data[key];
+  return getEntries(list);
 }
 
 /** Lưới /knowledge/ — alt: "{title} | Fresh Dog Food Delivery | Article Thumbnail" */
 export async function getKnowledgeCards(): Promise<KnowledgeCard[]> {
-  return (await ordered(KNOWLEDGE_ORDER)).map((e) => ({
+  /* MỌI bài, mới nhất trước. Không có danh sách khai tay nên bài thứ 7 tự vào lưới. */
+  const all = await getCollection("posts");
+  all.sort((a, b) => b.data.date.getTime() - a.data.date.getTime());
+  return all.map((e) => ({
     image: e.data.images.card,
     imageAlt: `${e.data.title} | Fresh Dog Food Delivery | Article Thumbnail`,
-    date: e.data.date,
+    date: formatArticleDate(e.data.date),
     readTime: e.data.readTime,
     title: e.data.title,
     excerpt: e.data.excerpt,
@@ -86,7 +69,7 @@ export async function getKnowledgeCards(): Promise<KnowledgeCard[]> {
 
 /** Sidebar trang chủ — alt: "{title} | Article Thumbnail", trích đoạn DÀI */
 export async function getMustReads(): Promise<MustRead[]> {
-  return (await ordered(MUST_READS_ORDER)).map((e) => ({
+  return (await curated("mustReads")).map((e) => ({
     title: e.data.title,
     excerpt: e.data.excerptLong!,
     image: e.data.images.mustRead!,
@@ -97,7 +80,7 @@ export async function getMustReads(): Promise<MustRead[]> {
 
 /** Sidebar trang review — alt là TIÊU ĐỀ TRẦN, không hậu tố (khác 4 chỗ kia) */
 export async function getReviewSidebarArticles(): Promise<SidebarArticle[]> {
-  return (await ordered(REVIEW_SIDEBAR_ORDER)).map((e) => ({
+  return (await curated("reviewSidebar")).map((e) => ({
     image: e.data.images.reviewSidebar!,
     imageAlt: e.data.title,
     title: e.data.title,
