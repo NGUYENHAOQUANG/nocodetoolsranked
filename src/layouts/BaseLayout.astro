@@ -47,18 +47,23 @@ const labels = (await getEntry("labels", "labels"))!.data;
       schema={schema}
     />
     {
-      /* `astro:fonts` phát @font-face kèm fallback ĐÃ KHỚP METRIC, nên lúc
-        `font-display: swap` đổi font thì chữ không nhảy.
+      /* `astro:fonts` phát @font-face kèm fallback ĐÃ KHỚP METRIC. Fallback đó khử
+        SẠCH phần nhảy theo CHIỀU DỌC — đã đo trên 788 phần tử: 0 phần tử đổi vị trí
+        dọc, 0 phần tử đổi chiều cao khi font về.
 
-        CỐ Ý không bật `preload`: `<Font preload>` preload MỌI biến thể, mà preload
-        font sẽ giành băng thông với ảnh LCP. Fallback khớp metric đã lo phần chữ
-        nhảy mà không tốn một byte mạng nào.
+        Nhưng nó KHÔNG khử được lệch NGANG: capsize chỉnh `size-adjust` và
+        `ascent/descent-override`, không chỉnh được bề rộng từng chữ cái. "Visit Site"
+        rộng 62,69px với Lato so với 59,80px với fallback — lệch 4,6%, nên chữ trong
+        nút bề rộng CỐ ĐỊNH căn lại ~1,7px lúc swap. Nhìn thấy được.
+
+        `preload` BẬT để chặn nốt phần đó. Đã đo trước/sau trên mạng 1,6 Mbps để chắc
+        nó không cướp băng thông của ảnh LCP — số liệu trong CLAUDE.md.
 
         Poppins KHÔNG khai ở đây — nó chỉ dùng trong `ExitPopup` (1/21 trang), nên
         `<Font cssVariable="--font-popup" />` đặt trong chính component đó để 20
         trang còn lại không phải mang theo khai báo thừa. */
     }
-    <Font cssVariable="--font-brand" />
+    <Font cssVariable="--font-brand" preload />
   </head>
   <body>
     {

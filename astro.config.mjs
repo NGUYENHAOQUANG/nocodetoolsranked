@@ -80,10 +80,13 @@ export default defineConfig({
       cssVariable: "--font-brand",
       fallbacks: ["Segoe UI", "Helvetica Neue", "Arial", "Noto Sans", "sans-serif"],
       options: {
+        /* CHỈ 400 và 700. Weight 900 từng khai ở đây nhưng KHÔNG rule CSS nào dùng — đã
+           đếm trên `dist`: 42 lần `font-weight:900` thì cả 42 đều nằm trong chính khối
+           `@font-face`, 0 lần ở rule thường. Nó chỉ lộ ra khi bật `preload`, vì preload
+           tải cả biến thể không ai dùng: 13,4 KB mỗi lượt tải trang. */
         variants: [
           { weight: 400, style: "normal", src: ["./src/assets/fonts/lato-400.woff2"] },
           { weight: 700, style: "normal", src: ["./src/assets/fonts/lato-700.woff2"] },
-          { weight: 900, style: "normal", src: ["./src/assets/fonts/lato-900.woff2"] },
         ],
       },
     },

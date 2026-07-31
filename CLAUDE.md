@@ -546,9 +546,21 @@ bàn phím, và trình đọc màn hình không biết đó là link.
 ### Font qua `astro:fonts`, KHÔNG tự khai `@font-face`
 
 Lý do chính là **`optimizedFallbacks`** (mặc định bật): Astro dùng capsize sinh
-`size-adjust` / `ascent-override` cho font dự phòng, nên lúc `font-display: swap` đổi font
-thì chữ **không nhảy** — và nó không tốn byte mạng nào vì dùng font có sẵn trong máy, khác
-với `preload` vốn giành băng thông với ảnh LCP.
+`size-adjust` / `ascent-override` cho font dự phòng.
+
+**Nó khử được nhảy DỌC, không khử được lệch NGANG.** Đo bằng cách chặn hẳn file font rồi
+so vị trí 788 phần tử với lúc font đã tải:
+
+|                                  | Kết quả        |
+| -------------------------------- | -------------- |
+| Phần tử dịch chuyển              | 26 / 788       |
+| Dịch **dọc** / đổi **chiều cao** | **0 — tất cả** |
+| Dịch **ngang**                   | 1,70 - 2,00px  |
+
+Capsize chỉnh tỉ lệ và metric dọc, không chỉnh được bề rộng từng chữ cái: "Visit Site" rộng
+**62,69px** với Lato so với **59,80px** với fallback (lệch 4,6%), nên chữ trong nút bề rộng
+CỐ ĐỊNH căn lại ~1,7px lúc swap. Nhìn thấy được, và chủ dự án đã báo đúng hiện tượng này.
+Bản trước tài liệu này viết "chữ không nhảy" - nói quá.
 
 Hai provider, mỗi cái có lý do **đo được**:
 
@@ -566,7 +578,22 @@ trang còn lại phải mang theo `@font-face` thừa. Bản cũ cũng làm vậ
 `@font-face` tay ngay trong `<style>` của component. Đã kiểm bản build: trang chủ 5 face,
 trang khác 3.
 
-**CỐ Ý không bật `preload`** — `<Font preload>` preload MỌI biến thể của family.
+### `preload` BẬT, và nó lộ ra một biến thể font không ai dùng
+
+Bật để chặn nốt phần lệch ngang ở trên. `<Font preload>` preload MỌI biến thể của family -
+chính vì vậy nó phơi ra chuyện `weight: 900` khai trong `astro.config.mjs` mà **không rule
+CSS nào dùng**: đếm trên `dist` có 42 lần `font-weight:900` thì cả 42 nằm trong chính khối
+`@font-face`, 0 lần ở rule thường. Đã bỏ khỏi config và xoá `lato-900.woff2`.
+
+Kết quả: **2 thẻ preload, 27,5 KB**, cả hai đều là weight thật sự dùng. Poppins KHÔNG bị
+kéo vào vì nó khai `<Font>` riêng trong `ExitPopup` (không có `preload`).
+
+**Chỗ chưa đo được, nói rõ để đừng tin nhầm:** Chrome không throttle kết nối tới localhost,
+nên không tái hiện được cảnh font về sau khi vẽ xong. Trên máy local font luôn về ở ~220ms,
+trước FCP ~470ms, ở CẢ hai bản - tức swap không xảy ra nên preload chưa thể hiện lợi ích.
+Đo LCP 3 lượt mỗi bên: **477ms có preload so với 471ms không** - chênh lệch nằm trong nhiễu,
+nên ít nhất khẳng định được preload KHÔNG cướp băng thông ảnh LCP ở kích thước 27,5 KB này.
+Muốn đo lợi ích thật thì phải chạy trên máy chủ thật với mạng chậm.
 
 `cssVariable` đặt đúng tên token repo dùng (`--font-brand`), nên component không phải sửa.
 **Đừng khai lại `--font-brand` trong `tokens.css`** — khai lại là đè mất tên font dự phòng
