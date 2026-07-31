@@ -70,4 +70,13 @@ const ogImage = new URL(image ?? SITE.ogImage.path, Astro.site).href;
 <meta name="twitter:description" content={description} />
 <meta name="twitter:image" content={ogImage} />
 
-{schema.map((node) => <script type="application/ld+json" set:html={JSON.stringify(node)} />)}
+{
+  /* `is:inline` khai TƯỜNG MINH: script có thuộc tính thì Astro vốn đã coi là inline,
+     nhưng không khai thì nó phát một hint. Khai ra để `astro check` về 0 tuyệt đối,
+     nhờ vậy cổng build siết được tới mức warning. */
+}
+{
+  schema.map((node) => (
+    <script is:inline type="application/ld+json" set:html={JSON.stringify(node)} />
+  ))
+}
