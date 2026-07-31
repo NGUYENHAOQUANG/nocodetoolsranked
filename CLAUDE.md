@@ -276,6 +276,8 @@ Không dùng tên chung chung như `utils.ts` / `helpers.ts` — đặt theo vi�
 - Hằng bất biến cấp module: `UPPER_SNAKE_CASE`
 - Collection và mảng dùng số nhiều, phần tử số ít
 - Tên nói **cái đó là gì**, không nói nó nằm ở đâu
+- Tên file asset **không lặp lại tên thư mục**: `hero/desktop.jpg`, không phải
+  `hero/hero.jpg`; `contact/help.png`, không phải `contact/contact-help.png`
 
 **CSS**
 
