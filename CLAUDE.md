@@ -116,11 +116,11 @@ chuyện của code. Lý do ghi ngay tại chỗ.
 Ba mảng id bài viết từng nằm ngay trong `lib/posts.ts` — biên tập trong code, đúng
 thứ mục trên cấm. Nhưng gỡ chúng không phải một cách:
 
-| Danh sách | Là gì | Nay |
-| --- | --- | --- |
-| Lưới `/knowledge/` | **mục lục** — phải đủ mọi bài | `getCollection` + sắp theo `date` |
-| "Must Reads" trang chủ | **tuyển chọn** 3/6 | `blocks/curated-posts.yaml` |
-| Sidebar trang review | **tuyển chọn** 3/6 | `blocks/curated-posts.yaml` |
+| Danh sách              | Là gì                         | Nay                               |
+| ---------------------- | ----------------------------- | --------------------------------- |
+| Lưới `/knowledge/`     | **mục lục** — phải đủ mọi bài | `getCollection` + sắp theo `date` |
+| "Must Reads" trang chủ | **tuyển chọn** 3/6            | `blocks/curated-posts.yaml`       |
+| Sidebar trang review   | **tuyển chọn** 3/6            | `blocks/curated-posts.yaml`       |
 
 Phép thử: **danh sách đó có phải chứa mọi entry không?** Có thì đừng khai tay —
 khai tay là bài thứ 7 lặng lẽ không xuất hiện, mà cũng không có gì báo. README từng
@@ -558,12 +558,30 @@ file hiện tại). Không ảnh hưởng người dùng, chỉ là dung lượn
 
 ### Prettier format `.astro`, KHÔNG format `src/content/**`
 
+Cấu hình **giống hệt `bestaibuilders`** — cùng `.prettierrc.json`, cùng
+`.prettierignore`. Chỉ đúng một khoá lệch mặc định:
+
+```json
+{ "printWidth": 100, "plugins": ["prettier-plugin-astro"] }
+```
+
+**Nháy đôi** cho code, tức mặc định của prettier, nên không khai `singleQuote`.
+Cũng không khai `overrides` gán parser `astro` — đã đo, output giống hệt từng byte
+có hay không có nó, vì `prettier-plugin-astro` tự nhận đuôi file. Và không khai
+`public/` trong ignore: prettier không nhận `.svg` / `.txt` / `.jpg` nên dòng đó
+không làm gì.
+
 `src/content/**` không format vì Markdown nhạy cảm với khoảng trắng — thụt lề quyết
 định danh sách lồng, dòng trống quyết định loose/tight (và nhịp dọc giữa các mục
-theo đó mà đổi).
+theo đó mà đổi). File `.yaml` nội dung cũng nằm ngoài: chuỗi biên tập, chỉnh tay.
 
 Vài chỗ trong template cố ý viết sát nhau, không có khoảng trắng (vd
 `</svg><span>` trong `HeroToplist`) — chúng đều có comment cảnh báo tại chỗ.
+
+**`core.autocrlf = true` trên máy này**, nên `prettier --check` báo mọi file chưa
+được format lại kể từ lần checkout — đó là CRLF, không phải lỗi định dạng. Muốn
+biết lỗi thật thì bỏ `\r\n` trước khi so: lần gần nhất 22 file bị báo nhưng chỉ 4
+file lệch thật.
 
 ---
 

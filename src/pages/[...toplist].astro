@@ -81,7 +81,8 @@ const schema = entry.id === "home" ? [organizationSchema(), websiteSchema()] : [
     />
     <PartnerList brands={brands} promo={promo} />
     <BestOverall title={data.bestOverallTitle} brand={topBrand} />
-    <MiniReview title={data.miniReviewTitle}
+    <MiniReview
+      title={data.miniReviewTitle}
       brand={topBrand}
       categories={data.miniReview.categories}
       pros={data.miniReview.pros}

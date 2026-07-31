@@ -22,5 +22,4 @@ src/content/**
 dist/
 .astro/
 node_modules/
-public/
 package-lock.json

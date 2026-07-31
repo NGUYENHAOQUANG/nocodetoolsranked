@@ -48,11 +48,11 @@ review, CTA giữa bài — đều lấy từ đây.
 
 ### Đổi thứ hạng, điểm số, coupon
 
-| File                                         | Dùng cho                            |
-| -------------------------------------------- | ----------------------------------- |
-| `src/content/placements/toplist/<id>.yaml`   | Bảng xếp hạng của MỘT trang toplist |
-| `src/content/placements/reviews-page.yaml`   | Danh sách `/reviews/` (6 brand)     |
-| `src/content/placements/sidebar.yaml`        | Thứ tự partner ở sidebar (review + blog) |
+| File                                       | Dùng cho                                 |
+| ------------------------------------------ | ---------------------------------------- |
+| `src/content/placements/toplist/<id>.yaml` | Bảng xếp hạng của MỘT trang toplist      |
+| `src/content/placements/reviews-page.yaml` | Danh sách `/reviews/` (6 brand)          |
+| `src/content/placements/sidebar.yaml`      | Thứ tự partner ở sidebar (review + blog) |
 
 `toplist/` có **một file mỗi ngách**; `home.yaml` là trang chủ.
 
