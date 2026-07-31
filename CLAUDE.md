@@ -296,7 +296,7 @@ của trang chủ nằm ở `components/`). Nó có ba slot **có tên**
 
 | File                | Vai trò                                                  |
 | ------------------- | -------------------------------------------------------- |
-| `styles/tokens.css` | 18 token đặt theo VAI TRÒ                                |
+| `styles/tokens.css` | 17 token đặt theo VAI TRÒ                                |
 | `styles/global.css` | `@font-face`, reset, `@import` tokens + prose            |
 | `styles/prose.css`  | Style thân bài do MDX render — BỐN khối, cố ý không gộp  |
 | `styles/hero.css`   | Khung banner dùng chung của `HeroToplist` và `HeroInner` |
@@ -309,7 +309,7 @@ class khung, mà scoped style không xuyên qua ranh giới component; chép và
 file là tạo lại đúng thứ trùng lặp vừa gỡ. Rule ở đó là class trần (0,1,0) nên
 luôn thua rule scoped (0,2,0) của từng nhánh: khung là nền, nhánh đè lên.
 
-Bốn khối của `prose.css`: `.post__body` (bài blog) · `.paragraph__content` (bài
+Bốn khối của `prose.css`: `.post__body` (bài blog) · `.review-section__body` (bài
 review) · `.page__body` (4 trang phẳng) · `.featured-article` (khối bài ở trang
 toplist). Đầu file ghi rõ vì sao **không gộp được** — đọc trước khi định dọn.
 
@@ -359,7 +359,25 @@ Không dùng tên chung chung như `utils.ts` / `helpers.ts` — đặt theo vi�
 
 **CSS**
 
-- BEM `block__element--modifier`, kebab-case. Block khớp tên component.
+- BEM `block__element--modifier`, kebab-case.
+- **Bắt buộc: trong một component, block gốc và họ element phải CÙNG một tên.**
+  Đây là luật kiểm được, và là luật duy nhất tuyệt đối. `bestaibuilders` từng vi phạm:
+  `PromoBanner` có gốc `.promo-banner` nhưng bốn element vẫn `.chart-break__*` — tàn dư
+  của một lần đổi tên chỉ sửa block mà quên element. Đổi tên component thì **đổi cả họ**.
+- **Khuyến khích: block lấy theo tên component** — nhưng được rút gọn khi phần bỏ đi chỉ
+  nói cách trình bày, không nói bản chất. Repo này có 13/38 component như vậy và đều có lý:
+
+  | Component                   | Block                                 | Vì sao lệch                                      |
+  | --------------------------- | ------------------------------------- | ------------------------------------------------ |
+  | `PartnerCard` `PromoBanner` | `.partner` `.promo`                   | "Card"/"Banner" là hình thức, không phải vật thể |
+  | `Header` `Footer`           | `.site-header` `.site-footer`         | tránh trùng tên thẻ HTML                         |
+  | `HeroToplist` `HeroInner`   | `.hero`                               | khung dùng chung ở `styles/hero.css`             |
+  | `MiniReviewCategories`      | `.mini-review__*`                     | nó LÀ element của block cha, tách file thôi      |
+  | `KnowledgeGrid`             | `.knowledge-grid` + `.knowledge-card` | lưới và thẻ là hai block thật                    |
+
+  Rút gọn thì được; **đặt tên chẳng liên quan thì không** — đó chính là ca `chart-break__*`
+  nằm trong `PromoBanner`.
+
 - Custom property đặt theo **vai trò**, không theo giá trị — `--color-primary`,
   không phải `--color-orange`
 
