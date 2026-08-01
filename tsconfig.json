@@ -3,10 +3,10 @@
   "include": [".astro/types.d.ts", "**/*"],
   "exclude": ["dist"],
   "compilerOptions": {
-    /** Một alias duy nhất — ít thứ phải nhớ hơn là chia nhỏ thành @components/@layouts/… */
-    "baseUrl": ".",
+    /** Một alias duy nhất - ít thứ phải nhớ hơn là chia nhỏ thành @components/@layouts/...
+        Đường dẫn lấy gốc là thư mục chứa file này; `baseUrl` không cần và đã deprecated. */
     "paths": {
-      "@/*": ["src/*"]
+      "@/*": ["./src/*"]
     },
     "noUncheckedIndexedAccess": true
   }
