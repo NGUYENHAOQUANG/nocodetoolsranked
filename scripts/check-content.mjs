@@ -53,8 +53,9 @@ function renderedTextOf(file, src) {
   s = s.replace(/\{\s*\/\*[\s\S]*?\*\/\s*\}/g, "");
   s = s.replace(/\/\*[\s\S]*?\*\//g, "");
   s = s.replace(/^\s*\/\/.*$/gm, "");
-  /* Thông báo lỗi cho lập trình viên là code, không phải nội dung trang */
-  s = s.replace(/new Error\((["'`])[\s\S]*?\1\)/g, "");
+  /* Thông báo lỗi cho lập trình viên là code, không phải nội dung trang.
+     `\s*` sau dấu ngoặc: nhiều chỗ viết `new Error(` rồi mới xuống dòng tới chuỗi. */
+  s = s.replace(/new Error\(\s*(["'`])[\s\S]*?\1\s*,?\s*\)/g, "");
 
   if (file.endsWith(".astro")) {
     /* KHÔNG cắt cả frontmatter: nó chứa cả chuỗi được render ra trang (giá trị
@@ -107,17 +108,29 @@ for (const file of walk(SRC)) {
        nên URL ở đó vốn đã an toàn. Giữ số dòng bằng cách thay bằng dòng trống. */
     const scanned = text
       .replace(/^```[\s\S]*?^```/gm, (b) => b.replace(/[^\n]/g, ""))
-      .replace(/`[^`\n]*`/g, (b) => " ".repeat(b.length));
+      .replace(/`[^`\n]*`/g, (b) => " ".repeat(b.length))
+      /* Xoá TRỌN link Markdown `[chữ](url)` — cả phần chữ lẫn phần đích.
+         Bản trước chỉ xét hai ký tự đứng ngay trước URL có phải `](` không, nên
+         `[http://x](http://x)` bị báo nhầm: ở đó URL nằm trong phần CHỮ. Đã chạy
+         thẳng processor của Astro để kiểm — CommonMark cấm link lồng link nên
+         phần chữ KHÔNG bị autolink, kết quả ra đúng một thẻ <a>. */
+      .replace(/\[[^\]\n]*\]\([^)\n]*\)/g, (b) => " ".repeat(b.length));
+
+    /* HAI dạng gfm tự biến thành link. Đã test trên Sätteri, không đoán:
+         `http://x`  -> <a href="http://x">
+         `www.x.eu`  -> <a href="http://www.x.eu">   <- KHÔNG có scheme, dễ sót nhất
+       Email thì CỐ Ý không bắt: `mailto:` tự sinh là thứ workspace muốn giữ ở
+       trang liên hệ. */
+    const AUTOLINKED = /(?:https?:\/\/|\bwww\.)\S+/g;
 
     scanned.split(/\r?\n/).forEach((line, i) => {
-      for (const m of line.matchAll(/https?:\/\/\S+/g)) {
+      for (const m of line.matchAll(AUTOLINKED)) {
         const before = line.slice(0, m.index);
-        /* Bốn cách khai đã an toàn — gfm không đụng tới */
-        const inMarkdownLink = /\]\($/.test(before); // [chữ](url)
+        /* Ba cách khai còn lại đã an toàn — gfm không đụng tới */
         const inExpression = /\{\s*['"`]$/.test(before); // {'url'} — giữ dạng chữ
         const inYamlValue = /^\s*[\w-]+:\s*["']?$/.test(before); // key: url
         const inAttribute = /\s(?:href|src|content|action)=["']?$/.test(before); // <a href="url">
-        if (!inMarkdownLink && !inExpression && !inYamlValue && !inAttribute) {
+        if (!inExpression && !inYamlValue && !inAttribute) {
           problems.push(`${rel}:${i + 1}: URL tran chua boc -> ${m[0].slice(0, 60)}`);
         }
       }

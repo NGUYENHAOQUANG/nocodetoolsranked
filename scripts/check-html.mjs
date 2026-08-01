@@ -1,5 +1,5 @@
 /**
- * Kiểm HTML của bản build theo 13 luật mà `astro check` không thấy được.
+ * Kiểm HTML của bản build theo 14 luật mà `astro check` không thấy được.
  *
  * `astro check` chỉ kiểm KIỂU. Nó không biết một trang có hai `<h1>`, hay
  * heading nhảy từ h1 xuống h4, hay ô nhập không có nhãn. Những thứ đó chỉ lộ ra
@@ -134,6 +134,21 @@ for (const file of walk(DIST).filter((f) => f.endsWith(".html"))) {
     const inner = m[2].replace(/<li[\s\S]*?<\/li>/g, "").replace(/<!--[\s\S]*?-->/g, "");
     if (/<\w/.test(inner)) add("list-child", `${rel}: <${m[1]}> chua ${inner.match(/<\w+/)[0]}>`);
   }
+
+  /* 11. Không có ký tự typographic trong bản build.
+     `check-content.mjs` canh NGUỒN, luật này canh KẾT QUẢ — vì có một đường sinh
+     ra chúng mà nguồn hoàn toàn ASCII: smart punctuation lúc build.
+     Đã cắn thật: bỏ khoá `markdown.smartypants` (đã deprecated) làm 14 nháy cong
+     mọc lại ở trang compare. Nguyên nhân là tài liệu workspace ghi sai — Sätteri
+     KHÔNG mặc định tắt smart punctuation, `satteri-processor.js` viết
+     `smartPunctuation: smartypants !== false`, tức mặc định BẬT. `mdx()` chỉ phủ
+     `.mdx`, nên còn sót một file `.md` là còn lỗi.
+     Luật này bắt đúng cái hỏng chứ không bắt nguyên nhân, nên nó không lạc hậu
+     khi nguyên nhân đổi. `© ® ™ °` không nằm ở đây - chúng hợp lệ. */
+  for (const m of new Set(body.match(/[‘’“”–—…]/g) ?? [])) {
+    const n = body.split(m).length - 1;
+    add("smart-punct", `${rel}: ${JSON.stringify(m)} x${n}`);
+  }
 }
 
 const LABEL = {
@@ -150,6 +165,7 @@ const LABEL = {
   "skip-dich": "Skip link khong co dich #main-content",
   "p-block": "<p> chua the block",
   "list-child": "<ul>/<ol> chua the khong phai <li>",
+  "smart-punct": "Ky tu typographic trong ban build",
 };
 
 const problems = Object.entries(LABEL).flatMap(([key, label]) => {
@@ -169,4 +185,4 @@ if (problems.length) {
   process.exit(1);
 }
 
-console.log("check-html: HTML dat ca 13 luat.");
+console.log("check-html: HTML dat ca 14 luat.");
