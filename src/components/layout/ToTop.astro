@@ -23,7 +23,9 @@
     /* font-size + line-height kế thừa quyết định chiều cao hộp: icon 35px nằm
        trên baseline, cộng phần lồi dưới baseline của strut → 38.8px */
     font-size: 1.5rem;
-    color: #d7d5d5;
+    /* Icon tô đặc bằng màu CTA, đặt trên vòng tròn trắng ở `::before` — đúng cấu
+       trúc của bản gốc (icon 35px màu primary, không phải xám nhạt). */
+    color: var(--color-primary);
     z-index: 50;
     animation: to-top-fade-in 1s;
   }

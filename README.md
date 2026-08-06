@@ -137,7 +137,7 @@ banner ở `blocks/labels.yaml`; chữ trang 404 ở `blocks/not-found.yaml`.
 **Ghi đè `public/og-image.jpg`**, giữ nguyên tên và kích thước **1200x630**.
 Không cần sửa code.
 
-Ảnh đang dùng là ảnh **tạm**, dựng từ banner hero đặt trên nền `#eaf4fb`.
+Ảnh đang dùng là ảnh **tạm**, dựng từ banner hero đặt trên nền `#f0f7fc`.
 
 > Phải để ở `public/` chứ không phải `src/assets/`: Astro băm tên file trong
 > `src/assets/` nên đổi ảnh là đổi URL, mà mạng xã hội **cache URL đó** — link

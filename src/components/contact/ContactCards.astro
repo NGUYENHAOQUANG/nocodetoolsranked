@@ -9,10 +9,10 @@ const { cards, modal } = (await getEntry("contact", "contact"))!.data;
 
 <section class="contact">
   {
-    /* Bản gốc để chuỗi "hey" trong h4.contactPage_page-subtitle (16px/400). Là chữ
-    trang trí, không phải tiêu đề mục - dùng <p>. */
+    /* Template cũ có một dòng chữ trang trí "hey" ở đây (h4.contactPage_page-subtitle).
+      Trang mẫu hiện tại KHÔNG có nó — đã bỏ. Muốn thêm dòng dẫn nhập thì cho vào
+      `blocks/contact.yaml` chứ đừng viết cứng lại vào component. */
   }
-  <p class="contact__subtitle">hey</p>
   <div class="contact__grid">
     {
       cards.map((card) => (
@@ -123,14 +123,6 @@ const { cards, modal } = (await getEntry("contact", "contact"))!.data;
     align-items: center;
     text-align: center;
   }
-  .contact__subtitle {
-    margin: 1.33em 0;
-    color: var(--color-text-body);
-    font-size: 1rem;
-    font-weight: 400;
-    line-height: 1.7rem;
-  }
-
   /* Lưới thẻ: base (mobile) 1 cột đầy; ≥768 auto-fit 245px căn giữa (ô rỗng co về 0) */
   .contact__grid {
     display: grid;

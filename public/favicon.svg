@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
   Man hinh + dau </> : bieu tuong trung tinh cho chu de website builder, cung y
-  tuong voi favicon cua site mau nhung ve lai bang mau thuong hieu (#185ac4).
+  tuong voi favicon cua site mau nhung ve lai bang mau thuong hieu (#7bb035, xanh la).
 
   Mau viet THANG chu khong dung token CSS cua site: file nay o public/ nen khong qua
   duoc build, va favicon duoc trinh duyet tai roi ve NGOAI tai lieu, bien CSS cua
   trang khong voi toi. Doi mau thuong hieu thi phai sua ca o day.
 -->
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none">
-  <rect x="4" y="10" width="56" height="38" rx="5" fill="#185ac4" />
+  <rect x="4" y="10" width="56" height="38" rx="5" fill="#7bb035" />
   <path
     d="M24 23.5 16.5 29 24 34.5M40 23.5 47.5 29 40 34.5M35.5 20.5l-7 17"
     stroke="#ffffff"
@@ -16,5 +16,5 @@
     stroke-linecap="round"
     stroke-linejoin="round"
   />
-  <path d="M26 48v4h12v-4M20 56h24" stroke="#185ac4" stroke-width="4" stroke-linecap="round" />
+  <path d="M26 48v4h12v-4M20 56h24" stroke="#7bb035" stroke-width="4" stroke-linecap="round" />
 </svg>

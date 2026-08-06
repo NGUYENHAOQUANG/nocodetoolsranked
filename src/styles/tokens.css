@@ -2,7 +2,8 @@
    Design token — biến CSS dùng chung toàn site.
 
    Đặt tên theo VAI TRÒ, không theo giá trị: `--color-primary` chứ không phải
-   `--color-blue`.
+   `--color-green`. (Chính nhờ vậy mà đổi cả bảng màu site chỉ là sửa khối này,
+   không phải rà lại từng component.)
 
    QUY TẮC ĐỂ MỘT GIÁ TRỊ THÀNH TOKEN — cần cả hai:
      (a) xuất hiện từ 3 chỗ trở lên, VÀ
@@ -19,16 +20,31 @@
    ========================================================================== */
 
 :root {
-  /* ----- Màu thương hiệu ----- */
-  /* Nút CTA. Đo trên bản gốc: rgb(24, 90, 196). */
-  --color-primary: #185ac4;
-  /* Thực chất là trạng thái hover của primary: 9/10 nơi dùng nó là :hover */
-  --color-secondary: #154b9b;
-  /* Viền card nổi bật (hạng 1). KHÁC `--color-accent-strong` một chút và bản gốc
-     cũng để lệch như vậy — hai vai trò khác nhau, không phải sai số. */
-  --color-accent: #1d55b7;
-  /* Nền đặc cho nhãn góc card, icon góc và nút trên banner khuyến mãi */
-  --color-accent-strong: #101954;
+  /* ----- Màu thương hiệu -----
+
+     Bảng màu lấy theo hệ của webador.co.uk. Ý chính KHÔNG phải là bốn mã hex mà là
+     cách chia vai trò của họ:
+
+       XANH LÁ = HÀNH ĐỘNG   · XANH DƯƠNG = THÔNG TIN   · XÁM ĐÁ = CHỮ VÀ NỀN TỐI
+
+     Nghĩa là: mọi thứ bấm được để đi ra đối tác thì xanh lá; mọi thứ chỉ để ĐỌC
+     (vòng điểm, viền card nổi bật, nền nhấn) thì xanh dương. Trộn hai vai trò là
+     mất luôn tín hiệu — nút xanh dương nằm cạnh vòng điểm xanh dương thì người đọc
+     không còn biết cái nào bấm được. */
+
+  /* Nút CTA. Đo trên webador.co.uk: rgb(123, 176, 53). */
+  --color-primary: #7bb035;
+  /* Thực chất là trạng thái hover của primary: 9/10 nơi dùng nó là :hover.
+     Cặp #7bb035 -> #70a030 lấy nguyên từ CSS của họ (`a.bg-success:hover`). */
+  --color-secondary: #70a030;
+  /* Nhấn THÔNG TIN: viền card nổi bật, vòng điểm. Đây là màu nhấn dùng nhiều nhất
+     bên họ (42 lần trong CSS) nên nó là màu "xanh dương của site", không phải màu
+     link (#3596d1) vốn chỉ dành cho chữ bấm được trong bài. */
+  --color-accent: #469fd5;
+  /* Nền đặc tối: nhãn góc card, icon góc, chân trang. Cùng mã với `--color-text-body`
+     vì bên họ chữ và nền tối dùng CHUNG một màu — giữ nguyên sự thật đó thay vì
+     bịa ra hai sắc độ. */
+  --color-accent-strong: #2c3235;
 
   /* ----- Chữ ----- */
   /* Mặc định của <body>. Bản gốc để #000 ở lớp bao ngoài rồi hầu hết khối nội
@@ -36,23 +52,26 @@
      thực tế. */
   --color-text: #000000;
   /* Màu chữ THỰC TẾ của phần lớn nội dung: thân bài, tiêu đề, nhãn */
-  --color-text-body: #2d2d2d;
+  --color-text-body: #2c3235;
   /* Chữ và icon nằm trên nền primary/secondary */
   --color-text-on-primary: #ffffff;
-  /* Khối giới thiệu đầu bài viết — CỐ Ý khác --color-text-body */
-  --color-text-intro: #2d364d;
+  /* Khối giới thiệu đầu bài viết — CỐ Ý khác --color-text-body, nhạt hơn một bậc.
+     Lấy sắc xám-đá thứ hai trong bảng của họ. */
+  --color-text-intro: #424c51;
   /* Chú thích phụ: mô tả hạng mục ở bản desktop, nhãn điểm trung tính */
-  --color-text-muted: #6b7280;
+  --color-text-muted: #7d7d7d;
 
   /* ----- Nền ----- */
   --color-bg: #ffffff;
   /* Nền card/panel nổi trên nền trang */
   --color-surface: #ffffff;
   /* Nền khối phụ: sidebar, coupon, CTA trong bài, drawer, must-reads */
-  --color-surface-muted: #f5f5f5;
+  --color-surface-muted: #f5f5f7;
 
   /* ----- Đường kẻ, bóng, lớp phủ ----- */
-  --color-divider: rgba(160, 160, 160, 0.576);
+  /* Đặc chứ không trong suốt: bên họ đường kẻ là màu ĐẶC (#c3c5c7 / #e0e4e6), và
+     kẻ trong suốt chồng lên nền khác nhau sẽ ra hai màu khác nhau. */
+  --color-divider: #c3c5c7;
   /* CHỈ là màu bóng, không phải cả `box-shadow`: 16 chỗ dùng nó trải trên 6 hình
      học khác nhau (0 0 10px, 0 0 8px, 0 1px 3px…). Token hoá cả chuỗi sẽ buộc
      phải chuẩn hoá hình học, tức đổi giao diện. */

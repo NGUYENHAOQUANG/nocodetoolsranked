@@ -330,12 +330,22 @@ của trang chủ nằm ở `components/`). Nó có ba slot **có tên**
 
 | File                | Vai trò                                                  |
 | ------------------- | -------------------------------------------------------- |
-| `styles/tokens.css` | 17 token đặt theo VAI TRÒ                                |
+| `styles/tokens.css` | 18 token đặt theo VAI TRÒ                                |
 | `styles/global.css` | `@font-face`, reset, `@import` tokens + prose            |
 | `styles/prose.css`  | Style thân bài do MDX render — BỐN khối, cố ý không gộp  |
 | `styles/hero.css`   | Khung banner dùng chung của `HeroToplist` và `HeroInner` |
 
 Ngoài ra mỗi component tự giữ style trong `<style>` scoped của nó.
+
+**Bảng màu lấy theo hệ của `webador.co.uk`**, và điều đáng nhớ không phải mấy mã
+hex mà là cách chia vai trò:
+
+> XANH LÁ = HÀNH ĐỘNG · XANH DƯƠNG = THÔNG TIN · XÁM ĐÁ = CHỮ VÀ NỀN TỐI
+
+Nút đi ra đối tác thì xanh lá; vòng điểm, viền card nổi bật, nền nhấn — thứ chỉ để
+ĐỌC — thì xanh dương. Thêm màu mới thì hỏi nó thuộc vai trò nào trước, đừng chọn
+theo "trông hợp mắt": nút xanh dương nằm cạnh vòng điểm xanh dương là mất luôn tín
+hiệu bấm-được. Lý do đầy đủ ghi ngay đầu `tokens.css`.
 
 `hero.css` **không** được `global.css` import — hai component hero tự
 `import "@/styles/hero.css"`. Nó là file global vì hai component render cùng bộ
@@ -430,8 +440,8 @@ Không dùng tên chung chung như `utils.ts` / `helpers.ts` — đặt theo vi�
   nằm trong `PromoBanner`.
 
 - Custom property đặt theo **vai trò**, không theo giá trị — `--color-primary`,
-  không phải `--color-blue`. (Đúng là vì vậy mà đổi cả bảng màu site chỉ tốn 4 dòng
-  trong `tokens.css`, không phải rà 40 chỗ.)
+  không phải `--color-green`. Bảng màu site đã đổi hai lần trong một ngày và cả hai
+  lần đều chỉ là sửa `tokens.css` cộng vài chỗ khai riêng, không phải rà 40 chỗ.
 
 **Nội dung**
 

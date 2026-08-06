@@ -24,7 +24,7 @@ export const SITE = {
    * 1200x630 là tỉ lệ Open Graph khuyến nghị (1.91:1). Khai `width`/`height`
    * cho Facebook dựng khung trước khi tải xong ảnh.
    *
-   * ẢNH HIỆN TẠI LÀ ẢNH TẠM — dựng từ banner hero, đặt trên nền #eaf4fb. Thay
+   * ẢNH HIỆN TẠI LÀ ẢNH TẠM — dựng từ banner hero, đặt trên nền #f0f7fc. Thay
    * bằng ảnh thiết kế riêng: ghi đè `public/og-image.jpg`, không cần sửa code.
    */
   ogImage: { path: "/og-image.jpg", width: 1200, height: 630 },

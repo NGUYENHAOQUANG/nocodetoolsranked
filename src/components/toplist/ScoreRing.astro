@@ -111,11 +111,11 @@ const starPaths = stars === undefined ? [] : starList(stars);
     stroke-linecap: round;
   }
   .score-ring__trail {
-    stroke: rgba(220, 220, 220, 0.521);
+    stroke: #e0e4e6;
   }
-  /* Mau cung tron do tren ban goc: #0374ef (theme `rattingProgressBar`). */
+  /* Vòng điểm là THÔNG TIN, không phải nút bấm -> dùng màu nhấn xanh dương. */
   .score-ring__arc {
-    stroke: #0374ef;
+    stroke: var(--color-accent);
   }
 
   /* Dưới 768px nằm trong luồng (không đè lên gì); từ 768px mới phủ lên vòng tròn */
@@ -160,7 +160,7 @@ const starPaths = stars === undefined ? [] : starList(stars);
     color: #ffcd42;
   }
   .score-ring__star--empty {
-    color: #e0e0e0;
+    color: #e0e4e6;
   }
 
   /* Ánh sáng lướt qua hàng sao khi hover (bản gốc: pseudo-element gradient chạy
