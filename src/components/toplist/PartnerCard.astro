@@ -4,6 +4,7 @@ import { AFFILIATE_REL } from "@/lib/links";
 import { Image } from "astro:assets";
 import type { ToplistRow } from "@/lib/rankings";
 import ScoreRing from "@/components/toplist/ScoreRing.astro";
+import HtmlSideBanner from "@/components/toplist/HtmlSideBanner.astro";
 import Coupon from "@/components/toplist/Coupon.astro";
 import PartnerTooltip from "@/components/toplist/PartnerTooltip.astro";
 import { CHEVRON_RIGHT, STAR_OUTLINE, FLAME, CHECK_THIN } from "@/lib/icon-paths";
@@ -71,13 +72,10 @@ const labels = (await getEntry("labels", "labels"))!.data;
         rel={AFFILIATE_REL}
         referrerpolicy="strict-origin"
       >
-        {/* format png: giữ nguyên pixel gốc, tránh nén lại mất mát (ảnh vốn đã đúng 320×800) */}
-        <Image
-          src={sideBanner}
-          alt={`${brand.name} | Website Builder`}
-          width={320}
-          height={800}
-          format="png"
+        <HtmlSideBanner
+          brandLogo={logo}
+          brandName={brand.name}
+          promoImage={sideBanner}
         />
       </a>
     )
@@ -869,21 +867,13 @@ const labels = (await getEntry("labels", "labels"))!.data;
       display: block;
       position: absolute;
       right: -2.6%;
-      max-width: 220px;
+      max-width: 180px;
       max-height: fit-content;
       transform: translateX(100%);
       z-index: 1;
     }
     .partner__side-banner:hover {
       opacity: 0.9;
-    }
-    /* Bản gốc giới hạn ảnh này ở 160px (nhỏ hơn max-width 220px của khung) */
-    .partner__side-banner img {
-      width: 160px;
-      height: auto;
-      max-width: 160px;
-      max-height: 100%;
-      object-fit: contain;
     }
   }
 </style>
