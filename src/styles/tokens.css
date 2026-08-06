@@ -45,6 +45,10 @@
      vì bên họ chữ và nền tối dùng CHUNG một màu — giữ nguyên sự thật đó thay vì
      bịa ra hai sắc độ. */
   --color-accent-strong: #2c3235;
+  
+  /* Coupon */
+  --color-coupon-bg: #d7f2f9;
+  --color-coupon-border: #469fd5;
 
   /* ----- Chữ ----- */
   /* Mặc định của <body>. Bản gốc để #000 ở lớp bao ngoài rồi hầu hết khối nội
