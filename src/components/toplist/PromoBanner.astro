@@ -23,11 +23,11 @@ const {
   title,
   href,
   buttonText,
-  bg = "#f0f7fc",
+  bg = "var(--color-primary)",
   borderColor = "transparent",
-  titleColor = "#2c3235",
-  buttonBg = "#7bb035",
-  buttonHoverBg = "#70a030",
+  titleColor = "var(--color-text-on-primary)",
+  buttonBg = "var(--color-accent-strong)",
+  buttonHoverBg = "var(--color-text)",
 } = Astro.props;
 ---
 
@@ -107,6 +107,10 @@ const {
     min-height: 30px;
     max-height: 40px;
     max-width: 250px;
+    background-color: var(--color-bg);
+    padding: 0.25rem 1rem;
+    border-radius: 4px;
+    box-shadow: 0 1px 3px var(--color-shadow);
   }
 
   /* Dưới 768px bản gốc KHÔNG render phần chữ — banner chỉ có logo + nút (2 cột).
