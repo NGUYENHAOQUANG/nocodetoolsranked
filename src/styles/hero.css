@@ -19,7 +19,7 @@
   position: relative;
   min-height: 170px;
   /* Nền dự phòng lộ ra ở mép khi ảnh chưa tải xong hoặc tỉ lệ không khớp. */
-  background: #f0f7fc;
+  background: var(--color-accent-strong);
 }
 .hero__banner {
   position: relative;
@@ -27,14 +27,17 @@
   display: grid;
 }
 
+
+
 /* `position: absolute` không chỉ để xếp lớp — nó GIỮ ảnh ngoài luồng grid.
    `.hero__banner` là grid, nên ảnh nằm trong luồng sẽ thành grid item và sinh
    thêm một hàng: đo được `grid-template-rows` thành `54.72px 117.28px`, đẩy tiêu
    đề xuống 54.7px và làm mất tác dụng của `--top`. Đừng đổi sang `static`. */
 .hero__bg {
   position: absolute;
-  inset: 0;
+  inset: 0 0 0 auto;
   width: 100%;
+  max-width: 650px;
   height: 100%;
   object-fit: cover;
   /* Mặc định của TRANG TRONG: neo mép trên-phải ở mọi bề rộng (đo trên bản gốc).
@@ -42,6 +45,8 @@
      Nhân vật nằm sát mép phải ảnh nên neo PHẢI là bắt buộc ở mọi trường hợp. */
   object-position: right top;
   z-index: 0;
+  -webkit-mask-image: linear-gradient(to right, transparent 0%, black 40%);
+  mask-image: linear-gradient(to right, transparent 0%, black 40%);
 }
 
 /* Bản gốc dùng margin 12px 0 (không phải padding) và để grid kéo giãn ô này */
@@ -67,7 +72,7 @@
   font-weight: 700;
   line-height: 1.2;
   letter-spacing: 0.2px;
-  color: var(--color-text);
+  color: var(--color-bg);
 }
 
 @media (min-width: 768px) {

@@ -13,8 +13,8 @@
  */
 import { getImage } from "astro:assets";
 import { getEntry, render } from "astro:content";
-import heroWide from "@/assets/heroes/banner.png";
-import heroCompact from "@/assets/heroes/compact.png";
+import heroWide from "@/assets/heroes/banner-new.png";
+import heroCompact from "@/assets/heroes/banner-new.png";
 import "@/styles/hero.css";
 
 interface Props {
@@ -141,7 +141,7 @@ const labels = (await getEntry("labels", "labels"))!.data;
     font-size: 1.125rem;
     font-weight: 400;
     line-height: 1.5rem;
-    color: var(--color-text);
+    color: var(--color-bg);
   }
   .hero__subtitle--wide {
     display: none;
@@ -154,7 +154,7 @@ const labels = (await getEntry("labels", "labels"))!.data;
     display: block;
     width: fit-content;
     font-size: 1rem;
-    color: var(--color-text);
+    color: var(--color-bg);
   }
   .hero__updated svg {
     position: relative;
@@ -168,13 +168,17 @@ const labels = (await getEntry("labels", "labels"))!.data;
   .hero__disclosure {
     display: none;
     position: absolute;
-    left: 80%;
+    left: 68.5%;
     bottom: 10px;
     z-index: 11;
     font-size: 1rem;
     line-height: 1.7;
     color: var(--color-text-body);
     cursor: pointer;
+    background-color: var(--color-bg);
+    padding: 2px 8px;
+    border-radius: 4px;
+    box-shadow: 0 1px 3px var(--color-shadow);
   }
   /* Khi mở phải vượt lên trên toplist (z-index 20) — nếu không, side banner của
      card #1 sẽ đè lên tooltip. Bản gốc cũng nâng lên 1000 lúc mở (bằng JS). */
