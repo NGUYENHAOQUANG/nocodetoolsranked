@@ -1,5 +1,5 @@
 ---
-import logo from "@/assets/site/logo.svg";
+import logo from "@/assets/logo/logo_no_bg.png";
 import { getReviewNavLinks } from "@/lib/rankings";
 import { mainNav } from "@/config/navigation";
 
@@ -22,6 +22,7 @@ const isActive = (href: string) => href.replace(/\/+$/, "") === currentPath;
         height={logo.height}
         alt="nocodetoolsranked.com Official Logo | Website Builder"
       />
+      <span class="site-header__brand-name">nocodetools<span class="site-header__brand-highlight">ranked</span></span>
     </a>
 
     <nav class="site-nav" aria-label="Main">
@@ -152,16 +153,27 @@ const isActive = (href: string) => href.replace(/\/+$/, "") === currentPath;
   }
 
   /* ----- Logo ----- */
-  /* Để block (không flex) cho ảnh giữ dạng inline: hộp logo cao bằng ảnh 35px
-     + phần dưới baseline, đúng cơ chế bản gốc dựng chiều cao header */
   .site-header__logo {
-    display: block;
+    display: flex;
+    align-items: center;
+    gap: 8px;
     min-width: 144px;
+    text-decoration: none;
   }
   .site-header__logo img {
-    max-height: 35px;
+    max-height: 42px;
     width: auto;
     object-fit: contain;
+  }
+  .site-header__brand-name {
+    font-size: 1.75rem;
+    font-weight: 700;
+    color: #3e5a9c;
+    letter-spacing: -0.02em;
+    line-height: 1;
+  }
+  .site-header__brand-highlight {
+    color: var(--color-primary);
   }
 
   /* ----- Hamburger (mobile) ----- */
