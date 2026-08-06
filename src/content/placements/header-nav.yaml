@@ -1,0 +1,18 @@
+# Menu con "Reviews" tren thanh dieu huong - 10 brand, dung thu tu ban goc.
+#
+# KHAC `sidebar.yaml` (4 brand): day la loi vao dieu huong cua site, con kia la goi y
+# doc them o mot trang bai viet. Hai muc dich khac nhau nen hai danh sach khac nhau.
+#
+# Day la TUYEN CHON, khong phai muc luc - khong phai brand nao co trang review cung
+# len menu (HubSpot va Square Online co trang nhung khong o day, dung nhu ban goc).
+entries:
+  - brand: "wix"
+  - brand: "base44"
+  - brand: "ionos"
+  - brand: "shopify"
+  - brand: "hostinger"
+  - brand: "hubspot"
+  - brand: "lovable"
+  - brand: "monday"
+  - brand: "clickup"
+  - brand: "bubble"

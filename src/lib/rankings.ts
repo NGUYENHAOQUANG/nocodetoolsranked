@@ -26,10 +26,17 @@ export interface ToplistRow {
   bullets: string[];
   bulletsMobile?: string[];
   coupon?: string;
+  /** Bản mobile của `coupon`; chỉ có khi hai bản khác nhau. */
+  couponMobile?: string;
+  /** Nhãn góc card, riêng từng brand. Không có thì card không có nhãn. */
+  badge?: string;
+  /** Icon góc trên-phải. Không có thì không vẽ. */
+  highlightIcon?: "star" | "flame";
   rating: string;
   ratingLabel: string;
-  stars: number;
-  reviewsCount: string;
+  /** Chỉ khai khi có số THẬT — xem ghi chú ở `content.config.ts` */
+  stars?: number;
+  reviewsCount?: string;
   href: string;
   isEditorsChoice?: boolean;
   hoverTooltip?: { highlight: string; text: string };
@@ -125,10 +132,13 @@ export async function getToplistBrands(placementId: string): Promise<ToplistRow[
     bullets: row.bullets,
     ...(row.bulletsMobile ? { bulletsMobile: row.bulletsMobile } : {}),
     ...(row.coupon ? { coupon: row.coupon } : {}),
+    ...(row.couponMobile ? { couponMobile: row.couponMobile } : {}),
+    ...(row.badge ? { badge: row.badge } : {}),
+    ...(row.highlightIcon ? { highlightIcon: row.highlightIcon } : {}),
     rating: row.rating,
     ratingLabel: row.ratingLabel,
-    stars: row.stars,
-    reviewsCount: row.reviewsCount,
+    ...(row.stars === undefined ? {} : { stars: row.stars }),
+    ...(row.reviewsCount === undefined ? {} : { reviewsCount: row.reviewsCount }),
     href: brand.affiliateUrl,
     ...(row.isEditorsChoice ? { isEditorsChoice: true } : {}),
     ...(row.hoverTooltip ? { hoverTooltip: row.hoverTooltip } : {}),
@@ -183,11 +193,18 @@ export async function getCarouselPartners(): Promise<CarouselPartner[]> {
 /**
  * Menu con "Reviews" ở header.
  *
+ * Đọc `placements/header-nav.yaml` chứ KHÔNG dùng chung `sidebar.yaml`: menu dẫn
+ * tới 10 bài review, sidebar chỉ gợi ý 4 brand. Dùng chung thì sửa cái này là hỏng
+ * cái kia.
+ *
  * Dùng `name` chứ KHÔNG dùng `sidebarName`: bản gốc ghi "Ollie" ở header nhưng
  * "Ollie " (có dấu cách cuối) ở sidebar. Hai trường khác nhau, không thay thế
  * được cho nhau — đây đúng là lý do brands giữ bốn biến thể tên riêng biệt.
  */
 export async function getReviewNavLinks(): Promise<{ label: string; href: string }[]> {
-  const rows = await sidebarRows();
+  const rows = await withBrands(
+    await rowsOf(await getEntry("headerNavPlacements", "header-nav"), "header-nav"),
+    "header-nav",
+  );
   return rows.map(({ key, brand }) => ({ label: brand.name, href: reviewUrl(key) }));
 }

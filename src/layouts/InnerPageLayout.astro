@@ -36,7 +36,7 @@ interface Props {
   heroTitle: string;
   /** Bản mobile, nếu bản gốc dùng chuỗi khác. Render bằng set:html nên chèn được <br>. */
   heroMobileTitle?: string;
-  /** Mặc định `"{heroTitle} | Fresh Dog Food Delivery"` — đúng với mọi trang hiện có */
+  /** Mặc định `"{heroTitle} | Website Builder"` — đúng với mọi trang hiện có */
   heroAlt?: string;
   /** Căn tiêu đề lên đầu banner — các trang nội dung phẳng và trang 404 */
   isTitleTop?: boolean;
@@ -53,7 +53,7 @@ const {
   schema = [],
   heroTitle,
   heroMobileTitle = heroTitle,
-  heroAlt = `${heroTitle} | Fresh Dog Food Delivery`,
+  heroAlt = `${heroTitle} | Website Builder`,
   isTitleTop = false,
   crumbs,
 } = Astro.props;

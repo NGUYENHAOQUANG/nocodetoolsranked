@@ -4,8 +4,17 @@ import { starList } from "@/lib/stars";
 interface Props {
   rating: string;
   label: string;
-  stars: number;
-  reviews: string;
+  /**
+   * Hai trường dưới ĐỀU tuỳ chọn, và thường vắng mặt.
+   *
+   * Card toplist của bản gốc chỉ hiện vòng điểm + nhãn: dữ liệu đối tác không có
+   * trường sao lẫn trường số lượt đánh giá nào. Khai bừa ở đây là BỊA số liệu xã
+   * hội trên một trang kiếm tiền — tệ hơn hẳn việc không hiện.
+   *
+   * Khai thì hiện, không khai thì thôi. Trang /reviews/ có sao thật nên vẫn truyền.
+   */
+  stars?: number;
+  reviews?: string;
 }
 
 const { rating, label, stars, reviews } = Astro.props;
@@ -16,7 +25,7 @@ const CIRCUMFERENCE = 2 * Math.PI * RADIUS;
 const ARC = `M 50,50 m 0,-${RADIUS} a ${RADIUS},${RADIUS} 0 1 1 0,${RADIUS * 2} a ${RADIUS},${RADIUS} 0 1 1 0,-${RADIUS * 2}`;
 const dashOffset = CIRCUMFERENCE * (1 - Number(rating) / 10);
 
-const starPaths = starList(stars);
+const starPaths = stars === undefined ? [] : starList(stars);
 ---
 
 <div class="score-ring">
@@ -42,24 +51,26 @@ const starPaths = starList(stars);
       <div class="score-ring__content">
         <div class="score-ring__value">{rating}</div>
         <label class="score-ring__label">{label}</label>
-        <div class="score-ring__stars" aria-hidden="true">
-          {
-            starPaths.map(({ kind, d }) => (
-              <svg
-                class:list={["score-ring__star", `score-ring__star--${kind}`]}
-                viewBox="0 0 16 16"
-                width="1rem"
-                height="1rem"
-                fill="currentColor"
-              >
-                <path d={d} />
-              </svg>
-            ))
-          }
-        </div>
+        {
+          starPaths.length > 0 && (
+            <div class="score-ring__stars" aria-hidden="true">
+              {starPaths.map(({ kind, d }) => (
+                <svg
+                  class:list={["score-ring__star", `score-ring__star--${kind}`]}
+                  viewBox="0 0 16 16"
+                  width="1rem"
+                  height="1rem"
+                  fill="currentColor"
+                >
+                  <path d={d} />
+                </svg>
+              ))}
+            </div>
+          )
+        }
       </div>
 
-      <span class="score-ring__reviews">Reviews ({reviews})</span>
+      {reviews && <span class="score-ring__reviews">Reviews ({reviews})</span>}
     </div>
   </div>
 </div>
@@ -102,8 +113,9 @@ const starPaths = starList(stars);
   .score-ring__trail {
     stroke: rgba(220, 220, 220, 0.521);
   }
+  /* Mau cung tron do tren ban goc: #0374ef (theme `rattingProgressBar`). */
   .score-ring__arc {
-    stroke: #c5e5f7;
+    stroke: #0374ef;
   }
 
   /* Dưới 768px nằm trong luồng (không đè lên gì); từ 768px mới phủ lên vòng tròn */

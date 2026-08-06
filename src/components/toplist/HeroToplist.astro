@@ -13,8 +13,8 @@
  */
 import { getImage } from "astro:assets";
 import { getEntry, render } from "astro:content";
-import heroImgDesktop from "@/assets/heroes/desktop.jpg";
-import heroImgMobile from "@/assets/heroes/mobile.jpg";
+import heroWide from "@/assets/heroes/banner.png";
+import heroCompact from "@/assets/heroes/compact.png";
 import "@/styles/hero.css";
 
 interface Props {
@@ -29,17 +29,16 @@ interface Props {
 
 const { title, subtitle, subtitleCompact, alt } = Astro.props;
 
-/* MỘT ảnh được tải, không phải hai — cùng lý do như `HeroInner`: ảnh
-   `display: none` vẫn nằm trong luồng tải, mà cả hai đều `loading="eager"` nên
-   chúng tranh băng thông với nhau trên đường tới LCP. Xem ghi chú ở HeroInner. */
+/* HAI ảnh khác nhau, đổi ở mốc 768px — art direction thật. Xem ghi chú dài ở
+   `HeroInner`. */
 const wide = await getImage({
-  src: heroImgDesktop,
+  src: heroWide,
   widths: [768, 1024, 1440, 1920, 2560],
   format: "webp",
 });
 const compact = await getImage({
-  src: heroImgMobile,
-  widths: [375, 480, 640, 768],
+  src: heroCompact,
+  widths: [375, 480, 650],
   format: "webp",
 });
 
@@ -51,10 +50,10 @@ const disclosure = await getEntry("pages", "advertiser-disclosure");
 if (!disclosure) throw new Error("Thiếu src/content/pages/advertiser-disclosure.mdx");
 const { Content: DisclosureText } = await render(disclosure);
 
-// Trang gốc tự hiển thị ngày = hôm nay; lấy ngày lúc build cho khớp hành vi đó.
+/* Trang gốc hiện THÁNG + NĂM, không có ngày ("Last Updated August 2026"). Lấy mốc
+   lúc build cho khớp hành vi "luôn là hiện tại" của bản gốc. */
 const lastUpdated = new Intl.DateTimeFormat("en-US", {
   month: "long",
-  day: "numeric",
   year: "numeric",
 }).format(new Date());
 
@@ -108,16 +107,16 @@ const labels = (await getEntry("labels", "labels"))!.data;
 </section>
 
 <style>
-  /* `<picture>` phải RA KHỎI luồng như `<img>` trước đây — `.hero__banner` là
-     grid, để nó làm grid item là sinh thêm một hàng. Xem ghi chú ở HeroInner. */
+  /* `<picture>` phải RA KHỎI luồng như `<img>` khi đứng một mình — `.hero__banner`
+     là grid, để nó làm grid item là sinh thêm một hàng. Xem ghi chú ở HeroInner. */
   picture {
     position: absolute;
     inset: 0;
   }
 
-  /* Ảnh mobile căn GIỮA theo chiều dọc, ảnh desktop căn MÉP TRÊN — đúng bản gốc.
-     Giờ chỉ còn một `<img>` nên `object-position` phải đổi theo đúng mốc mà
-     `<source media>` dùng, không còn hai class riêng nữa. */
+  /* Ảnh MOBILE căn giữa dọc, ảnh DESKTOP căn mép trên — đo trên bản gốc
+     (`100% 50%` dưới 768px, `100% 0%` từ 768px). Chỉ còn một `<img>` nên
+     `object-position` phải đổi theo đúng mốc mà `<source media>` dùng. */
   .hero__bg {
     object-position: right center;
   }
@@ -137,7 +136,7 @@ const labels = (await getEntry("labels", "labels"))!.data;
 
   .hero__subtitle {
     margin: 5px 0;
-    /* Chừa lề phải để chữ không đè lên ảnh con chó — bản gốc áp ở MỌI kích thước */
+    /* Chừa lề phải để chữ không đè lên nhân vật ở mép phải ảnh — bản gốc áp ở MỌI cỡ */
     padding-right: min(30%, 200px);
     font-size: 1.125rem;
     font-weight: 400;
@@ -206,7 +205,7 @@ const labels = (await getEntry("labels", "labels"))!.data;
     visibility: visible;
   }
 
-  /* ===== Từ 768px: đổi sang ảnh + nội dung bản desktop (KHÔNG phải 615px) ===== */
+  /* ===== Từ 768px: đổi sang ảnh + chữ nghĩa bản desktop (KHÔNG phải 615px) ===== */
   @media (min-width: 768px) {
     .hero__bg {
       object-position: right top;

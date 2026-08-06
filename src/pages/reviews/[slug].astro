@@ -7,7 +7,7 @@ import ReviewIntro from "@/components/article/ReviewIntro.astro";
 import ProsCons from "@/components/article/ProsCons.astro";
 import ArticleLink from "@/components/article/ArticleLink.astro";
 import ReviewSidebar from "@/components/article/ReviewSidebar.astro";
-import { REVIEWS_INDEX, reviewUrl } from "@/lib/links";
+import { HOME, REVIEWS_INDEX, reviewUrl } from "@/lib/links";
 import { articleSchema } from "@/lib/schema-org";
 
 /** Mỗi file MDX trong src/content/reviews → một trang /reviews/<brand>/
@@ -32,9 +32,12 @@ const brand = (await getEntry(entry.data.brand))!.data;
 const author = (await getEntry(entry.data.author))!.data;
 const partnerKey = typeof entry.data.brand === "string" ? entry.data.brand : entry.data.brand.id;
 
-/* Bản gốc: "Home" KHÔNG có href (không phải link), mốc giữa mới là link, và
-   mốc cuối lại ghi "Reviews" chứ không phải tên bài. Giữ nguyên cả ba. */
-const crumbs = [{ text: "Home" }, { text: "Reviews", href: REVIEWS_INDEX }, { text: "Reviews" }];
+/* Đo trên bản gốc: "Home" và "Reviews" đều là link, mốc cuối là TÊN BÀI. */
+const crumbs = [
+  { text: "Home", href: HOME },
+  { text: "Reviews", href: REVIEWS_INDEX },
+  { text: heroTitle },
+];
 
 /* KHÔNG phát Review/AggregateRating: Google cấm self-serving review markup cho
    sản phẩm bên thứ ba. Điểm số vẫn hiện cho người đọc, chỉ không khai schema. */
@@ -54,8 +57,7 @@ const schema = [
   description={description}
   type="article"
   schema={schema}
-  heroTitle="Reviews"
-  heroMobileTitle={heroTitle}
+  heroTitle={heroTitle}
   crumbs={crumbs}
 >
   <ArticleGrid>

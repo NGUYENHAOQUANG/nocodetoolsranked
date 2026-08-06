@@ -10,8 +10,8 @@
  * Khung dùng chung nằm ở `@/styles/hero.css`.
  */
 import { getImage } from "astro:assets";
-import heroImgDesktop from "@/assets/heroes/desktop.jpg";
-import heroImgMobile from "@/assets/heroes/mobile.jpg";
+import heroWide from "@/assets/heroes/banner.png";
+import heroCompact from "@/assets/heroes/compact.png";
 import "@/styles/hero.css";
 
 interface Props {
@@ -26,23 +26,32 @@ interface Props {
 
 const { title, mobileTitle = title, isTitleTop = false, alt } = Astro.props;
 
-/* MỘT ảnh được tải, không phải hai.
-   Hai `<Image>` ẩn/hiện bằng CSS thì trình duyệt vẫn tải CẢ HAI: ảnh
-   `display: none` vẫn nằm trong luồng tải. Đo trên /about/: hai ảnh hero chiếm
-   41.2 KB trong 95.8 KB của trang, tức gần một nửa — và một nửa số đó không bao
-   giờ hiện, lại còn `loading="eager"` nên tranh băng thông với ảnh thật.
+/* Chỉ dựng hai nhánh chữ khi hai chuỗi KHÁC nhau. Giống nhau mà vẫn dựng hai nhánh
+   thì mỗi trang ship tiêu đề hai lần, một bản không bao giờ hiện. */
+const hasTwoTitles = mobileTitle !== title;
 
-   `<picture>` + `<source media>` để trình duyệt chọn TRƯỚC khi tải. Astro không
-   có component nào làm art direction (`<Picture>` chỉ đổi ĐỊNH DẠNG của cùng
-   một ảnh), nên dựng tay bằng `getImage()` — vẫn được srcset tối ưu. */
+/* HAI ảnh THẬT SỰ KHÁC NHAU, đổi ở mốc 768px — đây là art direction thật, không
+   phải cùng một ảnh hai cỡ:
+   - `banner.png`  3800x520, dải rất dẹt, dùng từ 768px;
+   - `compact.png` 650x325, khung gần vuông hơn, dùng dưới 768px.
+   Đo trên bản gốc: dưới 768px nó phát file 650x325 (`object-position: 100% 50%`),
+   từ 768px đổi sang 3800x520 (`100% 0%`).
+
+   Bản gốc đổi ảnh bằng JS đọc `clientWidth` còn CSS ẩn theo `innerWidth`, lệch
+   đúng 15px thanh cuộn nên ở 768-782px KHÔNG ảnh nào hiện (đo lại hôm nay: banner
+   cao 0px ở đúng 768). `<picture>` + `<source media>` xử lý cùng một việc bằng CSS
+   thuần nên không có khe hở đó, và trình duyệt chỉ TẢI ảnh nó chọn.
+
+   Astro KHÔNG có component làm art direction (`<Picture>` chỉ đổi ĐỊNH DẠNG của
+   cùng một ảnh), nên phải ghép tay bằng `getImage()`. */
 const wide = await getImage({
-  src: heroImgDesktop,
+  src: heroWide,
   widths: [768, 1024, 1440, 1920, 2560],
   format: "webp",
 });
 const compact = await getImage({
-  src: heroImgMobile,
-  widths: [375, 480, 640, 768],
+  src: heroCompact,
+  widths: [375, 480, 650],
   format: "webp",
 });
 
@@ -70,9 +79,9 @@ const innerContentClass = [
   }
   <div class="hero__banner">
     {
-      /* `alt` dùng bản DESKTOP cho cả hai nhánh: `<picture>` chỉ có một `<img>`
-        nên chỉ có một alt. Chuỗi desktop là chuỗi mô tả trang, còn chuỗi mobile
-        của bản gốc chỉ khác ở vài trang và không mô tả gì thêm về ẢNH. */
+      /* MỘT `alt` cho cả hai nhánh: `<picture>` chỉ có một `<img>`. Chuỗi này mô tả
+        trang, còn chuỗi mobile của bản gốc chỉ khác ở vài trang và không nói thêm gì
+        về ẢNH. `width`/`height` lấy theo ảnh MOBILE vì đó là ảnh của `<img>`. */
     }
     <picture>
       <source media="(min-width: 768px)" srcset={wide.srcSet.attribute} sizes="100vw" />
@@ -90,14 +99,23 @@ const innerContentClass = [
     <div class={innerContentClass}>
       <div class="hero__text">
         {
-          /* set:html để tiêu đề mobile chèn <br> cứng như bản gốc (vd
-            "Top Dog Food Delivery" xuống dòng rồi "Reviews") — không tự wrap.
-            Nhánh nào bị `display: none` thì trình đọc màn hình cũng bỏ qua,
-            nên một `<h1>` vẫn cho ra đúng một tiêu đề được đọc. */
+          /* set:html để tiêu đề mobile chèn được `<br>` CỨNG như bản gốc, thay vì
+            phó mặc cho chỗ tự wrap. Hầu hết trang giờ dùng một chuỗi cho cả hai
+            nhánh; trường `mobileTitle` giữ lại cho trang nào cần ngắt dòng riêng.
+            Nhánh nào bị `display: none` thì trình đọc màn hình cũng bỏ qua, nên
+            một `<h1>` vẫn cho ra đúng một tiêu đề được đọc. */
         }
         <h1 class="hero__title">
-          <span class="hero__title-part hero__title-part--compact" set:html={mobileTitle} />
-          <span class="hero__title-part hero__title-part--wide" set:html={title} />
+          {
+            hasTwoTitles ? (
+              <Fragment>
+                <span class="hero__title-part hero__title-part--compact" set:html={mobileTitle} />
+                <span class="hero__title-part hero__title-part--wide" set:html={title} />
+              </Fragment>
+            ) : (
+              <span set:html={title} />
+            )
+          }
         </h1>
       </div>
     </div>
@@ -111,25 +129,24 @@ const innerContentClass = [
   .hero__content--inner {
     justify-content: center;
   }
-  /* /about/: tiêu đề căn LÊN ĐẦU (bản gốc dùng space-between/flex-start,
+  /* Trang 404: tiêu đề căn LÊN ĐẦU (bản gốc dùng space-between/flex-start,
      một con nên nằm sát trên) — đè lên căn-giữa của --inner */
   .hero__content--top {
     justify-content: flex-start;
   }
 
-  /* `<picture>` phải RA KHỎI luồng, đúng như `<img>` trước đây.
+  /* `<picture>` phải RA KHỎI luồng, đúng như `<img>` khi đứng một mình.
 
      `display: contents` KHÔNG dùng được: `.hero__banner` là grid, nên nó đưa
      `<img>` lên làm grid item và sinh thêm một hàng — đo được `grid-template-rows`
      thành `54.72px 117.28px`, đẩy tiêu đề xuống 54.7px và làm mất tác dụng của
-     `--top` ở trang /about/. Cho `<picture>` absolute thì grid lại chỉ còn đúng
-     một item trong luồng như cũ. */
+     `--top`. Cho `<picture>` absolute thì grid lại chỉ còn đúng một item trong luồng. */
   picture {
     position: absolute;
     inset: 0;
   }
 
-  /* Chữ đổi theo CÙNG mốc 768px mà `<source media>` dùng cho ảnh. */
+  /* Chữ đổi ở mốc 768px — CÙNG mốc mà `<source media>` dùng cho ảnh. */
   .hero__title-part--wide {
     display: none;
   }

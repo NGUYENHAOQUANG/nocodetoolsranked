@@ -20,7 +20,7 @@ import sitemap from "@astrojs/sitemap";
  */
 export default defineConfig({
   /** Bắt buộc để dựng canonical và sitemap. Không có `site` thì cả hai đều không chạy. */
-  site: "https://top10dogfood.com",
+  site: "https://nocodetoolsranked.com",
 
   /**
    * Mọi URL của site kết thúc bằng "/", và mọi link nội bộ cũng viết kèm "/".

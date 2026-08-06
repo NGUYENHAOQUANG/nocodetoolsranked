@@ -7,13 +7,13 @@
  */
 
 export const SITE = {
-  name: "top10dogfood.com",
+  name: "nocodetoolsranked.com",
   /** Thẻ <title> mặc định khi trang không tự đặt */
-  defaultTitle: "Top 10 Dog Food Subscriptions 2026",
+  defaultTitle: "Best Website Builders 2026: Reviews & Comparison Rank",
   /** Mô tả mặc định. Bản cũ để chuỗi TIẾNG VIỆT trên site tiếng Anh và không
       trang nào override, nên cả 10 trang đều ship chuỗi đó — xem CLAUDE.md §6. */
   defaultDescription:
-    "Compare the top 10 fresh dog food subscription services of 2026 - reviews, ratings, and exclusive offers, delivered to your door.",
+    "Compare the best website builders of 2026. Expert reviews of top tools to help you create a professional website in minutes.",
   /**
    * Ảnh chia sẻ mặc định cho mọi trang (Open Graph / Twitter Card).
    *

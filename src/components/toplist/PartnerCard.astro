@@ -6,7 +6,7 @@ import type { ToplistRow } from "@/lib/rankings";
 import ScoreRing from "@/components/toplist/ScoreRing.astro";
 import Coupon from "@/components/toplist/Coupon.astro";
 import PartnerTooltip from "@/components/toplist/PartnerTooltip.astro";
-import { CHEVRON_RIGHT, STAR_OUTLINE, CHECK_THIN } from "@/lib/icon-paths";
+import { CHEVRON_RIGHT, STAR_OUTLINE, FLAME, CHECK_THIN } from "@/lib/icon-paths";
 
 interface Props {
   brand: ToplistRow;
@@ -37,14 +37,22 @@ const {
   bullets,
   bulletsMobile,
   coupon,
+  couponMobile,
   rating,
   ratingLabel,
   stars,
   reviewsCount,
   href,
+  badge,
+  highlightIcon,
   isEditorsChoice = false,
   hoverTooltip,
 } = Astro.props.brand;
+
+/* Icon góc card. Khối "Best Overall" lặp lại card ở cuối trang thì bỏ icon đi —
+   ở đó nó không còn là dấu hiệu thứ hạng nữa. */
+const HIGHLIGHT_PATHS = { star: STAR_OUTLINE, flame: FLAME };
+const highlightPath = isBestOverall || !highlightIcon ? null : HIGHLIGHT_PATHS[highlightIcon];
 
 const mobileLogo = logoMobile ?? logo;
 // Không có bản mobile thì dưới 768px KHÔNG hiện gạch đầu dòng (chỉ The Pet's Table có)
@@ -66,7 +74,7 @@ const labels = (await getEntry("labels", "labels"))!.data;
         {/* format png: giữ nguyên pixel gốc, tránh nén lại mất mát (ảnh vốn đã đúng 320×800) */}
         <Image
           src={sideBanner}
-          alt={`${brand.name} - Fresh Dog Food Delivery`}
+          alt={`${brand.name} | Website Builder`}
           width={320}
           height={800}
           format="png"
@@ -82,17 +90,23 @@ const labels = (await getEntry("labels", "labels"))!.data;
   <div class="partner__frame" data-href={href}>
     {shouldShowRank && <span class="partner__rank partner__rank--compact">{rank}</span>}
     {
-      isEditorsChoice && (
-        <span class:list={["partner__tag", { "partner__tag--full": isBestOverall }]}>
-          {labels.badge.exclusiveOffer}
-        </span>
+      /* Nhãn và KHUNG NỔI BẬT là hai thứ khác nhau, đừng gộp lại:
+        - `badge` là chữ, RIÊNG từng brand ("Best Website Builder" / "Highly
+          Recommended"), và nhiều hơn một card có thể mang nhãn;
+        - `isEditorsChoice` là viền + icon sao + tooltip tự mở, chỉ card đầu có.
+        Bản trước lấy chung một chuỗi từ `labels.yaml` và buộc vào `isEditorsChoice`,
+        nên card thứ hai không thể có nhãn riêng. */
+    }
+    {
+      badge && (
+        <span class:list={["partner__tag", { "partner__tag--full": isBestOverall }]}>{badge}</span>
       )
     }
     {
-      isEditorsChoice && !isBestOverall && (
+      highlightPath && (
         <span class="partner__highlight" aria-hidden="true">
           <svg viewBox="0 0 16 16" fill="currentColor">
-            <path d={STAR_OUTLINE} />
+            <path d={highlightPath} />
           </svg>
         </span>
       )
@@ -179,11 +193,14 @@ const labels = (await getEntry("labels", "labels"))!.data;
           </ul>
         </div>
 
-        {/* Dưới 768px coupon tách khỏi cột nội dung thành 1 ô lưới riêng chiếm cả hàng */}
+        {
+          /* Dưới 768px coupon tách khỏi cột nội dung thành 1 ô lưới riêng chiếm cả hàng.
+            Vài brand rút gọn chữ ở bản mobile (Squarespace), nên chuỗi có thể khác. */
+        }
         {
           coupon && (
             <div class="partner__coupon partner__coupon--compact">
-              <Coupon text={coupon} />
+              <Coupon text={couponMobile ?? coupon} />
             </div>
           )
         }
@@ -306,7 +323,7 @@ const labels = (await getEntry("labels", "labels"))!.data;
     display: flex;
     align-items: center;
     justify-content: center;
-    background-color: var(--color-accent);
+    background-color: var(--color-accent-strong);
     color: var(--color-text-on-primary);
     font-size: 0.9rem;
     font-weight: 400;
@@ -340,7 +357,7 @@ const labels = (await getEntry("labels", "labels"))!.data;
     width: 27px;
     height: 27px;
     padding: 3px;
-    background-color: var(--color-accent);
+    background-color: var(--color-accent-strong);
     color: var(--color-text-on-primary);
     font-size: 1.3rem;
     border-bottom-left-radius: 7px;

@@ -4,6 +4,7 @@
 import { getEntry } from "astro:content";
 import InnerPageLayout from "@/layouts/InnerPageLayout.astro";
 import { HOME, REVIEWS_INDEX, KNOWLEDGE_INDEX } from "@/lib/links";
+import { SITE } from "@/config/site";
 
 const TITLE = "Page Not Found";
 
@@ -13,7 +14,7 @@ const notFound = (await getEntry("notFound", "not-found"))!.data;
 <InnerPageLayout
   noindex
   isTitleTop
-  title={`Top 10 Dog Food Subscriptions - ${TITLE}`}
+  title={`${SITE.defaultTitle} - ${TITLE}`}
   heroTitle={TITLE}
   crumbs={[{ text: "Home", href: HOME }, { text: TITLE }]}
 >

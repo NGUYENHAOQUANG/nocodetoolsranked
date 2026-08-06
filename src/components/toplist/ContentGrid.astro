@@ -1,20 +1,21 @@
 ---
 import type { CollectionEntry } from "astro:content";
 import FeaturedArticle from "@/components/toplist/FeaturedArticle.astro";
-import FaqAccordion from "@/components/toplist/FaqAccordion.astro";
 import MustReads from "@/components/toplist/MustReads.astro";
 
 interface Props {
   toplist: CollectionEntry<"toplists">;
-  faq: { question: string; answer: string }[];
 }
 
-const { toplist, faq } = Astro.props;
+const { toplist } = Astro.props;
 ---
 
+{
+  /* Từng có `FaqAccordion` giữa bài viết và sidebar. Trang chủ không còn khối FAQ
+    nên nó đã bỏ khỏi đây; `FaqAccordion.astro` vẫn còn trong repo. */
+}
 <section class="content-grid">
   <FeaturedArticle entry={toplist} />
-  <FaqAccordion items={faq} />
   <MustReads />
 </section>
 
@@ -25,13 +26,13 @@ const { toplist, faq } = Astro.props;
     margin-inline: auto;
     padding: 0 10px;
     /* Bên gốc section này là flex item của wrapper trang nên tự là BFC, giữ
-       margin đáy 20px của FAQ nằm trong. Ở đây nó là block thường nên phải tạo
-       BFC, không thì section hụt đúng 20px. */
+       margin đáy của con nằm trong. Ở đây nó là block thường nên phải tạo BFC,
+       không thì margin cuối cùng rò ra ngoài và section hụt chiều cao. */
     display: flow-root;
   }
 
-  /* Dưới 1025px bản gốc KHÔNG bật grid: bài viết và FAQ xếp chồng như block,
-     còn sidebar bị ẩn hẳn (class dùng chung `large-larger-display`). */
+  /* Dưới 1025px bản gốc KHÔNG bật grid: bài viết xếp như block, còn sidebar bị
+     ẩn hẳn (class dùng chung `large-larger-display`). */
   .content-grid > :global(.must-reads) {
     display: none;
   }
@@ -47,13 +48,12 @@ const { toplist, faq } = Astro.props;
       grid-template-rows: 1fr auto;
       gap: 10px 20px;
       /* Rule chung cho mọi section của trang là `2px auto 30px`, nhưng bên gốc
-         section này là flex item nên 2px KHÔNG gộp với margin đáy 20px của
-         MiniReview → cách nhau 22px. Ở đây hai section là block cạnh nhau nên
-         margin gộp, phải khai thẳng 22px mới ra đúng khoảng cách. */
+         section này là flex item nên 2px KHÔNG gộp với margin đáy 20px của section
+         trên → cách nhau 22px. Ở đây hai section là block cạnh nhau nên margin gộp,
+         phải khai thẳng 22px mới ra đúng khoảng cách. */
       margin: 22px auto 30px;
     }
-    .content-grid > :global(.featured-article),
-    .content-grid > :global(.faq) {
+    .content-grid > :global(.featured-article) {
       grid-column: 1;
     }
     .content-grid > :global(.must-reads) {

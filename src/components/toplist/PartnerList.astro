@@ -1,7 +1,7 @@
 ---
 /**
  * Bảng xếp hạng của một trang toplist: danh sách PartnerCard, có một banner
- * khuyến mãi chèn xen giữa.
+ * khuyến mãi ngang chèn xen giữa.
  *
  * Không tự đi lấy dữ liệu — trang truyền vào. Trước đây nó gọi thẳng
  * `getHomepageBrands()` và giữ luôn dữ liệu banner trong frontmatter, nên
@@ -60,8 +60,8 @@ const { brands, promo } = Astro.props;
   }
 
   /* Bản gốc có rule chung cho mọi section trong trang: từ 1025px thêm 30px đáy,
-     tạo khoảng cách tới section "Best Overall" phía dưới. (margin-top 2px không có
-     tác dụng vì bị margin 5px của card đầu nuốt khi collapse.) */
+     tạo khoảng cách tới section phía dưới. (margin-top 2px không có tác dụng vì bị
+     margin 5px của card đầu nuốt khi collapse.) */
   @media (min-width: 1025px) {
     .partner-list {
       margin: 2px auto 30px;

@@ -16,7 +16,7 @@ trực giác.
 | Script              | Kiểm gì                               | Chạy lúc          |
 | ------------------- | ------------------------------------- | ----------------- |
 | `check-content.mjs` | nội dung chỉ ASCII; URL trần phải bọc | `npm run check`   |
-| `check-html.mjs`    | 13 luật HTML trên `dist/`             | sau `astro build` |
+| `check-html.mjs`    | 14 luật HTML trên `dist/`             | sau `astro build` |
 
 **`check-content.mjs`** cắt bỏ phần không render ra trang (comment, `<style>`,
 `<script>`, chuỗi trong `new Error`) rồi soi phần còn lại. Nó quét cả `.ts`, vì
@@ -31,10 +31,15 @@ Luật URL trần là **điều kiện để giữ `gfm` bật**: gfm tự biế
 cái nữa từ thân MDX. Nó nhận tham số thư mục nên soi được bản build khác:
 `node scripts/check-html.mjs ../ban-cu/dist`.
 
-13 luật: một `<h1>` mỗi trang · heading không nhảy cấp · heading không rỗng ·
+14 luật: một `<h1>` mỗi trang · heading không nhảy cấp · heading không rỗng ·
 không thuộc tính lỗi thời · `<button>` có `type` · `<img>` có `alt` · `alt` không
 lặp chữ "image" · `<a>` có `href` · `target="_blank"` kèm `noopener` · ô nhập có
-nhãn · skip link có đích · `<p>` không chứa thẻ block · `<ul>`/`<ol>` chỉ chứa `<li>`.
+nhãn · skip link có đích · `<p>` không chứa thẻ block · `<ul>`/`<ol>` chỉ chứa `<li>` ·
+không ký tự typographic trong bản build.
+
+Luật cuối trùng ý với `check-content.mjs` nhưng **không thừa**: cái kia canh NGUỒN,
+cái này canh KẾT QUẢ. Có một đường sinh ra nháy cong mà nguồn hoàn toàn ASCII —
+smart punctuation lúc build — nên chỉ canh nguồn là không đủ.
 
 ### Hai điều kiện để một luật đáng có script
 
@@ -94,11 +99,17 @@ Hệ quả cho component — ranh giới nằm ở **chữ đó có đổi theo 
 > Nội dung **đổi theo trang** -> truyền qua **props**. Nhãn **không đổi ở đâu cả**
 > -> component **tự `getEntry`**.
 
-`hero`, `faq`, `miniReview` và hai tiêu đề mục lớn (`bestOverallTitle`,
-`miniReviewTitle`) đổi theo từng ngách nên phải là props: ngách cá sẽ là "Best
-Overall Cat Food Delivery". Ngược lại `blocks/labels.yaml` (chữ nút CTA, skip
-link, nhãn huy hiệu) giống hệt ở mọi trang, nên component tự lấy — xâu qua props
-chỉ tạo prop drilling cho thứ không bao giờ khác.
+`hero` và `articleTitle` đổi theo từng ngách nên phải là props: ngách thương mại
+điện tử sẽ là "The Best Ecommerce Website Builder in 2026". Ngược lại
+`blocks/labels.yaml` (chữ nút CTA, skip link, nhãn "Last Updated") giống hệt ở mọi
+trang, nên component tự lấy — xâu qua props chỉ tạo prop drilling cho thứ không bao
+giờ khác.
+
+Cùng phép thử đó áp cho **nhãn góc card** ("Best Website Builder", "Highly
+Recommended"): nó đổi theo từng BRAND trên từng bảng xếp hạng, nên nó là trường
+`badge` của dòng xếp hạng chứ không phải một chuỗi trong `labels.yaml`. Bản trước
+để chung một chuỗi "Exclusive Offer" ở `labels.yaml` và buộc nó vào cờ
+`isEditorsChoice`, nên card thứ hai không thể mang nhãn riêng.
 
 Năm component từng tự gọi `getEntry(..., "homepage")`. Cái sai ở đó **không phải**
 tự lấy, mà là tự lấy một entry **khoá theo trang**: mỗi component chỉ chạy được
@@ -119,8 +130,8 @@ thứ mục trên cấm. Nhưng gỡ chúng không phải một cách:
 | Danh sách              | Là gì                         | Nay                               |
 | ---------------------- | ----------------------------- | --------------------------------- |
 | Lưới `/knowledge/`     | **mục lục** — phải đủ mọi bài | `getCollection` + sắp theo `date` |
-| "Must Reads" trang chủ | **tuyển chọn** 3/6            | `blocks/curated-posts.yaml`       |
-| Sidebar trang review   | **tuyển chọn** 3/6            | `blocks/curated-posts.yaml`       |
+| "Must Reads" trang chủ | **tuyển chọn** N bài          | `blocks/curated-posts.yaml`       |
+| Sidebar trang review   | **tuyển chọn** N bài          | `blocks/curated-posts.yaml`       |
 
 Phép thử: **danh sách đó có phải chứa mọi entry không?** Có thì đừng khai tay —
 khai tay là bài thứ 7 lặng lẽ không xuất hiện, mà cũng không có gì báo. README từng
@@ -170,15 +181,16 @@ Hệ quả: đổi link affiliate là sửa **một dòng** trong `brands/`, m�
 viết.
 
 **Ảnh riêng của brand phải đến TỪ brand, kể cả khi nó nằm ở thư mục khác.**
-`PartnerCard` từng `import` cứng banner dọc của The Pets Table, còn nơi gọi thì
-quyết định bằng thứ hạng: `hasSideBanner={i === 0}`. Nghĩa là kéo Ollie lên hạng 1
-thì card Ollie hiện **banner của The Pets Table**, kèm alt "Ollie" — build vẫn
-xanh, không gì báo.
+`PartnerCard` từng `import` cứng banner dọc của MỘT brand, còn nơi gọi thì quyết
+định bằng thứ hạng: `hasSideBanner={i === 0}`. Nghĩa là kéo brand khác lên hạng 1
+thì card đó hiện **banner của brand cũ**, kèm alt tên brand mới — build vẫn xanh,
+không gì báo.
 
 Nay `sideBanner` là một trường của `brands/<id>.yaml`; component chỉ giữ **vị trí
 slot** (card hạng 1, từ 1525px), còn **ảnh nào** thì brand quyết. Brand không có
-creative riêng thì slot đó bỏ trống. Đã thử cả hai chiều: gỡ `sideBanner` của brand
-hạng 1 -> banner biến mất; gắn cho brand hạng 2 -> vẫn không hiện.
+creative riêng thì slot đó bỏ trống — hiện KHÔNG brand nào khai, nên slot trống ở
+mọi trang. Đã thử cả hai chiều: gỡ `sideBanner` của brand hạng 1 -> banner biến
+mất; gắn cho brand hạng 2 -> vẫn không hiện.
 
 Ảnh vẫn ở `assets/promos/`, không dời sang `assets/brands/` — thư mục chia theo
 **ảnh đó là gì**, còn ai-quyết-định-dùng-ảnh-nào là trục khác. Xem mục quy ước tên.
@@ -187,14 +199,16 @@ hạng 1 -> banner biến mất; gắn cho brand hạng 2 -> vẫn không hiện
 
 `content/toplists/<id>.mdx` là MỘT trang toplist hoàn chỉnh. Trang chủ là entry
 `home`; mọi ngách khác lấy id làm slug ở gốc site. Thân MDX là bài viết dài dưới
-bảng xếp hạng; frontmatter giữ tiêu đề, hero, FAQ, mini-review.
+bảng xếp hạng; frontmatter giữ tiêu đề và hero.
 
 Bốn collection cũ (`featuredArticles`, `faq`, `miniReviews`, và chữ nghĩa hero vốn
 viết cứng trong component) đều chỉ có ĐÚNG MỘT entry tên `homepage` — tức đã sẵn
 hình dạng "khoá theo trang", chỉ là mới có một trang. Gộp lại nên thêm một ngách
-là thêm **một** file nội dung, không phải bốn.
+là thêm **một** file nội dung, không phải bốn. (`faq` và `miniReview` sau đó bị gỡ
+khỏi schema vì trang chủ không còn hai khối đó — component thì vẫn còn.
+`bestOverallTitle` và `promo` thì VẪN dùng.)
 
-Bảng xếp hạng thì KHÔNG gộp vào đó: nó dài 120 dòng cho 9 brand x 12 trường, và
+Bảng xếp hạng thì KHÔNG gộp vào đó: nó dài ~130 dòng cho 10 brand x 12 trường, và
 nhịp sửa khác hẳn phần còn lại (điểm/coupon/thứ tự đổi hàng tuần, bài viết hàng
 quý). Nó ở `content/placements/toplist/<id>.yaml`, nối bằng `reference()`.
 
@@ -221,9 +235,15 @@ Luật, không có chỗ nào cần phán đoán:
 | `layout/`    | mọi trang (6 file)              |
 | `toplist/`   | trang chủ + mọi ngách (16 file) |
 | `article/`   | trang review + bài blog (12)    |
-| `reviews/`   | `/reviews/` (2)                 |
+| `review/`    | `/reviews/` (2)                 |
 | `knowledge/` | `/knowledge/` (1)               |
 | `contact/`   | `/contact/` (1)                 |
+
+Ba file trong `toplist/` hiện **không component nào import**: `MiniReview`,
+`MiniReviewCategories`, `FaqAccordion`. Chúng là các khối trang chủ đã tắt, giữ lại
+để bật lại được — đúng ca mà `check-unused.mjs` từng báo sai và vì thế đã bị bỏ.
+Bật lại một khối là thêm trường vào schema `toplists` rồi render, không phải viết
+lại component.
 
 Trục này chọn vì **đơn vị lớn lên của repo là loại trang**: thêm brand hay thêm
 bài chỉ là thêm file nội dung, còn component mới chỉ sinh ra khi có loại trang
@@ -324,7 +344,7 @@ file là tạo lại đúng thứ trùng lặp vừa gỡ. Rule ở đó là cla
 luôn thua rule scoped (0,2,0) của từng nhánh: khung là nền, nhánh đè lên.
 
 Bốn khối của `prose.css`: `.post__body` (bài blog) · `.review-section__body` (bài
-review) · `.page__body` (4 trang phẳng) · `.featured-article` (khối bài ở trang
+review) · `.page__body` (3 trang phẳng) · `.featured-article` (khối bài ở trang
 toplist). Đầu file ghi rõ vì sao **không gộp được** — đọc trước khi định dọn.
 
 `tokens.css` ghi sẵn quy tắc để một giá trị thành token: **dùng >=3 chỗ VÀ mọi chỗ
@@ -410,7 +430,8 @@ Không dùng tên chung chung như `utils.ts` / `helpers.ts` — đặt theo vi�
   nằm trong `PromoBanner`.
 
 - Custom property đặt theo **vai trò**, không theo giá trị — `--color-primary`,
-  không phải `--color-orange`
+  không phải `--color-blue`. (Đúng là vì vậy mà đổi cả bảng màu site chỉ tốn 4 dòng
+  trong `tokens.css`, không phải rà 40 chỗ.)
 
 **Nội dung**
 
@@ -519,14 +540,23 @@ HTML vẫn đúng nên chỉ lộ khi so **CSS** của `dist/`.
 
 ### Hero: `<picture>` chứ không phải hai `<img>` ẩn/hiện
 
-Ảnh `display: none` **vẫn được trình duyệt tải**. Hai `<Image>` desktop/mobile ẩn
-nhau bằng CSS nghĩa là mọi trang tải cả hai, và cả hai đều `loading="eager"` nên
-chúng tranh băng thông trên đường tới LCP. Đo được: `/about/` từ 95.2 KB xuống
-63.6 KB, trang chủ giảm 31.5 KB, toàn site 21 trang giảm 14%.
+Banner là **hai ảnh THẬT SỰ KHÁC NHAU**, không phải một ảnh hai cỡ:
+`heroes/banner.png` là dải rất dẹt 3800x520 (từ 768px), `heroes/compact.png` là
+khung gần vuông 650x325 (dưới 768px). Đó là art direction, và `<picture>` +
+`<source media>` tồn tại đúng cho việc này.
+
+Đừng thay bằng hai `<Image>` ẩn/hiện bằng CSS: ảnh `display: none` **vẫn được
+trình duyệt tải**, nên mọi trang tải cả hai, và cả hai đều `loading="eager"` nên
+chúng tranh băng thông trên đường tới LCP. Đo được lúc gỡ: trang trong từ 95.2 KB
+xuống 63.6 KB, trang chủ giảm 31.5 KB, toàn site giảm 14%.
 
 Astro **không có** component làm art direction — `<Picture>` chỉ đổi ĐỊNH DẠNG của
-cùng một ảnh. Dựng tay bằng `getImage()` rồi ghép `<picture>` + `<source media>`;
-vẫn được srcset tối ưu.
+cùng một ảnh. Ghép tay bằng `getImage()` rồi dựng `<picture>`; vẫn được srcset.
+
+Mốc 768px là của bản gốc, và **cách bản gốc làm thì hỏng**: JS chọn ảnh theo
+`clientWidth` còn CSS ẩn theo `innerWidth`, lệch đúng 15px thanh cuộn nên ở
+768-782px KHÔNG ảnh nào hiện (đo lại trên site họ: banner cao 0px ở đúng 768).
+`<source media>` là CSS thuần nên không có khe hở đó.
 
 Ba điều phải nhớ khi sửa hero:
 
@@ -534,11 +564,13 @@ Ba điều phải nhớ khi sửa hero:
    `display: contents`. `.hero__banner` là grid, nên `display: contents` đưa
    `<img>` lên làm grid item và sinh thêm một hàng — đo được `grid-template-rows`
    thành `54.72px 117.28px`, đẩy tiêu đề xuống 54.7px và làm mất tác dụng của
-   `--top` ở trang `/about/`.
+   `--top`.
 2. **Chỉ còn MỘT `alt`.** Bản gốc có chuỗi alt riêng cho mobile ở vài trang; nay
    dùng chuỗi desktop cho cả hai vì `<picture>` chỉ có một `<img>`.
-3. **`object-position` phải đổi theo cùng mốc** mà `<source media>` dùng. Trang
-   chủ căn ảnh mobile giữa dọc, ảnh desktop mép trên.
+3. **`object-position` phải đổi theo CÙNG mốc** mà `<source media>` dùng, và hai
+   loại trang khác nhau: trang toplist neo `right center` ở mobile rồi `right top`
+   từ 768px; trang trong neo `right top` ở mọi bề rộng. Neo PHẢI là bắt buộc ở mọi
+   trường hợp — nhân vật nằm sát mép phải ảnh.
 
 ### HTML: một `<h1>`, heading đúng cấp
 
@@ -742,8 +774,9 @@ biết chúng từng tồn tại và vì sao không còn:
 Còn lại, **cố ý giữ**:
 
 - Một brand có tới **năm biến thể tên** (`name`, `logoAlt`, `logoAltShort`,
-  `sidebarName`, `articleLinkName`) vì nguồn dùng chuỗi khác nhau ở từng vị trí.
-  Đây là dữ liệu thật, không phải trùng lặp.
+  `sidebarName`, `articleLinkName`) vì nguồn dùng chuỗi khác nhau ở từng vị trí
+  (menu ghi "Base 44", card ghi "Base44"). Bộ dữ liệu hiện tại khai trùng nhau ở
+  phần lớn brand — đó là tình cờ, không phải lý do để gộp trường.
 - `--font-ui` khai `"Work Sans"` mà không nạp font đó — tái tạo có chủ ý lỗi của
   bản gốc.
 - Trang chủ và `/reviews/` xếp hạng khác nhau cho cùng một brand.

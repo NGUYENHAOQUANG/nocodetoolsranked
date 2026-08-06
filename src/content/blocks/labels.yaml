@@ -5,7 +5,9 @@
 # `visitSite` từng nằm rải ở 4 component, `readMore` ở 3.
 cta:
   visitSite: "Visit Site"
-  viewRates: "View Rates"
+  # Ban goc dung dung "Visit Site" o MOI nut CTA, ke ca trong bai review va o
+  # carousel sidebar. Giu truong rieng vi day la vi tri khac visitSite tren card.
+  viewRates: "Visit Site"
   readMore: "Read More"
   readMoreLower: "Read more"
   readReview: "Read review"
@@ -14,11 +16,15 @@ cta:
 # Tiêu đề mục dùng chung mọi trang (khác tiêu đề RIÊNG ngách, xem `toplists/`).
 heading:
   mustReads: "Must Reads"
+  recommendedPartners: "Recommended Website Builders"
 
-# Nhãn nhỏ trên thẻ và banner.
+# Nhãn nhỏ trên banner.
+#
+# Nhãn góc card ("Best Website Builder", "Highly Recommended") KHÔNG ở đây: nó khác
+# nhau theo từng brand nên là dữ liệu xếp hạng, xem `badge` trong placements/toplist/.
 badge:
-  exclusiveOffer: "Exclusive Offer"
-  lastUpdated: "Last Updated:"
+  # Khong co dau hai cham: ban goc ghi "Last Updated August 2026"
+  lastUpdated: "Last Updated"
   advertisingDisclosure: "Advertising Disclosure"
 
 # Skip link (WCAG 2.4.1). Không phải lựa chọn biên tập nhưng vẫn là chữ người dùng ĐỌC

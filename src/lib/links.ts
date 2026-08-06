@@ -29,7 +29,6 @@ export const postUrl = (postId: string) => `/knowledge/${postId}/`;
 
 /** Các trang tĩnh */
 export const STATIC_PAGES = {
-  about: "/about/",
   contact: "/contact/",
   privacy: "/privacy-policy/",
   terms: "/terms-of-use/",

@@ -22,6 +22,12 @@ const labels = (await getEntry("labels", "labels"))!.data;
 ---
 
 <div class="sidebar-partners">
+  {
+    /* <h2> chu khong phai <h4>: trang chi co <h1> o banner roi toi cac muc <h2>,
+      dat <h4> o day la nhay cap va check-html.mjs bat. Ban goc dung <h3> nhung
+      dan y cua no von da nhay cap san. */
+  }
+  <h2 class="sidebar-partners__title">{labels.heading.recommendedPartners}</h2>
   <div class="sidebar-partners__content">
     {
       partners.map((p) => (
@@ -59,6 +65,15 @@ const labels = (await getEntry("labels", "labels"))!.data;
 </div>
 
 <style>
+  /* Do tren ban goc: 1.17rem/700, mau chu than bai, margin doc 1em, can trai. */
+  .sidebar-partners__title {
+    margin: 1em 0;
+    font-size: 1.17rem;
+    font-weight: 700;
+    line-height: 1.3;
+    color: var(--color-text-body);
+  }
+
   /* ===== Mặc định là bản MOBILE (<481px), các mốc min-width bên dưới chồng lên
      đúng như bản gốc ===== */
   .sidebar-partners {

@@ -1,10 +1,11 @@
-# Thứ tự partner ở sidebar - dùng cho CẢ carousel lẫn danh sách, và ở CẢ trang
-# review lẫn bài blog (nên tên file không có tiền tố "review-").
-# Logo/alt/tên/link/promo đều lấy từ collection `brands`, ở đây chỉ còn THỨ TỰ.
+# Thu tu doi tac o sidebar trang review va trang bai viet - 4 brand.
+#
+# Dung cho ca danh sach "Recommended Website Builders" lan carousel khuyen mai:
+# hai khoi nam canh nhau trong cung mot sidebar nen dung chung thu tu la dung.
+#
+# Menu header dung file RIENG (`header-nav.yaml`, 10 brand).
 entries:
-  - brand: "the-pets-table"
-  - brand: "ollie"
-  - brand: "spot-tango"
-  - brand: "we-feed-raw"
-  - brand: "freshpet"
-  - brand: "sundays-for-dogs"
+  - brand: "wix"
+  - brand: "base44"
+  - brand: "shopify"
+  - brand: "ionos"

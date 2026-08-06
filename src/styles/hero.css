@@ -26,12 +26,19 @@
   display: grid;
 }
 
+/* `position: absolute` không chỉ để xếp lớp — nó GIỮ ảnh ngoài luồng grid.
+   `.hero__banner` là grid, nên ảnh nằm trong luồng sẽ thành grid item và sinh
+   thêm một hàng: đo được `grid-template-rows` thành `54.72px 117.28px`, đẩy tiêu
+   đề xuống 54.7px và làm mất tác dụng của `--top`. Đừng đổi sang `static`. */
 .hero__bg {
   position: absolute;
   inset: 0;
   width: 100%;
   height: 100%;
   object-fit: cover;
+  /* Mặc định của TRANG TRONG: neo mép trên-phải ở mọi bề rộng (đo trên bản gốc).
+     Trang toplist đè lại: mobile neo giữa dọc, desktop mới neo mép trên.
+     Nhân vật nằm sát mép phải ảnh nên neo PHẢI là bắt buộc ở mọi trường hợp. */
   object-position: right top;
   z-index: 0;
 }

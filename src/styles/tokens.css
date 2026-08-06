@@ -2,7 +2,7 @@
    Design token — biến CSS dùng chung toàn site.
 
    Đặt tên theo VAI TRÒ, không theo giá trị: `--color-primary` chứ không phải
-   `--color-orange`.
+   `--color-blue`.
 
    QUY TẮC ĐỂ MỘT GIÁ TRỊ THÀNH TOKEN — cần cả hai:
      (a) xuất hiện từ 3 chỗ trở lên, VÀ
@@ -20,11 +20,15 @@
 
 :root {
   /* ----- Màu thương hiệu ----- */
-  --color-primary: #f97132;
+  /* Nút CTA. Đo trên bản gốc: rgb(24, 90, 196). */
+  --color-primary: #185ac4;
   /* Thực chất là trạng thái hover của primary: 9/10 nơi dùng nó là :hover */
-  --color-secondary: #f44516;
-  /* Nhấn cho card "Exclusive Offer": viền, nhãn, icon sao */
-  --color-accent: #00cfea;
+  --color-secondary: #154b9b;
+  /* Viền card nổi bật (hạng 1). KHÁC `--color-accent-strong` một chút và bản gốc
+     cũng để lệch như vậy — hai vai trò khác nhau, không phải sai số. */
+  --color-accent: #1d55b7;
+  /* Nền đặc cho nhãn góc card, icon góc và nút trên banner khuyến mãi */
+  --color-accent-strong: #101954;
 
   /* ----- Chữ ----- */
   /* Mặc định của <body>. Bản gốc để #000 ở lớp bao ngoài rồi hầu hết khối nội

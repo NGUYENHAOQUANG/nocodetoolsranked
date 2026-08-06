@@ -24,9 +24,14 @@ const CHECK = "M186.301 339.893L96 249.461l-32 30.507L186.301 402 448 140.506 41
 const CROSS =
   "M405 136.798L375.202 107 256 226.202 136.798 107 107 136.798 226.202 256 107 375.202 136.798 405 256 285.798 375.202 405 405 375.202 285.798 256z";
 
+/* Sao và số lượt đánh giá là dữ liệu TUỲ CHỌN của dòng xếp hạng: chỉ khai khi có số
+   thật (xem `content.config.ts`). Không có thì không vẽ, chứ không vẽ 0 sao hay
+   "(undefined Reviews)". */
+const starCount = brand.stars ?? 0;
+
 /* Bản gốc đặt dấu ngoặc khác nhau ở 2 bản (rộng bằng nhau nên rất dễ bỏ sót) */
-const reviewsDesktop = `(${brand.reviewsCount} Reviews)`;
-const reviewsMobile = `(${brand.reviewsCount}) Reviews`;
+const reviewsDesktop = brand.reviewsCount ? `(${brand.reviewsCount} Reviews)` : "";
+const reviewsMobile = brand.reviewsCount ? `(${brand.reviewsCount}) Reviews` : "";
 
 /* Nhãn dùng chung toàn site, không đổi theo trang -> tự lấy thay vì truyền props. */
 const labels = (await getEntry("labels", "labels"))!.data;
@@ -57,7 +62,7 @@ const labels = (await getEntry("labels", "labels"))!.data;
         <div class="mini-review__rating-row">
           <div class="mini-review__stars" aria-hidden="true">
             {
-              Array.from({ length: brand.stars }, () => (
+              Array.from({ length: starCount }, () => (
                 <svg viewBox="0 0 16 16" fill="currentColor">
                   <path d={STAR_OUTLINE} />
                 </svg>
@@ -122,7 +127,7 @@ const labels = (await getEntry("labels", "labels"))!.data;
           <div class="mini-review__rating-row">
             <div class="mini-review__stars" aria-hidden="true">
               {
-                Array.from({ length: brand.stars }, () => (
+                Array.from({ length: starCount }, () => (
                   <svg viewBox="0 0 16 16" fill="currentColor">
                     <path d={STAR_OUTLINE} />
                   </svg>

@@ -1,120 +1,172 @@
-# Bảng xếp hạng TRANG CHỦ — 9 brand.
-# Thứ tự và điểm ở đây CỐ Ý khác /reviews/ (vd Ollie 8.7 ở đây, 9.3 ở kia).
-# Đó là chủ ý của bản gốc, không phải dữ liệu lệch.
+# Bang xep hang TRANG CHU - 8 brand, doc thang tu DOM da render cua trang mau.
+#
+# VI SAO 8 CHU KHONG PHAI 10: CMS ben do khai 10 doi tac, nhung hai brand (Tide va
+# IONOS) bi LOC di truoc khi render - moi dong doi tac co dieu kien hien theo mui gio
+# va vung. Site tinh khong co tang loc do, nen o day chi liet ke dung nhung gi nguoi
+# doc that su nhin thay. Hai brand kia van con trong content/brands/ va van co trang
+# review; IONOS van nam trong danh sach /reviews/ va menu header.
+#
+# `rating` di theo VI TRI chu khong theo brand: bo diem 9.8 / 9.7 / 8.5 / 8.2 / 7.9 /
+# 7.6 / 7.5 / 7.3 gan lien voi hang 1..8. Doi thu tu thi doi ca diem, dung keo diem
+# di theo brand.
+#
+# `bullets` la dung nhung gach dau dong HIEN THI, khong phai tat ca gach dau dong brand
+# do co: CMS ben kia khai du 5 dong roi cat bot bang `desktopDetailsLimit`. O day noi
+# dung chinh la thu duoc hien, nen cat san - khong can them mot truong gioi han.
 entries:
-  - brand: "the-pets-table"
+  - brand: "wix"
     rank: 1
-    rating: "9.9"
-    ratingLabel: "Outstanding"
+    rating: "9.8"
+    ratingLabel: "Superb"
     stars: 5
-    reviewsCount: "2,452"
-    tagline: " Best Fresh Food Brand"
-    taglineMobile: " Human-grade fresh dog food"
+    reviewsCount: "12,143"
+    tagline: "Wix"
+    taglineMobile: "Wix"
+    isTaglineMobileBold: true
+    badge: "Best Website Builder"
+    bullets:
+      - "Easy drag-and-drop website builder"
+      - "900+ professional website templates"
+      - "Built-in SEO and marketing tools"
+      - "Hosting and security included"
+      - "Mobile Friendly designs"
+    bulletsMobile:
+      - "AI website builder"
+      - "900+ professional templates"
+      - "Mobile friendly design"
+      - "Integrated SEO & marketing."
+    coupon: "Limited Offer - Get 50% Off"
+    isEditorsChoice: true
+    highlightIcon: "star"
+    hoverTooltip:
+      highlight: "21,454"
+      text: " Users visited this site this month"
+
+  - brand: "squarespace"
+    rank: 2
+    rating: "9.7"
+    ratingLabel: "Very Good"
+    stars: 5
+    reviewsCount: "9,844"
+    tagline: "Squarespace"
+    taglineMobile: "Squarespace"
+    isTaglineMobileBold: true
+    badge: "Highly Recommended"
+    bullets:
+      - "No credit card required - Start for Free"
+      - "Built-in marketing and business tools"
+      - "AI tools to help you build"
+      - "Award-winning designs"
+    bulletsMobile:
+      - "Start for Free"
+      - "Built-in marketing tools"
+      - "AI tools to help you build"
+    coupon: "Claim your 20% OFF - SPO20"
+    # Ban mobile rut gon, KHAC ban desktop
+    couponMobile: "Get 20% OFF - SPO20"
+    highlightIcon: "flame"
+
+  - brand: "base44"
+    rank: 3
+    rating: "8.5"
+    ratingLabel: "Good"
+    stars: 4
+    reviewsCount: "6,758"
+    tagline: "Base44"
+    taglineMobile: "Base44"
     isTaglineMobileBold: true
     bullets:
-      - "100% money back guarantee"
-      - "On-staff board certified vet nutritionist®"
-      - "9 recipes - more variety than most competitors"
-      - "+30,000,000 meals delivered to happy customers"
-      - "Human-grade fresh and affordable air-dried options"
+      - "Start Free & Upgrade as your needs grow"
+      - "AI-powered app logic for smarter functionality"
+      - "Built-in hosting and backend support"
     bulletsMobile:
-      - "Fresh, Air-Dried, Mixed, and Topper plans"
-      - "EasyFresh™ - Human-Grade, Shelf-Stable"
-      - "10+ Recipes, More Variety Than Most"
-    coupon: "Get 60% off your 1st box + 20% off your 2nd"
-    isEditorsChoice: true
-    hoverTooltip:
-      highlight: "16,024 people"
-      text: " visited this site today"
-  - brand: "spot-tango"
-    rank: 2
-    rating: "9.3"
-    ratingLabel: "Excellent"
-    stars: 4.5
-    reviewsCount: "2,002"
-    tagline: " Over 150,000,000  Meals Served "
-    taglineMobile: "Over 150,000,000 Meals Served "
-    bullets:
-      - "Vet-approved, nutrient-rich wet dog food"
-      - "Tailored portions to your dog's needs and traits"
-      - "Fresh & UnKibble delivered straight to your door"
-    coupon: "Get 60% Off + Personalized Plan "
-  - brand: "ollie"
-    rank: 3
-    rating: "8.7"
-    ratingLabel: "Excellent"
-    stars: 4
-    reviewsCount: "1,983"
-    tagline: " Ensured care graded practice"
-    taglineMobile: "Human-grade, vet-approved for optimal health"
-    bullets:
-      - "Customized to your dog's profile"
-      - "Human-grade, vet-approved for optimal health"
-      - "Complete, balanced raw nutrition for dogs"
-    coupon: " 70% off your first box + FREE bowl and Welcome Kit"
-  - brand: "sundays-for-dogs"
+      - "Start for Free"
+      - "No-code builder"
+      - "Built-in backend"
+
+  - brand: "webador"
     rank: 4
-    rating: "8.4"
-    ratingLabel: "Very Good"
+    rating: "8.2"
+    ratingLabel: "Good"
     stars: 4
-    reviewsCount: "1,902"
-    tagline: "30% off First Order"
-    taglineMobile: "Get 30% off Your First Order"
+    reviewsCount: "5,902"
+    tagline: "Webador"
+    taglineMobile: "Webador"
+    isTaglineMobileBold: true
     bullets:
-      - "No fillers. Only real food"
-      - "Premium meats + superfoods"
-  - brand: "maxbone"
+      - "Get 50% off your first 12 months!"
+      - "Build a website in about 10 minutes"
+      - "No design or coding skills required"
+    bulletsMobile:
+      - "First 12 months - 50% Off "
+      - "Build a website in minutes"
+      - "Trusted by over 345K+"
+
+  - brand: "shopify"
     rank: 5
-    rating: "8.0"
-    ratingLabel: "Very Good"
-    stars: 4
-    reviewsCount: "1,850"
-    tagline: "50% Off + Subscription Bags"
-    taglineMobile: "50% Off + Subscription Bags"
-    bullets:
-      - "#1 ingredient farm-raised beef and turkey"
-      - "No hormones, antibiotics, or synthetics"
-  - brand: "we-feed-raw"
-    rank: 6
     rating: "7.9"
-    ratingLabel: "Good"
-    stars: 4
-    reviewsCount: "1,622"
-    tagline: " Best Raw Food Brand"
-    taglineMobile: "Nutritionist formulated + vet approved"
-    bullets:
-      - "Complete & balanced raw meals"
-      - "PhD-formulated for optimal nutrition"
-  - brand: "freshpet"
-    rank: 7
-    rating: "7.8"
-    ratingLabel: "Good"
-    stars: 4
-    reviewsCount: "1,494"
-    tagline: " Get 50% Off First Order + FREE Welcome Kit "
-    taglineMobile: "Get 50% Off First Order + FREE Welcome Kit"
-    bullets:
-      - "Formulated by veterinary nutritionists"
-      - "Ideal for pets needing weight management"
-  - brand: "maev"
-    rank: 8
-    rating: "7.7"
-    ratingLabel: "Good"
-    stars: 3.5
-    reviewsCount: "1,159"
-    tagline: " 20% off using: MAEVDELIVERY20"
-    taglineMobile: "20% off using: MAEVDELIVERY20"
-    bullets:
-      - "100% USDA-certified lean protein"
-      - "Specialized formula tailored for puppies"
-  - brand: "honest-kitchen"
-    rank: 9
-    rating: "6.1"
     ratingLabel: "Fair"
-    stars: 3
-    reviewsCount: "986"
-    tagline: "20% off All Recipes"
-    taglineMobile: "20% off All Recipes"
+    stars: 4
+    reviewsCount: "4,721"
+    tagline: "Shopify"
+    taglineMobile: "Shopify"
+    isTaglineMobileBold: true
     bullets:
-      - "Dry, wet, dehydrated, treats & toppers"
-      - "First to offer human-grade meals for dogs and cats"
+      - "Build fast and scalable online stores"
+      - "High-converting checkout system"
+      - "Reliable uptime during heavy traffic periods"
+    bulletsMobile:
+      - "Build scalable shops."
+      - "High-conversion checkout."
+
+  - brand: "lovable"
+    rank: 6
+    rating: "7.6"
+    ratingLabel: "Fair"
+    stars: 4
+    reviewsCount: "3,012"
+    tagline: "Lovable"
+    taglineMobile: "Lovable"
+    isTaglineMobileBold: true
+    bullets:
+      - "AI-powered sites, apps & pages from one prompt"
+      - "Clean code automatically synced to GitHub"
+      - "Seamlessly integrates with your existing tools & Data"
+    bulletsMobile:
+      - "AI-powered builder"
+      - "Auto-sync to GitHub"
+      - "Easy integration with tools"
+
+  - brand: "emergent"
+    rank: 7
+    rating: "7.5"
+    ratingLabel: "Fair"
+    stars: 4
+    reviewsCount: "2,437"
+    tagline: "Emergent"
+    taglineMobile: "Emergent"
+    isTaglineMobileBold: true
+    bullets:
+      - "One of the fastest ways to launch an MVP"
+      - "AI-powered platform with no-code workflow"
+      - "Explore and learn from projects built by others"
+    bulletsMobile:
+      - "Launch MVPs fast"
+      - "Try community projects"
+      - "No-code setup"
+
+  - brand: "hostinger"
+    rank: 8
+    rating: "7.3"
+    ratingLabel: "Fair"
+    stars: 4
+    reviewsCount: "1,057"
+    tagline: "Hostinger"
+    taglineMobile: "Hostinger"
+    isTaglineMobileBold: true
+    bullets:
+      - "Launch websites instantly with one-click setup"
+      - "Connect your site to your own custom domain"
+    bulletsMobile:
+      - "AI-built pages in minutes."
+      - "Risk-free for 30 days."

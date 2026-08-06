@@ -1,6 +1,6 @@
-# top10dogfood.com
+# nocodetoolsranked.com
 
-Trang toplist / review affiliate về dịch vụ giao thức ăn tươi cho chó.
+Trang toplist / review affiliate về website builder (công cụ dựng web không cần code).
 Astro 7, static, không dùng UI framework nào.
 
 Doanh thu đến từ affiliate — nút "Visit Site" / "View Rates" trỏ sang đối tác.
@@ -25,7 +25,7 @@ Cần Node >= 22.12.
 | Lệnh              | Việc                                                     |
 | ----------------- | -------------------------------------------------------- |
 | `npm run dev`     | Máy chủ phát triển                                       |
-| `npm run build`   | `check` -> dựng vào `dist/` -> `check-html` (13 luật)    |
+| `npm run build`   | `check` -> dựng vào `dist/` -> `check-html` (14 luật)    |
 | `npm run preview` | Xem thử bản đã dựng                                      |
 | `npm run check`   | `astro check` (kiểu) + `check-content` (ASCII, URL trần) |
 | `npm run format`  | Prettier cho mọi thứ **trừ** `src/content/**`            |
@@ -46,21 +46,29 @@ Mục tiêu của dự án: **thêm/sửa nội dung không cần chạm vào co
 Mọi nơi hiển thị link đó — toplist, card, sidebar, carousel, nút trong bài
 review, CTA giữa bài — đều lấy từ đây.
 
+> **Hiện MỌI brand đang để `affiliateUrl: "#"`.** Đó là chỗ giữ chỗ, không phải
+> link thật: chưa thay thì mọi nút CTA trên site bấm vào không đi đâu cả.
+
 ### Đổi thứ hạng, điểm số, coupon
 
 | File                                       | Dùng cho                                 |
 | ------------------------------------------ | ---------------------------------------- |
 | `src/content/placements/toplist/<id>.yaml` | Bảng xếp hạng của MỘT trang toplist      |
-| `src/content/placements/reviews-page.yaml` | Danh sách `/reviews/` (6 brand)          |
+| `src/content/placements/reviews-page.yaml` | Danh sách `/reviews/` (9 brand)          |
 | `src/content/placements/sidebar.yaml`      | Thứ tự partner ở sidebar (review + blog) |
+| `src/content/placements/header-nav.yaml`   | Menu con "Reviews" trên thanh điều hướng |
 
 `toplist/` có **một file mỗi ngách**; `home.yaml` là trang chủ.
 
-Sửa `rank` / `rating` / `stars` / `coupon` ngay trong file tương ứng.
+Sửa `rank` / `rating` / `badge` / `coupon` ngay trong file tương ứng.
 
-> Trang chủ và `/reviews/` **cố ý** xếp hạng khác nhau (Ollie 8.7 ở trang chủ,
-> 9.3 ở `/reviews/`). Đó là hai bảng độc lập, không phải dữ liệu lệch — đừng
-> "đồng bộ" chúng.
+> Trang chủ và `/reviews/` **cố ý** khác nhau: trang chủ xếp 8 brand, `/reviews/`
+> liệt kê 9 brand khác một phần và theo thứ tự khác. Đó là hai bảng độc lập, không
+> phải dữ liệu lệch — đừng "đồng bộ" chúng.
+
+> `stars` và `reviewsCount` là **tuỳ chọn**: không khai thì card chỉ hiện vòng điểm
+> và nhãn. Chỉ khai khi có số THẬT — điền bừa là bịa số liệu xã hội trên một trang
+> kiếm tiền.
 
 ### Thêm một brand
 
@@ -71,7 +79,11 @@ Sửa `rank` / `rating` / `stars` / `coupon` ngay trong file tương ứng.
 Muốn brand đó có trang review riêng thì thêm:
 
 4. `src/content/reviews/<brand>.mdx` -> URL thành `/reviews/<brand>/`
-5. Thêm brand vào `placements/reviews-page.yaml` và `placements/sidebar.yaml`
+5. Thêm brand vào `placements/reviews-page.yaml`, và vào `placements/sidebar.yaml`
+   / `placements/header-nav.yaml` nếu muốn nó xuất hiện ở sidebar / menu
+
+> Tên file review **phải trùng id brand** — URL `/reviews/<brand>/` dựng thẳng từ
+> khoá brand, nên đặt khác tên là link sidebar và menu trỏ vào trang 404.
 
 ### Thêm một trang toplist (ngách mới)
 
@@ -81,7 +93,7 @@ Muốn brand đó có trang review riêng thì thêm:
 
    Frontmatter bắt buộc: `title`, `description`, `heroTitle`, `heroAlt`,
    `heroSubtitle`, `heroSubtitleCompact`, `ranking`, `bestOverallTitle`,
-   `miniReviewTitle`, `articleTitle`, `faq`, `miniReview`. `promo` là tuỳ chọn.
+   `articleTitle`. `promo` (banner ngang chèn giữa danh sách) là tuỳ chọn.
 
    Thân MDX chính là bài viết dài nằm dưới bảng xếp hạng.
 
@@ -91,7 +103,7 @@ Trang chủ chính là entry `toplists/home.mdx`; id `home` cho ra URL `/`. Nó 
 CHUNG khuôn với mọi ngách — không có `index.astro` riêng.
 
 > **Id bị chiếm:** `home` dành cho trang chủ. Ngoài ra id ngách không được trùng
-> id trong `content/pages/` (`about`, `terms-of-use`, `privacy-policy`,
+> id trong `content/pages/` (`terms-of-use`, `privacy-policy`,
 > `advertiser-disclosure`) và không được là `contact`, `reviews`, `knowledge`.
 
 ### Thêm một bài viết
@@ -102,19 +114,23 @@ trong collection và sắp theo `date` giảm dần, không có danh sách khai 
 
 Muốn bài đó xuất hiện thêm ở "Must Reads" (trang chủ) hoặc sidebar trang review
 thì thêm slug vào `src/content/blocks/curated-posts.yaml`. Hai chỗ đó là **tuyển
-chọn** (3 trên 6 bài, thứ tự không theo ngày) nên phải khai tay.
+chọn** (thứ tự không theo ngày) nên phải khai tay.
 
 Frontmatter bắt buộc: `title`, `date` (dạng ISO `2026-01-06`), `readTime`, `author`, `excerpt`,
 `images.card`, `relatedPosts`. Ảnh để trong `src/assets/posts/`.
 
-> `images` có tới **bốn** slot vì cùng một bài dùng bốn ảnh khác nhau ở bốn vị
-> trí (lưới knowledge, Must Reads trang chủ, sidebar review, sidebar bài viết).
-> Chỉ `card` bắt buộc.
+> `images` có tới **bốn** slot vì cùng một bài có thể dùng bốn ảnh khác nhau ở bốn
+> vị trí (lưới knowledge, Must Reads trang chủ, sidebar review, sidebar bài viết).
+> Chỉ `card` bắt buộc. Ba bài hiện tại dùng chung một ảnh cho cả bốn slot.
 
-### Sửa FAQ, đánh giá chi tiết, thẻ liên hệ
+### Sửa thẻ liên hệ, chữ nút, chữ trang 404
 
-FAQ và mini-review nằm ngay trong frontmatter của trang toplist
-(`src/content/toplists/<slug>.mdx`). Nội dung trang liên hệ ở `src/content/blocks/contact.yaml`.
+Nội dung trang liên hệ ở `src/content/blocks/contact.yaml`; chữ nút CTA và nhãn
+banner ở `blocks/labels.yaml`; chữ trang 404 ở `blocks/not-found.yaml`.
+
+> Trang chủ hiện **không có** khối FAQ và mini-review. Component của cả hai vẫn nằm
+> trong `src/components/toplist/` — bật lại là việc của người sửa code, xem
+> `CLAUDE.md`.
 
 ### Đổi ảnh chia sẻ mạng xã hội
 
@@ -151,25 +167,25 @@ build**, không phải trang hỏng âm thầm.
 ```
 src/
 ├─ content/       <- NỘI DUNG Ở ĐÂY
-│  ├─ brands/        9  danh tính đối tác (tên, logo, alt, link affiliate)
+│  ├─ brands/       15  danh tính đối tác (tên, logo, alt, link affiliate)
 │  ├─ toplists/      1  MỘT FILE = MỘT TRANG TOPLIST (home.mdx là trang chủ)
-│  ├─ placements/    3  brand được xếp hạng thế nào ở từng trang
+│  ├─ placements/    4  brand được xếp hạng thế nào ở từng trang
 │  │                    └─ toplist/  một file mỗi ngách
-│  ├─ reviews/       6  bài review từng brand (.mdx)
-│  ├─ posts/         6  bài blog (.mdx)
-│  ├─ pages/         4  trang phẳng: about, terms, privacy, disclosure
-│  ├─ authors/       3
+│  ├─ reviews/      14  bài review từng brand (.mdx)
+│  ├─ posts/         3  bài blog (.mdx)
+│  ├─ pages/         3  trang phẳng: terms, privacy, disclosure
+│  ├─ authors/       2
 │  └─ blocks/        4  MỘT FILE = MỘT KHỐI nội dung, mỗi file đúng MỘT entry
 │                       labels · not-found · curated-posts · contact
 │
 ├─ assets/        file nhị phân Astro băm và phát ra
-│                 brands · authors · hero · posts · promos · contact · icons · site · fonts
+│                 brands · authors · heroes · posts · promos · illustrations · icons · site · fonts
 │
 ├─ components/    thư mục = LOẠI TRANG mà component phục vụ
 │  ├─ layout/     6  mọi trang: Header, Footer, Breadcrumbs, HeroInner, Seo, ToTop
 │  ├─ toplist/   16  trang chủ + mọi ngách
 │  ├─ article/   12  trang review + bài blog
-│  ├─ reviews/    2  ReviewsList, ReviewCard
+│  ├─ review/     2  ReviewsList, ReviewCard
 │  ├─ knowledge/  1  KnowledgeGrid
 │  └─ contact/    1  ContactCards
 │
@@ -206,7 +222,7 @@ Mọi route sinh từ tên file trong content collection — thêm file là thê
 | `/` và `/<ngách>/`   | `content/toplists/*.mdx` | `pages/[...toplist].astro`     |
 | `/reviews/<brand>/`  | `content/reviews/*.mdx`  | `pages/reviews/[slug].astro`   |
 | `/knowledge/<slug>/` | `content/posts/*.mdx`    | `pages/knowledge/[slug].astro` |
-| 4 trang phẳng        | `content/pages/*.mdx`    | `pages/[page].astro`           |
+| 3 trang phẳng        | `content/pages/*.mdx`    | `pages/[page].astro`           |
 
 Ngoài ra `/reviews/`, `/knowledge/`, `/contact/` là page tĩnh, và `/404`.
 
@@ -223,9 +239,16 @@ chỗ đó, đừng gõ tay đường dẫn trong component.
 
 ## Ghi chú
 
-Nội dung ban đầu nhập từ một site có sẵn. Dấu vết của nguồn **đã dọn xong** —
-dấu cách thừa trong `alt`, `<p>&nbsp;</p>` làm spacer, trang Terms không dùng
-heading, nháy cong và em dash. `CLAUDE.md` mục _"Nội dung đến từ nguồn ngoài"_
-ghi lại từng thứ, vì sao không còn, và vài chỗ **cố ý giữ**.
+Nội dung nhập từ một site có sẵn cùng nền tảng. Dấu vết của nguồn **đã dọn xong** —
+dấu cách thừa trong `alt`, `<p>&nbsp;</p>` làm spacer, nháy cong và em dash.
+`CLAUDE.md` mục _"Nội dung đến từ nguồn ngoài"_ ghi lại từng thứ, vì sao không
+còn, và vài chỗ **cố ý giữ**.
+
+**Ba thứ còn là chỗ giữ chỗ, phải thay trước khi chạy thật:**
+
+1. `affiliateUrl` của cả 15 brand đang là `"#"`.
+2. `src/assets/site/logo.svg` và `logo-white.svg` mang **tên thương hiệu của site
+   nguồn**, không phải của site này.
+3. `public/og-image.jpg` dựng máy móc từ banner, chưa có thiết kế riêng.
 
 Astro: https://docs.astro.build

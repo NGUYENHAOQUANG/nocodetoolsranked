@@ -15,24 +15,30 @@ import { z, type ZodType } from "astro/zod";
    Xem CLAUDE.md §8.4.
    =========================================================================== */
 
-/** Danh tính đối tác. Bốn biến thể tên KHÔNG suy ra được từ nhau — bản gốc có
-    dấu cách đôi và dấu cách cuối cố ý, nên mỗi biến thể là một trường riêng. */
+/**
+ * Danh tính đối tác.
+ *
+ * Bốn biến thể tên là bốn trường RIÊNG chứ không phải một, vì nguồn dùng chuỗi khác
+ * nhau ở từng vị trí và không suy ra được từ nhau: menu ghi "Base 44" trong khi card
+ * toplist ghi "Base44". Bộ dữ liệu hiện tại khai trùng nhau ở phần lớn brand — đó là
+ * tình cờ, không phải lý do để gộp trường.
+ */
 const brands = defineCollection({
   loader: glob({ pattern: "**/*.yaml", base: "./src/content/brands" }),
   schema: ({ image }) =>
     z.object({
-      /** Tên chuẩn, vd "The Pet's Table", "Fresh Pet" (hai từ) */
+      /** Tên ở menu điều hướng, vd "Base 44", "Square Online" */
       name: z.string(),
       logo: image(),
-      /** Chỉ khai khi bản mobile khác desktop (Fresh Pet, The Honest Kitchen) */
+      /** Chỉ khai khi bản mobile khác desktop — hiện chỉ Wix có */
       logoMobile: image().optional(),
-      /** Dạng dài: "X Official Logo | Fresh Dog Food Delivery" — toplist trang chủ */
+      /** Dạng dài: "X Official Logo | Website Builder" — toplist trang chủ */
       logoAlt: z.string(),
       /** Dạng ngắn: "X logo" — sidebar, carousel, card /reviews/ */
       logoAltShort: z.string().optional(),
-      /** Tên ở sidebar — vài brand có dấu cách CUỐI của bản gốc (vd "Ollie ") */
+      /** Tên ở sidebar trang review */
       sidebarName: z.string().optional(),
-      /** Tên ở link cuối bài review — khác cả hai trên (vd "Freshpet" một từ) */
+      /** Tên ở link cuối bài review */
       articleLinkName: z.string().optional(),
       /**
        * Banner dọc nổi bên phải card hạng 1 (chỉ hiện từ 1525px). Chỉ brand nào có
@@ -55,9 +61,17 @@ const homepageRow = z.object({
   /** Chuỗi để giữ đúng "8.0"; vòng điểm dùng giá trị này tính phần trăm */
   rating: z.string(),
   ratingLabel: z.string(),
-  /** 0–5 bước 0.5. KHÔNG suy ra được từ rating (8.7 và 7.8 cùng 4 sao, 7.7 lại 3.5) */
-  stars: z.number(),
-  reviewsCount: z.string(),
+  /**
+   * Hai trường dưới TUỲ CHỌN: không khai thì `ScoreRing` chỉ vẽ vòng điểm + nhãn.
+   *
+   * Đừng điền bừa — đây là số liệu xã hội trên một trang kiếm tiền, bịa ra là nói
+   * dối người đọc. Bảng nào không có số thật thì để trống, vòng điểm vẫn đủ dùng.
+   *
+   * `stars`: 0-5 bước 0.5, KHÔNG suy ra được từ `rating` (8.5 và 7.3 cùng 4 sao,
+   * còn 9.7 lại 5 sao) — nên nó phải là dữ liệu chứ không phải phép tính.
+   */
+  stars: z.number().optional(),
+  reviewsCount: z.string().optional(),
   /** Render với white-space: pre-line nên dấu cách đầu/cuối được giữ nguyên */
   tagline: z.string(),
   taglineMobile: z.string(),
@@ -65,7 +79,23 @@ const homepageRow = z.object({
   bullets: z.array(z.string()),
   bulletsMobile: z.array(z.string()).optional(),
   coupon: z.string().optional(),
-  /** Card #1: viền cyan + nhãn "Exclusive Offer" + icon sao góc phải */
+  /** Chỉ khai khi bản mobile KHÁC bản desktop (vd Squarespace rút gọn
+      "Claim your 20% OFF" thành "Get 20% OFF"). Không khai thì dùng `coupon`. */
+  couponMobile: z.string().optional(),
+  /**
+   * Nhãn nổi ở góc card ("Best Website Builder", "Highly Recommended").
+   * RIÊNG từng brand và không buộc vào `isEditorsChoice` — bản gốc gắn nhãn cho
+   * hai card đầu nhưng chỉ card #1 có viền nổi bật.
+   */
+  badge: z.string().optional(),
+  /**
+   * Icon nhỏ ở góc trên-phải card. KHÔNG khai thì không có icon.
+   *
+   * Tách khỏi `isEditorsChoice` vì bản gốc gắn icon cho HAI card đầu (sao cho #1,
+   * ngọn lửa cho #2) trong khi chỉ #1 có viền nổi bật và tooltip tự mở.
+   */
+  highlightIcon: z.enum(["star", "flame"]).optional(),
+  /** Card #1: viền cyan + tooltip tự mở */
   isEditorsChoice: z.boolean().default(false),
   hoverTooltip: z.object({ highlight: z.string(), text: z.string() }).optional(),
 });
@@ -76,8 +106,8 @@ const reviewsPageRow = z.object({
   rating: z.string(),
   ratingLabel: z.string(),
   stars: z.number(),
-  /** Đoạn mở đầu thân bài review. Nâng lên đây thay vì bóc từ MDX: chuỗi chứa
-      ’ và — phải sống sót byte-exact dưới smartypants:false. */
+  /** Đoạn mở đầu thân bài review. Nâng lên đây thay vì bóc từ MDX: bóc tự động thì
+      đổi câu mở bài là đổi luôn chữ trên card /reviews/ mà không ai định làm vậy. */
   excerpt: z.string(),
 });
 
@@ -114,6 +144,21 @@ const sidebarPlacements = defineCollection({
   schema: z.object({ entries: z.array(z.object({ brand: reference("brands") })) }),
 });
 
+/**
+ * Menu con "Reviews" ở header — danh sách RIÊNG, không dùng chung `sidebar.yaml`.
+ *
+ * Hai danh sách này khác nhau thật: menu điều hướng dẫn tới 10 bài review, còn
+ * sidebar trang review chỉ gợi ý 4 brand. Gộp làm một thì hoặc menu cụt đi 6 mục,
+ * hoặc sidebar phình lên 10 — đổi một cái là hỏng cái kia.
+ *
+ * Cả hai đều là TUYỂN CHỌN (không phải mục lục), nên khai tay là đúng; `reference()`
+ * lo phần gõ sai tên brand.
+ */
+const headerNavPlacements = defineCollection({
+  loader: glob({ pattern: "header-nav.yaml", base: "./src/content/placements" }),
+  schema: z.object({ entries: z.array(z.object({ brand: reference("brands") })) }),
+});
+
 /** Tác giả. Bài review dùng avatar SVG dùng chung, bài blog dùng PNG riêng —
     một trường `avatar` phục vụ được cả hai. */
 const authors = defineCollection({
@@ -133,9 +178,10 @@ const authors = defineCollection({
 const reviews = defineCollection({
   loader: glob({ pattern: "**/*.mdx", base: "./src/content/reviews" }),
   schema: z.object({
-    /** Thẻ <title> */
+    /** Thẻ <title>. Khác `heroTitle`: chuỗi SEO thường dài hơn và có thêm năm,
+        tính năng, giá — vd "Wix Website Builder Review 2026: Features, Pricing…" */
     title: z.string(),
-    /** Tiêu đề hero bản MOBILE. Desktop luôn ghi "Reviews" — hai chuỗi khác hẳn nhau. */
+    /** <h1> trên banner, dùng cho CẢ desktop lẫn mobile */
     heroTitle: z.string(),
     /**
      * Meta description của trang. BẮT BUỘC — bản trước dùng luôn `promo` làm mô tả, mà
@@ -191,14 +237,18 @@ const pages = defineCollection({
 
 /**
  * MỘT FILE = MỘT TRANG TOPLIST. Trang chủ là entry `home` (id đó cho ra URL "/");
- * mọi ngách khác lấy id làm slug ở gốc site (`fresh-dog-food.mdx` -> "/fresh-dog-food/").
+ * mọi ngách khác lấy id làm slug ở gốc site (`ecommerce-builders.mdx` -> "/ecommerce-builders/").
  *
- * Gom bốn collection cũ (`featuredArticles` + `faq` + `miniReviews` + tiêu đề
- * hero vốn viết cứng trong `HeroToplist.astro`) về đây. Bốn cái đó đều có ĐÚNG MỘT
- * entry tên `homepage` — tức là đã sẵn hình dạng "khoá theo trang", chỉ là mới
- * có một trang. Gộp lại thì thêm một ngách là thêm một file, không phải bốn.
+ * Gom các collection cũ (`featuredArticles` + tiêu đề hero vốn viết cứng trong
+ * `HeroToplist.astro`) về đây. Chúng đều có ĐÚNG MỘT entry tên `homepage` — tức là
+ * đã sẵn hình dạng "khoá theo trang", chỉ là mới có một trang. Gộp lại thì thêm một
+ * ngách là thêm một file, không phải bốn.
  *
- * Bảng xếp hạng thì KHÔNG gộp: nó dài 120 dòng cho 9 brand x 12 trường, và nhịp
+ * `faq` và `miniReview` từng nằm ở đây; trang chủ hiện KHÔNG còn hai khối đó nên
+ * trường cũng đi theo. `FaqAccordion.astro` / `MiniReview.astro` vẫn còn trong repo:
+ * bật lại là thêm trường vào schema rồi render, không phải viết lại component.
+ *
+ * Bảng xếp hạng thì KHÔNG gộp: nó dài ~130 dòng cho 10 brand x 12 trường, và nhịp
  * sửa khác hẳn phần còn lại (điểm/coupon/thứ tự đổi hàng tuần, bài viết hàng quý).
  * Nối bằng `reference()` nên gõ sai id là lỗi build, không phải bảng trống.
  *
@@ -236,9 +286,8 @@ const labels = blocks(
       readReview: z.string(),
       compareAll: z.string(),
     }),
-    heading: z.object({ mustReads: z.string() }),
+    heading: z.object({ mustReads: z.string(), recommendedPartners: z.string() }),
     badge: z.object({
-      exclusiveOffer: z.string(),
       lastUpdated: z.string(),
       advertisingDisclosure: z.string(),
     }),
@@ -264,60 +313,40 @@ const notFound = blocks(
 
 const toplists = defineCollection({
   loader: glob({ pattern: "**/*.mdx", base: "./src/content/toplists" }),
-  schema: ({ image }) =>
-    z.object({
-      /** Thẻ <title> và meta description — riêng từng ngách, không dùng chung */
-      title: z.string(),
-      description: z.string(),
+  schema: z.object({
+    /** Thẻ <title> và meta description — riêng từng ngách, không dùng chung */
+    title: z.string(),
+    description: z.string(),
 
-      /** <h1>. Chứa HTML thô nên render bằng set:html — `<span>` là từ chỉ hiện
-          từ 615px, không tách được thành hai <h1> vì mỗi trang chỉ một <h1>. */
-      heroTitle: z.string(),
-      heroAlt: z.string(),
-      /** Hai phụ đề cho hai mốc màn hình — bản gốc dùng hai câu KHÁC nhau */
-      heroSubtitle: z.string(),
-      heroSubtitleCompact: z.string(),
+    /** <h1>. Chứa HTML thô nên render bằng set:html — `<span>` là từ chỉ hiện
+        từ 768px, không tách được thành hai <h1> vì mỗi trang chỉ một <h1>. */
+    heroTitle: z.string(),
+    heroAlt: z.string(),
+    /** Hai phụ đề cho hai mốc màn hình. Trang chủ hiện dùng CÙNG một câu ở cả
+        hai — vẫn giữ hai trường vì ngách sau có thể cần câu ngắn riêng. */
+    heroSubtitle: z.string(),
+    heroSubtitleCompact: z.string(),
 
-      ranking: reference("toplistPlacements"),
+    ranking: reference("toplistPlacements"),
 
-      /** Banner khuyến mãi chèn giữa danh sách. Không khai thì không chèn. */
-      promo: z
-        .object({
-          brand: reference("brands"),
-          afterRank: z.number(),
-          logoAlt: z.string(),
-          title: z.string(),
-          buttonText: z.string(),
-        })
-        .optional(),
+    /** Tieu de muc lap lai card hang 1 o cuoi danh sach. RIENG tung ngach. */
+    bestOverallTitle: z.string(),
 
-      /** Tiêu đề hai mục lớn. RIÊNG từng ngách — ngách cá sẽ là "Best Overall Cat Food". */
-      bestOverallTitle: z.string(),
-      miniReviewTitle: z.string(),
+    /** Banner khuyến mãi ngang, chèn ngay SAU card hạng `afterRank`. Không khai
+        thì danh sách chạy liền, không chèn gì. */
+    promo: z
+      .object({
+        brand: reference("brands"),
+        afterRank: z.number(),
+        logoAlt: z.string(),
+        title: z.string(),
+        buttonText: z.string(),
+      })
+      .optional(),
 
-      /** Tiêu đề khối bài viết. Thân bài KHÔNG lặp lại nó. */
-      articleTitle: z.string(),
-
-      /** `answer` là chuỗi HTML (bản gốc có <strong>) → set:html */
-      faq: z.array(z.object({ question: z.string(), answer: z.string() })),
-
-      /** Đánh giá chi tiết brand hạng 1. Logo/điểm/sao/link lấy từ `ranking`. */
-      miniReview: z.object({
-        categories: z.array(
-          z.object({
-            title: z.string(),
-            icon: image(),
-            /** 0–10; quyết định màu ô điểm (≥9 xanh, ≥7 vàng, còn lại xám) */
-            score: z.number(),
-            description: z.string(),
-          }),
-        ),
-        pros: z.array(z.string()),
-        cons: z.array(z.string()),
-        /** Chỉ hiện dưới 768px, trong drawer "Summary" */
-        summary: z.string(),
-      }),
-    }),
+    /** Tiêu đề khối bài viết. Thân bài KHÔNG lặp lại nó. */
+    articleTitle: z.string(),
+  }),
 });
 
 /** Bài blog. Thân MDX = prose + ảnh; TOC lấy từ heading trong thân.
@@ -394,6 +423,7 @@ export const collections = {
   toplistPlacements,
   reviewsPagePlacements,
   sidebarPlacements,
+  headerNavPlacements,
   authors,
   reviews,
   labels,

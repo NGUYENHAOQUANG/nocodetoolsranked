@@ -20,15 +20,18 @@ export interface NavLink {
  */
 export const mainNav = {
   reviews: { label: "Reviews", href: REVIEWS_INDEX } satisfies NavLink,
-  knowledge: { label: "Learn", href: KNOWLEDGE_INDEX } satisfies NavLink,
+  knowledge: { label: "Knowledge", href: KNOWLEDGE_INDEX } satisfies NavLink,
 };
 
-/** Danh sách link ở chân trang, đúng thứ tự hiển thị. */
+/**
+ * Danh sách link ở chân trang, đúng thứ tự hiển thị.
+ *
+ * Chỉ 5 mục, và CỐ Ý không lặp lại "Reviews"/"Knowledge" của thanh điều hướng:
+ * chân trang ở đây gánh phần pháp lý (điều khoản, riêng tư, công bố quảng cáo)
+ * cộng lối liên hệ, còn điều hướng nội dung đã có ở header.
+ */
 export const footerLinks: NavLink[] = [
   { label: "Home", href: HOME },
-  { label: "About Us", href: STATIC_PAGES.about },
-  { label: "Reviews", href: REVIEWS_INDEX },
-  { label: "Knowledge", href: KNOWLEDGE_INDEX },
   { label: "Terms of Use", href: STATIC_PAGES.terms },
   { label: "Privacy Policy", href: STATIC_PAGES.privacy },
   { label: "Advertiser Disclosure", href: STATIC_PAGES.disclosure },

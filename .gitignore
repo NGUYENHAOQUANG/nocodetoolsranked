@@ -22,3 +22,6 @@ pnpm-debug.log*
 
 # jetbrains setting folder
 .idea/
+
+# anh chup / snapshot do Playwright MCP ghi ra khi do giao dien
+.playwright-mcp/

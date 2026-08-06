@@ -51,14 +51,14 @@ async function curated(key: "mustReads" | "reviewSidebar") {
   return getEntries(list);
 }
 
-/** Lưới /knowledge/ — alt: "{title} | Fresh Dog Food Delivery | Article Thumbnail" */
+/** Lưới /knowledge/ — alt: "{title} | Article Thumbnail" */
 export async function getKnowledgeCards(): Promise<KnowledgeCard[]> {
   /* MỌI bài, mới nhất trước. Không có danh sách khai tay nên bài thứ 7 tự vào lưới. */
   const all = await getCollection("posts");
   all.sort((a, b) => b.data.date.getTime() - a.data.date.getTime());
   return all.map((e) => ({
     image: e.data.images.card,
-    imageAlt: `${e.data.title} | Fresh Dog Food Delivery | Article Thumbnail`,
+    imageAlt: `${e.data.title} | Article Thumbnail`,
     date: formatArticleDate(e.data.date),
     readTime: e.data.readTime,
     title: e.data.title,
