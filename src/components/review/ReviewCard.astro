@@ -164,7 +164,7 @@ const labels = (await getEntry("labels", "labels"))!.data;
   .review-card__more {
     text-decoration: underline;
     font-weight: 500;
-    color: inherit;
+    color: var(--color-primary);
   }
 
   .review-card__grade {
@@ -196,10 +196,10 @@ const labels = (await getEntry("labels", "labels"))!.data;
     stroke-linecap: round;
   }
   .review-card__ring-trail {
-    stroke: #ededed;
+    stroke: var(--color-ring-trail);
   }
   .review-card__ring-arc {
-    stroke: #c5e5f7;
+    stroke: var(--color-accent);
   }
   .review-card__ring-overlay {
     position: absolute;

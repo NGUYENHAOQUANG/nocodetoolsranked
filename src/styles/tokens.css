@@ -49,6 +49,9 @@
   /* Coupon */
   --color-coupon-bg: #d7f2f9;
   --color-coupon-border: #469fd5;
+  
+  /* Score Ring */
+  --color-ring-trail: #e0e4e6;
 
   /* ----- Chữ ----- */
   /* Mặc định của <body>. Bản gốc để #000 ở lớp bao ngoài rồi hầu hết khối nội
