@@ -28,6 +28,7 @@ const {
 
 /* Nhãn dùng chung toàn site, không đổi theo trang -> tự lấy thay vì truyền props. */
 const labels = (await getEntry("labels", "labels"))!.data;
+const GA_ID = import.meta.env.PUBLIC_GA_MEASUREMENT_ID;
 ---
 
 <!doctype html>
@@ -69,6 +70,27 @@ const labels = (await getEntry("labels", "labels"))!.data;
         trang còn lại không phải mang theo khai báo thừa. */
     }
     <Font cssVariable="--font-brand" preload />
+    <!-- Google tag (gtag.js) -->
+    {
+      GA_ID && (
+        <>
+          <script
+            is:inline
+            async
+            src={`https://www.googletagmanager.com/gtag/js?id=${GA_ID}`}
+          />
+          <script
+            is:inline
+            set:html={`
+              window.dataLayer = window.dataLayer || [];
+              function gtag(){dataLayer.push(arguments);}
+              gtag('js', new Date());
+              gtag('config', '${GA_ID}');
+            `}
+          />
+        </>
+      )
+    }
   </head>
   <body>
     {
