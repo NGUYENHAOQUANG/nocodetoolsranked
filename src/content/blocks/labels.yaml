@@ -16,6 +16,8 @@ cta:
 # Tiêu đề mục dùng chung mọi trang (khác tiêu đề RIÊNG ngách, xem `toplists/`).
 heading:
   mustReads: "Must Reads"
+  # Nhan cua drawer trong khoi "Review Highlights" - chi hien duoi 768px
+  summaryDrawer: "Summary"
   recommendedPartners: "Recommended Website Builders"
 
 # Nhãn nhỏ trên banner.

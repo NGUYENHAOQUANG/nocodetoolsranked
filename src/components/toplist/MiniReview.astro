@@ -6,10 +6,8 @@ import type { ToplistRow } from "@/lib/rankings";
 import { STAR_OUTLINE } from "@/lib/icon-paths";
 import MiniReviewCategories from "@/components/toplist/MiniReviewCategories.astro";
 
-interface Props {
-  /** Tiêu đề mục — RIÊNG từng ngách nên phải truyền vào, không tự lấy. */
-  title: string;
-  /** Bản gốc chỉ đánh giá chi tiết brand hạng 1 (The Pet's Table) */
+/** Một brand trong danh sách — dữ liệu xếp hạng ghép với nội dung bài review của nó */
+export interface MiniReviewItem {
   brand: ToplistRow;
   categories: { title: string; icon: ImageMetadata; score: number; description: string }[];
   pros: string[];
@@ -18,7 +16,18 @@ interface Props {
   summary: string;
 }
 
-const { title, brand, categories, pros, cons, summary } = Astro.props;
+interface Props {
+  /** Tiêu đề mục — RIÊNG từng ngách nên phải truyền vào, không tự lấy. */
+  title: string;
+  /**
+   * N brand đầu bảng, KHÔNG phải một. Bản gốc lấy top-N của chính bảng xếp hạng
+   * trang đó (theme của họ đặt `maxMiniReviewsPerPage`), nên thứ tự ở đây chính là
+   * thứ tự bảng xếp hạng — nơi gọi cắt sẵn, component không tự quyết lấy mấy cái.
+   */
+  items: MiniReviewItem[];
+}
+
+const { title, items } = Astro.props;
 
 const CHECK = "M186.301 339.893L96 249.461l-32 30.507L186.301 402 448 140.506 416 110z";
 const CROSS =
@@ -26,12 +35,16 @@ const CROSS =
 
 /* Sao và số lượt đánh giá là dữ liệu TUỲ CHỌN của dòng xếp hạng: chỉ khai khi có số
    thật (xem `content.config.ts`). Không có thì không vẽ, chứ không vẽ 0 sao hay
-   "(undefined Reviews)". */
-const starCount = brand.stars ?? 0;
+   "(undefined Reviews)".
 
-/* Bản gốc đặt dấu ngoặc khác nhau ở 2 bản (rộng bằng nhau nên rất dễ bỏ sót) */
-const reviewsDesktop = brand.reviewsCount ? `(${brand.reviewsCount} Reviews)` : "";
-const reviewsMobile = brand.reviewsCount ? `(${brand.reviewsCount}) Reviews` : "";
+   Bản gốc đặt dấu ngoặc KHÁC nhau ở hai bản (rộng bằng nhau nên rất dễ bỏ sót):
+   desktop "(12,143 Reviews)", mobile "(12,143) Reviews". */
+const rows = items.map((it) => ({
+  ...it,
+  starCount: it.brand.stars ?? 0,
+  reviewsDesktop: it.brand.reviewsCount ? `(${it.brand.reviewsCount} Reviews)` : "",
+  reviewsMobile: it.brand.reviewsCount ? `(${it.brand.reviewsCount}) Reviews` : "",
+}));
 
 /* Nhãn dùng chung toàn site, không đổi theo trang -> tự lấy thay vì truyền props. */
 const labels = (await getEntry("labels", "labels"))!.data;
@@ -41,188 +54,186 @@ const labels = (await getEntry("labels", "labels"))!.data;
   <h2 class="mini-review__title">{title}</h2>
 
   {
-    /* Bản gốc dựng 2 cây DOM riêng rồi đổi bằng `display` chứ không chỉ sắp xếp lại:
-      desktop có Pros/Cons, mobile thay bằng drawer "Summary" → nội dung khác nhau */
+    /* Mỗi brand là MỘT mục, và mỗi mục vẫn có đủ hai cây DOM. Không gộp hai cây:
+      desktop có Pros/Cons, mobile thay bằng drawer "Summary" — nội dung khác nhau
+      thật, không phải cùng nội dung sắp xếp lại. */
   }
-
-  {/* ===== Bản mobile (<768px, hoặc màn hình thấp <420px) ===== */}
-  <div class="mini-review__mobile">
-    <div class="mini-review__mobile-top">
-      <div class="mini-review__mobile-logo-box">
-        <img
-          class="mini-review__mobile-logo"
-          src={brand.logo.src}
-          alt={brand.logoAlt}
-          width="180"
-          height="60"
-        />
-      </div>
-
-      <div class="mini-review__mobile-rating">
-        <div class="mini-review__rating-row">
-          <div class="mini-review__stars" aria-hidden="true">
-            {
-              Array.from({ length: starCount }, () => (
-                <svg viewBox="0 0 16 16" fill="currentColor">
-                  <path d={STAR_OUTLINE} />
-                </svg>
-              ))
-            }
-          </div>
-          <span class="mini-review__score">{brand.rating}</span>
-        </div>
-        <span class="mini-review__reviews">{reviewsMobile}</span>
-      </div>
-
-      <div class="mini-review__cta">
-        <a
-          class="mini-review__button"
-          href={brand.href}
-          title={labels.cta.visitSite}
-          target="_blank"
-          rel={AFFILIATE_REL}
-          referrerpolicy="strict-origin"
-        >
-          {labels.cta.visitSite}
-        </a>
-      </div>
-    </div>
-
-    <MiniReviewCategories categories={categories} />
-
-    <div class="mini-review__drawer">
-      <button class="mini-review__drawer-button" type="button" aria-expanded="false">
-        <span class="mini-review__drawer-title">Summary</span>
-        <svg
-          class="mini-review__drawer-icon"
-          viewBox="0 0 512 512"
-          fill="none"
-          stroke="currentColor"
-          stroke-width="48"
-          stroke-linecap="round"
-          stroke-linejoin="round"
-          aria-hidden="true"
-        >
-          <path d="m112 184 144 144 144-144"></path>
-        </svg>
-      </button>
-      <div class="mini-review__drawer-content">
-        <p class="mini-review__drawer-text">{summary}</p>
-      </div>
-    </div>
-  </div>
-
-  {/* ===== Bản desktop (≥768px và cao ≥420px) ===== */}
-  <div class="mini-review__desktop">
-    <div class="mini-review__column mini-review__column--main">
-      <div class="mini-review__header">
-        <img
-          class="mini-review__logo"
-          src={brand.logo.src}
-          alt={brand.logoAlt}
-          width={brand.logo.width}
-          height={brand.logo.height}
-        />
-        <div class="mini-review__rating">
-          <div class="mini-review__rating-row">
-            <div class="mini-review__stars" aria-hidden="true">
-              {
-                Array.from({ length: starCount }, () => (
-                  <svg viewBox="0 0 16 16" fill="currentColor">
-                    <path d={STAR_OUTLINE} />
-                  </svg>
-                ))
-              }
+  {
+    rows.map((it) => (
+      <div class="mini-review__item">
+        {/* ===== Bản mobile (<768px, hoặc màn hình thấp <420px) ===== */}
+        <div class="mini-review__mobile">
+          <div class="mini-review__mobile-top">
+            <div class="mini-review__mobile-logo-box">
+              <img
+                class="mini-review__mobile-logo"
+                src={it.brand.logo.src}
+                alt={it.brand.logoAlt}
+                width="180"
+                height="60"
+              />
             </div>
-            <span class="mini-review__score">{brand.rating}</span>
+
+            <div class="mini-review__mobile-rating">
+              <div class="mini-review__rating-row">
+                <div class="mini-review__stars" aria-hidden="true">
+                  {Array.from({ length: it.starCount }, () => (
+                    <svg viewBox="0 0 16 16" fill="currentColor">
+                      <path d={STAR_OUTLINE} />
+                    </svg>
+                  ))}
+                </div>
+                <span class="mini-review__score">{it.brand.rating}</span>
+              </div>
+              <span class="mini-review__reviews">{it.reviewsMobile}</span>
+            </div>
+
+            <div class="mini-review__cta">
+              <a
+                class="mini-review__button"
+                href={it.brand.href}
+                title={labels.cta.visitSite}
+                target="_blank"
+                rel={AFFILIATE_REL}
+                referrerpolicy="strict-origin"
+              >
+                {labels.cta.visitSite}
+              </a>
+            </div>
           </div>
-          <span class="mini-review__reviews">{reviewsDesktop}</span>
+
+          <MiniReviewCategories categories={it.categories} />
+
+          <div class="mini-review__drawer">
+            <button class="mini-review__drawer-button" type="button" aria-expanded="false">
+              <span class="mini-review__drawer-title">{labels.heading.summaryDrawer}</span>
+              <svg
+                class="mini-review__drawer-icon"
+                viewBox="0 0 512 512"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="48"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                aria-hidden="true"
+              >
+                <path d="m112 184 144 144 144-144" />
+              </svg>
+            </button>
+            <div class="mini-review__drawer-content">
+              <p class="mini-review__drawer-text">{it.summary}</p>
+            </div>
+          </div>
         </div>
-      </div>
 
-      <MiniReviewCategories categories={categories} />
-    </div>
+        {/* ===== Bản desktop (≥768px và cao ≥420px) ===== */}
+        <div class="mini-review__desktop">
+          <div class="mini-review__column mini-review__column--main">
+            <div class="mini-review__header">
+              <img
+                class="mini-review__logo"
+                src={it.brand.logo.src}
+                alt={it.brand.logoAlt}
+                width={it.brand.logo.width}
+                height={it.brand.logo.height}
+              />
+              <div class="mini-review__rating">
+                <div class="mini-review__rating-row">
+                  <div class="mini-review__stars" aria-hidden="true">
+                    {Array.from({ length: it.starCount }, () => (
+                      <svg viewBox="0 0 16 16" fill="currentColor">
+                        <path d={STAR_OUTLINE} />
+                      </svg>
+                    ))}
+                  </div>
+                  <span class="mini-review__score">{it.brand.rating}</span>
+                </div>
+                <span class="mini-review__reviews">{it.reviewsDesktop}</span>
+              </div>
+            </div>
 
-    <div class="mini-review__column mini-review__column--aside">
-      <div class="mini-review__proscons">
-        <div class="mini-review__proscons-group">
-          <h3 class="mini-review__proscons-title">
-            <svg
-              class="mini-review__proscons-icon"
-              viewBox="0 0 512 512"
-              fill="currentColor"
-              aria-hidden="true"
-            >
-              <path d={CHECK}></path>
-            </svg>
-            Pros
-          </h3>
-          <ul class="mini-review__proscons-list">
-            {
-              pros.map((item) => (
-                <li class="mini-review__proscons-item">
+            <MiniReviewCategories categories={it.categories} />
+          </div>
+
+          <div class="mini-review__column mini-review__column--aside">
+            <div class="mini-review__proscons">
+              <div class="mini-review__proscons-group">
+                <h3 class="mini-review__proscons-title">
                   <svg
-                    class="mini-review__item-icon"
+                    class="mini-review__proscons-icon"
                     viewBox="0 0 512 512"
                     fill="currentColor"
                     aria-hidden="true"
                   >
                     <path d={CHECK} />
                   </svg>
-                  <span>{item}</span>
-                </li>
-              ))
-            }
-          </ul>
-        </div>
+                  Pros
+                </h3>
+                <ul class="mini-review__proscons-list">
+                  {it.pros.map((item) => (
+                    <li class="mini-review__proscons-item">
+                      <svg
+                        class="mini-review__item-icon"
+                        viewBox="0 0 512 512"
+                        fill="currentColor"
+                        aria-hidden="true"
+                      >
+                        <path d={CHECK} />
+                      </svg>
+                      <span>{item}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
 
-        <div class="mini-review__proscons-group">
-          <h3 class="mini-review__proscons-title">
-            {/* Bản gốc để icon "Cons" cố định 16px, còn icon "Pros" là 1em (20.8px) */}
-            <svg
-              class="mini-review__proscons-icon mini-review__proscons-icon--sm"
-              viewBox="0 0 512 512"
-              fill="currentColor"
-              aria-hidden="true"
-            >
-              <path d={CROSS}></path>
-            </svg>
-            Cons
-          </h3>
-          <ul class="mini-review__proscons-list">
-            {
-              cons.map((item) => (
-                <li class="mini-review__proscons-item">
+              <div class="mini-review__proscons-group">
+                <h3 class="mini-review__proscons-title">
+                  {/* Bản gốc để icon "Cons" cố định 16px, còn icon "Pros" là 1em (20.8px) */}
                   <svg
-                    class="mini-review__item-icon"
+                    class="mini-review__proscons-icon mini-review__proscons-icon--sm"
                     viewBox="0 0 512 512"
                     fill="currentColor"
                     aria-hidden="true"
                   >
                     <path d={CROSS} />
                   </svg>
-                  <span>{item}</span>
-                </li>
-              ))
-            }
-          </ul>
+                  Cons
+                </h3>
+                <ul class="mini-review__proscons-list">
+                  {it.cons.map((item) => (
+                    <li class="mini-review__proscons-item">
+                      <svg
+                        class="mini-review__item-icon"
+                        viewBox="0 0 512 512"
+                        fill="currentColor"
+                        aria-hidden="true"
+                      >
+                        <path d={CROSS} />
+                      </svg>
+                      <span>{item}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            </div>
+
+            <div class="mini-review__cta">
+              <a
+                class="mini-review__button"
+                href={it.brand.href}
+                title={labels.cta.visitSite}
+                target="_blank"
+                rel={AFFILIATE_REL}
+                referrerpolicy="strict-origin"
+              >
+                {labels.cta.visitSite}
+              </a>
+            </div>
+          </div>
         </div>
       </div>
-
-      <div class="mini-review__cta">
-        <a
-          class="mini-review__button"
-          href={brand.href}
-          title={labels.cta.visitSite}
-          target="_blank"
-          rel={AFFILIATE_REL}
-          referrerpolicy="strict-origin"
-        >
-          {labels.cta.visitSite}
-        </a>
-      </div>
-    </div>
-  </div>
+    ))
+  }
 </section>
 
 <style>
@@ -262,6 +273,13 @@ const labels = (await getEntry("labels", "labels"))!.data;
     text-transform: uppercase;
   }
 
+  /* Vỏ bọc MỘT brand. Không tự vẽ gì — nó chỉ gom hai cây DOM của cùng một brand
+     lại làm một flex item, để `gap` của `.mini-review` tách các brand với nhau
+     thay vì tách mobile khỏi desktop. */
+  .mini-review__item {
+    display: contents;
+  }
+
   .mini-review__desktop {
     display: none;
   }
@@ -272,10 +290,13 @@ const labels = (await getEntry("labels", "labels"))!.data;
     align-items: center;
     gap: 0.5rem;
   }
+  /* Sao VÀNG, không phải màu thương hiệu: đây là quy ước chấm sao chung của mọi
+     nơi trên site (`ScoreRing`, card `/reviews/`) và của cả bản gốc. Dùng
+     `--color-primary` ở đây là khối này lệch với ba chỗ kia mỗi lần đổi bảng màu. */
   .mini-review__stars {
     display: flex;
     gap: 0.125rem;
-    color: var(--color-primary);
+    color: #ffcd42;
   }
   .mini-review__stars svg {
     width: 1rem;

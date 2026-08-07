@@ -12,30 +12,26 @@ const { brandLogo, brandName, promoImage } = Astro.props;
 
 <div class="html-banner">
   <div class="html-banner__header">
-    <Image
-      class="html-banner__logo"
-      src={brandLogo}
-      alt={`${brandName} logo`}
-      height={60}
-    />
+    <Image class="html-banner__logo" src={brandLogo} alt={`${brandName} logo`} height={60} />
   </div>
-  
+
   <div class="html-banner__content">
-    <h3 class="html-banner__title">
-      200M+ users<br />worldwide
-    </h3>
-    
-    <div class="html-banner__button">
-      Visit Site
-    </div>
+    {
+      /* <p> chu KHONG phai <h3>: day la khau hieu quang cao, khong phai muc trong
+        dan y tai lieu. Banner nay nam ngay sau <h1> cua trang nen mot <h3> o day la
+        nhay cap (h1 -> h3) va check-html bat. Co chu van do CSS quyet dinh. */
+    }
+    <p class="html-banner__title">200M+ users<br />worldwide</p>
+
+    <div class="html-banner__button">Visit Site</div>
   </div>
-  
+
+  {
+    /* alt rong: anh khuyen mai nay thuan trang tri. Ten brand da co o alt cua logo
+      ngay tren, va ca banner nam trong mot <a> co nhan roi - mo ta lai la doc thua. */
+  }
   <div class="html-banner__footer">
-    <Image
-      class="html-banner__promo-image"
-      src={promoImage}
-      alt="Promo Image"
-    />
+    <Image class="html-banner__promo-image" src={promoImage} alt="" />
   </div>
 </div>
 
@@ -47,26 +43,26 @@ const { brandLogo, brandName, promoImage } = Astro.props;
     min-height: 480px;
     /* Solid soft green background to blend seamlessly with the masked image */
     background: #e8f5e9;
-    
+
     overflow: hidden;
     position: relative;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
     text-align: center;
     border: 1px solid #dcedce;
   }
-  
+
   .html-banner__header {
     padding: 35px 20px 10px;
     display: flex;
     justify-content: center;
   }
-  
+
   .html-banner__logo {
     max-width: 140px;
     height: auto;
     object-fit: contain;
   }
-  
+
   .html-banner__content {
     padding: 10px 20px 15px;
     flex-grow: 1;
@@ -75,7 +71,7 @@ const { brandLogo, brandName, promoImage } = Astro.props;
     align-items: center;
     z-index: 2;
   }
-  
+
   .html-banner__title {
     font-size: 1.45rem;
     font-weight: 700;
@@ -84,7 +80,7 @@ const { brandLogo, brandName, promoImage } = Astro.props;
     margin: 15px 0 25px;
     letter-spacing: -0.02em;
   }
-  
+
   .html-banner__button {
     background: var(--color-primary);
     color: #fff;
@@ -94,13 +90,13 @@ const { brandLogo, brandName, promoImage } = Astro.props;
     border-radius: 5px;
     width: 100%;
     transition: background 0.2s ease;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   }
-  
+
   .html-banner:hover .html-banner__button {
     background: var(--color-secondary);
   }
-  
+
   .html-banner__footer {
     width: 100%;
     margin-top: auto;
@@ -108,7 +104,7 @@ const { brandLogo, brandName, promoImage } = Astro.props;
     display: flex;
     z-index: 1;
   }
-  
+
   .html-banner__promo-image {
     width: 100%;
     height: auto;

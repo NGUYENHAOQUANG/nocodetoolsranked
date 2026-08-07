@@ -204,9 +204,15 @@ bảng xếp hạng; frontmatter giữ tiêu đề và hero.
 Bốn collection cũ (`featuredArticles`, `faq`, `miniReviews`, và chữ nghĩa hero vốn
 viết cứng trong component) đều chỉ có ĐÚNG MỘT entry tên `homepage` — tức đã sẵn
 hình dạng "khoá theo trang", chỉ là mới có một trang. Gộp lại nên thêm một ngách
-là thêm **một** file nội dung, không phải bốn. (`faq` và `miniReview` sau đó bị gỡ
-khỏi schema vì trang chủ không còn hai khối đó — component thì vẫn còn.
-`bestOverallTitle` và `promo` thì VẪN dùng.)
+là thêm **một** file nội dung, không phải bốn. (`faq` sau đó bị gỡ khỏi schema vì
+trang chủ không còn khối đó — component thì vẫn còn. `bestOverallTitle`, `promo` và
+`miniReviewTitle` thì VẪN dùng.)
+
+`miniReview` quay lại nhưng ở hình dạng KHÁC: trang toplist chỉ giữ TIÊU ĐỀ khối,
+còn nội dung chấm điểm nằm ở chính bài review của từng brand (`categories`,
+`summary`), và tên + icon bốn hạng mục ở `blocks/review-categories.yaml`. Ba nguồn
+đó ghép trong `getMiniReviewItems`. Bản cũ nhét cả ba vào frontmatter trang chủ nên
+mỗi ngách phải chép lại toàn bộ mô tả của brand.
 
 Bảng xếp hạng thì KHÔNG gộp vào đó: nó dài ~130 dòng cho 10 brand x 12 trường, và
 nhịp sửa khác hẳn phần còn lại (điểm/coupon/thứ tự đổi hàng tuần, bài viết hàng
@@ -239,11 +245,13 @@ Luật, không có chỗ nào cần phán đoán:
 | `knowledge/` | `/knowledge/` (1)               |
 | `contact/`   | `/contact/` (1)                 |
 
-Ba file trong `toplist/` hiện **không component nào import**: `MiniReview`,
-`MiniReviewCategories`, `FaqAccordion`. Chúng là các khối trang chủ đã tắt, giữ lại
-để bật lại được — đúng ca mà `check-unused.mjs` từng báo sai và vì thế đã bị bỏ.
-Bật lại một khối là thêm trường vào schema `toplists` rồi render, không phải viết
-lại component.
+Một file trong `toplist/` hiện **không component nào import**: `FaqAccordion`. Nó là
+khối trang chủ đã tắt, giữ lại để bật lại được — đúng ca mà `check-unused.mjs` từng
+báo sai và vì thế đã bị bỏ. Bật lại là thêm trường vào schema `toplists` rồi render,
+không phải viết lại component.
+
+`MiniReview` + `MiniReviewCategories` từng nằm trong danh sách đó và nay đã bật lại —
+đúng lý do vì sao không xoá component chỉ vì tạm thời không ai import.
 
 Trục này chọn vì **đơn vị lớn lên của repo là loại trang**: thêm brand hay thêm
 bài chỉ là thêm file nội dung, còn component mới chỉ sinh ra khi có loại trang

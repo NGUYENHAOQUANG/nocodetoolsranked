@@ -197,6 +197,30 @@ const reviews = defineCollection({
     author: reference("authors"),
     pros: z.array(z.string()),
     cons: z.array(z.string()),
+
+    /**
+     * Chấm điểm theo hạng mục, dùng cho khối "Review Highlights" ở trang toplist.
+     *
+     * TÊN và ICON hạng mục KHÔNG ở đây — chúng là dữ liệu toàn site, nằm ở
+     * `blocks/review-categories.yaml`. Ở đây chỉ có phần RIÊNG của brand: điểm và
+     * mô tả. Ghép hai thứ lại theo THỨ TỰ, nên mảng này phải đúng 4 phần tử và
+     * đúng thứ tự Design / Features / Pricing / Usability.
+     *
+     * `.length(4)` để lệch số lượng thành lỗi build: thiếu một phần tử thì hạng mục
+     * cuối biến mất, thừa một phần tử thì nó không có tên — cả hai đều im lặng.
+     */
+    categories: z
+      .array(
+        z.object({
+          /** 0–10; quyết định màu ô điểm (>=9 xanh, >=7 vàng, còn lại xám) */
+          score: z.number(),
+          description: z.string(),
+        }),
+      )
+      .length(4),
+
+    /** Đoạn tóm tắt trong drawer "Summary" — CHỈ hiện dưới 768px */
+    summary: z.string(),
   }),
 });
 
@@ -286,7 +310,11 @@ const labels = blocks(
       readReview: z.string(),
       compareAll: z.string(),
     }),
-    heading: z.object({ mustReads: z.string(), recommendedPartners: z.string() }),
+    heading: z.object({
+      mustReads: z.string(),
+      recommendedPartners: z.string(),
+      summaryDrawer: z.string(),
+    }),
     badge: z.object({
       lastUpdated: z.string(),
       advertisingDisclosure: z.string(),
@@ -311,6 +339,22 @@ const notFound = blocks(
   }),
 );
 
+/**
+ * Bốn hạng mục chấm điểm của khối "Review Highlights" — TÊN và ICON, dùng chung
+ * mọi trang.
+ *
+ * Tách khỏi `reviews/*.mdx` vì bốn cái tên này không đổi theo brand: để trong từng
+ * bài review là chép "Design/Features/Pricing/Usability" 14 lần, và sửa tên hạng
+ * mục thành 14 lần sửa. Brand chỉ đóng góp ĐIỂM và MÔ TẢ.
+ *
+ * Dùng dạng hàm `({ image })` vì có `image()`.
+ */
+const reviewCategories = blocks("review-categories.yaml", ({ image }) =>
+  z.object({
+    entries: z.array(z.object({ title: z.string(), icon: image() })).length(4),
+  }),
+);
+
 const toplists = defineCollection({
   loader: glob({ pattern: "**/*.mdx", base: "./src/content/toplists" }),
   schema: z.object({
@@ -331,6 +375,10 @@ const toplists = defineCollection({
 
     /** Tieu de muc lap lai card hang 1 o cuoi danh sach. RIENG tung ngach. */
     bestOverallTitle: z.string(),
+
+    /** Tiêu đề khối "Review Highlights". RIÊNG từng ngách vì nó gọi tên ngách
+        ("Website Builders Review Highlights"), khác bốn tên hạng mục vốn toàn site. */
+    miniReviewTitle: z.string(),
 
     /** Banner khuyến mãi ngang, chèn ngay SAU card hạng `afterRank`. Không khai
         thì danh sách chạy liền, không chèn gì. */
@@ -429,6 +477,7 @@ export const collections = {
   labels,
   notFound,
   curatedPosts,
+  reviewCategories,
   toplists,
   pages,
   posts,

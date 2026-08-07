@@ -12,12 +12,13 @@
  */
 import { getCollection, getEntry } from "astro:content";
 import { organizationSchema, websiteSchema } from "@/lib/schema-org";
-import { getToplistBrands } from "@/lib/rankings";
+import { getToplistBrands, getMiniReviewItems } from "@/lib/rankings";
 import BaseLayout from "@/layouts/BaseLayout.astro";
 import Header from "@/components/layout/Header.astro";
 import HeroToplist from "@/components/toplist/HeroToplist.astro";
 import PartnerList from "@/components/toplist/PartnerList.astro";
 import BestOverall from "@/components/toplist/BestOverall.astro";
+import MiniReview from "@/components/toplist/MiniReview.astro";
 import ContentGrid from "@/components/toplist/ContentGrid.astro";
 import Footer from "@/components/layout/Footer.astro";
 import ToTop from "@/components/layout/ToTop.astro";
@@ -64,6 +65,12 @@ if (data.promo) {
   };
 }
 
+/* Khối "Review Highlights": ba brand đầu bảng có bài review.
+   Con số 3 là của bản gốc (`maxMiniReviewsPerPage`) — nó là quyết định TRÌNH BÀY
+   (bao nhiêu khối cho vừa trang) chứ không phải nội dung, nên để ở đây chứ không
+   nhét thành một trường trong file nội dung. */
+const miniReviews = await getMiniReviewItems(rankingId, 3);
+
 /* organization + website schema chỉ phát ở trang chủ: hai kiểu đó mô tả CẢ SITE,
    phát lại ở từng ngách là khai trùng. */
 const schema = entry.id === "home" ? [organizationSchema(), websiteSchema()] : [];
@@ -80,6 +87,7 @@ const schema = entry.id === "home" ? [organizationSchema(), websiteSchema()] : [
     />
     <PartnerList brands={brands} promo={promo} />
     <BestOverall title={data.bestOverallTitle} brand={topBrand} />
+    <MiniReview title={data.miniReviewTitle} items={miniReviews} />
     <ContentGrid toplist={entry} />
   </main>
   <Footer />

@@ -1,0 +1,19 @@
+# Bon hang muc cham diem cua khoi "Review Highlights" duoi bang xep hang.
+#
+# TOAN SITE, khong doi theo trang: ban goc de chung trong goi ngon ngu chu khong
+# trong du lieu tung trang. Vi vay component tu `getEntry` thay vi nhan qua props
+# - dung phep thu trong CLAUDE.md ("nhan khong doi o dau ca -> tu lay").
+#
+# THU TU LA HOP DONG: moi bai review khai dung 4 phan tu `categories` theo DUNG
+# thu tu nay (Design, Features, Pricing, Usability) va chi khai diem + mo ta.
+# Doi thu tu o day ma khong doi trong 14 file review la diem gan nham hang muc -
+# build van xanh, khong gi bao.
+entries:
+  - title: "Design"
+    icon: "../../assets/icons/design.svg"
+  - title: "Features"
+    icon: "../../assets/icons/features.svg"
+  - title: "Pricing"
+    icon: "../../assets/icons/pricing.svg"
+  - title: "Usability"
+    icon: "../../assets/icons/usability.svg"

@@ -13,6 +13,8 @@ import type { ImageMetadata } from "astro";
 import { reviewUrl } from "@/lib/links";
 
 export interface ToplistRow {
+  /** Khoá brand — cũng chính là tên file bài review, nên dùng để nối sang `reviews` */
+  key: string;
   rank: number;
   name: string;
   logo: ImageMetadata;
@@ -119,7 +121,8 @@ export async function getToplistBrands(placementId: string): Promise<ToplistRow[
     await rowsOf(await getEntry("toplistPlacements", placementId), placementId),
     placementId,
   );
-  return rows.map(({ row, brand }) => ({
+  return rows.map(({ row, key, brand }) => ({
+    key,
     rank: row.rank,
     name: brand.name,
     logo: brand.logo,
@@ -143,6 +146,51 @@ export async function getToplistBrands(placementId: string): Promise<ToplistRow[
     ...(row.isEditorsChoice ? { isEditorsChoice: true } : {}),
     ...(row.hoverTooltip ? { hoverTooltip: row.hoverTooltip } : {}),
   }));
+}
+
+/**
+ * Khối "Review Highlights": N brand đầu bảng, mỗi brand ghép ba nguồn.
+ *
+ *   bảng xếp hạng  ->  logo, điểm, sao, số lượt đánh giá, link
+ *   bài review     ->  điểm + mô tả từng hạng mục, pros/cons, summary
+ *   block toàn site ->  TÊN và ICON của bốn hạng mục
+ *
+ * Ghép hạng mục theo THỨ TỰ chứ không theo khoá: bài review chỉ khai điểm và mô tả,
+ * tên nằm ở `blocks/review-categories.yaml`. Schema ép cả hai bên đúng 4 phần tử nên
+ * lệch số lượng là lỗi build; lệch THỨ TỰ thì không ai bắt được — xem ghi chú trong
+ * chính file yaml đó.
+ *
+ * Brand nào chưa có bài review thì BỎ QUA chứ không dựng mục rỗng: bảng xếp hạng
+ * chứa cả brand không có trang review (vd Emergent), và `limit` đếm trên số mục thật
+ * sự dựng được.
+ */
+export async function getMiniReviewItems(placementId: string, limit: number) {
+  const [brands, block] = await Promise.all([
+    getToplistBrands(placementId),
+    getEntry("reviewCategories", "review-categories"),
+  ]);
+  if (!block) throw new Error("Thiếu src/content/blocks/review-categories.yaml");
+  const meta = block.data.entries;
+
+  const items = [];
+  for (const brand of brands) {
+    if (items.length >= limit) break;
+    const review = await getEntry("reviews", brand.key);
+    if (!review) continue;
+    items.push({
+      brand,
+      categories: review.data.categories.map((c, i) => ({
+        title: meta[i]!.title,
+        icon: meta[i]!.icon,
+        score: c.score,
+        description: c.description,
+      })),
+      pros: review.data.pros,
+      cons: review.data.cons,
+      summary: review.data.summary,
+    });
+  }
+  return items;
 }
 
 /** Danh sách trang /reviews/ — 6 brand, thứ tự và điểm KHÁC trang chủ (có chủ ý) */

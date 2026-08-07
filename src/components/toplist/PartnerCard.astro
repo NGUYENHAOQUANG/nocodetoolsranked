@@ -1,7 +1,6 @@
 ---
 import { getEntry } from "astro:content";
 import { AFFILIATE_REL } from "@/lib/links";
-import { Image } from "astro:assets";
 import type { ToplistRow } from "@/lib/rankings";
 import ScoreRing from "@/components/toplist/ScoreRing.astro";
 import HtmlSideBanner from "@/components/toplist/HtmlSideBanner.astro";
@@ -72,11 +71,7 @@ const labels = (await getEntry("labels", "labels"))!.data;
         rel={AFFILIATE_REL}
         referrerpolicy="strict-origin"
       >
-        <HtmlSideBanner
-          brandLogo={logo}
-          brandName={brand.name}
-          promoImage={sideBanner}
-        />
+        <HtmlSideBanner brandLogo={logo} brandName={brand.name} promoImage={sideBanner} />
       </a>
     )
   }

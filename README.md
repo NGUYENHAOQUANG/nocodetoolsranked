@@ -93,7 +93,8 @@ Muốn brand đó có trang review riêng thì thêm:
 
    Frontmatter bắt buộc: `title`, `description`, `heroTitle`, `heroAlt`,
    `heroSubtitle`, `heroSubtitleCompact`, `ranking`, `bestOverallTitle`,
-   `articleTitle`. `promo` (banner ngang chèn giữa danh sách) là tuỳ chọn.
+   `miniReviewTitle`, `articleTitle`. `promo` (banner ngang chèn giữa danh sách) là
+   tuỳ chọn.
 
    Thân MDX chính là bài viết dài nằm dưới bảng xếp hạng.
 
@@ -128,9 +129,21 @@ Frontmatter bắt buộc: `title`, `date` (dạng ISO `2026-01-06`), `readTime`,
 Nội dung trang liên hệ ở `src/content/blocks/contact.yaml`; chữ nút CTA và nhãn
 banner ở `blocks/labels.yaml`; chữ trang 404 ở `blocks/not-found.yaml`.
 
-> Trang chủ hiện **không có** khối FAQ và mini-review. Component của cả hai vẫn nằm
-> trong `src/components/toplist/` — bật lại là việc của người sửa code, xem
-> `CLAUDE.md`.
+Khối **"Review Highlights"** (ba brand đầu bảng, chấm điểm 4 hạng mục) lấy nội dung
+từ ba chỗ:
+
+| Sửa cái gì                          | Ở đâu                                            |
+| ----------------------------------- | ------------------------------------------------ |
+| Tiêu đề khối                        | `toplists/<slug>.mdx` -> `miniReviewTitle`       |
+| Tên + icon 4 hạng mục               | `blocks/review-categories.yaml` (toàn site)      |
+| Điểm + mô tả từng hạng mục, tóm tắt | `reviews/<brand>.mdx` -> `categories`, `summary` |
+
+> Thứ tự `categories` trong bài review phải khớp thứ tự trong
+> `review-categories.yaml` — ghép theo VỊ TRÍ, không theo tên. Đổi thứ tự một bên mà
+> quên bên kia là điểm gắn nhầm hạng mục, build vẫn xanh.
+
+> Trang chủ hiện **không có** khối FAQ. Component `FaqAccordion` vẫn nằm trong
+> `src/components/toplist/` — bật lại là việc của người sửa code, xem `CLAUDE.md`.
 
 ### Đổi ảnh chia sẻ mạng xã hội
 
@@ -175,8 +188,9 @@ src/
 │  ├─ posts/         3  bài blog (.mdx)
 │  ├─ pages/         3  trang phẳng: terms, privacy, disclosure
 │  ├─ authors/       2
-│  └─ blocks/        4  MỘT FILE = MỘT KHỐI nội dung, mỗi file đúng MỘT entry
+│  └─ blocks/        5  MỘT FILE = MỘT KHỐI nội dung, mỗi file đúng MỘT entry
 │                       labels · not-found · curated-posts · contact
+│                       review-categories
 │
 ├─ assets/        file nhị phân Astro băm và phát ra
 │                 brands · authors · heroes · posts · promos · illustrations · icons · site · fonts
