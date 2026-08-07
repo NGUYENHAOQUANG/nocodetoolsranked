@@ -61,9 +61,19 @@
 
    `margin: 1em` và `1.33em` chính là mặc định UA của h3/h4 — bản gốc chỉ đặt
    font-size rồi để UA lo margin. Giữ dạng `em` để quan hệ đó không đứt khi đổi cỡ. */
+/* TEAL cho đầu mục cấp một — không phải màu chữ thân bài.
+
+   Đây là quy ước xuyên site: tiêu đề mục là MỐC QUÉT TRANG, cùng vai trò "định
+   hướng đọc" với link nav, nên cùng màu với nó. Áp cho `.post__body h2` và
+   `.review-section__body h2`; KHÔNG áp cho `.page__body h2` (trang pháp lý —
+   ở đó đầu mục là cấu trúc văn bản, tô màu vào thành ra mời gọi bấm) và không
+   áp cho h3 (mục con phải chìm hơn mục cha).
+
+   `--color-accent-text` chứ không phải `--color-accent`: đây là CHỮ, và hai token
+   tách nhau chính để chỗ nào là chữ / chỗ nào là nét vẽ còn chỉnh riêng được. */
 .post__body h2 {
   margin: 1em 0;
-  color: var(--color-text-body);
+  color: var(--color-accent-text);
   font-size: 1.25rem;
   font-weight: 700;
   line-height: 2.2rem;
@@ -133,9 +143,16 @@
 }
 .review-section__body h2,
 .review-section__body h3 {
-  color: var(--color-text-body);
   opacity: 1;
   font-weight: 700;
+}
+/* Xem ghi chú màu ở `.post__body h2`. Tách khỏi rule gộp bên trên vì h3 giữ màu
+   chữ thân bài — gộp lại là h3 cũng thành teal và mất bậc phân cấp. */
+.review-section__body h2 {
+  color: var(--color-accent-text);
+}
+.review-section__body h3 {
+  color: var(--color-text-body);
 }
 .review-section__body p {
   margin: 1em 0;
@@ -360,12 +377,13 @@
 }
 
 /* global.css reset margin h2/h3/p về 0 → khai lại đúng mặc định UA */
+/* Teal — cùng quy ước với `.post__body h2`, xem ghi chú ở đó. */
 .featured-article h2,
 .featured-article__title {
   margin: 0.83em 0;
   font-size: 1.5625rem;
   line-height: 2.2rem;
-  color: var(--color-text-body);
+  color: var(--color-accent-text);
 }
 
 /* Tiêu đề khối do component render, luôn là phần tử ĐẦU — dùng `.featured-article__title`

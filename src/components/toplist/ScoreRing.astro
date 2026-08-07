@@ -113,7 +113,12 @@ const starPaths = stars === undefined ? [] : starList(stars);
   .score-ring__trail {
     stroke: var(--color-ring-trail);
   }
-  /* Vòng điểm là THÔNG TIN, không phải nút bấm -> dùng màu nhấn xanh dương. */
+  /* Vòng điểm là THÔNG TIN, không phải nút bấm -> dùng màu nhấn TEAL. Dùng
+     `--color-accent` (không phải bản tối `--color-accent-text`) vì đây là NÉT VẼ
+     dày 5px, không phải chữ — ngưỡng tương phản cho thành phần đồ hoạ là 3:1 và
+     #09bcbe trên trắng đạt 2.35:1... vẫn thiếu. Nét được cứu bởi `--color-ring-trail`
+     bao quanh: người đọc thấy cung nhờ tương phản với ĐƯỜNG RAY xám, không phải
+     với nền trắng. */
   .score-ring__arc {
     stroke: var(--color-accent);
   }
@@ -157,10 +162,10 @@ const starPaths = stars === undefined ? [] : starList(stars);
     display: flex;
     flex-wrap: nowrap;
     font-size: 30%;
-    color: #ffcd42;
+    color: var(--color-star);
   }
   .score-ring__star--empty {
-    color: #e0e4e6;
+    color: var(--color-star-empty);
   }
 
   /* Ánh sáng lướt qua hàng sao khi hover (bản gốc: pseudo-element gradient chạy

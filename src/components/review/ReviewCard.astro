@@ -123,7 +123,8 @@ const labels = (await getEntry("labels", "labels"))!.data;
       "content"
       "grade";
     grid-template-rows: auto 0.7fr 1fr;
-    border: 1px solid #ddd;
+    border: 1px solid var(--color-card-border);
+    box-shadow: var(--shadow-card);
     /* Bản gốc đặt màu chữ này ở wrapper trang rồi cho kế thừa xuống */
     color: var(--color-text-body);
   }
@@ -242,10 +243,10 @@ const labels = (await getEntry("labels", "labels"))!.data;
   }
   .review-card__star--full,
   .review-card__star--half {
-    color: #ffcd42;
+    color: var(--color-star);
   }
   .review-card__star--empty {
-    color: #e0e0e0;
+    color: var(--color-star-empty);
   }
 
   /* KHÔNG dùng flex ở đây: bản gốc để ô này là block cao 45px, nút con cao 47px

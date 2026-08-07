@@ -23,9 +23,12 @@
     /* font-size + line-height kế thừa quyết định chiều cao hộp: icon 35px nằm
        trên baseline, cộng phần lồi dưới baseline của strut → 38.8px */
     font-size: 1.5rem;
-    /* Icon tô đặc bằng màu CTA, đặt trên vòng tròn trắng ở `::before` — đúng cấu
-       trúc của bản gốc (icon 35px màu primary, không phải xám nhạt). */
-    color: var(--color-primary);
+    /* Icon tô đặc, đặt trên vòng tròn trắng ở `::before` — đúng cấu trúc của bản
+       gốc (icon 35px tô màu đặc, không phải xám nhạt).
+       TEAL chứ không phải màu CTA: cuộn lên đầu trang là điều hướng TRONG trang.
+       Dùng token dành cho CHỮ/nét mảnh (`--color-accent-text`) để nếu sau này phải
+       chỉnh tương phản thì icon này đi theo cùng lúc với tiêu đề mục và link nav. */
+    color: var(--color-accent-text);
     z-index: 50;
     animation: to-top-fade-in 1s;
   }

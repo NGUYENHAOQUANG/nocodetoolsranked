@@ -41,7 +41,9 @@ const labels = (await getEntry("labels", "labels"))!.data;
     height: max-content;
     padding: 10px 40px;
     background-color: var(--color-surface-muted);
-    box-shadow: 0 0 3px var(--color-shadow);
+    /* Bóng xanh nhạt dùng chung cho MỌI thẻ nổi của site (thẻ xếp hạng, thẻ
+       sidebar) — xem `--shadow-card` trong tokens.css. */
+    box-shadow: var(--shadow-card);
   }
 
   .must-reads__title {
@@ -51,7 +53,11 @@ const labels = (await getEntry("labels", "labels"))!.data;
     padding-bottom: 10px;
     font-size: 1.6rem;
     font-weight: 400;
-    color: var(--color-text-body);
+    /* NAVY, không teal: đây là tiêu đề của một THẺ trong cột phụ, không phải đầu
+       mục của bài. Bên template2 mọi tiêu đề thẻ sidebar đều navy còn tiêu đề mục
+       trong bài mới teal — hai họ tiêu đề, hai màu, để mắt tách được cột phụ khỏi
+       mạch đọc chính. */
+    color: var(--color-accent-strong);
   }
 
   .must-reads__item {

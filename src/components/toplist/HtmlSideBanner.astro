@@ -41,14 +41,18 @@ const { brandLogo, brandName, promoImage } = Astro.props;
     flex-direction: column;
     width: 100%;
     min-height: 480px;
-    /* Solid soft green background to blend seamlessly with the masked image */
-    background: #e8f5e9;
+    /* Nền XANH NHẠT đặc, hoà liền với ảnh đã mask. Trước là xanh lá (#e8f5e9) —
+       không còn vai trò nào trong bảng màu mới. Dùng chung mã với coupon vì cả hai
+       đều là "khối khuyến mãi trên nền nhạt". */
+    background: var(--color-coupon-bg);
 
     overflow: hidden;
     position: relative;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
     text-align: center;
-    border: 1px solid #dcedce;
+    /* Đậm hơn nền một bậc trong CÙNG sắc xanh — không token hoá vì đây là giá trị
+       hoà ảnh dùng đúng một chỗ (quy tắc >=3 chỗ ở đầu tokens.css). */
+    border: 1px solid #b8e4f5;
   }
 
   .html-banner__header {
@@ -81,9 +85,11 @@ const { brandLogo, brandName, promoImage } = Astro.props;
     letter-spacing: -0.02em;
   }
 
+  /* CAM: đây là banner khuyến mãi, không phải nút xếp hạng. Cùng lý do với
+     `PromoBanner` — xem ghi chú ở đó. */
   .html-banner__button {
-    background: var(--color-primary);
-    color: #fff;
+    background: var(--color-highlight);
+    color: var(--color-text-on-primary);
     font-size: 1.125rem;
     font-weight: 500;
     padding: 12px 15px;
@@ -93,8 +99,11 @@ const { brandLogo, brandName, promoImage } = Astro.props;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   }
 
+  /* Cam đậm hơn, KHÔNG phải `--color-secondary`: cái đó là hover của nút CTA xanh,
+     nên nút cam đang từ cam nhảy sang xanh giữa chừng — đổi luôn vai trò màu ngay
+     lúc người dùng chạm vào. Hover phải ở CÙNG họ màu với trạng thái nghỉ. */
   .html-banner:hover .html-banner__button {
-    background: var(--color-secondary);
+    background: var(--color-highlight-dark);
   }
 
   .html-banner__footer {

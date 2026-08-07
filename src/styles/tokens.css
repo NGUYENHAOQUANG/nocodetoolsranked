@@ -22,49 +22,98 @@
 :root {
   /* ----- Màu thương hiệu -----
 
-     Bảng màu lấy theo hệ của webador.co.uk. Ý chính KHÔNG phải là bốn mã hex mà là
-     cách chia vai trò của họ:
+     Bảng màu lấy theo hệ của bestaibuilders.com (repo `template2`). Ý chính KHÔNG
+     phải mấy mã hex mà là cách họ chia BỐN vai trò, phân tách bằng HUE chứ không
+     bằng độ đậm nhạt:
 
-       XANH LÁ = HÀNH ĐỘNG   · XANH DƯƠNG = THÔNG TIN   · XÁM ĐÁ = CHỮ VÀ NỀN TỐI
+       NAVY = KHUNG/UY TÍN  ·  XANH DƯƠNG = HÀNH ĐỘNG
+       TEAL = ĐỊNH HƯỚNG    ·  CAM        = KHUYẾN MÃI
 
-     Nghĩa là: mọi thứ bấm được để đi ra đối tác thì xanh lá; mọi thứ chỉ để ĐỌC
-     (vòng điểm, viền card nổi bật, nền nhấn) thì xanh dương. Trộn hai vai trò là
-     mất luôn tín hiệu — nút xanh dương nằm cạnh vòng điểm xanh dương thì người đọc
-     không còn biết cái nào bấm được. */
+     Đọc theo hành vi người dùng:
+       - bấm để ĐI RA đối tác            -> xanh dương (`--color-primary`)
+       - bấm để đi TRONG site, hoặc chỉ
+         để nhìn (H2, icon, vòng điểm)   -> teal
+       - KHÔNG bấm được, chỉ đóng khung
+         (footer, ribbon, nhãn góc)      -> navy
+       - ưu đãi/giá/khẩn                 -> cam
 
-  /* Nút CTA. Đo trên webador.co.uk: rgb(123, 176, 53). */
-  --color-primary: #7bb035;
+     Vai trò thứ tư (CAM) là thứ hệ cũ KHÔNG có: hồi đó dải promo dùng chung màu
+     xanh lá với nút CTA, nên người đọc không phân biệt được "nút để đi" với "dải
+     quảng cáo". Thêm màu mới thì hỏi nó thuộc vai trò nào trước, đừng chọn theo
+     "trông hợp mắt" — hai vai trò cùng màu là mất luôn tín hiệu.
+
+     BẢNG MÀU CŨ (webador.co.uk, xanh lá = hành động) đã bỏ. Nếu gặp comment nào
+     còn nhắc "xanh lá = hành động" thì đó là comment sót, sửa đi. */
+
+  /* Nút CTA — mọi nút đi ra đối tác. Tương phản trên nền trắng 5.87:1 (đạt AA). */
+  --color-primary: #1261c9;
   /* Thực chất là trạng thái hover của primary: 9/10 nơi dùng nó là :hover.
-     Cặp #7bb035 -> #70a030 lấy nguyên từ CSS của họ (`a.bg-success:hover`). */
-  --color-secondary: #70a030;
-  /* Nhấn THÔNG TIN: viền card nổi bật, vòng điểm. Đây là màu nhấn dùng nhiều nhất
-     bên họ (42 lần trong CSS) nên nó là màu "xanh dương của site", không phải màu
-     link (#3596d1) vốn chỉ dành cho chữ bấm được trong bài. */
-  --color-accent: #469fd5;
-  /* Nền đặc tối: nhãn góc card, icon góc, chân trang. Cùng mã với `--color-text-body`
-     vì bên họ chữ và nền tối dùng CHUNG một màu — giữ nguyên sự thật đó thay vì
-     bịa ra hai sắc độ. */
-  --color-accent-strong: #2c3235;
-  
+     Cặp #1261c9 -> #0e4997 lấy nguyên từ `--c-primary`/`--c-primary-dark` bên kia. */
+  --color-secondary: #0e4997;
+
+  /* Nhấn ĐỊNH HƯỚNG: vòng điểm, viền card nổi bật, icon, nét trang trí lớn.
+     CHỈ dùng cho mảng màu và hình, KHÔNG dùng làm màu chữ — xem token dưới. */
+  --color-accent: #09bcbe;
+  /* Cùng vai trò teal nhưng dành riêng cho CHỮ: tiêu đề mục, link nav, mục lục,
+     nhãn "Pros", nút cuộn-lên-đầu.
+
+     HIỆN GIỜ CÙNG GIÁ TRỊ với `--color-accent` — CHỌN CÓ Ý THỨC, không phải token
+     thừa: bản gốc bên template2 dùng đúng #09bcbe cho toàn bộ H2 nội dung và ta
+     chép lại y vậy. Đánh đổi: #09bcbe trên nền trắng chỉ đạt 2.35:1, dưới cả
+     ngưỡng chữ lớn (3:1). Bản đạt AA là #0a7d7f (4.94:1), mắt thường gần như
+     không phân biệt được khi đặt rời — đổi MỘT dòng này là cả site theo.
+
+     Vì thế ĐỪNG "dọn" hai token làm một: cái seam này chính là thứ cho phép sửa
+     tương phản mà không đụng tới màu của nét vẽ và vòng điểm. (Cùng lý do với ba
+     token cùng `#ffffff` — xem quy tắc ở đầu file.) */
+  --color-accent-text: #09bcbe;
+
+  /* Nền đặc tối: chân trang, nhãn góc card, ribbon, nền dự phòng của banner.
+     TRƯỚC ĐÂY cùng mã với `--color-text-body` (#2c3235) vì bên webador chữ và nền
+     tối dùng chung một màu. Nay hai vai trò TÁCH HẲN: navy là khung, chữ là
+     #212529. Đừng gộp lại. */
+  --color-accent-strong: #062b55;
+
+  /* KHUYẾN MÃI/KHẨN — badge ưu đãi, giá, nút promo. Vai trò thứ tư, không được
+     dùng cho nút "Visit Site" thường (đó là việc của --color-primary).
+
+     #ff631f lấy nguyên của template2 — CHỌN CÓ Ý THỨC, không phải sơ suất: chữ
+     trắng trên nó chỉ đạt 2.98:1, dưới ngưỡng AA (4.5:1). Bản đạt chuẩn là
+     #c2410c (5.18:1) nếu sau này cần đổi lại.
+
+     Vì thế token này CHỈ dùng làm NỀN của khối có chữ lớn/đậm, không bao giờ làm
+     màu chữ trên nền sáng — chỗ cần cam làm chữ (nhãn điểm "trung bình" trong
+     `MiniReview`) khai riêng #c2410c, xem ghi chú ở đó. */
+  --color-highlight: #ff631f;
+  --color-highlight-dark: #e04e0c;
+
+  /* Sao đánh giá. Trước đây #ffcd42/#e0e0e0 viết cứng ở 3 component. */
+  --color-star: #f3b42c;
+  --color-star-empty: #e5e5e5;
+
   /* Coupon */
-  --color-coupon-bg: #d7f2f9;
-  --color-coupon-border: #469fd5;
-  
+  --color-coupon-bg: #e1f5fc;
+  /* Đường viền đứt + cái kéo nằm trên nó. Cùng HỌ cam với `--color-highlight`
+     nhưng nhạt hơn một bậc — cố ý: viền đứt là nét trang trí bao quanh, để nó cùng
+     độ đậm với nút promo thì hai thứ đánh nhau. Đổi `--color-highlight` thì nhớ
+     chỉnh cả mã này cho khớp họ. */
+  --color-coupon-border: #fd8451;
+
   /* Score Ring */
-  --color-ring-trail: #e0e4e6;
+  --color-ring-trail: #e5e5e5;
 
   /* ----- Chữ ----- */
-  /* Mặc định của <body>. Bản gốc để #000 ở lớp bao ngoài rồi hầu hết khối nội
-     dung tự đặt lại thành #2d2d2d — giữ đúng sự thật đó thay vì làm nó gọn hơn
-     thực tế. */
-  --color-text: #000000;
-  /* Màu chữ THỰC TẾ của phần lớn nội dung: thân bài, tiêu đề, nhãn */
-  --color-text-body: #2c3235;
+  /* Mặc định của <body>. */
+  --color-text: #212529;
+  /* Màu chữ THỰC TẾ của phần lớn nội dung: thân bài, tiêu đề, nhãn.
+     Cùng giá trị với --color-text nhưng KHÁC vai trò (một cái là mặc định kế
+     thừa, một cái là màu khối nội dung tự đặt) — giữ hai token, xem quy tắc
+     ba-token-cùng-#ffffff ở đầu file. */
+  --color-text-body: #212529;
   /* Chữ và icon nằm trên nền primary/secondary */
   --color-text-on-primary: #ffffff;
-  /* Khối giới thiệu đầu bài viết — CỐ Ý khác --color-text-body, nhạt hơn một bậc.
-     Lấy sắc xám-đá thứ hai trong bảng của họ. */
-  --color-text-intro: #424c51;
+  /* Khối giới thiệu đầu bài viết — CỐ Ý khác --color-text-body, nhạt hơn một bậc. */
+  --color-text-intro: #484848;
   /* Chú thích phụ: mô tả hạng mục ở bản desktop, nhãn điểm trung tính */
   --color-text-muted: #7d7d7d;
 
@@ -76,15 +125,35 @@
   --color-surface-muted: #f5f5f7;
 
   /* ----- Đường kẻ, bóng, lớp phủ ----- */
-  /* Đặc chứ không trong suốt: bên họ đường kẻ là màu ĐẶC (#c3c5c7 / #e0e4e6), và
-     kẻ trong suốt chồng lên nền khác nhau sẽ ra hai màu khác nhau. */
-  --color-divider: #c3c5c7;
+  /* Đặc chứ không trong suốt: đường kẻ là màu ĐẶC, vì kẻ trong suốt chồng lên nền
+     khác nhau sẽ ra hai màu khác nhau. Nhạt hơn #c3c5c7 cũ một bậc để khớp hệ mới
+     — bên template2 kẻ gần như tàng hình, sức tách khối do BÓNG lo. */
+  --color-divider: #e0e0e0;
+  /* Viền thẻ nổi. NGOẠI LỆ có chủ ý của quy tắc "kẻ phải đặc": viền thẻ ở đây
+     chồng trên nền trắng lẫn nền #f5f5f7, và alpha 12.5% cho ra đúng hai sắc độ
+     mong muốn ở hai nền — chính là cách template2 làm (`rgb(0 0 0 / 0.125)`,
+     dùng 8 chỗ). Viền đặc sẽ nặng mặt và giết hiệu ứng "thẻ nổi". */
+  --color-card-border: rgb(0 0 0 / 0.125);
   /* CHỈ là màu bóng, không phải cả `box-shadow`: 16 chỗ dùng nó trải trên 6 hình
      học khác nhau (0 0 10px, 0 0 8px, 0 1px 3px…). Token hoá cả chuỗi sẽ buộc
      phải chuẩn hoá hình học, tức đổi giao diện. */
   --color-shadow: rgba(0, 0, 0, 0.1);
   /* Nền phủ tối sau drawer và modal */
   --color-overlay: rgba(0, 0, 0, 0.5);
+
+  /* ----- Bóng thẻ -----
+     Token này CỐ Ý token hoá CẢ CHUỖI box-shadow, ngược với `--color-shadow` ngay
+     trên. Được, vì đây là một hình học DUY NHẤT dùng cho một họ khối duy nhất
+     (thẻ xếp hạng + thẻ sidebar) — không phải 6 hình học như `--color-shadow`.
+
+     Bóng có SẮC XANH chứ không xám: đó là nét nhận diện lớn nhất của bảng màu này.
+     Thẻ trắng trên nền trắng vẫn tách ra mà không cần viền đậm. Đổi hết mã hex mà
+     quên bóng thì trang đúng màu nhưng vẫn phẳng lì — không giống bản gốc.
+
+     KHÔNG có token bóng-lúc-hover: thẻ xếp hạng CỐ Ý đứng yên khi rê chuột. Từng
+     có `--shadow-card-hover` (đổi sang bóng đen toả đều) nhưng đã bỏ theo yêu cầu.
+     Tín hiệu bấm-được nay chỉ do chính cái nút CTA gánh. */
+  --shadow-card: rgb(192 221 238 / 0.5) 5.13px 3.63px 27px 0;
 
   /* ----- Chữ viết ----- */
   --font-base:

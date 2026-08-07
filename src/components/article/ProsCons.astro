@@ -102,8 +102,13 @@ const lists = [
     font-size: inherit;
     font-weight: inherit;
   }
+  /* TEAL cho Pros, không phải màu CTA: đây là nhãn đánh giá, không bấm được.
+     `--color-primary` ở đây từng làm nhãn "Pros" trông y hệt nút "Visit Site" nằm
+     ngay dưới nó. (Bên template2 dấu ✓ của khối pros cũng dùng teal — cùng lý do.)
+     Đỏ của Cons giữ nguyên: đỏ là quy ước phủ định phổ quát, không thuộc bảng màu
+     thương hiệu nên không phải ánh xạ. */
   .pros-cons__label--pros {
-    color: var(--color-primary);
+    color: var(--color-accent-text);
   }
   .pros-cons__label--cons {
     color: #bc2e4c;
@@ -112,7 +117,7 @@ const lists = [
     fill: currentColor;
   }
   .pros-cons__icon--pros {
-    color: var(--color-primary);
+    color: var(--color-accent-text);
   }
   .pros-cons__icon--cons {
     color: #bc2e4c;

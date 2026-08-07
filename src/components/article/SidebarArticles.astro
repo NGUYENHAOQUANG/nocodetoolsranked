@@ -68,7 +68,8 @@ const labels = (await getEntry("labels", "labels"))!.data;
     padding: 10px;
     background-color: var(--color-surface-muted);
     border-radius: 4px;
-    box-shadow: 0 0 10px var(--color-shadow);
+    /* Bóng thẻ dùng chung — xem `--shadow-card` trong tokens.css */
+    box-shadow: var(--shadow-card);
   }
   .sidebar-articles__node {
     width: 100%;

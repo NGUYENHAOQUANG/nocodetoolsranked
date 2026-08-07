@@ -23,11 +23,19 @@ const {
   title,
   href,
   buttonText,
-  bg = "var(--color-primary)",
-  borderColor = "transparent",
-  titleColor = "var(--color-text-on-primary)",
-  buttonBg = "var(--color-accent-strong)",
-  buttonHoverBg = "var(--color-text)",
+  /* Dải khuyến mãi phải KHÁC HẲN nút CTA, và trước đây nó không khác: `bg` mặc
+     định là `--color-primary` — đúng màu của mọi nút "Visit Site" quanh nó. Hai
+     vai trò một màu thì người đọc không phân biệt được "nút để đi ra đối tác" với
+     "dải quảng cáo xen giữa bảng".
+
+     Cách tách: nền XANH RẤT NHẠT + nút CAM (`--color-highlight`, vai trò khuyến
+     mãi). Cam không xuất hiện ở bất cứ đâu khác trên trang xếp hạng, nên chỉ cần
+     thấy cam là biết đây là ưu đãi. */
+  bg = "var(--color-coupon-bg)",
+  borderColor = "var(--color-card-border)",
+  titleColor = "var(--color-text)",
+  buttonBg = "var(--color-highlight)",
+  buttonHoverBg = "var(--color-highlight-dark)",
 } = Astro.props;
 ---
 
@@ -162,22 +170,28 @@ const {
     box-shadow: none;
     transition: 0.2s ease-out;
   }
+  /* Dịch trái 10px để chừa chỗ cho mũi tên — trước đây đây là trạng thái HOVER,
+     nay là trạng thái nghỉ. Giữ `transition` dù không còn ai đổi transform: nếu
+     sau này thêm lại hiệu ứng thì nó chạy mượt sẵn. */
   .promo__button-text {
     display: inline-block;
+    transform: translateX(-10px);
     font-family: var(--font-brand);
     font-size: 1.05rem;
     white-space: nowrap;
     transition: 0.2s ease-out;
   }
 
-  /* Mũi tên trượt ra khi hover */
+  /* Mũi tên HIỆN SẴN, không đợi hover. Trước đây `opacity: 0` + `right: 30px` rồi
+     hover mới trượt vào 20px và hiện ra — tức trên thiết bị cảm ứng (không có
+     hover) mũi tên KHÔNG BAO GIỜ hiện. Nay lấy thẳng trạng thái cuối làm mặc định,
+     hover chỉ còn đẩy nó nhích thêm sang phải. */
   .promo__arrow {
     position: absolute;
     top: 50%;
-    right: 30px;
+    right: 20px;
     width: 17px;
     transform: translateY(-50%);
-    opacity: 0;
     color: var(--color-text-on-primary);
     font-size: 1rem;
     transition: 0.2s ease-out;
@@ -185,12 +199,11 @@ const {
   .promo__button:hover {
     background-color: var(--promo-btn-hover-bg);
   }
+  /* Nhích 8px sang phải khi hover. Đổi `right` chứ KHÔNG đổi `transform`: transform
+     ở đây đang gánh `translateY(-50%)` để căn giữa dọc — ghi đè nó là mũi tên tụt
+     xuống nửa chiều cao. */
   .promo__button:hover .promo__arrow {
-    right: 20px;
-    opacity: 1;
-  }
-  .promo__button:hover .promo__button-text {
-    transform: translateX(-10px);
+    right: 12px;
   }
 
   /* ===== ≥320px ===== */

@@ -49,10 +49,12 @@ const year = new Date().getFullYear();
     display: flex;
     flex-flow: column wrap;
     justify-content: space-between;
-    /* Bản gốc khai #1b1a35 trong CSS nhưng ghi đè bằng inline style ở cấu hình
-       trang. Cùng mã với `--color-accent-strong`, nhưng khai thẳng vì đây là nền
-       của cả một vùng chứ không phải một nhãn nhỏ. */
-    background-color: #2c3235;
+    /* Dải màu đặc THỨ HAI của trang (cái thứ nhất là vạch 5px trên header) — hai
+       cái đóng khung toàn bộ nội dung trắng ở giữa. Dùng token chứ không khai
+       thẳng hex như trước: nay `--color-accent-strong` KHÔNG còn trùng
+       `--color-text-body`, nên hex viết cứng ở đây sẽ âm thầm lệch khỏi các nhãn
+       góc card vốn phải cùng một navy. */
+    background-color: var(--color-accent-strong);
   }
 
   .site-footer__logo {
@@ -67,7 +69,9 @@ const year = new Date().getFullYear();
     flex-direction: column;
     flex-wrap: wrap;
     padding-bottom: 10px;
-    border-bottom: 1px solid #ddd;
+    /* Trắng trong suốt thay cho #ddd đặc: nền chuyển từ xám-đá sang navy, mà xám
+       nhạt đặc trên navy đọc ra một vệt bạc chứ không phải đường kẻ chìm. */
+    border-bottom: 1px solid rgb(255 255 255 / 0.2);
   }
   .site-footer__links {
     width: fit-content;

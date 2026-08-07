@@ -90,10 +90,12 @@ const labels = (await getEntry("labels", "labels"))!.data;
     object-fit: cover;
     display: block;
   }
+  /* TEAL: thẻ bài viết dẫn đi TRONG site, không ra đối tác. Lớp phủ hover màu
+     xanh-CTA làm nó trông như một nút affiliate. */
   .knowledge-card__overlay {
     position: absolute;
     inset: 0;
-    background: var(--color-primary);
+    background: var(--color-accent);
     opacity: 0;
     transition: opacity 0.2s linear;
   }

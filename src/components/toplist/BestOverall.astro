@@ -24,8 +24,8 @@ const { title, brand } = Astro.props;
     width: 100%;
     margin: 0 auto 30px;
     padding-bottom: 17px;
-    border-top: 1px solid #cbcbcb;
-    border-bottom: 1px solid #cbcbcb;
+    border-top: 1px solid var(--color-divider);
+    border-bottom: 1px solid var(--color-divider);
   }
 
   .best-overall__inner {
@@ -41,6 +41,9 @@ const { title, brand } = Astro.props;
     font-size: 1.4rem;
     font-weight: 700;
     text-align: start;
-    color: var(--color-text-body);
+    /* TEAL như mọi tiêu đề mục khác của site (xem `prose.css`, `FaqAccordion`,
+       `MustReads`). Tiêu đề mục là ĐỊNH HƯỚNG ĐỌC, không phải chữ thân bài — để
+       nó cùng màu chữ thường thì người đọc mất mốc quét trang. */
+    color: var(--color-accent-text);
   }
 </style>

@@ -243,11 +243,19 @@ const labels = (await getEntry("labels", "labels"))!.data;
      `(min-width:768px) and (min-height:420px)` (chính là mốc bản gốc dùng cho nút).
      ========================================================================== */
   .mini-review {
-    /* Palette ô điểm của bản gốc */
-    --score-high-color: #016630;
-    --score-high-background: #c7fcd9;
-    --score-medium-color: #894b00;
-    --score-medium-background: #fbf9ad;
+    /* Palette ô điểm. Bản gốc dùng XANH LÁ cho bậc cao — bỏ, vì xanh lá không còn
+       là vai trò nào trong bảng màu mới, để lại thì nó thành màu mồ côi duy nhất
+       trên trang. Bậc cao chuyển sang họ XANH DƯƠNG (cùng họ với vòng điểm và nút),
+       bậc trung sang họ CAM, bậc thấp giữ xám trung tính.
+       Cả ba cặp đều đạt AA: 7.69:1 / 4.63:1 / 4.83:1.
+
+       Bậc trung KHÔNG dùng `--color-highlight`: token đó là #ff631f, chỉ hợp làm
+       NỀN — làm màu CHỮ trên nền #fdf0e6 nó chỉ đạt 2.66:1. #c2410c là cùng vai
+       trò cam nhưng đủ tối để đọc được. */
+    --score-high-color: #0e4997;
+    --score-high-background: #e1f5fc;
+    --score-medium-color: #c2410c;
+    --score-medium-background: #fdf0e6;
     --score-low-color: #6b7280;
     --score-low-background: #f3f4f6;
 
@@ -262,10 +270,12 @@ const labels = (await getEntry("labels", "labels"))!.data;
     color: var(--color-text-body);
   }
 
+  /* TEAL như mọi tiêu đề mục khác (xem ghi chú ở `.post__body h2` trong prose.css) */
   .mini-review__title {
     width: 100%;
     max-width: min(95dvw, var(--width-content));
     margin-inline: auto;
+    color: var(--color-accent-text);
   }
   /* Rule trông thừa nhưng có tác dụng render: ::first-letter tách chữ cái đầu
      thành text run riêng, đổi shaping/subpixel của phần chữ còn lại */
@@ -292,11 +302,13 @@ const labels = (await getEntry("labels", "labels"))!.data;
   }
   /* Sao VÀNG, không phải màu thương hiệu: đây là quy ước chấm sao chung của mọi
      nơi trên site (`ScoreRing`, card `/reviews/`) và của cả bản gốc. Dùng
-     `--color-primary` ở đây là khối này lệch với ba chỗ kia mỗi lần đổi bảng màu. */
+     `--color-primary` ở đây là khối này lệch với ba chỗ kia mỗi lần đổi bảng màu.
+     Nay đã có `--color-star` nên ba chỗ đó dùng chung một token thật, không còn
+     phải trông vào việc ai cũng nhớ gõ đúng cùng một mã hex. */
   .mini-review__stars {
     display: flex;
     gap: 0.125rem;
-    color: #ffcd42;
+    color: var(--color-star);
   }
   .mini-review__stars svg {
     width: 1rem;

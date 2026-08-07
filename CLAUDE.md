@@ -338,22 +338,42 @@ của trang chủ nằm ở `components/`). Nó có ba slot **có tên**
 
 | File                | Vai trò                                                  |
 | ------------------- | -------------------------------------------------------- |
-| `styles/tokens.css` | 18 token đặt theo VAI TRÒ                                |
+| `styles/tokens.css` | 29 token đặt theo VAI TRÒ                                |
 | `styles/global.css` | `@font-face`, reset, `@import` tokens + prose            |
 | `styles/prose.css`  | Style thân bài do MDX render — BỐN khối, cố ý không gộp  |
 | `styles/hero.css`   | Khung banner dùng chung của `HeroToplist` và `HeroInner` |
 
 Ngoài ra mỗi component tự giữ style trong `<style>` scoped của nó.
 
-**Bảng màu lấy theo hệ của `webador.co.uk`**, và điều đáng nhớ không phải mấy mã
-hex mà là cách chia vai trò:
+**Bảng màu lấy theo hệ của `bestaibuilders.com`** (repo chị em `template2`), và
+điều đáng nhớ không phải mấy mã hex mà là cách chia **bốn** vai trò:
 
-> XANH LÁ = HÀNH ĐỘNG · XANH DƯƠNG = THÔNG TIN · XÁM ĐÁ = CHỮ VÀ NỀN TỐI
+> NAVY = KHUNG/UY TÍN · XANH DƯƠNG = HÀNH ĐỘNG · TEAL = ĐỊNH HƯỚNG · CAM = KHUYẾN MÃI
 
-Nút đi ra đối tác thì xanh lá; vòng điểm, viền card nổi bật, nền nhấn — thứ chỉ để
-ĐỌC — thì xanh dương. Thêm màu mới thì hỏi nó thuộc vai trò nào trước, đừng chọn
-theo "trông hợp mắt": nút xanh dương nằm cạnh vòng điểm xanh dương là mất luôn tín
-hiệu bấm-được. Lý do đầy đủ ghi ngay đầu `tokens.css`.
+Phân biệt bằng câu hỏi "bấm vào thì đi đâu":
+
+- **ra đối tác** → xanh dương (`--color-primary`): nút "Visit Site", "Get in touch"
+- **đi trong site, hoặc chỉ để nhìn** → teal: tiêu đề mục, link nav, mục lục, vòng
+  điểm, thẻ bài viết, nút cuộn-lên-đầu
+- **không bấm được, chỉ đóng khung** → navy (`--color-accent-strong`): chân trang,
+  drawer mobile, nhãn góc card, huy hiệu thứ hạng, tiêu đề thẻ sidebar
+- **ưu đãi** → cam (`--color-highlight`): dải promo, coupon, banner sidebar
+
+Vai trò CAM là thứ hệ cũ (webador, xanh lá = hành động) KHÔNG có — hồi đó dải promo
+dùng chung màu với nút CTA nên người đọc không phân biệt được. Thêm màu mới thì hỏi
+nó thuộc vai trò nào trước, đừng chọn theo "trông hợp mắt". Lý do đầy đủ ghi ngay
+đầu `tokens.css`.
+
+Hai token teal, **hiện cùng giá trị `#09bcbe`** nhưng đừng gộp: `--color-accent`
+cho mảng màu và nét vẽ, `--color-accent-text` cho chữ. Seam đó tồn tại vì #09bcbe
+làm màu chữ chỉ đạt 2.35:1 trên nền trắng — chép nguyên lỗi tương phản của bản
+gốc là lựa chọn có ý thức, và khi nào muốn sửa thì chỉ sửa một dòng. Lý do đầy đủ
+ghi ở `tokens.css`.
+
+`--shadow-card` là nét nhận diện lớn nhất của bảng màu: bóng có **sắc xanh**, dùng
+cho mọi thẻ nổi (thẻ xếp hạng, thẻ sidebar). Đổi hex mà quên bóng thì trang đúng
+màu nhưng phẳng lì. Thẻ xếp hạng **đứng yên khi hover** — cố ý, không có bóng
+hover; tín hiệu bấm-được do chính nút CTA gánh.
 
 `hero.css` **không** được `global.css` import — hai component hero tự
 `import "@/styles/hero.css"`. Nó là file global vì hai component render cùng bộ

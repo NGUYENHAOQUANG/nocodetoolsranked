@@ -271,20 +271,28 @@ const labels = (await getEntry("labels", "labels"))!.data;
     z-index: 1;
   }
 
+  /* Bóng SẮC XANH + viền đen-12.5%, không phải bóng xám đặc: đây là nét nhận diện
+     của bảng màu (xem `--shadow-card` trong tokens.css). Viền không làm card to ra
+     — `box-sizing: border-box` toàn cục nên 1px ăn vào trong. */
   .partner__frame {
     width: 100%;
     height: 100%;
     padding: 20px 0;
     position: relative;
-    box-shadow: 0 0 7px rgba(0, 0, 0, 0.25);
+    border: 1px solid var(--color-card-border);
+    box-shadow: var(--shadow-card);
     cursor: pointer;
   }
   /* Card "Exclusive Offer" luôn đứng đầu danh sách nên sát mép trên hơn */
   .partner--editors-choice {
     margin-top: 5px;
   }
+  /* Viền NAVY, không phải màu CTA. Viền xanh-CTA bao quanh một card mà bên trong
+     có sẵn nút xanh-CTA là hai vai trò cùng màu — người đọc mất tín hiệu
+     bấm-được. Navy gộp nó vào cùng họ với nhãn "Exclusive Offer" và huy hiệu góc,
+     đều là dấu hiệu XẾP HẠNG chứ không phải hành động. */
   .partner--editors-choice .partner__frame {
-    border: 2px solid var(--color-primary);
+    border: 2px solid var(--color-accent-strong);
   }
   /* ----- Huy hiệu số thứ hạng ----- */
   .partner__rank {
@@ -295,7 +303,9 @@ const labels = (await getEntry("labels", "labels"))!.data;
     height: 27px;
     align-items: center;
     justify-content: center;
-    background-color: var(--color-primary);
+    /* NAVY như hai dấu góc kia (`__tag`, `__highlight`). Số thứ hạng là thông tin
+       xếp hạng, không bấm được — mượn màu nút là sai vai trò. */
+    background-color: var(--color-accent-strong);
     color: var(--color-text-on-primary);
     border-bottom-right-radius: 7px;
   }
@@ -351,7 +361,7 @@ const labels = (await getEntry("labels", "labels"))!.data;
     height: 27px;
     padding: 3px;
     background-color: var(--color-accent-strong);
-    color: #ffcd42;
+    color: var(--color-star);
     font-size: 1.3rem;
     border-bottom-left-radius: 7px;
     cursor: pointer;
@@ -496,10 +506,21 @@ const labels = (await getEntry("labels", "labels"))!.data;
     cursor: pointer;
     --hover-color: var(--color-primary);
   }
+  /* Teal ĐẬM hơn `--color-accent`, và là custom property CỤC BỘ chứ không phải
+     token toàn cục — đúng quy tắc ở đầu `tokens.css`: một vai trò chỉ dùng trong
+     một component thì để ngay trong component đó.
+
+     Vì sao không dùng thẳng `--color-accent` (#09bcbe) như trước: dấu ✓ là nét
+     MẢNH trên nền trắng, ở đó #09bcbe chỉ đạt 2.35:1 nên nhìn ra nhạt và mờ. Cùng
+     mã đó lại rất hợp cho vòng điểm (nét dày 5px, có đường ray xám làm nền) và cho
+     link trong drawer (nền navy, 6.03:1) — nên KHÔNG đổi token chung, chỉ đổi
+     riêng chỗ này. #0a7d7f đạt 4.94:1. */
   .partner__bullets svg {
+    --bullet-check-color: #0a7d7f;
+
     flex-shrink: 0;
     margin: 3px 5px auto 0;
-    color: var(--color-accent);
+    color: var(--bullet-check-color);
   }
   .partner__bullets--wide {
     display: none;

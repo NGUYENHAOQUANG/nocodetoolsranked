@@ -16,7 +16,7 @@ const { title, date, readTime, author, avatar } = Astro.props;
 ---
 
 <div class="post-intro">
-  {/* Ngày + thời lượng đọc, rồi tiêu đề bài (màu xanh slate #2d364d) */}
+  {/* Ngày + thời lượng đọc, rồi tiêu đề bài (xám nhạt hơn thân bài — `--color-text-intro`) */}
   <div class="post-intro__top">
     <p class="post-intro__meta">{date} | {readTime}</p>
     <h2 class="post-intro__title">{title}</h2>
@@ -34,7 +34,7 @@ const { title, date, readTime, author, avatar } = Astro.props;
 </div>
 
 <style>
-  /* Meta + tiêu đề đều màu slate #2d364d (khác thân bài #2d2d2d) */
+  /* Meta + tiêu đề dùng `--color-text-intro`, nhạt hơn thân bài đúng một bậc */
   .post-intro__meta {
     margin: 0;
     color: var(--color-text-intro);

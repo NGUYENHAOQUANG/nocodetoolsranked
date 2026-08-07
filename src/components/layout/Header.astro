@@ -165,15 +165,18 @@ const isActive = (href: string) => href.replace(/\/+$/, "") === currentPath;
     width: auto;
     object-fit: contain;
   }
+  /* Navy + teal, KHÔNG navy + xanh-CTA: chữ thương hiệu không bấm-để-đi-ra-đối-tác
+     nên không được mượn màu của nút. Đây là CHỮ nên lấy `--color-accent-text`,
+     không lấy `--color-accent` (dành cho mảng màu và nét vẽ). */
   .site-header__brand-name {
     font-size: 1.75rem;
     font-weight: 700;
-    color: #3e5a9c;
+    color: var(--color-accent-strong);
     letter-spacing: -0.02em;
     line-height: 1;
   }
   .site-header__brand-highlight {
-    color: var(--color-primary);
+    color: var(--color-accent-text);
   }
 
   /* ----- Hamburger (mobile) ----- */
@@ -216,12 +219,16 @@ const isActive = (href: string) => href.replace(/\/+$/, "") === currentPath;
   .site-nav__link::first-letter {
     text-transform: capitalize;
   }
+  /* TEAL, không phải màu CTA: link nav đi TRONG site, không ra đối tác. Gạch chân
+     khi hover là của template2 — nó bù lại việc teal nhạt hơn màu chữ nên chỉ đổi
+     màu thôi thì tín hiệu hover quá yếu. */
   .site-nav__item:hover > .site-nav__link {
-    color: var(--color-primary);
+    color: var(--color-accent-text);
+    text-decoration: underline;
   }
-  /* Mục ứng với trang hiện tại: cam + đậm 600 (navbar_active bản gốc) */
+  /* Mục ứng với trang hiện tại: teal + đậm 600 (navbar_active bản gốc) */
   .site-nav__link.is-active {
-    color: var(--color-primary);
+    color: var(--color-accent-text);
     font-weight: 600;
   }
 
@@ -252,12 +259,12 @@ const isActive = (href: string) => href.replace(/\/+$/, "") === currentPath;
     font-size: 0.9rem;
   }
   .site-nav__submenu a:hover {
-    color: var(--color-primary);
+    color: var(--color-accent-text);
     background: var(--color-surface-muted);
   }
-  /* Mục trang hiện tại (navbar_active ở bản gốc): cam + đậm 600 */
+  /* Mục trang hiện tại (navbar_active ở bản gốc): teal + đậm 600 */
   .site-nav__submenu a.is-active {
-    color: var(--color-primary);
+    color: var(--color-accent-text);
     font-weight: 600;
   }
 
@@ -289,7 +296,11 @@ const isActive = (href: string) => href.replace(/\/+$/, "") === currentPath;
     right: 0;
     width: 255px;
     height: 100%;
-    background: var(--color-surface);
+    /* Navy đặc, không phải panel trắng: drawer là KHUNG (giống chân trang), không
+       phải nội dung. Chữ trong đây chuyển sang teal — teal trên navy đạt 6.03:1,
+       cao hơn hẳn 2.35:1 của chính nó trên nền trắng, nên ở đây dùng được
+       `--color-accent` chứ không cần bản tối `--color-accent-text`. */
+    background: var(--color-accent-strong);
     /* will-change:transform ép panel nằm trên layer riêng (composited) NGAY TỪ
        lúc vẽ → chữ dùng khử răng cưa GRAYSCALE như bản gốc, không lên màu kiểu
        subpixel (viền chữ ánh xanh/cam). translate3d(0) đơn thuần bị Chromium ép
@@ -313,7 +324,7 @@ const isActive = (href: string) => href.replace(/\/+$/, "") === currentPath;
     padding: 0;
     background: none;
     border: 0;
-    color: var(--color-text-body);
+    color: var(--color-accent);
   }
 
   .mobile-drawer__list {
@@ -334,24 +345,26 @@ const isActive = (href: string) => href.replace(/\/+$/, "") === currentPath;
     padding: 0 0 0 15px;
     background: none;
     border: 0;
-    border-bottom: 1px solid #808080;
+    /* Kẻ TRẮNG trong suốt, không phải #808080 đặc: trên nền navy, xám đặc đọc ra
+       một vệt bẩn còn trắng-25% cho đúng cảm giác "cùng một mặt phẳng". */
+    border-bottom: 1px solid rgb(255 255 255 / 0.25);
     font-size: 18px;
     font-weight: 400;
-    color: var(--color-text-body);
+    color: var(--color-accent);
     text-align: left;
     text-decoration: none;
     cursor: pointer;
   }
   .mobile-drawer__chevron {
     flex-shrink: 0;
-    color: var(--color-text-body);
+    color: var(--color-accent);
     transition: transform 0.2s ease;
   }
   .mobile-drawer__toggle[aria-expanded="true"] .mobile-drawer__chevron {
     transform: rotate(180deg);
   }
 
-  /* Submenu (Reviews) — cả khối thụt 10%, item con nhạt hơn (weight 300, màu đen) */
+  /* Submenu (Reviews) — cả khối thụt 10%, item con nhạt hơn (weight 300, trắng mờ) */
   .mobile-drawer__submenu {
     max-height: 0;
     overflow: hidden;
@@ -363,11 +376,13 @@ const isActive = (href: string) => href.replace(/\/+$/, "") === currentPath;
     margin: 0;
     padding: 0;
   }
+  /* Item con TRẮNG MỜ, không teal: cả hai cấp cùng teal thì mất bậc phân cấp mà
+     `font-weight: 300` một mình không gánh nổi. Trên navy, trắng-80% cho 11.9:1. */
   .mobile-drawer__item--inner {
     width: calc(100% - 10px);
     margin-left: 10px;
     font-weight: 300;
-    color: var(--color-text);
+    color: rgb(255 255 255 / 0.8);
   }
 
   /* ===== Desktop (≥ 1025px) ===== */

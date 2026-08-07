@@ -37,12 +37,14 @@ const { text } = Astro.props;
      DPR cao, lớp đó bị raster rồi ghép ở toạ độ lẻ (đo được x = 30,078px × 3 = 90,234
      pixel thiết bị) nên chữ MỜ. */
 
-  /* Lớp nền cam thò ra sau tấm coupon */
+  /* Lớp nền CAM thò ra sau tấm coupon. Trước đây khai `--color-primary` nên nó ra
+     màu nút CTA chứ không phải cam — comment nói một đằng, mắt thấy một nẻo.
+     Coupon là ưu đãi, đúng vai trò của `--color-highlight`. */
   .coupon__bg {
     position: absolute;
     inset: 1px;
     border-radius: 5px;
-    background-color: var(--color-primary);
+    background-color: var(--color-highlight);
     z-index: 0;
     transition: transform 0.3s ease;
   }
@@ -58,7 +60,7 @@ const { text } = Astro.props;
     border: 2px dashed var(--color-coupon-border);
     border-radius: 8px;
     background-color: var(--color-coupon-bg);
-    color: #333;
+    color: var(--color-text);
     font-weight: 600;
     font-size: 14px;
     text-align: center;

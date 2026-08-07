@@ -112,8 +112,11 @@ const headings = allHeadings.filter((h) => h.text.trim());
   }
 
   @media (min-width: 615px) {
+    /* TEAL: mục lục là điều hướng TRONG trang, cùng vai trò với link nav — không
+       phải hành động đi ra đối tác. Trước là `--color-secondary` (hover của nút
+       CTA), tức mượn màu của một vai trò khác. */
     .article-toc__item:hover {
-      color: var(--color-secondary);
+      color: var(--color-accent-text);
     }
   }
 
