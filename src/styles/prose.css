@@ -158,8 +158,16 @@
   list-style: decimal;
 }
 
-/* Ô bọc cho bảng rộng hơn viewport. `.review-section` cũng cuộn ngang được nhưng ẩn
-   thanh cuộn (`scrollbar-width: none`); ở đây cần thanh cuộn HIỆN như bản gốc. */
+/* Ô bọc cho bảng rộng hơn viewport, dùng ở CẢ bài blog lẫn bài review.
+
+   Vỏ này do `src/lib/rehype-table-scroll.mjs` gắn lúc build — nội dung là Markdown
+   nên không tự viết ra được. Trước đây rule này có mà KHÔNG nơi nào dùng, nên bảng
+   ở bài blog bị cắt cụt ở mobile: đo ở 375px, bảng 486px nằm trong cột 356px mà
+   không có gì cuộn.
+
+   Thanh cuộn để HIỆN (cao 15px), đúng bản gốc. `.review-section` bọc ngoài cũng
+   cuộn ngang được nhưng ẩn thanh cuộn (`scrollbar-width: none`) — hai tầng này
+   bản gốc cũng có đủ, đã đối chiếu từng mắt xích. */
 .prose-scroll {
   width: 100%;
   overflow-x: auto;

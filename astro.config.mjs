@@ -4,6 +4,8 @@ import { defineConfig, fontProviders } from "astro/config";
 import mdx from "@astrojs/mdx";
 import sitemap from "@astrojs/sitemap";
 
+import rehypeTableScroll from "./src/lib/rehype-table-scroll.mjs";
+
 /**
  * Nguyên tắc: ưu tiên mặc định của Astro. Chỉ khai một khoá khi giá trị muốn
  * dùng KHÁC mặc định — khai lại đúng mặc định là rác, nó làm người đọc tưởng
@@ -49,6 +51,16 @@ export default defineConfig({
    * không ảnh hưởng gì.
    */
   integrations: [mdx({ smartypants: false }), sitemap()],
+
+  /**
+   * Bọc mỗi bảng trong một vỏ cuộn ngang — xem `src/lib/rehype-table-scroll.mjs`.
+   *
+   * Khai ở `markdown` chứ không ở `mdx()`: `@astrojs/mdx` kế thừa cấu hình
+   * markdown (`extendMarkdownConfig` mặc định true), nên một chỗ là đủ cho cả
+   * hai. Đây là khoá `markdown` DUY NHẤT — `smartypants` vẫn phải khai riêng ở
+   * `mdx()` vì gói đó có mặc định RIÊNG đè lên, đọc ghi chú bên dưới.
+   */
+  markdown: { rehypePlugins: [rehypeTableScroll] },
 
   /**
    * Font qua `astro:fonts` thay vì tự khai `@font-face`.
