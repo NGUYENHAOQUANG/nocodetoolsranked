@@ -43,7 +43,7 @@ const usingDefault = image === undefined;
 const ogImage = new URL(image ?? SITE.ogImage.path, Astro.site).href;
 ---
 
-{noindex && <meta name="robots" content="noindex" />}
+{noindex && <meta name="robots" content="noindex, follow" />}
 {/* Trang noindex không khai canonical: nó không phải bản chính của gì cả. */}
 {!noindex && <link rel="canonical" href={canonical} />}
 
