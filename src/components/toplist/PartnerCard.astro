@@ -61,7 +61,17 @@ const mobileLogo = logoMobile ?? logo;
 const labels = (await getEntry("labels", "labels"))!.data;
 ---
 
-<div class:list={["partner", { "partner--editors-choice": isEditorsChoice }]}>
+{
+  /* `partner--best-overall` là modifier MỚI ở gốc card. Trước đây `isBestOverall`
+    chỉ tác động tới cái nhãn (`partner__tag--full`), nên không có chỗ nào bám để
+    đổi khung của riêng khối "Our Most Popular". */
+}
+<div
+  class:list={[
+    "partner",
+    { "partner--editors-choice": isEditorsChoice, "partner--best-overall": isBestOverall },
+  ]}
+>
   {
     hasSideBanner && sideBanner && (
       <a
@@ -298,7 +308,7 @@ const labels = (await getEntry("labels", "labels"))!.data;
      Cả bảy card đều dùng chung `box-shadow: 0 0 7px rgba(0,0,0,.25)`.
 
      #1d55b7 viết cứng, KHÔNG dùng token: nó không thuộc bảng màu của site này —
-     gần `--color-primary` (#1261c9) nhưng không trùng. Gán vào token nào cũng là
+     gần `--color-primary` (#185ac4) nhưng không trùng. Gán vào token nào cũng là
      nói dối về nguồn gốc của nó.
 
      Đánh đổi đã biết: viền xanh này bao quanh một card mà bên trong có sẵn nút
@@ -306,6 +316,17 @@ const labels = (await getEntry("labels", "labels"))!.data;
      tách hai tín hiệu; đổi sang xanh là chọn bám bản gốc, có chủ đích. */
   .partner--editors-choice .partner__frame {
     border: 3px solid #1d55b7;
+  }
+  /* Bản lặp lại ở khối "Our Most Popular" KHÔNG viền, dù nó vẫn là card hạng 1 nên
+     vẫn mang `partner--editors-choice`. Bên site mẫu cũng vậy: card cuối trang
+     (1060x318) đo được `border: 0px none`, chỉ card đầu bảng mới có viền — ở đó
+     viền dùng để chỉ ra "đây là hạng 1 giữa một danh sách", còn khối này đứng
+     riêng nên không cần chỉ nữa.
+
+     PHẢI đứng SAU rule trên: hai selector cùng đặc hiệu (0,2,0), thứ tự khai
+     quyết định. Đảo lên trước là viền quay lại mà không có gì báo. */
+  .partner--best-overall .partner__frame {
+    border: 0;
   }
   /* ----- Huy hiệu số thứ hạng ----- */
   .partner__rank {
