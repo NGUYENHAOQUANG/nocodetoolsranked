@@ -8,6 +8,18 @@
 
 export const SITE = {
   name: "nocodetoolsranked.com",
+  /**
+   * Chữ thương hiệu vẽ trên header và chân trang, TÁCH LÀM HAI vì nửa sau đổi
+   * màu (teal ở header, teal trên nền navy ở chân trang). Khác `name` ở chỗ
+   * không có ".com".
+   *
+   * Ở đây chứ không gõ thẳng vào markup: trước đây header gõ tay
+   * "nocodetools"/"ranked" còn chân trang lại nạp `assets/site/logo-white.svg` —
+   * mà file đó là logo của MỘT SITE KHÁC ("RankWebsiteBuilder", còn sót từ dự án
+   * trước), nên hai đầu trang cuối trang hiện hai thương hiệu khác nhau suốt một
+   * thời gian mà build vẫn xanh. Một nguồn thì không lệch được nữa.
+   */
+  brand: { lead: "nocodetools", accent: "ranked" },
   /** Thẻ <title> mặc định khi trang không tự đặt */
   defaultTitle: "Best Website Builders 2026: Reviews & Comparison Rank",
   /** Mô tả mặc định. Bản cũ để chuỗi TIẾNG VIỆT trên site tiếng Anh và không

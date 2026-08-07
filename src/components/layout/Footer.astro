@@ -1,6 +1,7 @@
 ---
-import logoWhite from "@/assets/site/logo-white.svg";
+import logo from "@/assets/logo/logo.webp";
 import { footerLinks } from "@/config/navigation";
+import { SITE } from "@/config/site";
 
 // Trang gốc hiển thị năm hiện tại; lấy lúc build cho khớp hành vi đó (như Hero)
 const year = new Date().getFullYear();
@@ -9,16 +10,25 @@ const year = new Date().getFullYear();
 <footer class="site-footer">
   <div class="site-footer__brand">
     {
-      /* Trang trí: tên site đã có ở dòng bản quyền ngay dưới và ở link logo trên
-        header, nên logo này không mang thêm thông tin -> alt rỗng. */
+      /* CHỮ chứ không phải <img>: trước đây chỗ này nạp `assets/site/logo-white.svg`,
+        vốn là logo "RankWebsiteBuilder" còn sót từ dự án trước — chân trang hiện
+        SAI THƯƠNG HIỆU. Dựng bằng chữ thì không thể sai nữa, và dùng chung nguồn
+        với header (`SITE.brand`).
+
+        `aria-hidden`: tên site đã có nguyên vẹn ở dòng bản quyền ngay dưới, đọc
+        lại lần nữa chỉ làm trình đọc màn hình lặp. */
     }
-    <img
-      class="site-footer__logo"
-      src={logoWhite.src}
-      alt=""
-      width={logoWhite.width}
-      height={logoWhite.height}
-    />
+    <a href="/" class="site-footer__logo-link" aria-label="nocodetoolsranked.com">
+      <img
+        src={logo.src}
+        alt="nocodetoolsranked.com Official Logo"
+        class="site-footer__logo-img"
+        style="max-height: 36px; width: auto;"
+      />
+      <span class="site-footer__logo" aria-hidden="true"
+        >{SITE.brand.lead}<span class="site-footer__logo-accent">{SITE.brand.accent}</span></span
+      >
+    </a>
   </div>
 
   <div class="site-footer__nav">
@@ -57,11 +67,35 @@ const year = new Date().getFullYear();
     background-color: var(--color-accent-strong);
   }
 
-  .site-footer__logo {
+  .site-footer__logo-link {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    text-decoration: none;
+  }
+  .site-footer__logo-img {
+    max-height: 32px;
     width: auto;
-    height: 55px;
-    max-width: min(100%, 220px);
+    object-fit: contain;
+    border-radius: 8px;
+    overflow: hidden;
+  }
+  /* Trước đây khối này là <img> nên có `height: 55px` + `max-width: 220px` để ghìm
+     ảnh. Nay là CHỮ: chiều cao do cỡ chữ quyết định, ghìm cứng 55px chỉ tạo ra
+     khoảng trống thừa dưới chữ. */
+  .site-footer__logo {
     align-self: flex-start;
+    font-size: 1rem;
+    font-weight: 700;
+    line-height: 1.2;
+    letter-spacing: -0.02em;
+    color: var(--color-text-on-primary);
+    white-space: nowrap;
+  }
+  /* Teal trên nền navy đạt 6.03:1 — ở đây dùng được `--color-accent` bản sáng,
+     khác header (nền trắng, phải dùng `--color-accent-text`). */
+  .site-footer__logo-accent {
+    color: var(--color-accent);
   }
 
   .site-footer__nav {
@@ -152,11 +186,11 @@ const year = new Date().getFullYear();
       align-items: flex-start;
       justify-content: center;
     }
+    /* `max-width`/`max-height`/`object-fit` cũ ở đây là để ghìm <img>; chữ không
+       cần cái nào. Chỉ giữ `position: relative` vì nó không dính tới ảnh. */
     .site-footer__logo {
       position: relative;
-      max-width: 220px;
-      max-height: 100%;
-      object-fit: contain;
+      font-size: 1.5rem;
     }
     .site-footer__nav {
       width: 65%;

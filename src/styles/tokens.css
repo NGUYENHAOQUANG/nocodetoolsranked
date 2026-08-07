@@ -47,7 +47,7 @@
 
   /* Nút CTA — mọi nút đi ra đối tác. Tương phản trên nền trắng 5.87:1 (đạt AA). */
   --color-primary: #1261c9;
-  /* Thực chất là trạng thái hover của primary: 9/10 nơi dùng nó là :hover.
+  /* Thực chất là trạng thái hover của primary: 9/10 nơi dùng nó là :hover.   
      Cặp #1261c9 -> #0e4997 lấy nguyên từ `--c-primary`/`--c-primary-dark` bên kia. */
   --color-secondary: #0e4997;
 
