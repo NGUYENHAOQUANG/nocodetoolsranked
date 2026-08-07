@@ -61,19 +61,17 @@
 
    `margin: 1em` và `1.33em` chính là mặc định UA của h3/h4 — bản gốc chỉ đặt
    font-size rồi để UA lo margin. Giữ dạng `em` để quan hệ đó không đứt khi đổi cỡ. */
-/* TEAL cho đầu mục cấp một — không phải màu chữ thân bài.
+/* Đầu mục cấp một dùng MÀU CHỮ THƯỜNG, không tô teal.
 
-   Đây là quy ước xuyên site: tiêu đề mục là MỐC QUÉT TRANG, cùng vai trò "định
-   hướng đọc" với link nav, nên cùng màu với nó. Áp cho `.post__body h2` và
-   `.review-section__body h2`; KHÔNG áp cho `.page__body h2` (trang pháp lý —
-   ở đó đầu mục là cấu trúc văn bản, tô màu vào thành ra mời gọi bấm) và không
-   áp cho h3 (mục con phải chìm hơn mục cha).
+   Từng là `--color-accent-text` với lý lẽ "tiêu đề mục là mốc quét trang nên cùng
+   màu với link nav". Đã bỏ theo yêu cầu: teal nay CHỈ còn ở logo và thanh nav —
+   tức chỉ những thứ thuộc về khung điều hướng, không phải nội dung.
 
-   `--color-accent-text` chứ không phải `--color-accent`: đây là CHỮ, và hai token
-   tách nhau chính để chỗ nào là chữ / chỗ nào là nét vẽ còn chỉnh riêng được. */
+   Phân cấp giữa h2 và thân bài nay do CỠ CHỮ và ĐỘ ĐẬM gánh (1.25rem/700 so với
+   1rem/400), không cần tới màu. */
 .post__body h2 {
   margin: 1em 0;
-  color: var(--color-accent-text);
+  color: var(--color-text-body);
   font-size: 1.25rem;
   font-weight: 700;
   line-height: 2.2rem;
@@ -146,10 +144,11 @@
   opacity: 1;
   font-weight: 700;
 }
-/* Xem ghi chú màu ở `.post__body h2`. Tách khỏi rule gộp bên trên vì h3 giữ màu
-   chữ thân bài — gộp lại là h3 cũng thành teal và mất bậc phân cấp. */
+/* h2 và h3 nay CÙNG màu chữ thường (xem ghi chú ở `.post__body h2`). Giữ hai rule
+   rời chứ không gộp lại vào block `h2, h3` bên trên: chúng từng khác màu, và tách
+   sẵn thì lần sau muốn cho h2 một màu riêng chỉ phải sửa một dòng. */
 .review-section__body h2 {
-  color: var(--color-accent-text);
+  color: var(--color-text-body);
 }
 .review-section__body h3 {
   color: var(--color-text-body);
@@ -377,13 +376,13 @@
 }
 
 /* global.css reset margin h2/h3/p về 0 → khai lại đúng mặc định UA */
-/* Teal — cùng quy ước với `.post__body h2`, xem ghi chú ở đó. */
+/* Màu chữ thường — cùng quy ước với `.post__body h2`, xem ghi chú ở đó. */
 .featured-article h2,
 .featured-article__title {
   margin: 0.83em 0;
   font-size: 1.5625rem;
   line-height: 2.2rem;
-  color: var(--color-accent-text);
+  color: var(--color-text-body);
 }
 
 /* Tiêu đề khối do component render, luôn là phần tử ĐẦU — dùng `.featured-article__title`

@@ -270,12 +270,13 @@ const labels = (await getEntry("labels", "labels"))!.data;
     color: var(--color-text-body);
   }
 
-  /* TEAL như mọi tiêu đề mục khác (xem ghi chú ở `.post__body h2` trong prose.css) */
+  /* Màu chữ thường như mọi tiêu đề mục khác (xem ghi chú ở `.post__body h2`
+     trong prose.css) — teal nay chỉ còn ở logo và thanh nav. */
   .mini-review__title {
     width: 100%;
     max-width: min(95dvw, var(--width-content));
     margin-inline: auto;
-    color: var(--color-accent-text);
+    color: var(--color-text-body);
   }
   /* Rule trông thừa nhưng có tác dụng render: ::first-letter tách chữ cái đầu
      thành text run riêng, đổi shaping/subpixel của phần chữ còn lại */

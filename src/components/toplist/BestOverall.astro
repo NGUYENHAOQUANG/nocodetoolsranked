@@ -41,9 +41,8 @@ const { title, brand } = Astro.props;
     font-size: 1.4rem;
     font-weight: 700;
     text-align: start;
-    /* TEAL như mọi tiêu đề mục khác của site (xem `prose.css`, `FaqAccordion`,
-       `MustReads`). Tiêu đề mục là ĐỊNH HƯỚNG ĐỌC, không phải chữ thân bài — để
-       nó cùng màu chữ thường thì người đọc mất mốc quét trang. */
-    color: var(--color-accent-text);
+    /* Màu chữ thường như mọi tiêu đề mục khác của site (xem ghi chú ở
+       `.post__body h2` trong prose.css) — teal nay chỉ còn ở logo và thanh nav. */
+    color: var(--color-text-body);
   }
 </style>

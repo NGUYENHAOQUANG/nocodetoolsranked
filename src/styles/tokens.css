@@ -58,14 +58,18 @@
   /* Nhấn ĐỊNH HƯỚNG: vòng điểm, viền card nổi bật, icon, nét trang trí lớn.
      CHỈ dùng cho mảng màu và hình, KHÔNG dùng làm màu chữ — xem token dưới. */
   --color-accent: #09bcbe;
-  /* Cùng vai trò teal nhưng dành riêng cho CHỮ: tiêu đề mục, link nav, mục lục,
-     nhãn "Pros", nút cuộn-lên-đầu.
+  /* Cùng vai trò teal nhưng dành riêng cho CHỮ.
+
+     PHẠM VI ĐÃ THU HẸP: teal chỉ còn ở KHUNG ĐIỀU HƯỚNG — chữ "ranked" của logo,
+     link nav + menu con lúc hover/active, mục lục bài lúc hover, nút cuộn-lên-đầu.
+     Nội dung thì KHÔNG: tiêu đề mục (h2 thân bài, "Review Highlights", "Our Most
+     Popular") và nhãn "Pros" đã trả về `--color-text-body`. Thêm chỗ dùng mới thì
+     hỏi trước: nó thuộc khung điều hướng hay thuộc nội dung.
 
      HIỆN GIỜ CÙNG GIÁ TRỊ với `--color-accent` — CHỌN CÓ Ý THỨC, không phải token
-     thừa: bản gốc bên template2 dùng đúng #09bcbe cho toàn bộ H2 nội dung và ta
-     chép lại y vậy. Đánh đổi: #09bcbe trên nền trắng chỉ đạt 2.35:1, dưới cả
-     ngưỡng chữ lớn (3:1). Bản đạt AA là #0a7d7f (4.94:1), mắt thường gần như
-     không phân biệt được khi đặt rời — đổi MỘT dòng này là cả site theo.
+     thừa. Đánh đổi: #09bcbe trên nền trắng chỉ đạt 2.35:1, dưới cả ngưỡng chữ lớn
+     (3:1). Bản đạt AA là #0a7d7f (4.94:1), mắt thường gần như không phân biệt được
+     khi đặt rời — đổi MỘT dòng này là cả site theo.
 
      Vì thế ĐỪNG "dọn" hai token làm một: cái seam này chính là thứ cho phép sửa
      tương phản mà không đụng tới màu của nét vẽ và vòng điểm. (Cùng lý do với ba
