@@ -7,59 +7,70 @@
 # `stars` o day la sao THAT doc tu ban goc (5 sao cho hai brand dau, 4 sao cho bay
 # brand con lai, khong co nua sao). Card trang chu khong co sao nen khong khai.
 #
-# `excerpt` la doan mo dau than bai review, nang len day de chuoi song sot byte-exact
-# duoi smartypants:false.
+# `excerptParagraphs` la doan mo dau than bai review, nang len day de chuoi song sot
+# byte-exact duoi smartypants:false. La MANG vi ban goc ngat Wix thanh HAI doan;
+# tam brand con lai moi brand mot doan.
 entries:
   - brand: "wix"
     rating: "9.8"
     ratingLabel: "Superb"
     stars: 5
-    excerpt: "Wix started in 2006 with a simple goal. The company wanted to make website creation easy for everyone. Many small business owners lacked coding skills at that time. Wix solved this problem with a visual drag-and-drop editor. Today the platform powers millions of websites across the United States. Entrepreneurs, bloggers, freelancers, and online stores rely on Wix daily. The company provides hosting, design tools, marketing tools, and security under one account."
+    excerptParagraphs:
+      - "Wix started in 2006 with a simple goal. The company wanted to make website creation easy for everyone. Many small business owners lacked coding skills at that time. Wix solved this problem with a visual drag-and-drop editor."
+      - "Today the platform powers millions of websites across the United States. Entrepreneurs, bloggers, freelancers, and online stores rely on Wix daily. The company provides hosting, design tools, marketing tools, and security under one account."
 
   - brand: "base44"
     rating: "9.2"
     ratingLabel: "Very Good"
     stars: 5
-    excerpt: "Base44 focuses on ease of use and fast website creation. Its interface allows beginners to design websites without complicated setup steps. At the same time, the platform includes tools for SEO, ecommerce, and marketing."
+    excerptParagraphs:
+      - "Base44 focuses on ease of use and fast website creation. Its interface allows beginners to design websites without complicated setup steps. At the same time, the platform includes tools for SEO, ecommerce, and marketing."
 
   - brand: "shopify"
     rating: "8.5"
     ratingLabel: "Good"
     stars: 4
-    excerpt: "Shopify launched in 2006 with the goal of helping businesses create and manage online stores easily. The platform focuses on ecommerce functionality while still offering flexible website design tools. Businesses can build storefronts, manage products, process payments, and track orders from a single dashboard."
+    excerptParagraphs:
+      - "Shopify launched in 2006 with the goal of helping businesses create and manage online stores easily. The platform focuses on ecommerce functionality while still offering flexible website design tools. Businesses can build storefronts, manage products, process payments, and track orders from a single dashboard."
 
   - brand: "ionos"
     rating: "8.2"
     ratingLabel: "Good"
     stars: 4
-    excerpt: "IONOS is a well-known web hosting and cloud services company that offers a website builder for small businesses. The company launched in Germany and now serves millions of customers across the United States and other countries. Its services include domain registration, hosting, cloud infrastructure, and website building tools."
+    excerptParagraphs:
+      - "IONOS is a well-known web hosting and cloud services company that offers a website builder for small businesses. The company launched in Germany and now serves millions of customers across the United States and other countries. Its services include domain registration, hosting, cloud infrastructure, and website building tools."
 
   - brand: "webador"
     rating: "7.9"
     ratingLabel: "Fair"
     stars: 4
-    excerpt: "Webador is a website builder designed for beginners, small businesses, and personal website owners. The platform focuses on simplicity and fast website creation. Users can design and publish a website within a short time using its visual editor."
+    excerptParagraphs:
+      - "Webador is a website builder designed for beginners, small businesses, and personal website owners. The platform focuses on simplicity and fast website creation. Users can design and publish a website within a short time using its visual editor."
 
   - brand: "lovable"
     rating: "7.6"
     ratingLabel: "Fair"
     stars: 4
-    excerpt: "Lovable is an AI website builder that helps users create websites by describing what they want in plain language. It works well for landing pages, portfolios, business websites, blogs, ecommerce-style pages, and service-based sites. Instead of starting with a blank editor, users can prompt Lovable to generate a website draft, then refine the layout, copy, colors, images, and sections through chat or visual edits. Lovable also offers website templates across categories such as portfolio, blog, ecommerce, services, resume, and landing pages."
+    excerptParagraphs:
+      - "Lovable is an AI website builder that helps users create websites by describing what they want in plain language. It works well for landing pages, portfolios, business websites, blogs, ecommerce-style pages, and service-based sites. Instead of starting with a blank editor, users can prompt Lovable to generate a website draft, then refine the layout, copy, colors, images, and sections through chat or visual edits. Lovable also offers website templates across categories such as portfolio, blog, ecommerce, services, resume, and landing pages."
 
   - brand: "monday"
     rating: "7.5"
     ratingLabel: "Fair"
     stars: 4
-    excerpt: "Monday.com is not a traditional website builder like Wix or Squarespace, but its monday vibe tool makes it possible to create website-style pages, internal portals, dashboards, forms, and custom business apps with AI prompts. It is best for teams that want to build interactive pages connected to their work data, rather than simple public marketing websites. With responsive layouts, shareable links, permissions, and AI-assisted building, Monday.com is a strong option for businesses that need secure portals, project hubs, resource pages, and client-facing workspaces."
+    excerptParagraphs:
+      - "Monday.com is not a traditional website builder like Wix or Squarespace, but its monday vibe tool makes it possible to create website-style pages, internal portals, dashboards, forms, and custom business apps with AI prompts. It is best for teams that want to build interactive pages connected to their work data, rather than simple public marketing websites. With responsive layouts, shareable links, permissions, and AI-assisted building, Monday.com is a strong option for businesses that need secure portals, project hubs, resource pages, and client-facing workspaces."
 
   - brand: "clickup"
     rating: "7.3"
     ratingLabel: "Fair"
     stars: 4
-    excerpt: "ClickUp is a flexible workspace for teams that need to manage website projects from planning to launch. It helps organize tasks, content, timelines, documents, and team collaboration in one place, making it easier to keep website work on track. While it is not a traditional drag-and-drop website builder, it is a strong option for teams that want better structure, visibility, and control throughout the website-building process."
+    excerptParagraphs:
+      - "ClickUp is a flexible workspace for teams that need to manage website projects from planning to launch. It helps organize tasks, content, timelines, documents, and team collaboration in one place, making it easier to keep website work on track. While it is not a traditional drag-and-drop website builder, it is a strong option for teams that want better structure, visibility, and control throughout the website-building process."
 
   - brand: "bubble"
     rating: "7.0"
     ratingLabel: "Fair"
     stars: 4
-    excerpt: "Bubble is a no-code website and web app builder made for users who want more than a basic static site. Its drag-and-drop editor, responsive design tools, built-in database, and workflow system make it useful for creating interactive websites, landing pages, portals, directories, and marketplace-style platforms. While it has a learning curve, Bubble gives teams strong flexibility to build custom website experiences without writing code."
+    excerptParagraphs:
+      - "Bubble is a no-code website and web app builder made for users who want more than a basic static site. Its drag-and-drop editor, responsive design tools, built-in database, and workflow system make it useful for creating interactive websites, landing pages, portals, directories, and marketplace-style platforms. While it has a learning curve, Bubble gives teams strong flexibility to build custom website experiences without writing code."

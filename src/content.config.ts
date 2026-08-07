@@ -107,8 +107,12 @@ const reviewsPageRow = z.object({
   ratingLabel: z.string(),
   stars: z.number(),
   /** Đoạn mở đầu thân bài review. Nâng lên đây thay vì bóc từ MDX: bóc tự động thì
-      đổi câu mở bài là đổi luôn chữ trên card /reviews/ mà không ai định làm vậy. */
-  excerpt: z.string(),
+      đổi câu mở bài là đổi luôn chữ trên card /reviews/ mà không ai định làm vậy.
+
+      MẢNG chứ không phải chuỗi: bản gốc ngắt Wix thành HAI `<p>` (card cao 266px
+      thay vì 250px). Nhét cả hai vào một chuỗi thì mất đúng chỗ ngắt đó — đo được
+      trên trình duyệt, `astro check` không thấy gì. */
+  excerptParagraphs: z.array(z.string()).min(1),
 });
 
 /**

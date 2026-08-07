@@ -10,14 +10,16 @@
       <ReviewSection>, nên nếu gộp rule thì `:first-of-type` sẽ khớp 4 lần mỗi trang
       thay vì 1, âm thầm xoá 0.83em margin bốn lần.
 
-   2. `.review-section__body` sở hữu riêng `h1`, `ol` và toàn bộ style bảng giá —
-      `.post__body` không có.
+   2. `.review-section__body` sở hữu riêng `ol` — `.post__body` không có.
 
-   3. Vài giá trị trùng nhau chỉ là TRÙNG HỢP: `h3 { margin: 1em }` và
-      `margin: 1.25rem` cùng ra 20px vì font-size của h3 đúng bằng 1.25rem. Gộp
-      lại thì mất mối liên hệ đó và lần sửa font-size sau sẽ lệch.
+   3. Vài giá trị trùng nhau chỉ là TRÙNG HỢP, không phải cùng nguồn: gộp lại thì
+      mất mối liên hệ với thứ sinh ra chúng, và lần sửa sau sẽ lệch.
 
    Dùng chung FILE, không dùng chung RULE. Xem CLAUDE.md §8.6.
+
+   NGOẠI LỆ đã cân nhắc: style BẢNG dùng chung cho khối 1 và khối 2, vì bảng ở hai
+   nơi do CÙNG một CMS sinh ra với cùng khai báo inline trên từng ô — trùng vì
+   cùng nguồn, không phải trùng hợp. Lý do đầy đủ ghi ngay tại khối bảng.
 
    Tên class giữ nguyên `.post__body` / `.review-section__body` (không đổi thành
    .prose--post/.prose--review) để HTML không đổi một ký tự nào.
@@ -44,28 +46,39 @@
   /* 1em (không phải 16px cứng) để co theo root 14px ở mobile như bản gốc */
   margin: 1em 0;
 }
-.post__body h3 {
-  /* Bản gốc: h3 margin 1.25rem trên+dưới (co ở mobile); RIÊNG h3 đầu tiên mt 0 */
-  margin: 1.25rem 0;
+/* THANG CỠ LỆCH MỘT CẤP SO VỚI THẺ CỦA BẢN GỐC — cố ý, đừng "sửa lại cho khớp tên thẻ".
+
+   Bản gốc nhảy thẳng từ <h1> banner xuống <h3> làm đầu mục (không có <h2> nào),
+   tức là nhảy cấp — đúng thứ `check-html.mjs` chặn. Nội dung ở đây dùng <h2> cho
+   cùng vai trò đó, nên <h2> phải mang CỠ CHỮ của <h3> bản gốc, <h3> mang cỡ của
+   <h4>. Cấp thẻ là dàn ý tài liệu, cỡ chữ là việc của CSS.
+
+   Đo trên bản mẫu (desktop root 16px / mobile root 14px — họ cũng co gốc như site
+   này, nên `rem`/`em` tái hiện đúng cả hai mốc):
+
+     đầu mục   20px/700  lh 35.2px  margin 20px      -> 17.5px    30.8  17.5
+     mục con   15px/700  lh 33.6px  margin 19.95px   -> 13.125px  29.4  17.46
+
+   `margin: 1em` và `1.33em` chính là mặc định UA của h3/h4 — bản gốc chỉ đặt
+   font-size rồi để UA lo margin. Giữ dạng `em` để quan hệ đó không đứt khi đổi cỡ. */
+.post__body h2 {
+  margin: 1em 0;
   color: var(--color-text-body);
   font-size: 1.25rem;
   font-weight: 700;
   line-height: 2.2rem;
 }
-.post__body h3:first-of-type {
-  margin-top: 0;
-}
-/* Một số bài (vd "why-fresh-food") dùng h2 cho mục thay vì h3: 25px, đậm,
-   margin 0.83em (mặc định h2); mục h2 ĐẦU TIÊN bỏ margin trên */
-.post__body h2 {
-  margin: 0.83em 0;
-  color: var(--color-text-body);
-  font-size: 1.5625rem;
-  font-weight: 700;
-  line-height: 2.2rem;
-}
+/* Đầu mục ĐẦU TIÊN của bài bỏ margin trên. Chỉ h2 mới có rule này: h3 là mục con
+   nằm giữa bài nên bản gốc để nguyên margin trên cho MỌI cái, kể cả cái đầu. */
 .post__body h2:first-of-type {
   margin-top: 0;
+}
+.post__body h3 {
+  margin: 1.33em 0;
+  color: var(--color-text-body);
+  font-size: 0.9375rem;
+  font-weight: 700;
+  line-height: 2.1rem;
 }
 /* Ảnh trong bài giữ đúng kích thước gốc (300×300), căn trái */
 .post__body img {
@@ -104,25 +117,25 @@
   line-height: 1.7rem;
 }
 
-/* global.css reset margin h1–h6 + p về 0 → khai lại đúng mặc định UA của từng
-   cấp (h1 .67em, h2 .83em, h3 1em, p 1em) vì bản gốc không reset. */
-.review-section__body h1 {
-  margin: 0.67em 0;
-  font-size: 2rem;
-}
+/* global.css reset margin h1–h6 + p về 0 → khai lại tường minh.
+   Thang cỡ LỆCH MỘT CẤP so với thẻ của bản gốc, cùng lý do và cùng số đo với
+   `.post__body` — đọc chú thích ở khối 1. Ở đây không có `:first-of-type` vì một
+   trang review chứa BỐN khối .review-section__body. */
 .review-section__body h2 {
-  margin: 0.83em 0;
-  font-size: 1.5625rem;
-}
-.review-section__body h3 {
   margin: 1em 0;
   font-size: 1.25rem;
+  line-height: 2.2rem;
+}
+.review-section__body h3 {
+  margin: 1.33em 0;
+  font-size: 0.9375rem;
+  line-height: 2.1rem;
 }
 .review-section__body h2,
 .review-section__body h3 {
   color: var(--color-text-body);
   opacity: 1;
-  line-height: 2.2rem;
+  font-weight: 700;
 }
 .review-section__body p {
   margin: 1em 0;
@@ -152,58 +165,89 @@
   overflow-x: auto;
 }
 
-/* Bảng giá.
+/* ==========================================================================
+   BẢNG — rule dùng CHUNG cho khối 1 và khối 2
 
-   Bản gốc dựng từ CMS nên viền nằm ở `style` inline của TỪNG Ô — 54 chỗ lặp lại
-   cùng một khai báo trên ba file nội dung. Đó là trình bày nằm trong dữ liệu.
-   Gom về đây, giữ nguyên hình: lưới 1px, hàng CUỐI không có viền dưới, và ô đầu
-   mỗi hàng có thêm viền trái (chồng lên viền của bảng — bản gốc như vậy vì
-   `border-collapse: separate` nên hai viền không gộp). */
+   Ngoại lệ DUY NHẤT của luật "dùng chung file, không dùng chung rule" ở đầu file,
+   và có lý do đo được: bảng ở bài blog và bảng ở bài review do CÙNG một CMS sinh
+   ra, cùng một khai báo inline trên từng ô (`border:1px #d3d3d3 solid`, padding
+   7px, line-height 24px). Không phải trùng hợp như mấy con số margin — chúng
+   trùng vì cùng một nguồn.
+
+   Bản gốc để viền trong `style` inline của TỪNG Ô — 54 chỗ lặp cùng một khai báo.
+   Đó là trình bày nằm trong dữ liệu. Gom về đây, giữ nguyên hình: lưới 1px, hàng
+   CUỐI không có viền dưới, ô đầu mỗi hàng có thêm viền trái (chồng lên viền của
+   bảng — bản gốc như vậy vì `border-collapse: separate` nên hai viền không gộp).
+
+   `th` đi kèm `td` ở mọi rule: bản gốc dùng `<td><b>` cho hàng tiêu đề, còn bảng
+   Markdown luôn sinh `<th>`. Cùng một hàng, hai thẻ khác nhau — thẻ nào là việc
+   của dàn ý, hình dạng phải như nhau. (Chữ đậm thì `<th>` tự có; vì vậy nguồn MDX
+   KHÔNG bọc `**` ở hàng đầu — bọc thêm thì `<strong>` = `bolder` của 700 = 900,
+   đậm hơn bản gốc một nấc.) */
+.post__body table,
 .review-section__body table {
   --table-border: 1px solid #d3d3d3;
 
-  border: var(--table-border);
-}
-.review-section__body td {
-  border-right: var(--table-border);
-}
-.review-section__body td:last-child {
-  border-right: 0;
-}
-.review-section__body td:first-child {
-  border-left: var(--table-border);
-}
-.review-section__body tr:not(:last-child) td {
-  border-bottom: var(--table-border);
-}
-
-.review-section__body table {
   width: max-content;
   min-width: 100%;
   overflow: hidden;
   background-color: var(--color-surface);
+  border: var(--table-border);
   border-collapse: separate;
   border-spacing: 0;
 }
+.post__body table *,
 .review-section__body table * {
   overflow: hidden;
 }
-.review-section__body td {
+.post__body :is(td, th),
+.review-section__body :is(td, th) {
   padding: 7px;
+  border-right: var(--table-border);
   line-height: 1.5;
 }
+.post__body :is(td, th):last-child,
+.review-section__body :is(td, th):last-child {
+  border-right: 0;
+}
+.post__body :is(td, th):first-child,
+.review-section__body :is(td, th):first-child {
+  border-left: var(--table-border);
+}
+.post__body tr:not(:last-child) :is(td, th),
+.review-section__body tr:not(:last-child) :is(td, th) {
+  border-bottom: var(--table-border);
+}
+/* Hàng tiêu đề: nền xám nhạt, căn TRÁI (mặc định UA của `<th>` là căn GIỮA).
+   Đo trên bản gốc: `<th>` khai inline `background-color: rgba(245,245,245,0.9)` và
+   `text-align` tính ra `start`.
+
+   Bản gốc có HAI dạng bảng: 7 bảng dùng `<th>` (có dải xám này) và 2 bảng dùng
+   `<td><b>` (không có, vì hàng đầu chỉ là hàng dữ liệu bôi đậm). Bảng Markdown
+   luôn sinh `<th>` nên không diễn tả được cả hai — theo dạng ĐA SỐ, và đó cũng là
+   cách trình bày đúng cho một hàng thật sự là tiêu đề. Hai bảng kia (Wix, bài
+   "10 features") vì vậy có thêm dải xám mà bản gốc không có. */
+.post__body th,
+.review-section__body th {
+  background-color: rgba(245, 245, 245, 0.9);
+  text-align: start;
+}
+.post__body tbody tr,
 .review-section__body tbody tr {
   background: transparent;
   transition: background 0.2s;
 }
+.post__body tbody tr:nth-child(2n),
 .review-section__body tbody tr:nth-child(2n) {
   background: rgba(245, 245, 245, 0.1);
 }
+.post__body tbody tr:hover,
 .review-section__body tbody tr:hover {
   background: rgba(245, 245, 245, 0.02);
 }
 
 @media (min-width: 1025px) and (min-height: 420px) {
+  .post__body table,
   .review-section__body table {
     width: 100%;
   }

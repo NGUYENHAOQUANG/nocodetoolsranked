@@ -8,7 +8,8 @@ interface Props {
   review: ReviewsPageRow;
 }
 
-const { logo, logoAlt, text, readMoreHref, rating, ratingLabel, stars, href } = Astro.props.review;
+const { logo, logoAlt, paragraphs, readMoreHref, rating, ratingLabel, stars, href } =
+  Astro.props.review;
 
 // Cung tròn r=47.5 trong viewBox 100×100 — cùng cách dựng với vòng điểm trang chủ
 const RADIUS = 47.5;
@@ -31,9 +32,11 @@ const labels = (await getEntry("labels", "labels"))!.data;
     <div class="review-card__text">
       {
         /* Bản gốc bọc nội dung trong <p> (margin mặc định 1em) rồi để "Read More"
-          là link INLINE ngay sau — nhờ vậy khối cao 249.63 chứ không phải 217.63 */
+          là link INLINE ngay sau — nhờ vậy khối cao 249.63 chứ không phải 217.63.
+          Nhiều <p> thì margin 1em giữa hai đoạn collapse còn 16px: đo trên bản gốc
+          khối Wix cao 266 (82 + 16 + 109 + link), khớp. */
       }
-      <p>{text}</p>
+      {paragraphs.map((p) => <p>{p}</p>)}
       <a class="review-card__more" href={readMoreHref}>{labels.cta.readMore}</a>
     </div>
   </div>
@@ -287,9 +290,12 @@ const labels = (await getEntry("labels", "labels"))!.data;
   }
   .review-card__button span {
     margin: 5px;
-    /* 1.12rem chứ không phải 1.2rem: bản gốc có rule CSS 1.2rem nhưng lại đặt
-       inline style 1.12rem ngay trên thẻ span → inline thắng */
-    font-size: 1.12rem;
+    /* 1.4rem chứ không phải 1.2rem của thẻ cha: bản gốc đặt inline `font-size:1.4rem`
+       ngay trên <span> nên nó thắng rule CSS. Đo lại trên trình duyệt: span rộng 92px
+       ở 22.4px — với 1.12rem (số cũ ghi ở đây) chỉ ra 74px.
+       ĐỪNG đồng bộ với `.partner__button-text` của PartnerCard: nút đó thật sự là
+       1.12rem và còn đổi cả font-family. Hai nút khác nhau ở bản gốc. */
+    font-size: 1.4rem;
   }
 
   /* ==========================================================================

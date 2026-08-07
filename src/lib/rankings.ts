@@ -47,7 +47,8 @@ export interface ToplistRow {
 export interface ReviewsPageRow {
   logo: ImageMetadata;
   logoAlt: string;
-  text: string;
+  /** Một `<p>` mỗi phần tử — bản gốc ngắt Wix thành hai đoạn, tám brand kia một đoạn. */
+  paragraphs: string[];
   readMoreHref: string;
   rating: string;
   ratingLabel: string;
@@ -202,7 +203,7 @@ export async function getReviewsPageEntries(): Promise<ReviewsPageRow[]> {
   return rows.map(({ row, key, brand }) => ({
     logo: brand.logo,
     logoAlt: brand.logoAltShort!,
-    text: row.excerpt,
+    paragraphs: row.excerptParagraphs,
     readMoreHref: reviewUrl(key),
     rating: row.rating,
     ratingLabel: row.ratingLabel,
