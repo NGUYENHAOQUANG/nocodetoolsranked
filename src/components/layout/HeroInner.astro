@@ -10,8 +10,8 @@
  * Khung dùng chung nằm ở `@/styles/hero.css`.
  */
 import { getImage } from "astro:assets";
-import heroWide from "@/assets/heroes/banner-new.png";
-import heroCompact from "@/assets/heroes/banner-new.png";
+import heroWide from "@/assets/heroes/banner-new.webp";
+import heroCompact from "@/assets/heroes/banner-new.webp";
 import "@/styles/hero.css";
 
 interface Props {
@@ -32,8 +32,8 @@ const hasTwoTitles = mobileTitle !== title;
 
 /* HAI ảnh THẬT SỰ KHÁC NHAU, đổi ở mốc 768px — đây là art direction thật, không
    phải cùng một ảnh hai cỡ:
-   - `banner.png`  3800x520, dải rất dẹt, dùng từ 768px;
-   - `compact.png` 650x325, khung gần vuông hơn, dùng dưới 768px.
+   - `banner.webp`  3800x520, dải rất dẹt, dùng từ 768px;
+   - `compact.webp` 650x325, khung gần vuông hơn, dùng dưới 768px.
    Đo trên bản gốc: dưới 768px nó phát file 650x325 (`object-position: 100% 50%`),
    từ 768px đổi sang 3800x520 (`100% 0%`).
 
