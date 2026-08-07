@@ -67,3 +67,38 @@ export function articleSchema(opts: {
     ...(opts.datePublished ? { datePublished: opts.datePublished } : {}),
   };
 }
+
+export function productReviewSchema(opts: {
+  productName: string;
+  description: string;
+  url: string;
+  image?: string;
+  authorName: string;
+  ratingValue: number;
+  bestRating: number;
+}) {
+  return {
+    "@context": "https://schema.org",
+    "@type": "Review",
+    itemReviewed: {
+      "@type": "Product",
+      name: opts.productName,
+      ...(opts.image ? { image: abs(opts.image) } : {}),
+    },
+    author: {
+      "@type": "Person",
+      name: opts.authorName,
+    },
+    reviewRating: {
+      "@type": "Rating",
+      ratingValue: opts.ratingValue,
+      bestRating: opts.bestRating,
+    },
+    publisher: {
+      "@type": "Organization",
+      name: SITE.name,
+    },
+    description: opts.description,
+    url: abs(opts.url),
+  };
+}

@@ -51,7 +51,7 @@ export const STATIC_PAGES = {
  * - `noopener`: chặn trang đích chạm `window.opener`. Trình duyệt hiện đại tự
  *   ngầm định khi có target="_blank", giữ lại cho bản cũ.
  */
-export const AFFILIATE_REL = "nofollow sponsored noopener";
+export const AFFILIATE_REL = "sponsored nofollow noopener";
 
 /** Link ra ngoài KHÔNG phải affiliate (vd chính sách của Google ở form liên hệ) */
 export const EXTERNAL_REL = "noopener";

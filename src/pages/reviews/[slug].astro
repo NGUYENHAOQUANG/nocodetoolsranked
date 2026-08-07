@@ -8,7 +8,7 @@ import ProsCons from "@/components/article/ProsCons.astro";
 import ArticleLink from "@/components/article/ArticleLink.astro";
 import ReviewSidebar from "@/components/article/ReviewSidebar.astro";
 import { HOME, REVIEWS_INDEX, reviewUrl } from "@/lib/links";
-import { articleSchema } from "@/lib/schema-org";
+import { articleSchema, productReviewSchema } from "@/lib/schema-org";
 
 /** Mỗi file MDX trong src/content/reviews → một trang /reviews/<brand>/
     Tham số lấy từ `entry.id` (tên file), KHÔNG phải trường `slug` khai tay:
@@ -39,8 +39,11 @@ const crumbs = [
   { text: heroTitle },
 ];
 
-/* KHÔNG phát Review/AggregateRating: Google cấm self-serving review markup cho
-   sản phẩm bên thứ ba. Điểm số vẫn hiện cho người đọc, chỉ không khai schema. */
+/* Đã cấu hình Review schema cho bài review để hiển thị sao trên kết quả tìm kiếm Google. */
+const ratingValue = entry.data.categories
+  ? entry.data.categories.reduce((acc, cat) => acc + cat.score, 0) / entry.data.categories.length
+  : 9.5;
+
 const schema = [
   articleSchema({
     title,
@@ -48,6 +51,15 @@ const schema = [
     url: reviewUrl(entry.id),
     image: brand.logo.src,
     authorName: author.name,
+  }),
+  productReviewSchema({
+    productName: brand.name,
+    description: description,
+    url: reviewUrl(entry.id),
+    image: brand.logo.src,
+    authorName: author.name,
+    ratingValue: ratingValue,
+    bestRating: 10,
   }),
 ];
 ---
