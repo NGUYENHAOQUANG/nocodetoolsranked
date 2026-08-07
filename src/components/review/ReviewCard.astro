@@ -123,8 +123,10 @@ const labels = (await getEntry("labels", "labels"))!.data;
       "content"
       "grade";
     grid-template-rows: auto 0.7fr 1fr;
+    /* CHỈ viền mảnh, KHÔNG bóng. Từng có `box-shadow: var(--shadow-card)` ở đây —
+       bóng đó có SẮC XANH và toả 27px, nên quanh mỗi card hiện một quầng xanh đọc
+       ra như viền thứ hai. Đã bỏ theo yêu cầu; card tách khỏi nền bằng viền là đủ. */
     border: 1px solid var(--color-card-border);
-    box-shadow: var(--shadow-card);
     /* Bản gốc đặt màu chữ này ở wrapper trang rồi cho kế thừa xuống */
     color: var(--color-text-body);
   }

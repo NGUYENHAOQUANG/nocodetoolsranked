@@ -88,8 +88,6 @@ const labels = (await getEntry("labels", "labels"))!.data;
     align-items: center;
     /* Không có trong CSS module, bản gốc đặt bằng style inline */
     background-color: var(--color-surface-muted);
-    /* Bóng thẻ dùng chung — xem `--shadow-card` trong tokens.css */
-    box-shadow: var(--shadow-card);
   }
   .sidebar-partners * {
     transition: 0.2s linear;
@@ -191,9 +189,6 @@ const labels = (await getEntry("labels", "labels"))!.data;
 
   /* ===== ≥481px: chuyển thành lưới 3 cột tự xuống hàng ===== */
   @media (min-width: 481px) and (min-height: 420px) {
-    .sidebar-partners {
-      box-shadow: var(--shadow-card);
-    }
     .sidebar-partners__content {
       width: 100%;
       height: 100%;
