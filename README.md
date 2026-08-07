@@ -138,9 +138,15 @@ từ ba chỗ:
 | Tên + icon 4 hạng mục               | `blocks/review-categories.yaml` (toàn site)      |
 | Điểm + mô tả từng hạng mục, tóm tắt | `reviews/<brand>.mdx` -> `categories`, `summary` |
 
+Bốn hạng mục hiện tại: **Build · Control · Tools · Reliability**.
+
 > Thứ tự `categories` trong bài review phải khớp thứ tự trong
 > `review-categories.yaml` — ghép theo VỊ TRÍ, không theo tên. Đổi thứ tự một bên mà
 > quên bên kia là điểm gắn nhầm hạng mục, build vẫn xanh.
+
+> `categories` là **tuỳ chọn**. Brand chưa có bản chấm điểm (hiện là `tide`,
+> `ionos`, `square-online`) thì khối này BỎ QUA nó và lấy brand kế tiếp — thà vắng
+> còn hơn dựng bốn ô rỗng hay mượn tạm mô tả của bộ hạng mục khác.
 
 > Trang chủ hiện **không có** khối FAQ. Component `FaqAccordion` vẫn nằm trong
 > `src/components/toplist/` — bật lại là việc của người sửa code, xem `CLAUDE.md`.

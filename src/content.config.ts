@@ -208,6 +208,9 @@ const reviews = defineCollection({
      *
      * `.length(4)` để lệch số lượng thành lỗi build: thiếu một phần tử thì hạng mục
      * cuối biến mất, thừa một phần tử thì nó không có tên — cả hai đều im lặng.
+     *
+     * TUỲ CHỌN vì không phải brand nào cũng có bản chấm điểm: brand thiếu thì khối
+     * "Review Highlights" BỎ QUA nó, chứ không dựng bốn ô rỗng. Thà vắng còn hơn bịa.
      */
     categories: z
       .array(
@@ -217,7 +220,8 @@ const reviews = defineCollection({
           description: z.string(),
         }),
       )
-      .length(4),
+      .length(4)
+      .optional(),
 
     /** Đoạn tóm tắt trong drawer "Summary" — CHỈ hiện dưới 768px */
     summary: z.string(),

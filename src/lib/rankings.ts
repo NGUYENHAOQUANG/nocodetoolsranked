@@ -160,9 +160,8 @@ export async function getToplistBrands(placementId: string): Promise<ToplistRow[
  * lệch số lượng là lỗi build; lệch THỨ TỰ thì không ai bắt được — xem ghi chú trong
  * chính file yaml đó.
  *
- * Brand nào chưa có bài review thì BỎ QUA chứ không dựng mục rỗng: bảng xếp hạng
- * chứa cả brand không có trang review (vd Emergent), và `limit` đếm trên số mục thật
- * sự dựng được.
+ * Brand nào chưa có bài review — hoặc có bài nhưng chưa chấm điểm hạng mục — thì BỎ
+ * QUA chứ không dựng mục rỗng, và `limit` đếm trên số mục thật sự dựng được.
  */
 export async function getMiniReviewItems(placementId: string, limit: number) {
   const [brands, block] = await Promise.all([
@@ -176,7 +175,8 @@ export async function getMiniReviewItems(placementId: string, limit: number) {
   for (const brand of brands) {
     if (items.length >= limit) break;
     const review = await getEntry("reviews", brand.key);
-    if (!review) continue;
+    /* Chưa có bài review, hoặc có nhưng chưa chấm điểm hạng mục -> bỏ qua. */
+    if (!review?.data.categories) continue;
     items.push({
       brand,
       categories: review.data.categories.map((c, i) => ({

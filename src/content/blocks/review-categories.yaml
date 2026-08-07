@@ -5,15 +5,15 @@
 # - dung phep thu trong CLAUDE.md ("nhan khong doi o dau ca -> tu lay").
 #
 # THU TU LA HOP DONG: moi bai review khai dung 4 phan tu `categories` theo DUNG
-# thu tu nay (Design, Features, Pricing, Usability) va chi khai diem + mo ta.
-# Doi thu tu o day ma khong doi trong 14 file review la diem gan nham hang muc -
+# thu tu nay (Build, Control, Tools, Reliability) va chi khai diem + mo ta.
+# Doi thu tu o day ma khong doi trong cac file review la diem gan nham hang muc -
 # build van xanh, khong gi bao.
 entries:
-  - title: "Design"
-    icon: "../../assets/icons/design.svg"
-  - title: "Features"
-    icon: "../../assets/icons/features.svg"
-  - title: "Pricing"
-    icon: "../../assets/icons/pricing.svg"
-  - title: "Usability"
-    icon: "../../assets/icons/usability.svg"
+  - title: "Build"
+    icon: "../../assets/icons/build.svg"
+  - title: "Control"
+    icon: "../../assets/icons/control.svg"
+  - title: "Tools"
+    icon: "../../assets/icons/tools.svg"
+  - title: "Reliability"
+    icon: "../../assets/icons/reliability.svg"
