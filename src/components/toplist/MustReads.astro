@@ -41,9 +41,10 @@ const labels = (await getEntry("labels", "labels"))!.data;
     height: max-content;
     padding: 10px 40px;
     background-color: var(--color-surface-muted);
-    /* Bóng xanh nhạt dùng chung cho MỌI thẻ nổi của site (thẻ xếp hạng, thẻ
-       sidebar) — xem `--shadow-card` trong tokens.css. */
-    box-shadow: var(--shadow-card);
+    /* CỐ Ý không dùng `--shadow-card`: khối này đã có nền xám riêng (`surface-muted`)
+       nên tự tách khỏi trang rồi, chồng thêm bóng xanh toả 27px là thừa và làm cả
+       cột phải ám xanh. Bóng xám mảnh 3px chỉ để viền bớt gắt. */
+    box-shadow: 0 0 3px var(--color-shadow);
   }
 
   .must-reads__title {
