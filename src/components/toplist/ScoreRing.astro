@@ -113,14 +113,11 @@ const starPaths = stars === undefined ? [] : starList(stars);
   .score-ring__trail {
     stroke: var(--color-ring-trail);
   }
-  /* Vòng điểm là THÔNG TIN, không phải nút bấm -> dùng màu nhấn TEAL. Dùng
-     `--color-accent` (không phải bản tối `--color-accent-text`) vì đây là NÉT VẼ
-     dày 5px, không phải chữ — ngưỡng tương phản cho thành phần đồ hoạ là 3:1 và
-     #09bcbe trên trắng đạt 2.35:1... vẫn thiếu. Nét được cứu bởi `--color-ring-trail`
-     bao quanh: người đọc thấy cung nhờ tương phản với ĐƯỜNG RAY xám, không phải
-     với nền trắng. */
+  /* Vòng điểm là THÔNG TIN, không phải nút bấm. Màu lấy của `rankaibuilder.com`
+     (#0374ef) — xem `--color-ring-arc` trong tokens.css. Xanh này KHÁC xanh nút
+     CTA (#185ac4): bên họ cũng tách hai mã, không dùng chung. */
   .score-ring__arc {
-    stroke: var(--color-accent);
+    stroke: var(--color-ring-arc);
   }
 
   /* Dưới 768px nằm trong luồng (không đè lên gì); từ 768px mới phủ lên vòng tròn */

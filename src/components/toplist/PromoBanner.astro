@@ -28,10 +28,19 @@ const {
      vai trò một màu thì người đọc không phân biệt được "nút để đi ra đối tác" với
      "dải quảng cáo xen giữa bảng".
 
-     Cách tách: nền XANH RẤT NHẠT + nút CAM (`--color-highlight`, vai trò khuyến
+     Cách tách: nền DẢI CHUYỂN MÀU + nút CAM (`--color-highlight`, vai trò khuyến
      mãi). Cam không xuất hiện ở bất cứ đâu khác trên trang xếp hạng, nên chỉ cần
-     thấy cam là biết đây là ưu đãi. */
-  bg = "var(--color-coupon-bg)",
+     thấy cam là biết đây là ưu đãi.
+
+     Dải chuyển màu lấy đúng của `rankaibuilder.com/best-ai-app-builders/` — bóc từ
+     payload JSON của họ chứ không suy từ pixel:
+       {"leftSideColor":"#f1d3bb","rightSideColor":"#bdd9e4","degrees":90}
+     Đo lại trên bản render của họ để đối chứng: mép trái #F0D3BB, mép phải #BDD9E4.
+
+     LƯU Ý: đây là `background` (shorthand), KHÔNG phải `background-color` như
+     trước — thuộc tính đó không nhận gradient, đặt vào là rule bị bỏ im lặng và
+     banner ra trong suốt. Xem <style> bên dưới. */
+  bg = "linear-gradient(90deg, #f1d3bb 0%, #bdd9e4 100%)",
   borderColor = "var(--color-card-border)",
   titleColor = "var(--color-text)",
   buttonBg = "var(--color-highlight)",
@@ -78,8 +87,11 @@ const {
 
 <style>
   /* ===== Base = mobile ===== */
+  /* `background` chứ không `background-color`: `--promo-bg` nay là một gradient,
+     mà `background-color` chỉ nhận màu đơn — gán gradient vào đó là rule bị bỏ
+     im lặng, banner ra trong suốt và không có gì báo. */
   .promo {
-    background-color: var(--promo-bg);
+    background: var(--promo-bg);
     cursor: pointer;
   }
 
@@ -92,7 +104,7 @@ const {
     min-height: 70px;
     padding: 2px 0.5rem;
     gap: 1.5rem;
-    background-color: var(--promo-bg);
+    background: var(--promo-bg);
     border: 1px solid var(--promo-border);
     border-radius: 3px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);

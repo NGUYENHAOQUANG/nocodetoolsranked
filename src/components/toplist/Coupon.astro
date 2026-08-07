@@ -37,14 +37,14 @@ const { text } = Astro.props;
      DPR cao, lớp đó bị raster rồi ghép ở toạ độ lẻ (đo được x = 30,078px × 3 = 90,234
      pixel thiết bị) nên chữ MỜ. */
 
-  /* Lớp nền CAM thò ra sau tấm coupon. Trước đây khai `--color-primary` nên nó ra
-     màu nút CTA chứ không phải cam — comment nói một đằng, mắt thấy một nẻo.
-     Coupon là ưu đãi, đúng vai trò của `--color-highlight`. */
+  /* Lớp nền thò ra sau tấm coupon — XANH, lấy của site mẫu
+     (.partnerCoupon_couponBackground -> rgb(24,90,196)). Từng là cam
+     (`--color-highlight`); đổi theo yêu cầu bám bản gốc. */
   .coupon__bg {
     position: absolute;
     inset: 1px;
     border-radius: 5px;
-    background-color: var(--color-highlight);
+    background-color: var(--color-coupon-accent);
     z-index: 0;
     transition: transform 0.3s ease;
   }
@@ -60,7 +60,9 @@ const { text } = Astro.props;
     border: 2px dashed var(--color-coupon-border);
     border-radius: 8px;
     background-color: var(--color-coupon-bg);
-    color: var(--color-text);
+    /* #333 của site mẫu, KHÔNG phải `--color-text` (#212529): trên nền be #f2dbcb
+       họ dùng đúng mã này cho cả chữ lẫn viền đứt. */
+    color: var(--color-coupon-border);
     font-weight: 600;
     font-size: 14px;
     text-align: center;
@@ -102,7 +104,9 @@ const { text } = Astro.props;
     right: -5px;
     z-index: 3;
     font-size: 20px;
-    color: var(--color-coupon-border);
+    /* XANH, không cùng màu với viền đứt: site mẫu tách hai thứ
+       (.scissorsIcon svg -> rgb(24,90,196), viền -> rgb(51,51,51)). */
+    color: var(--color-coupon-accent);
     transform: rotate(160deg);
     transform-origin: center;
     transition: all 0.3s ease;

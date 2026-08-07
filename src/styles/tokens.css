@@ -45,11 +45,15 @@
      BẢNG MÀU CŨ (webador.co.uk, xanh lá = hành động) đã bỏ. Nếu gặp comment nào
      còn nhắc "xanh lá = hành động" thì đó là comment sót, sửa đi. */
 
-  /* Nút CTA — mọi nút đi ra đối tác. Tương phản trên nền trắng 5.87:1 (đạt AA). */
-  --color-primary: #1261c9;
-  /* Thực chất là trạng thái hover của primary: 9/10 nơi dùng nó là :hover.   
-     Cặp #1261c9 -> #0e4997 lấy nguyên từ `--c-primary`/`--c-primary-dark` bên kia. */
-  --color-secondary: #0e4997;
+  /* Nút CTA — mọi nút đi ra đối tác. Lấy đúng của `rankaibuilder.com`, đọc
+     computed style trên bản render ĐÃ HYDRATE của họ (HTML tĩnh chỉ có skeleton):
+       .partnerButton_visit-site-button -> background: rgb(24,90,196); radius: 3px
+     Chữ trắng trên nó đạt 6.4:1. */
+  --color-primary: #185ac4;
+  /* Trạng thái hover của primary: 9/10 nơi dùng nó là :hover. Site mẫu KHÔNG lộ
+     giá trị này (phải có con trỏ thật mới kích hoạt) nên đây là bản tối hơn một
+     bậc suy từ #185ac4, giữ đúng tương quan sáng/tối của cặp cũ. */
+  --color-secondary: #12448f;
 
   /* Nhấn ĐỊNH HƯỚNG: vòng điểm, viền card nổi bật, icon, nét trang trí lớn.
      CHỈ dùng cho mảng màu và hình, KHÔNG dùng làm màu chữ — xem token dưới. */
@@ -87,20 +91,40 @@
   --color-highlight: #ff631f;
   --color-highlight-dark: #e04e0c;
 
-  /* Sao đánh giá. Trước đây #ffcd42/#e0e0e0 viết cứng ở 3 component. */
-  --color-star: #f3b42c;
+  /* Sao đánh giá. Trước đây #ffcd42/#e0e0e0 viết cứng ở 3 component.
+     #ffcd42 chính là mã của `rankaibuilder.com` (.stars_container -> rgb(255,205,66));
+     trước đó ta để #f3b42c, nay trả về đúng bản gốc. */
+  --color-star: #ffcd42;
   --color-star-empty: #e5e5e5;
 
-  /* Coupon */
-  --color-coupon-bg: #e1f5fc;
-  /* Đường viền đứt + cái kéo nằm trên nó. Cùng HỌ cam với `--color-highlight`
-     nhưng nhạt hơn một bậc — cố ý: viền đứt là nét trang trí bao quanh, để nó cùng
-     độ đậm với nút promo thì hai thứ đánh nhau. Đổi `--color-highlight` thì nhớ
-     chỉnh cả mã này cho khớp họ. */
-  --color-coupon-border: #fd8451;
+  /* ----- Coupon -----
+     Cả ba mã dưới lấy của `rankaibuilder.com`, computed style trên bản đã hydrate:
+       .partnerCoupon_coupon           -> background rgb(242,219,203)
+                                          border 2px dashed rgb(51,51,51)
+       .partnerCoupon_couponBackground -> background rgb(24,90,196)   (lớp thò ra sau)
+       .partnerCoupon_scissorsIcon svg -> fill/stroke rgb(24,90,196)
 
-  /* Score Ring */
-  --color-ring-trail: #e5e5e5;
+     LƯU Ý: nền coupon là màu BE, không còn cùng họ với `--color-coupon-bg` cũ
+     (xanh nhạt). Nó cũng KHÔNG còn liên quan gì tới `--color-highlight` — đừng
+     "dọn" cho hai thứ khớp nhau. */
+  --color-coupon-bg: #f2dbcb;
+  /* Viền đứt: xám-đen, KHÔNG phải màu thương hiệu. */
+  --color-coupon-border: #333333;
+  /* Lớp nền thò ra sau tấm coupon + cái kéo. Trùng mã với `--color-primary` nhưng
+     là token riêng: hai vai trò khác nhau, và nếu sau này đổi màu nút CTA thì
+     coupon không được đi theo. */
+  --color-coupon-accent: #185ac4;
+
+  /* ----- Score Ring -----
+     Cùng nguồn: .grade svg path -> trail stroke rgba(220,220,220,.52)
+                                    arc   stroke rgb(3,116,239)
+     Hai token này chỉ dùng ở HAI component (`ScoreRing`, `ReviewCard`) — dưới
+     ngưỡng ">=3 chỗ" ở đầu file. Giữ dạng token là CỐ Ý và có tiền lệ:
+     `--color-ring-trail` vốn đã như vậy từ trước. Vòng điểm được render bởi hai
+     component riêng vì hai trang dựng markup khác nhau; tách mã ra thành hai bản
+     sao là kiểu lệch âm thầm mà file này tồn tại để chặn. */
+  --color-ring-trail: rgba(220, 220, 220, 0.52);
+  --color-ring-arc: #0374ef;
 
   /* ----- Chữ ----- */
   /* Mặc định của <body>. */

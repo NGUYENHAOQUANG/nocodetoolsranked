@@ -141,7 +141,9 @@ const labels = (await getEntry("labels", "labels"))!.data;
     font-size: 1.125rem;
     font-weight: 400;
     line-height: 1.5rem;
-    color: var(--color-bg);
+    /* TỐI, không phải `--color-bg`: nền hero nay sáng (#d5e5f2, xem `hero.css`).
+       Chữ trắng ở đó chỉ còn 1.2:1. */
+    color: var(--color-text-body);
   }
   .hero__subtitle--wide {
     display: none;
@@ -149,12 +151,14 @@ const labels = (await getEntry("labels", "labels"))!.data;
 
   /* Dòng inline như gốc: icon nằm trên baseline của chữ (không phải flex căn giữa),
      nhờ vậy icon cao đúng vị trí. line-height kế thừa 1.7em từ body. */
+  /* Icon tick dùng `currentColor` nên đổi theo màu chữ luôn — xem ghi chú ở
+     `.hero__subtitle`. */
   .hero__updated {
     margin-top: auto;
     display: block;
     width: fit-content;
     font-size: 1rem;
-    color: var(--color-bg);
+    color: var(--color-text-body);
   }
   .hero__updated svg {
     position: relative;
@@ -213,15 +217,21 @@ const labels = (await getEntry("labels", "labels"))!.data;
     .hero__title :global(span) {
       display: inline;
     }
+  }
+
+  /* Câu dài đổi ở 1025px, KHÔNG phải 768px như trước.
+     Dải 768–1024 vừa hiện ảnh nền (từ 768) vừa còn hẹp, mà `.hero__subtitle` chỉ
+     chừa `padding-right: min(30%, 200px)` — ở 768 phần chừa đó là 200px, không đủ:
+     câu hai vế vỡ thành 3 dòng và mấy chữ cuối đè lên nhân vật ở mép phải ảnh.
+     1025px cũng là mốc desktop THẬT của site này (root font 14->16px, nav hiện,
+     hero cao 170->220), nên 768 vốn là mốc lạc lõng ở riêng chỗ này. */
+  @media (min-width: 1025px) {
     .hero__subtitle--wide {
       display: block;
     }
     .hero__subtitle--compact {
       display: none;
     }
-  }
-
-  @media (min-width: 1025px) {
     .hero__subtitle {
       line-height: 1.6rem;
     }

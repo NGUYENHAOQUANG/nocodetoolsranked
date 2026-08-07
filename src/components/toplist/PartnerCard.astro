@@ -271,28 +271,41 @@ const labels = (await getEntry("labels", "labels"))!.data;
     z-index: 1;
   }
 
-  /* Bóng SẮC XANH + viền đen-12.5%, không phải bóng xám đặc: đây là nét nhận diện
-     của bảng màu (xem `--shadow-card` trong tokens.css). Viền không làm card to ra
-     — `box-sizing: border-box` toàn cục nên 1px ăn vào trong. */
+  /* Bóng XÁM TRUNG TÍNH, KHÔNG dùng `--shadow-card` (bóng sắc xanh). Lấy đúng của
+     `rankaibuilder.com/best-ai-app-builders/` — bóc từ CSS của họ:
+       .partnerNode-2_border__LSI2R { padding:20px 0; box-shadow:0 0 7px rgba(0,0,0,.25) }
+     Trùng khít cả `padding` lẫn `box-shadow` với khối này.
+
+     Cũng KHÔNG có viền: bên họ card chỉ có bóng, viền chỉ xuất hiện ở biến thể
+     "Editor's Choice" ngay dưới. Viền 1px từng thêm ở đây đã gỡ. */
   .partner__frame {
     width: 100%;
     height: 100%;
     padding: 20px 0;
     position: relative;
-    border: 1px solid var(--color-card-border);
-    box-shadow: var(--shadow-card);
+    box-shadow: 0 0 7px rgba(0, 0, 0, 0.25);
     cursor: pointer;
   }
   /* Card "Exclusive Offer" luôn đứng đầu danh sách nên sát mép trên hơn */
   .partner--editors-choice {
     margin-top: 5px;
   }
-  /* Viền NAVY, không phải màu CTA. Viền xanh-CTA bao quanh một card mà bên trong
-     có sẵn nút xanh-CTA là hai vai trò cùng màu — người đọc mất tín hiệu
-     bấm-được. Navy gộp nó vào cùng họ với nhãn "Exclusive Offer" và huy hiệu góc,
-     đều là dấu hiệu XẾP HẠNG chứ không phải hành động. */
+  /* CHỈ card hạng 1 có viền — các card còn lại để trần, chỉ có bóng. Lấy đúng của
+     `rankaibuilder.com/best-ai-app-builders/`, đọc computed style trên bản render
+     đã hydrate của họ:
+       card #1     -> border: 3px solid rgb(29, 85, 183)
+       card #2..#7 -> border: 0px none
+     Cả bảy card đều dùng chung `box-shadow: 0 0 7px rgba(0,0,0,.25)`.
+
+     #1d55b7 viết cứng, KHÔNG dùng token: nó không thuộc bảng màu của site này —
+     gần `--color-primary` (#1261c9) nhưng không trùng. Gán vào token nào cũng là
+     nói dối về nguồn gốc của nó.
+
+     Đánh đổi đã biết: viền xanh này bao quanh một card mà bên trong có sẵn nút
+     "Visit Site" cũng xanh — hai vai trò cùng họ màu. Trước đó ở đây là navy để
+     tách hai tín hiệu; đổi sang xanh là chọn bám bản gốc, có chủ đích. */
   .partner--editors-choice .partner__frame {
-    border: 2px solid var(--color-accent-strong);
+    border: 3px solid #1d55b7;
   }
   /* ----- Huy hiệu số thứ hạng ----- */
   .partner__rank {

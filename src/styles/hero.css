@@ -18,23 +18,22 @@
 .hero {
   position: relative;
   min-height: 170px;
-  /* Nền dự phòng lộ ra ở mép khi ảnh chưa tải xong hoặc tỉ lệ không khớp.
+  /* Nền hero — MÀU ĐẶC, không gradient.
 
-     Gradient chứ không phải màu đặc, và đầu phải là TEAL — ba lý do:
-       1. Ảnh bị mask `transparent -> black 40%` nên nửa phải là ảnh thật; đầu teal
-          rơi đúng vào vùng cửa sổ sáng trong ảnh nên đọc ra như ánh sáng hắt vào,
-          không phải một dải màu dán lên.
-       2. Hero từng là vùng DUY NHẤT trên trang không có chút teal nào, trong khi
-          teal là một trong bốn vai trò chính (logo, dấu ✓, tiêu đề mục, vòng điểm).
-       3. KHÔNG kéo sáng thêm về phía #1261c9: sáng nữa là cả banner đọc ra như một
-          nút CTA khổng lồ — đúng va chạm vai trò mà bảng màu này dựng lên để tránh.
+     Lấy đúng của `rankwebsitebuilder.com/best-ai-app-builders/`: đo trên bản render
+     thật, 7 điểm trải x=30..600 và y=60..260 đều trả về CÙNG một mã #d5e5f2, tức
+     bên đó là màu đặc chứ không phải dải chuyển màu.
 
-     Vì là gradient nên chỗ này KHÔNG dùng `--color-accent-strong` được nữa. Điểm
-     đầu #062b55 CỐ Ý trùng đúng mã của token đó để hero còn nối liền mạch với chân
-     trang và nhãn góc card — đổi token thì phải chỉnh cả mã này, không có gì báo.
+     Hệ quả kéo theo: hero từ nền TỐI-chữ-trắng đổi sang nền SÁNG-chữ-tối. Mọi chỗ
+     đang tô `--color-bg` (trắng) trong `.hero__*` phải đổi sang màu chữ tối, nếu
+     không chữ trắng trên nền #d5e5f2 chỉ còn 1.2:1 — coi như tàng hình. Xem
+     `.hero__title` dưới và `.hero__subtitle` / `.hero__updated` trong `HeroToplist`.
+
+     Đây cũng là chỗ DUY NHẤT trên trang có nền sáng-nhạt mà không phải thẻ card,
+     nên KHÔNG token hoá (quy tắc >=3 chỗ ở đầu `tokens.css`).
 
      Áp cho CẢ `HeroToplist` lẫn `HeroInner` — hai component dùng chung file này. */
-  background: linear-gradient(105deg, #062b55 0%, #06456b 60%, #0a6f82 100%);
+  background: #d5e5f2;
 }
 .hero__banner {
   position: relative;
@@ -81,13 +80,16 @@
   flex-direction: column;
 }
 
+/* Chữ TỐI vì nền hero nay sáng (xem `.hero` ở trên). Trước là `--color-bg` (trắng)
+   cho nền navy — giữ nguyên là tiêu đề chỉ còn 1.2:1, gần như tàng hình.
+   `--color-text-body` (#212529) trên #d5e5f2 đạt 12.0:1. */
 .hero__title {
   margin: 5px 0;
   font-size: 1.7rem;
   font-weight: 700;
   line-height: 1.2;
   letter-spacing: 0.2px;
-  color: var(--color-bg);
+  color: var(--color-text-body);
 }
 
 @media (min-width: 768px) {

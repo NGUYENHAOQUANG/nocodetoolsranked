@@ -41,18 +41,22 @@ const { brandLogo, brandName, promoImage } = Astro.props;
     flex-direction: column;
     width: 100%;
     min-height: 480px;
-    /* Nền XANH NHẠT đặc, hoà liền với ảnh đã mask. Trước là xanh lá (#e8f5e9) —
-       không còn vai trò nào trong bảng màu mới. Dùng chung mã với coupon vì cả hai
-       đều là "khối khuyến mãi trên nền nhạt". */
-    background: var(--color-coupon-bg);
+    /* CÙNG cặp màu với `PromoBanner` — lấy của `rankaibuilder.com` (#f1d3bb ->
+       #bdd9e4), xem ghi chú đầy đủ ở PromoBanner.astro.
+
+       Khác một điểm: 180deg (trên->dưới) chứ không 90deg như bên đó. Khối này cao
+       ~480px mà chỉ rộng ~200px, nên chạy dải theo chiều NGANG là ép cả đoạn
+       chuyển màu vào 200px — nhìn ra một vệt gấp chứ không phải chuyển màu. Chạy
+       theo cạnh dài mới giữ được đúng cảm giác của bản gốc. */
+    background: linear-gradient(180deg, #f1d3bb 0%, #bdd9e4 100%);
 
     overflow: hidden;
     position: relative;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
     text-align: center;
-    /* Đậm hơn nền một bậc trong CÙNG sắc xanh — không token hoá vì đây là giá trị
-       hoà ảnh dùng đúng một chỗ (quy tắc >=3 chỗ ở đầu tokens.css). */
-    border: 1px solid #b8e4f5;
+    /* Đậm hơn đầu dưới của dải một bậc, cùng sắc xanh — không token hoá vì đây là
+       giá trị hoà ảnh dùng đúng một chỗ (quy tắc >=3 chỗ ở đầu tokens.css). */
+    border: 1px solid #a9cede;
   }
 
   .html-banner__header {
