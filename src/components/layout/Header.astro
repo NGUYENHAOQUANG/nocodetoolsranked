@@ -178,7 +178,7 @@ const isActive = (href: string) => href.replace(/\/+$/, "") === currentPath;
     line-height: 1;
   }
   .site-header__brand-highlight {
-    color: var(--color-accent-text);
+    color: var(--color-primary);
   }
 
   /* ----- Hamburger (mobile) ----- */
@@ -225,12 +225,12 @@ const isActive = (href: string) => href.replace(/\/+$/, "") === currentPath;
      khi hover là của template2 — nó bù lại việc teal nhạt hơn màu chữ nên chỉ đổi
      màu thôi thì tín hiệu hover quá yếu. */
   .site-nav__item:hover > .site-nav__link {
-    color: var(--color-accent-text);
+    color: var(--color-primary);
     text-decoration: underline;
   }
   /* Mục ứng với trang hiện tại: teal + đậm 600 (navbar_active bản gốc) */
   .site-nav__link.is-active {
-    color: var(--color-accent-text);
+    color: var(--color-primary);
     font-weight: 600;
   }
 
@@ -261,12 +261,12 @@ const isActive = (href: string) => href.replace(/\/+$/, "") === currentPath;
     font-size: 0.9rem;
   }
   .site-nav__submenu a:hover {
-    color: var(--color-accent-text);
+    color: var(--color-primary);
     background: var(--color-surface-muted);
   }
   /* Mục trang hiện tại (navbar_active ở bản gốc): teal + đậm 600 */
   .site-nav__submenu a.is-active {
-    color: var(--color-accent-text);
+    color: var(--color-primary);
     font-weight: 600;
   }
 
