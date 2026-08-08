@@ -23,7 +23,6 @@ const year = new Date().getFullYear();
         src={logo.src}
         alt="nocodetoolsranked.com Official Logo"
         class="site-footer__logo-img"
-        style="max-height: 36px; width: auto;"
       />
       <span class="site-footer__logo" aria-hidden="true"
         >{SITE.brand.lead}<span class="site-footer__logo-accent">{SITE.brand.accent}</span></span
@@ -75,18 +74,15 @@ const year = new Date().getFullYear();
     text-decoration: none;
   }
   .site-footer__logo-img {
-    max-height: 32px;
+    max-height: 28px;
     width: auto;
     object-fit: contain;
-    border-radius: 8px;
-    overflow: hidden;
   }
   /* Trước đây khối này là <img> nên có `height: 55px` + `max-width: 220px` để ghìm
      ảnh. Nay là CHỮ: chiều cao do cỡ chữ quyết định, ghìm cứng 55px chỉ tạo ra
      khoảng trống thừa dưới chữ. */
   .site-footer__logo {
-    align-self: flex-start;
-    font-size: 1rem;
+    font-size: 1.25rem;
     font-weight: 700;
     line-height: 1.2;
     letter-spacing: -0.02em;
@@ -189,6 +185,9 @@ const year = new Date().getFullYear();
     }
     /* `max-width`/`max-height`/`object-fit` cũ ở đây là để ghìm <img>; chữ không
        cần cái nào. Chỉ giữ `position: relative` vì nó không dính tới ảnh. */
+    .site-footer__logo-img {
+      max-height: 36px;
+    }
     .site-footer__logo {
       position: relative;
       font-size: 1.5rem;

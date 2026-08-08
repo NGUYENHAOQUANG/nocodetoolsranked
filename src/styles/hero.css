@@ -63,6 +63,18 @@
   mask-image: linear-gradient(to right, transparent 0%, black 40%);
 }
 
+/* Điều chỉnh riêng cho mobile (<= 425px) theo yêu cầu:
+   - Dời ảnh qua phải (giảm width) để không che chữ.
+   - Chỉnh lại mask để gradient mượt hơn, chừa rõ mặt cô gái. */
+@media (max-width: 425px) {
+  .hero__bg {
+    width: 75%;
+    object-position: 75% center !important;
+    -webkit-mask-image: linear-gradient(to right, transparent 0%, black 50%);
+    mask-image: linear-gradient(to right, transparent 0%, black 50%);
+  }
+}
+
 /* Bản gốc dùng margin 12px 0 (không phải padding) và để grid kéo giãn ô này */
 .hero__content {
   position: relative;

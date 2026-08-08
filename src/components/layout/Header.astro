@@ -148,7 +148,7 @@ const isActive = (href: string) => href.replace(/\/+$/, "") === currentPath;
   .site-header__inner {
     position: relative;
     z-index: 26;
-    padding: 7px 15px 0 5px;
+    padding: 10px 15px;
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -179,6 +179,15 @@ const isActive = (href: string) => href.replace(/\/+$/, "") === currentPath;
   }
   .site-header__brand-highlight {
     color: #286ce6;
+  }
+
+  @media (max-width: 425px) {
+    .site-header__logo img {
+      max-height: 28px;
+    }
+    .site-header__brand-name {
+      font-size: 1.25rem;
+    }
   }
 
   /* ----- Hamburger (mobile) ----- */
@@ -394,7 +403,7 @@ const isActive = (href: string) => href.replace(/\/+$/, "") === currentPath;
     .site-header__inner {
       max-width: min(var(--width-content), 100dvw);
       margin-inline: auto;
-      padding: 7px 0 0;
+      padding: 10px 0;
     }
     .site-header__burger {
       display: none;
