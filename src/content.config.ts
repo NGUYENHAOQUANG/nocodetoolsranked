@@ -47,7 +47,23 @@ const brands = defineCollection({
        * danh tính brand; xem quy ước hai trục trong CLAUDE.md.
        */
       sideBanner: image().optional(),
-      /** NGUỒN DUY NHẤT của link affiliate. Mọi nơi khác tham chiếu tới đây. */
+      /**
+       * NGUỒN DUY NHẤT của link affiliate. Mọi nơi khác tham chiếu tới đây — một
+       * brand xuất hiện tới 9 loại khối (nút bảng xếp hạng, card review, mini
+       * review, carousel sidebar, side banner, dải promo, inline CTA, "View
+       * Rates", link brand cuối bài) và TẤT CẢ đọc đúng trường này.
+       *
+       * ⚠️ HIỆN ĐANG LÀ TRANG CHỦ CHÍNH THỨC CỦA BRAND, KHÔNG PHẢI LINK AFFILIATE.
+       *
+       * Trước đây cả 15 brand để `"#"` nên nút "Visit Site" bấm vào không đi đâu.
+       * Đã thay bằng URL chính thức để nút hoạt động, nhưng đây CHƯA phải link
+       * kiếm tiền: click hiện KHÔNG được gắn tracking, tức traffic đi ra mà không
+       * ghi nhận hoa hồng — và không có gì báo lỗi, trang vẫn chạy bình thường.
+       *
+       * Khi có link affiliate thật (dạng `go.impact.com/...`, `?ref=`, endpoint
+       * `/click?` của mạng affiliate...) thì thay thẳng vào từng file
+       * `content/brands/*.yaml`. Không phải sửa component nào.
+       */
       affiliateUrl: z.string(),
       /** Dòng chữ trong ô carousel sidebar */
       carouselPromo: z.string().optional(),
