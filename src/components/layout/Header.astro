@@ -158,12 +158,12 @@ const isActive = (href: string) => href.replace(/\/+$/, "") === currentPath;
   .site-header__logo {
     display: flex;
     align-items: center;
-    gap: 8px;
+    gap: 4px;
     min-width: 144px;
     text-decoration: none;
   }
   .site-header__logo img {
-    max-height: 42px;
+    max-height: 36px;
     width: auto;
     object-fit: contain;
   }
@@ -171,14 +171,14 @@ const isActive = (href: string) => href.replace(/\/+$/, "") === currentPath;
      nên không được mượn màu của nút. Đây là CHỮ nên lấy `--color-accent-text`,
      không lấy `--color-accent` (dành cho mảng màu và nét vẽ). */
   .site-header__brand-name {
-    font-size: 1.75rem;
+    font-size: 1.5rem;
     font-weight: 700;
     color: var(--color-accent-strong);
     letter-spacing: -0.02em;
     line-height: 1;
   }
   .site-header__brand-highlight {
-    color: var(--color-primary);
+    color: #286ce6;
   }
 
   /* ----- Hamburger (mobile) ----- */
@@ -215,6 +215,7 @@ const isActive = (href: string) => href.replace(/\/+$/, "") === currentPath;
     display: block;
     text-align: center;
     transition: color 0.15s ease;
+    font-size: 0.95rem;
   }
   /* Có trong bản gốc: tách chữ cái đầu thành run riêng, làm đổi shaping subpixel
      của phần chữ còn lại. Bỏ đi thì "Reviews" render lệch vài pixel so với gốc. */
