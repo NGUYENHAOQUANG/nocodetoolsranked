@@ -1,7 +1,15 @@
 ---
 import { Image } from "astro:assets";
+import { getEntry } from "astro:content";
 import promoPopup from "@/assets/promos/promo-popup.webp";
 import { CLOSE_X } from "@/lib/icon-paths";
+import { AFFILIATE_REL } from "@/lib/links";
+
+/* Brand của creative này. Khai cứng "wix" NGAY CẠNH ảnh cũng khai cứng ở trên —
+   hai thứ phải đi cùng nhau: ảnh `promo-popup.webp` vẽ sẵn logo và nút của Wix,
+   nên đổi ảnh mà quên đổi id là popup quảng cáo một brand nhưng dẫn sang brand
+   khác. Link vẫn đọc từ `content/brands/wix.yaml` để không có bản sao URL thứ hai. */
+const promoBrand = (await getEntry("brands", "wix"))!.data;
 ---
 
 {
@@ -22,7 +30,20 @@ import { CLOSE_X } from "@/lib/icon-paths";
       </svg>
     </button>
 
-    <a href="#" class="exit-popup__image-link" data-close>
+    {
+      /* Trước đây `href="#"`: bấm vào ảnh quảng cáo chỉ đóng popup, không đi đâu —
+        toàn bộ creative thành vô dụng. Nay dẫn ra đối tác như mọi nút affiliate
+        khác. Giữ `data-close` để popup đóng lại sau khi mở tab mới, nếu không
+        người dùng quay lại tab cũ vẫn thấy nó chắn màn hình. */
+    }
+    <a
+      href={promoBrand.affiliateUrl}
+      class="exit-popup__image-link"
+      target="_blank"
+      rel={AFFILIATE_REL}
+      referrerpolicy="strict-origin"
+      data-close
+    >
       <Image src={promoPopup} alt="Special Promo Offer" class="exit-popup__image" />
     </a>
   </div>
