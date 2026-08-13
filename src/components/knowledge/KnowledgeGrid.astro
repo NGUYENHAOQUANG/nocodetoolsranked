@@ -23,8 +23,10 @@ const labels = (await getEntry("labels", "labels"))!.data;
           <Image
             src={card.image}
             alt={card.imageAlt}
-            width={card.image.width}
-            height={card.image.height}
+            width={360}
+            height={239}
+            widths={[360]}
+            sizes="360px"
             loading={index < 3 ? "eager" : "lazy"}
             fetchpriority={index < 3 ? "high" : "auto"}
           />

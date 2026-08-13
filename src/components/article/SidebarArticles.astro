@@ -30,7 +30,7 @@ const labels = (await getEntry("labels", "labels"))!.data;
           <a class="sidebar-articles__image" href={a.href}>
             {/* Giữ đúng tỉ lệ ảnh gốc: 2 ảnh 600×400 và 1 ảnh 597×400 nên thẻ
                 thứ 3 cao lệch nhẹ — bản gốc cũng vậy */}
-            <Image src={a.image} alt={a.imageAlt} width={a.image.width} height={a.image.height} />
+            <Image src={a.image} alt={a.imageAlt} width={360} height={240} widths={[360]} sizes="360px" />
           </a>
           {/* Tiêu đề + link nằm trong 1 ô bọc: node chỉ có 2 con nên chỉ có 1
               gap. Để 3 con ngang cấp là thừa 1 gap → mỗi thẻ dư đúng 10px. */}
