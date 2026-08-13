@@ -15,7 +15,7 @@ const labels = (await getEntry("labels", "labels"))!.data;
 
 <div class="knowledge-grid">
   {
-    knowledgeCards.map((card) => (
+    knowledgeCards.map((card, index) => (
       <article class="knowledge-card">
         <a class="knowledge-card__image" href={card.href} aria-label={card.title}>
           {/* Giữ NGUYÊN tỉ lệ ảnh gốc (không ép 350×239 kẻo méo) — để CSS object-fit
@@ -25,6 +25,8 @@ const labels = (await getEntry("labels", "labels"))!.data;
             alt={card.imageAlt}
             width={card.image.width}
             height={card.image.height}
+            loading={index < 3 ? "eager" : "lazy"}
+            fetchpriority={index < 3 ? "high" : "auto"}
           />
           <span class="knowledge-card__overlay" aria-hidden="true" />
         </a>
