@@ -37,7 +37,7 @@ const labels = (await getEntry("labels", "labels"))!.data;
           </a>
           <p class="knowledge-card__excerpt">{card.excerpt}</p>
           <a class="knowledge-card__more" href={card.href}>
-            {labels.cta.readMore}
+            {labels.cta.readMore}<span class="knowledge-card__sr-only"> about {card.title}</span>
             <svg
               viewBox="0 0 1024 1024"
               width="1em"
@@ -178,6 +178,17 @@ const labels = (await getEntry("labels", "labels"))!.data;
   .knowledge-card__title:hover {
     text-decoration: underline;
     cursor: pointer;
+  }
+  .knowledge-card__sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border-width: 0;
   }
 
   /* ===== ≥768px: 2 cột ===== */

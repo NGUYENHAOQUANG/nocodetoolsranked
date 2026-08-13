@@ -37,7 +37,7 @@ const labels = (await getEntry("labels", "labels"))!.data;
           khối Wix cao 266 (82 + 16 + 109 + link), khớp. */
       }
       {paragraphs.map((p) => <p>{p}</p>)}
-      <a class="review-card__more" href={readMoreHref}>{labels.cta.readMore}</a>
+      <a class="review-card__more" href={readMoreHref}>{labels.cta.readMore}<span class="review-card__sr-only"> about {logoAlt.replace(/ logo/i, '')}</span></a>
     </div>
   </div>
 
@@ -299,6 +299,17 @@ const labels = (await getEntry("labels", "labels"))!.data;
        ĐỪNG đồng bộ với `.partner__button-text` của PartnerCard: nút đó thật sự là
        1.12rem và còn đổi cả font-family. Hai nút khác nhau ở bản gốc. */
     font-size: 1.4rem;
+  }
+  .review-card__sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border-width: 0;
   }
 
   /* ==========================================================================
