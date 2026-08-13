@@ -13,6 +13,7 @@ import ArticleGrid from "@/components/article/ArticleGrid.astro";
 import ArticleToc from "@/components/article/ArticleToc.astro";
 import PostIntro from "@/components/article/PostIntro.astro";
 import PostSidebar from "@/components/article/PostSidebar.astro";
+import MdxImage from "@/components/article/MdxImage.astro";
 import { KNOWLEDGE_INDEX, postUrl } from "@/lib/links";
 import { articleSchema } from "@/lib/schema-org";
 import { formatArticleDate, isoDate } from "@/lib/article-date";
@@ -74,7 +75,7 @@ const schema = [
         avatar={author.avatar}
       />
       <div class="post__body">
-        <Content />
+        <Content components={{ img: MdxImage }} />
       </div>
     </main>
     <PostSidebar slot="sidebar" postId={entry.id} />
