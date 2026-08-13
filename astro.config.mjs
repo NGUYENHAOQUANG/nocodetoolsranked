@@ -3,7 +3,7 @@ import { defineConfig, fontProviders } from "astro/config";
 
 import mdx from "@astrojs/mdx";
 import sitemap from "@astrojs/sitemap";
-
+import inlinePageScript from "./scripts/inline-page-script.mjs";
 import rehypeTableScroll from "./src/lib/rehype-table-scroll.mjs";
 
 /**
@@ -18,7 +18,6 @@ import rehypeTableScroll from "./src/lib/rehype-table-scroll.mjs";
  *                            toàn cục cho [data-astro-image], đè lên kích thước
  *                            ảnh mà component tự canh
  *   prefetch.defaultStrategy mặc định 'hover'
- *   sitemap({ filter })      sitemap đã tự loại 404 và 500
  */
 export default defineConfig({
   /** Bắt buộc để dựng canonical và sitemap. Không có `site` thì cả hai đều không chạy. */
@@ -50,7 +49,16 @@ export default defineConfig({
    * Repo không có file `.md` nào (toàn `.mdx`) nên mặc định của processor
    * không ảnh hưởng gì.
    */
-  integrations: [mdx({ smartypants: false }), sitemap()],
+  integrations: [
+    mdx({ smartypants: false }),
+    sitemap({
+      filter: (page) =>
+        !page.includes("/terms-of-use") &&
+        !page.includes("/privacy-policy") &&
+        !page.includes("/advertiser-disclosure"),
+    }),
+    inlinePageScript(),
+  ],
 
   /**
    * Bọc mỗi bảng trong một vỏ cuộn ngang — xem `src/lib/rehype-table-scroll.mjs`.
@@ -118,4 +126,8 @@ export default defineConfig({
 
   /** Site affiliate sống bằng cú nhấp: nạp trước trang đích khi rê chuột lên link. */
   prefetch: { prefetchAll: true },
+
+  build: {
+    inlineStylesheets: "always",
+  },
 });

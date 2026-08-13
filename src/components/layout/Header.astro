@@ -453,8 +453,9 @@ const isActive = (href: string) => href.replace(/\/+$/, "") === currentPath;
     if (toggle && submenu) {
       toggle.addEventListener("click", () => {
         const expanded = toggle.getAttribute("aria-expanded") === "true";
+        const height = expanded ? "0" : submenu.scrollHeight + "px";
         toggle.setAttribute("aria-expanded", String(!expanded));
-        submenu.style.maxHeight = expanded ? "0" : submenu.scrollHeight + "px";
+        submenu.style.maxHeight = height;
       });
     }
   }

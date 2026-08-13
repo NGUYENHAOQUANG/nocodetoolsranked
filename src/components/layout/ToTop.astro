@@ -63,16 +63,21 @@
   const button = document.querySelector<HTMLButtonElement>(".to-top");
 
   if (button) {
-    // Vì `html { overflow-x: hidden }` nên html mới là khung cuộn — `window.scrollY`
-    // luôn báo 0, phải đọc từ documentElement.
-    const scrollTop = () => document.documentElement.scrollTop || document.body.scrollTop;
+    // Thay vì lắng nghe sự kiện scroll và đo `scrollTop` (gây Forced Reflow),
+    // ta dùng IntersectionObserver theo dõi một điểm mốc ẩn ở 100px từ đầu trang.
+    const sentinel = document.createElement("div");
+    sentinel.style.position = "absolute";
+    sentinel.style.top = "100px";
+    sentinel.style.visibility = "hidden";
+    document.body.appendChild(sentinel);
 
-    const sync = () => {
-      button.classList.toggle("is-visible", scrollTop() > 100);
-    };
-
-    sync();
-    window.addEventListener("scroll", sync, { passive: true });
+    const observer = new IntersectionObserver((entries) => {
+      // Khi điểm mốc trôi ra khỏi màn hình (scroll > 100px), isIntersecting = false
+      entries.forEach((entry) => {
+        button.classList.toggle("is-visible", !entry.isIntersecting);
+      });
+    });
+    observer.observe(sentinel);
 
     // Bản gốc chờ 100ms rồi mới cuộn; `scroll-behavior: smooth` lo phần hoạt ảnh
     button.addEventListener("click", () => {

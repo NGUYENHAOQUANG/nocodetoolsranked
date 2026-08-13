@@ -41,7 +41,14 @@ const GA_ID = import.meta.env.PUBLIC_GA_MEASUREMENT_ID;
     <link rel="shortcut icon" href="/favicon.ico" />
     <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
     <meta name="apple-mobile-web-app-title" content="nocodetoolsranked" />
-    <link rel="manifest" href="/site.webmanifest" />
+    <script is:inline>
+      addEventListener("load", () => {
+        const link = document.createElement("link");
+        link.rel = "manifest";
+        link.href = "/site.webmanifest";
+        document.head.append(link);
+      });
+    </script>
     <title>{title}</title>
     <meta name="description" content={description} />
     <Seo
@@ -74,6 +81,8 @@ const GA_ID = import.meta.env.PUBLIC_GA_MEASUREMENT_ID;
     {
       GA_ID && (
         <>
+         <link rel="preconnect" href="https://www.googletagmanager.com" />
+        <link rel="preconnect" href="https://www.google-analytics.com" />
           <script
             is:inline
             async
