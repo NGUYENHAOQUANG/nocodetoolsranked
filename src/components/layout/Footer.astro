@@ -1,4 +1,5 @@
 ---
+import { Image } from "astro:assets";
 import logo from "@/assets/logo/logo_white.webp";
 import { footerLinks } from "@/config/navigation";
 import { SITE } from "@/config/site";
@@ -19,12 +20,12 @@ const year = new Date().getFullYear();
         lại lần nữa chỉ làm trình đọc màn hình lặp. */
     }
     <a href="/" class="site-footer__logo-link" aria-label="nocodetoolsranked.com">
-      <img
-        src={logo.src}
+      <Image
+        src={logo}
+        height={72}
+        quality={60}
         alt="nocodetoolsranked.com Official Logo"
         class="site-footer__logo-img"
-        width={logo.width}
-        height={logo.height}
       />
       <span class="site-footer__logo" aria-hidden="true"
         >{SITE.brand.lead}<span class="site-footer__logo-accent">{SITE.brand.accent}</span></span
