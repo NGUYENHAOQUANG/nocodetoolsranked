@@ -64,6 +64,7 @@ const year = new Date().getFullYear();
        `--color-text-body`, nên hex viết cứng ở đây sẽ âm thầm lệch khỏi các nhãn
        góc card vốn phải cùng một navy. */
     background-color: var(--color-accent-strong);
+    color: var(--color-text-on-primary);
   }
 
 
@@ -92,7 +93,7 @@ const year = new Date().getFullYear();
   /* Teal trên nền navy đạt 6.03:1 — ở đây dùng được `--color-accent` bản sáng,
      khác header (nền trắng, phải dùng `--color-accent-text`). */
   .site-footer__logo-accent {
-    color: #286ce6;
+    color: var(--color-accent);
   }
 
   .site-footer__nav {
