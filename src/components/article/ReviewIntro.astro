@@ -41,8 +41,8 @@ const labels = (await getEntry("labels", "labels"))!.data;
             class="review-intro__thumb"
             src={likeIcon.src}
             alt="Like icon"
-            width="44"
-            height="38"
+            width={likeIcon.width}
+            height={likeIcon.height}
           />
         </div>
         <p>{promo}</p>

@@ -135,17 +135,31 @@ const headings = allHeadings.filter((h) => h.text.trim());
     .filter((el): el is HTMLElement => el !== null);
 
   if (links.length && targets.length) {
+    const passed = new Set();
     const sync = () => {
-      // heading cuối cùng đã trôi qua mốc 120px tính từ đỉnh màn hình;
-      // -1 = chưa cuộn tới heading nào → không tô mục nào (như bản gốc)
-      let current = -1;
-      targets.forEach((el, i) => {
-        if (el.getBoundingClientRect().top <= 120) current = i;
+      let currentId: string | null = null;
+      targets.forEach((el) => {
+        if (passed.has(el.id)) currentId = el.id;
       });
-      links.forEach((l, i) => l.classList.toggle("is-active", i === current));
+      links.forEach((l) => l.classList.toggle("is-active", l.dataset.target === currentId));
     };
 
-    sync();
-    window.addEventListener("scroll", sync, { passive: true });
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          // rootMargin: "-120px..." tạo ranh giới ảo cách top 120px.
+          // Khi heading trượt lên trên ranh giới này, nó rời khỏi vùng quan sát (isIntersecting = false).
+          if (!entry.isIntersecting && entry.boundingClientRect.top <= 120) {
+            passed.add(entry.target.id);
+          } else {
+            passed.delete(entry.target.id);
+          }
+        });
+        sync();
+      },
+      { rootMargin: "-120px 0px 0px 0px" }
+    );
+
+    targets.forEach((el) => observer.observe(el));
   }
 </script>

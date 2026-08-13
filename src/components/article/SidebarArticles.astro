@@ -41,7 +41,7 @@ const labels = (await getEntry("labels", "labels"))!.data;
               <p class="sidebar-articles__title">{a.title}</p>
             </a>
             <a class="sidebar-articles__link" href={a.href}>
-              {labels.cta.readMoreLower}
+              {labels.cta.readMoreLower}<span class="sidebar-articles__sr-only"> about {a.title}</span>
             </a>
           </div>
         </div>
@@ -105,6 +105,8 @@ const labels = (await getEntry("labels", "labels"))!.data;
   }
   .sidebar-articles__title-link {
     --hover-color: var(--color-primary);
+    display: inline-block;
+    padding: 8px 0;
   }
   .sidebar-articles__title {
     position: relative;
@@ -118,9 +120,22 @@ const labels = (await getEntry("labels", "labels"))!.data;
     color: var(--color-primary);
     font-size: 1rem;
     font-weight: 400;
+    display: inline-block;
+    padding: 12px 0;
   }
   .sidebar-articles__link:hover {
     opacity: 0.5;
+  }
+  .sidebar-articles__sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border-width: 0;
   }
 
   /* ===== ≥768px: thẻ bài viết thành lưới 2 cột ===== */
