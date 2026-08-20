@@ -212,6 +212,8 @@ const reviews = defineCollection({
     description: z.string(),
     /** Dòng khuyến mãi ở thanh trên cùng bài. CHỈ để hiển thị, không dùng cho SEO. */
     promo: z.string(),
+    published: z.coerce.date().optional(),
+    updated: z.coerce.date().optional(),
     /** Đối tác của bài. Gõ sai = lỗi build. */
     brand: reference("brands"),
     author: reference("authors"),
@@ -280,6 +282,8 @@ const pages = defineCollection({
      * thay vì ép về một kiểu — ép sẽ làm trang terms dài thêm khoảng 130px.
      */
     headingStyle: z.enum(["plain", "distinct"]).default("distinct"),
+    published: z.coerce.date().optional(),
+    updated: z.coerce.date().optional(),
   }),
 });
 
@@ -418,6 +422,8 @@ const toplists = defineCollection({
 
     /** Tiêu đề khối bài viết. Thân bài KHÔNG lặp lại nó. */
     articleTitle: z.string(),
+    published: z.coerce.date().optional(),
+    updated: z.coerce.date().optional(),
   }),
 });
 
@@ -436,7 +442,9 @@ const posts = defineCollection({
       heroMobileTitle: z.string().optional(),
       /** Ngày thật để sắp xếp và để JSON-LD phát `datePublished`. Hiển thị đi
        *  qua `formatArticleDate` - xem `lib/article-date.ts`. */
-      date: z.coerce.date(),
+      date: z.coerce.date().optional(),
+      published: z.coerce.date().optional(),
+      updated: z.coerce.date().optional(),
       readTime: z.string(),
       author: reference("authors"),
       /** Trích đoạn ~115 ký tự + "..." cho lưới /knowledge/. Điểm cắt là tuỳ ý

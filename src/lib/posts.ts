@@ -55,11 +55,15 @@ async function curated(key: "mustReads" | "reviewSidebar") {
 export async function getKnowledgeCards(): Promise<KnowledgeCard[]> {
   /* MỌI bài, mới nhất trước. Không có danh sách khai tay nên bài thứ 7 tự vào lưới. */
   const all = await getCollection("posts");
-  all.sort((a, b) => b.data.date.getTime() - a.data.date.getTime());
+  all.sort((a, b) => {
+    const timeA = (a.data.updated || a.data.published || a.data.date || new Date(0)).getTime();
+    const timeB = (b.data.updated || b.data.published || b.data.date || new Date(0)).getTime();
+    return timeB - timeA;
+  });
   return all.map((e) => ({
     image: e.data.images.card,
     imageAlt: `${e.data.title} | Article Thumbnail`,
-    date: formatArticleDate(e.data.date),
+    date: formatArticleDate(e.data.updated || e.data.published || e.data.date || new Date()),
     readTime: e.data.readTime,
     title: e.data.title,
     excerpt: e.data.excerpt,

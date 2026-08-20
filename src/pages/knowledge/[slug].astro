@@ -25,7 +25,8 @@ export async function getStaticPaths() {
 
 const { entry } = Astro.props;
 const { Content, headings } = await render(entry);
-const { title, date, readTime, heroMobileTitle } = entry.data;
+const { title, updated, published, date, readTime, heroMobileTitle } = entry.data;
+const articleDate = updated || published || date || new Date();
 
 /* Tác giả (tên/vai trò/ảnh) lấy từ collection `authors` qua reference().
    Map AVATARS hardcode trước đây đã bỏ — gõ sai tên tác giả giờ là lỗi build
@@ -41,7 +42,7 @@ const schema = [
     url: postUrl(entry.id),
     image: entry.data.images.card.src,
     authorName: author.name,
-    datePublished: isoDate(date),
+    datePublished: isoDate(articleDate),
   }),
 ];
 ---
@@ -69,7 +70,7 @@ const schema = [
     <main id="main-content" slot="main" class="post__main">
       <PostIntro
         title={title}
-        date={formatArticleDate(date)}
+        date={formatArticleDate(articleDate)}
         readTime={readTime}
         author={author}
         avatar={author.avatar}

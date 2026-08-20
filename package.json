@@ -7,7 +7,7 @@
   },
   "scripts": {
     "dev": "astro dev",
-    "build": "npm run check && astro build && node scripts/check-html.mjs",
+    "build": "npm run check && astro build && node scripts/process-sitemap.mjs dist && node scripts/check-html.mjs",
     "preview": "astro preview",
     "check": "astro check --minimumFailingSeverity hint && node scripts/check-content.mjs",
     "format": "prettier --write .",
