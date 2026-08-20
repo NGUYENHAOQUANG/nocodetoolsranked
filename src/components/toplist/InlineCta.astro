@@ -168,9 +168,13 @@ const { logo, logoAlt, affiliateUrl: href } = brand.data;
   @media (min-width: 615px) {
     .inline-cta__button:hover {
       background-color: var(--hover-bg-color);
+      color: var(--color-text-on-primary);
+      text-decoration: none;
+      opacity: 1;
     }
     .inline-cta__button:hover .inline-cta__button-text {
       transform: translateX(-5px);
+      color: var(--color-text-on-primary);
     }
     .inline-cta__button:hover .inline-cta__arrow {
       opacity: 1;
