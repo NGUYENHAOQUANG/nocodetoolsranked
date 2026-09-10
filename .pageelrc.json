@@ -2,22 +2,19 @@
   "version": 2,
   "collections": [
     {
-      "id": "collection-1789032892085",
-      "name": "Main Collection",
-      "postsPath": "src/content/pages",
-      "imagesPath": "public",
+      "id": "posts",
+      "name": "Blog Posts",
+      "postsPath": "src/content/posts",
+      "imagesPath": "src/assets",
       "template": {
         "fields": [
           {
-            "name": "publishDate",
-            "type": "date"
-          },
-          {
             "name": "title",
-            "type": "string"
+            "type": "string",
+            "required": true
           },
           {
-            "name": "author",
+            "name": "heroMobileTitle",
             "type": "string"
           },
           {
@@ -25,44 +22,121 @@
             "type": "string"
           },
           {
-            "name": "image",
+            "name": "excerptLong",
             "type": "string"
           },
           {
-            "name": "category",
+            "name": "readTime",
             "type": "string"
           },
           {
-            "name": "tags",
-            "type": "array"
+            "name": "author",
+            "type": "string"
           },
           {
-            "name": "metadata",
-            "type": "object"
+            "name": "date",
+            "type": "date"
           }
         ]
-      },
-      "tableColumns": [],
-      "columnWidths": {
-        "__name__": 35
+      }
+    },
+    {
+      "id": "reviews",
+      "name": "Brand Reviews",
+      "postsPath": "src/content/reviews",
+      "imagesPath": "src/assets",
+      "template": {
+        "fields": [
+          {
+            "name": "title",
+            "type": "string",
+            "required": true
+          },
+          {
+            "name": "heroTitle",
+            "type": "string"
+          },
+          {
+            "name": "description",
+            "type": "string"
+          },
+          {
+            "name": "promo",
+            "type": "string"
+          },
+          {
+            "name": "brand",
+            "type": "string"
+          },
+          {
+            "name": "author",
+            "type": "string"
+          },
+          {
+            "name": "summary",
+            "type": "string"
+          }
+        ]
+      }
+    },
+    {
+      "id": "pages",
+      "name": "Site Pages",
+      "postsPath": "src/content/pages",
+      "imagesPath": "src/assets",
+      "template": {
+        "fields": [
+          {
+            "name": "title",
+            "type": "string",
+            "required": true
+          },
+          {
+            "name": "heroTitle",
+            "type": "string"
+          },
+          {
+            "name": "description",
+            "type": "string"
+          },
+          {
+            "name": "headingStyle",
+            "type": "string"
+          }
+        ]
+      }
+    },
+    {
+      "id": "toplists",
+      "name": "Toplists",
+      "postsPath": "src/content/toplists",
+      "imagesPath": "src/assets",
+      "template": {
+        "fields": [
+          {
+            "name": "title",
+            "type": "string",
+            "required": true
+          },
+          {
+            "name": "heroTitle",
+            "type": "string"
+          },
+          {
+            "name": "description",
+            "type": "string"
+          }
+        ]
       }
     }
   ],
-  "activeCollectionId": "collection-1789032892085",
+  "activeCollectionId": "posts",
   "settings": {
     "projectType": "astro",
-    "domainUrl": "https://nocodetoolsranked.com",
     "postFileTypes": ".md,.mdx",
-    "imageFileTypes": "image/*",
-    "publishDateSource": "file",
-    "imageCompressionEnabled": false,
-    "maxImageSize": 500,
-    "imageResizeMaxWidth": 1024
+    "imageFileTypes": ".png,.jpg,.jpeg,.gif,.svg,.webp"
   },
-  "commitMessages": {
-    "newPost": "feat(content): add post \"{filename}\"",
-    "updatePost": "fix(content): update post \"{filename}\"",
-    "newImage": "feat(assets): add image \"{filename}\"",
-    "updateImage": "refactor(assets): update image for \"{filename}\""
+  "plugins": {
+    "editor": "@pageel/plugin-mdx"
   }
 }
