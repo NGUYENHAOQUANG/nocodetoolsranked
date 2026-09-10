@@ -1,0 +1,27 @@
+{
+  "version": 2,
+  "settings": {
+    "projectType": "astro",
+    "domainUrl": "https://nocodetoolsranked.com",
+    "postFileTypes": ".md,.mdx",
+    "imageFileTypes": "image/*",
+    "publishDateSource": "file",
+    "imageCompressionEnabled": false,
+    "maxImageSize": 500,
+    "imageResizeMaxWidth": 1024
+  },
+  "commitMessages": {
+    "newPost": "feat(content): add post \"{filename}\"",
+    "updatePost": "fix(content): update post \"{filename}\"",
+    "newImage": "feat(assets): add image \"{filename}\"",
+    "updateImage": "refactor(assets): update image for \"{filename}\""
+  },
+  "collections": [
+    {
+      "id": "collection-1789032892085",
+      "name": "Main Collection",
+      "postsPath": "src/content/pages",
+      "imagesPath": "public"
+    }
+  ]
+}
