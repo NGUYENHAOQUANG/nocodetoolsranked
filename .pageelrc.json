@@ -1,5 +1,54 @@
 {
   "version": 2,
+  "collections": [
+    {
+      "id": "collection-1789032892085",
+      "name": "Main Collection",
+      "postsPath": "src/content/pages",
+      "imagesPath": "public",
+      "template": {
+        "fields": [
+          {
+            "name": "publishDate",
+            "type": "date"
+          },
+          {
+            "name": "title",
+            "type": "string"
+          },
+          {
+            "name": "author",
+            "type": "string"
+          },
+          {
+            "name": "excerpt",
+            "type": "string"
+          },
+          {
+            "name": "image",
+            "type": "string"
+          },
+          {
+            "name": "category",
+            "type": "string"
+          },
+          {
+            "name": "tags",
+            "type": "array"
+          },
+          {
+            "name": "metadata",
+            "type": "object"
+          }
+        ]
+      },
+      "tableColumns": [],
+      "columnWidths": {
+        "__name__": 35
+      }
+    }
+  ],
+  "activeCollectionId": "collection-1789032892085",
   "settings": {
     "projectType": "astro",
     "domainUrl": "https://nocodetoolsranked.com",
@@ -15,13 +64,5 @@
     "updatePost": "fix(content): update post \"{filename}\"",
     "newImage": "feat(assets): add image \"{filename}\"",
     "updateImage": "refactor(assets): update image for \"{filename}\""
-  },
-  "collections": [
-    {
-      "id": "collection-1789032892085",
-      "name": "Main Collection",
-      "postsPath": "src/content/pages",
-      "imagesPath": "public"
-    }
-  ]
+  }
 }
