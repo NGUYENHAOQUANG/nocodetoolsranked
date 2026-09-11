@@ -1,0 +1,281 @@
+{
+  "version": "1.2",
+  "media": {
+    "default_library": "repo_media",
+    "libraries": [
+      {
+        "key": "repo_media",
+        "label": "Repository media",
+        "references": {
+          "write": {
+            "mode": "root_relative",
+            "base_path": "/"
+          },
+          "allow_default_library_fallback": true
+        },
+        "limits": {
+          "max_file_size_mb": 10
+        },
+        "driver": "git",
+        "storage": {
+          "root_path": "public"
+        }
+      }
+    ]
+  },
+  "ssg_framework": "astro",
+  "frontmatter_format": "yaml",
+  "publishing_mode": "direct_publish",
+  "collections": [
+    {
+      "name": "reviews",
+      "git_path": "/src/content/reviews/",
+      "file_extension": ".mdx",
+      "filename_pattern": "",
+      "collection_type": "flat",
+      "frontmatter_schema": [
+        {
+          "name": "title",
+          "type": "title",
+          "label": "Title"
+        },
+        {
+          "name": "heroTitle",
+          "type": "text",
+          "label": "Hero Title"
+        },
+        {
+          "name": "description",
+          "type": "richtext",
+          "label": "Description"
+        },
+        {
+          "name": "published",
+          "type": "datetime",
+          "label": "Published",
+          "withTime": true
+        },
+        {
+          "name": "updated",
+          "type": "datetime",
+          "label": "Updated",
+          "withTime": true
+        },
+        {
+          "name": "promo",
+          "type": "text",
+          "label": "Promo"
+        },
+        {
+          "name": "brand",
+          "type": "text",
+          "label": "Brand"
+        },
+        {
+          "name": "author",
+          "type": "text",
+          "label": "Author"
+        },
+        {
+          "name": "pros",
+          "type": "multiselect",
+          "label": "Pros",
+          "options": [
+            "Simple interface suitable for beginners and small businesses",
+            "Ready-made templates designed for different industries",
+            "Hosting and website management included in one platform",
+            "Built-in SEO tools to help improve search visibility",
+            "Ecommerce tools available for online stores"
+          ],
+          "color": "blue"
+        },
+        {
+          "name": "cons",
+          "type": "multiselect",
+          "label": "Cons",
+          "options": [
+            "Fewer advanced integrations than larger website builder platforms",
+            "Limited template customization compared with developer-focused systems",
+            "Higher plans required for ecommerce and advanced marketing tools"
+          ],
+          "color": "blue"
+        },
+        {
+          "name": "categories",
+          "type": "list",
+          "label": "Categories"
+        },
+        {
+          "name": "summary",
+          "type": "richtext",
+          "label": "Summary"
+        }
+      ]
+    },
+    {
+      "name": "posts",
+      "git_path": "/src/content/posts/",
+      "file_extension": ".mdx",
+      "filename_pattern": "",
+      "collection_type": "flat",
+      "frontmatter_schema": [
+        {
+          "name": "title",
+          "type": "title",
+          "label": "Title"
+        },
+        {
+          "name": "date",
+          "type": "datetime",
+          "label": "Date"
+        },
+        {
+          "name": "tags",
+          "type": "multiselect",
+          "label": "Tags",
+          "options": [
+            "fasfasd"
+          ],
+          "color": "blue"
+        },
+        {
+          "name": "heroMobileTitle",
+          "type": "text",
+          "label": "Hero Mobile Title"
+        },
+        {
+          "name": "excerpt",
+          "type": "richtext",
+          "label": "Excerpt"
+        },
+        {
+          "name": "excerptLong",
+          "type": "text",
+          "label": "Excerpt Long"
+        },
+        {
+          "name": "readTime",
+          "type": "text",
+          "label": "Read Time"
+        },
+        {
+          "name": "author",
+          "type": "text",
+          "label": "Author"
+        }
+      ]
+    },
+    {
+      "name": "pages",
+      "git_path": "/src/content/pages/",
+      "file_extension": ".mdx",
+      "filename_pattern": "",
+      "collection_type": "flat",
+      "frontmatter_schema": [
+        {
+          "name": "title",
+          "type": "title",
+          "label": "Title"
+        },
+        {
+          "name": "heroTitle",
+          "type": "text",
+          "label": "Hero Title"
+        },
+        {
+          "name": "description",
+          "type": "richtext",
+          "label": "Description"
+        },
+        {
+          "name": "published",
+          "type": "datetime",
+          "label": "Published",
+          "withTime": true
+        },
+        {
+          "name": "updated",
+          "type": "datetime",
+          "label": "Updated",
+          "withTime": true
+        }
+      ]
+    },
+    {
+      "name": "toplists",
+      "git_path": "/src/content/toplists/",
+      "file_extension": ".mdx",
+      "filename_pattern": "",
+      "collection_type": "flat",
+      "frontmatter_schema": [
+        {
+          "name": "title",
+          "type": "title",
+          "label": "Title"
+        },
+        {
+          "name": "description",
+          "type": "richtext",
+          "label": "Description"
+        },
+        {
+          "name": "published",
+          "type": "datetime",
+          "label": "Published",
+          "withTime": true
+        },
+        {
+          "name": "updated",
+          "type": "datetime",
+          "label": "Updated",
+          "withTime": true
+        },
+        {
+          "name": "heroTitle",
+          "type": "text",
+          "label": "Hero Title"
+        },
+        {
+          "name": "heroAlt",
+          "type": "text",
+          "label": "Hero Alt"
+        },
+        {
+          "name": "heroSubtitle",
+          "type": "richtext",
+          "label": "Hero Subtitle"
+        },
+        {
+          "name": "heroSubtitleCompact",
+          "type": "text",
+          "label": "Hero Subtitle Compact"
+        },
+        {
+          "name": "ranking",
+          "type": "text",
+          "label": "Ranking"
+        },
+        {
+          "name": "promo",
+          "type": "json",
+          "label": "Promo"
+        },
+        {
+          "name": "bestOverallTitle",
+          "type": "text",
+          "label": "Best Overall Title"
+        },
+        {
+          "name": "miniReviewTitle",
+          "type": "text",
+          "label": "Mini Review Title"
+        },
+        {
+          "name": "articleTitle",
+          "type": "text",
+          "label": "Article Title"
+        }
+      ]
+    }
+  ]
+}

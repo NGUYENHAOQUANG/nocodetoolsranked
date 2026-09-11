@@ -1,0 +1,11 @@
+{
+  "version": 1,
+  "sites": [
+    {
+      "key": "localhost",
+      "display_name": "Site",
+      "website_url": "http://localhost:4321",
+      "root_path": ""
+    }
+  ]
+}
