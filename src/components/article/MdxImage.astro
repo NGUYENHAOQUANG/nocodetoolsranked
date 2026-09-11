@@ -17,10 +17,10 @@ const { src, alt = "", ...rest } = Astro.props;
     <Image
       src={src}
       alt={alt}
-      width={390}
-      height={260}
-      widths={[390]}
-      sizes="390px"
+      width={src.width}
+      height={src.height}
+      widths={[390, 768, src.width]}
+      sizes="(max-width: 768px) 100vw, 768px"
       {...rest}
     />
   )
