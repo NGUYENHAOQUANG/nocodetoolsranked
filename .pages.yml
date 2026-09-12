@@ -35,10 +35,8 @@ content:
         label: Tác giả
         type: select
         options:
-          - label: Aditi Patel (aditi-patel)
-            value: aditi-patel
-          - label: Neil Stone (neil-stone)
-            value: neil-stone
+          - aditi-patel
+          - neil-stone
         default: aditi-patel
         required: true
         description: "Chọn tác giả từ danh sách"
@@ -92,34 +90,20 @@ content:
         label: Brand liên kết
         type: select
         options:
-          - label: Wix (wix)
-            value: wix
-          - label: Hostinger (hostinger)
-            value: hostinger
-          - label: Shopify (shopify)
-            value: shopify
-          - label: Squarespace (squarespace)
-            value: squarespace
-          - label: Webador (webador)
-            value: webador
-          - label: Square Online (square-online)
-            value: square-online
-          - label: Ionos (ionos)
-            value: ionos
-          - label: HubSpot (hubspot)
-            value: hubspot
-          - label: ClickUp (clickup)
-            value: clickup
-          - label: Bubble (bubble)
-            value: bubble
-          - label: Base44 (base44)
-            value: base44
-          - label: Lovable (lovable)
-            value: lovable
-          - label: Monday (monday)
-            value: monday
-          - label: Tide (tide)
-            value: tide
+          - wix
+          - hostinger
+          - shopify
+          - squarespace
+          - webador
+          - square-online
+          - ionos
+          - hubspot
+          - clickup
+          - bubble
+          - base44
+          - lovable
+          - monday
+          - tide
         default: wix
         required: true
         description: "Chọn thương hiệu cần đánh giá"
@@ -127,10 +111,8 @@ content:
         label: Tác giả bài review
         type: select
         options:
-          - label: Aditi Patel (aditi-patel)
-            value: aditi-patel
-          - label: Neil Stone (neil-stone)
-            value: neil-stone
+          - aditi-patel
+          - neil-stone
         default: aditi-patel
         required: true
         description: "Chọn tác giả thực hiện review"
