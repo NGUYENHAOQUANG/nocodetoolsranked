@@ -15,22 +15,43 @@ content:
         label: Tiêu đề bài viết
         type: string
         required: true
+        description: "Tiêu đề chính của bài viết"
       - name: published
         label: Ngày xuất bản
-        type: string
+        type: date
+        required: true
+        description: "Chọn ngày đăng bài"
       - name: updated
         label: Ngày cập nhật
-        type: string
+        type: date
+        description: "Ngày cập nhật gần nhất (không bắt buộc)"
       - name: readTime
         label: Thời gian đọc
         type: string
+        required: true
+        default: "5 min read"
+        description: "Định dạng ví dụ: 5 min read"
       - name: author
         label: Tác giả
         type: reference
         collection: authors
+        required: true
+        description: "Chọn tác giả từ danh sách"
       - name: excerpt
-        label: Mô tả ngắn
+        label: Mô tả ngắn (Excerpt)
         type: string
+        required: true
+        description: "Tóm tắt ngắn bài viết hiển thị ở danh sách"
+      - name: images
+        label: Ảnh bài viết
+        type: object
+        required: true
+        fields:
+          - name: card
+            label: Ảnh thẻ (Card Image)
+            type: image
+            required: true
+            description: "Chọn ảnh đại diện cho bài viết"
       - name: body
         label: Nội dung bài viết
         type: rich-text
@@ -47,34 +68,45 @@ content:
         label: Tiêu đề trang
         type: string
         required: true
+        description: "Tiêu đề chuẩn SEO của bài review"
       - name: heroTitle
         label: Tiêu đề Banner Hero
         type: string
         required: true
+        description: "Tiêu đề lớn hiển thị ở đầu bài review"
       - name: description
         label: Mô tả Meta Description
         type: string
         required: true
+        description: "Mô tả SEO xuất hiện trên Google"
       - name: promo
         label: Dòng Khuyến mãi (Promo Text)
         type: string
+        description: "Ví dụ: Get 10% Off"
       - name: brand
         label: Brand liên kết
         type: reference
         collection: brands
+        required: true
+        description: "Chọn thương hiệu cần đánh giá"
       - name: author
         label: Tác giả bài review
         type: reference
         collection: authors
+        required: true
+        description: "Chọn tác giả thực hiện review"
       - name: pros
         label: Ưu điểm (Pros)
         type: list
+        description: "Thêm từng ưu điểm của sản phẩm"
       - name: cons
         label: Nhược điểm (Cons)
         type: list
+        description: "Thêm từng nhược điểm của sản phẩm"
       - name: summary
         label: Tóm tắt bài review
         type: string
+        description: "Nội dung tóm tắt cho màn hình nhỏ"
       - name: body
         label: Nội dung bài review
         type: rich-text
@@ -94,12 +126,15 @@ content:
       - name: logo
         label: Logo
         type: image
+        required: true
       - name: logoAlt
         label: Logo Alt Text
         type: string
+        required: true
       - name: affiliateUrl
         label: Link Affiliate
         type: string
+        required: true
 
   - name: authors
     label: Authors (Tác giả)
@@ -116,6 +151,7 @@ content:
       - name: role
         label: Vai trò
         type: string
+        required: true
       - name: avatar
         label: Ảnh đại diện
         type: image
