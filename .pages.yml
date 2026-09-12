@@ -33,8 +33,12 @@ content:
         description: "Định dạng ví dụ: 5 min read"
       - name: author
         label: Tác giả
-        type: reference
-        collection: authors
+        type: select
+        options:
+          - label: Aditi Patel (aditi-patel)
+            value: aditi-patel
+          - label: Neil Stone (neil-stone)
+            value: neil-stone
         default: aditi-patel
         required: true
         description: "Chọn tác giả từ danh sách"
@@ -86,15 +90,47 @@ content:
         description: "Ví dụ: Get 10% Off"
       - name: brand
         label: Brand liên kết
-        type: reference
-        collection: brands
+        type: select
+        options:
+          - label: Wix (wix)
+            value: wix
+          - label: Hostinger (hostinger)
+            value: hostinger
+          - label: Shopify (shopify)
+            value: shopify
+          - label: Squarespace (squarespace)
+            value: squarespace
+          - label: Webador (webador)
+            value: webador
+          - label: Square Online (square-online)
+            value: square-online
+          - label: Ionos (ionos)
+            value: ionos
+          - label: HubSpot (hubspot)
+            value: hubspot
+          - label: ClickUp (clickup)
+            value: clickup
+          - label: Bubble (bubble)
+            value: bubble
+          - label: Base44 (base44)
+            value: base44
+          - label: Lovable (lovable)
+            value: lovable
+          - label: Monday (monday)
+            value: monday
+          - label: Tide (tide)
+            value: tide
         default: wix
         required: true
         description: "Chọn thương hiệu cần đánh giá"
       - name: author
         label: Tác giả bài review
-        type: reference
-        collection: authors
+        type: select
+        options:
+          - label: Aditi Patel (aditi-patel)
+            value: aditi-patel
+          - label: Neil Stone (neil-stone)
+            value: neil-stone
         default: aditi-patel
         required: true
         description: "Chọn tác giả thực hiện review"
