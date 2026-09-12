@@ -35,8 +35,9 @@ content:
         label: Tác giả
         type: select
         options:
-          - aditi-patel
-          - neil-stone
+          values:
+            - aditi-patel
+            - neil-stone
         default: aditi-patel
         required: true
         description: "Chọn tác giả từ danh sách"
@@ -90,20 +91,21 @@ content:
         label: Brand liên kết
         type: select
         options:
-          - wix
-          - hostinger
-          - shopify
-          - squarespace
-          - webador
-          - square-online
-          - ionos
-          - hubspot
-          - clickup
-          - bubble
-          - base44
-          - lovable
-          - monday
-          - tide
+          values:
+            - wix
+            - hostinger
+            - shopify
+            - squarespace
+            - webador
+            - square-online
+            - ionos
+            - hubspot
+            - clickup
+            - bubble
+            - base44
+            - lovable
+            - monday
+            - tide
         default: wix
         required: true
         description: "Chọn thương hiệu cần đánh giá"
@@ -111,8 +113,9 @@ content:
         label: Tác giả bài review
         type: select
         options:
-          - aditi-patel
-          - neil-stone
+          values:
+            - aditi-patel
+            - neil-stone
         default: aditi-patel
         required: true
         description: "Chọn tác giả thực hiện review"
