@@ -1,13 +1,13 @@
 media:
   input: src/assets
-  output: '../../assets'
+  output: /src/assets
 
 content:
   - name: posts
     label: Posts (Bài viết Knowledge)
     type: collection
     path: src/content/posts
-    format: mdx
+    filename: "{slug}.mdx"
     view:
       fields: [title, published, author]
     fields:
@@ -17,36 +17,29 @@ content:
         required: true
       - name: published
         label: Ngày xuất bản
-        type: date
+        type: string
       - name: updated
         label: Ngày cập nhật
-        type: date
+        type: string
       - name: readTime
-        label: Thời gian đọc (vd: 5 min read)
+        label: Thời gian đọc
         type: string
       - name: author
         label: Tác giả
         type: reference
         collection: authors
       - name: excerpt
-        label: Mô tả ngắn (Excerpt)
+        label: Mô tả ngắn
         type: string
-      - name: images
-        label: Hình ảnh
-        type: object
-        fields:
-          - name: card
-            label: Ảnh thẻ (Card Image)
-            type: image
       - name: body
-        label: Nội dung bài viết (MDX)
+        label: Nội dung bài viết
         type: rich-text
 
   - name: reviews
     label: Reviews (Bài đánh giá Brand)
     type: collection
     path: src/content/reviews
-    format: mdx
+    filename: "{slug}.mdx"
     view:
       fields: [title, heroTitle, brand]
     fields:
@@ -74,23 +67,23 @@ content:
         type: reference
         collection: authors
       - name: pros
-        label: Danh sách Ưu điểm (Pros)
+        label: Ưu điểm (Pros)
         type: list
       - name: cons
-        label: Danh sách Nhược điểm (Cons)
+        label: Nhược điểm (Cons)
         type: list
       - name: summary
         label: Tóm tắt bài review
         type: string
       - name: body
-        label: Nội dung bài review (MDX)
+        label: Nội dung bài review
         type: rich-text
 
   - name: brands
     label: Brands (Danh tính đối tác)
     type: collection
     path: src/content/brands
-    format: yaml
+    filename: "{slug}.yaml"
     view:
       fields: [name, affiliateUrl]
     fields:
@@ -112,7 +105,7 @@ content:
     label: Authors (Tác giả)
     type: collection
     path: src/content/authors
-    format: yaml
+    filename: "{slug}.yaml"
     view:
       fields: [name, role]
     fields:
@@ -121,7 +114,7 @@ content:
         type: string
         required: true
       - name: role
-        label: Vai trò / Chức danh
+        label: Vai trò
         type: string
       - name: avatar
         label: Ảnh đại diện
