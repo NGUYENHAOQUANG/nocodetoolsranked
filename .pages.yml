@@ -1,0 +1,128 @@
+media:
+  input: src/assets
+  output: '../../assets'
+
+content:
+  - name: posts
+    label: Posts (Bài viết Knowledge)
+    type: collection
+    path: src/content/posts
+    format: mdx
+    view:
+      fields: [title, published, author]
+    fields:
+      - name: title
+        label: Tiêu đề bài viết
+        type: string
+        required: true
+      - name: published
+        label: Ngày xuất bản
+        type: date
+      - name: updated
+        label: Ngày cập nhật
+        type: date
+      - name: readTime
+        label: Thời gian đọc (vd: 5 min read)
+        type: string
+      - name: author
+        label: Tác giả
+        type: reference
+        collection: authors
+      - name: excerpt
+        label: Mô tả ngắn (Excerpt)
+        type: string
+      - name: images
+        label: Hình ảnh
+        type: object
+        fields:
+          - name: card
+            label: Ảnh thẻ (Card Image)
+            type: image
+      - name: body
+        label: Nội dung bài viết (MDX)
+        type: rich-text
+
+  - name: reviews
+    label: Reviews (Bài đánh giá Brand)
+    type: collection
+    path: src/content/reviews
+    format: mdx
+    view:
+      fields: [title, heroTitle, brand]
+    fields:
+      - name: title
+        label: Tiêu đề trang
+        type: string
+        required: true
+      - name: heroTitle
+        label: Tiêu đề Banner Hero
+        type: string
+        required: true
+      - name: description
+        label: Mô tả Meta Description
+        type: string
+        required: true
+      - name: promo
+        label: Dòng Khuyến mãi (Promo Text)
+        type: string
+      - name: brand
+        label: Brand liên kết
+        type: reference
+        collection: brands
+      - name: author
+        label: Tác giả bài review
+        type: reference
+        collection: authors
+      - name: pros
+        label: Danh sách Ưu điểm (Pros)
+        type: list
+      - name: cons
+        label: Danh sách Nhược điểm (Cons)
+        type: list
+      - name: summary
+        label: Tóm tắt bài review
+        type: string
+      - name: body
+        label: Nội dung bài review (MDX)
+        type: rich-text
+
+  - name: brands
+    label: Brands (Danh tính đối tác)
+    type: collection
+    path: src/content/brands
+    format: yaml
+    view:
+      fields: [name, affiliateUrl]
+    fields:
+      - name: name
+        label: Tên thương hiệu
+        type: string
+        required: true
+      - name: logo
+        label: Logo
+        type: image
+      - name: logoAlt
+        label: Logo Alt Text
+        type: string
+      - name: affiliateUrl
+        label: Link Affiliate
+        type: string
+
+  - name: authors
+    label: Authors (Tác giả)
+    type: collection
+    path: src/content/authors
+    format: yaml
+    view:
+      fields: [name, role]
+    fields:
+      - name: name
+        label: Tên tác giả
+        type: string
+        required: true
+      - name: role
+        label: Vai trò / Chức danh
+        type: string
+      - name: avatar
+        label: Ảnh đại diện
+        type: image
