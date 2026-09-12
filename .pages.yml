@@ -35,6 +35,7 @@ content:
         label: Tác giả
         type: reference
         collection: authors
+        default: aditi-patel
         required: true
         description: "Chọn tác giả từ danh sách"
       - name: excerpt
@@ -87,12 +88,14 @@ content:
         label: Brand liên kết
         type: reference
         collection: brands
+        default: wix
         required: true
         description: "Chọn thương hiệu cần đánh giá"
       - name: author
         label: Tác giả bài review
         type: reference
         collection: authors
+        default: aditi-patel
         required: true
         description: "Chọn tác giả thực hiện review"
       - name: pros
