@@ -17,20 +17,33 @@ content:
         required: true
       - name: published
         label: Ngày xuất bản
-        type: string
+        type: date
+        required: true
       - name: updated
         label: Ngày cập nhật
-        type: string
+        type: date
       - name: readTime
-        label: Thời gian đọc
+        label: Thời gian đọc (vd: 7 min read)
         type: string
+        required: true
       - name: author
         label: Tác giả
         type: reference
         collection: authors
+        required: true
       - name: excerpt
         label: Mô tả ngắn
         type: string
+        required: true
+      - name: images
+        label: Hình ảnh bài viết
+        type: object
+        required: true
+        fields:
+          - name: card
+            label: Ảnh thẻ bài viết (Card Image)
+            type: image
+            required: true
       - name: body
         label: Nội dung bài viết
         type: rich-text
@@ -62,10 +75,12 @@ content:
         label: Brand liên kết
         type: reference
         collection: brands
+        required: true
       - name: author
         label: Tác giả bài review
         type: reference
         collection: authors
+        required: true
       - name: pros
         label: Ưu điểm (Pros)
         type: list
@@ -94,12 +109,15 @@ content:
       - name: logo
         label: Logo
         type: image
+        required: true
       - name: logoAlt
         label: Logo Alt Text
         type: string
+        required: true
       - name: affiliateUrl
         label: Link Affiliate
         type: string
+        required: true
 
   - name: authors
     label: Authors (Tác giả)
@@ -116,6 +134,8 @@ content:
       - name: role
         label: Vai trò
         type: string
+        required: true
       - name: avatar
         label: Ảnh đại diện
         type: image
+        required: true
